@@ -1,0 +1,2637 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="Scripts" displayName="Scripts" projectFiles="true">
+      <logicalFolder name="Apps" displayName="Apps" projectFiles="true">
+        <itemPath>Scripts/Apps/fshare.py</itemPath>
+        <itemPath>Scripts/Apps/fsyshare.py</itemPath>
+        <itemPath>Scripts/Apps/syshare.py</itemPath>
+        <itemPath>Scripts/Apps/tshare.py</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Bundles" displayName="Bundles" projectFiles="true">
+        <logicalFolder name="tShare" displayName="tShare" projectFiles="true">
+          <logicalFolder name="bin" displayName="bin" projectFiles="true">
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="Tests" displayName="Tests" projectFiles="true">
+        <itemPath>Scripts/Tests/sys_share_01.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_02.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_02_1.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_03.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_04.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_04_1.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_05.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_05_1.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_11.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_21.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_22.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_23.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_24.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_25.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_26.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_26_1.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_31.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_40.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_40_1.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_40_1_1.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_40_all.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_41.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_42.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_43.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_44.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_45.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_46.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_47.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_48.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_49.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_50.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_90.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_91.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_92.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_93.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_95.py</itemPath>
+        <itemPath>Scripts/Tests/sys_share_all.py</itemPath>
+      </logicalFolder>
+      <itemPath>Scripts/sys_share.py</itemPath>
+      <itemPath>Scripts/sys_share_app.py</itemPath>
+      <itemPath>Scripts/sys_share_format.py</itemPath>
+      <itemPath>Scripts/sys_share_test.py</itemPath>
+      <itemPath>Scripts/test.py</itemPath>
+    </logicalFolder>
+    <logicalFolder name="Servers" displayName="Servers" projectFiles="true">
+      <itemPath>Servers/out0</itemPath>
+      <itemPath>Servers/out1</itemPath>
+      <itemPath>Servers/out10</itemPath>
+      <itemPath>Servers/out11</itemPath>
+      <itemPath>Servers/out12</itemPath>
+      <itemPath>Servers/out13</itemPath>
+      <itemPath>Servers/out14</itemPath>
+      <itemPath>Servers/out15</itemPath>
+      <itemPath>Servers/out16</itemPath>
+      <itemPath>Servers/out17</itemPath>
+      <itemPath>Servers/out18</itemPath>
+      <itemPath>Servers/out19</itemPath>
+      <itemPath>Servers/out2</itemPath>
+      <itemPath>Servers/out20</itemPath>
+      <itemPath>Servers/out21</itemPath>
+      <itemPath>Servers/out22</itemPath>
+      <itemPath>Servers/out23</itemPath>
+      <itemPath>Servers/out24</itemPath>
+      <itemPath>Servers/out25</itemPath>
+      <itemPath>Servers/out26</itemPath>
+      <itemPath>Servers/out27</itemPath>
+      <itemPath>Servers/out28</itemPath>
+      <itemPath>Servers/out29</itemPath>
+      <itemPath>Servers/out3</itemPath>
+      <itemPath>Servers/out30</itemPath>
+      <itemPath>Servers/out31</itemPath>
+      <itemPath>Servers/out32</itemPath>
+      <itemPath>Servers/out33</itemPath>
+      <itemPath>Servers/out34</itemPath>
+      <itemPath>Servers/out35</itemPath>
+      <itemPath>Servers/out36</itemPath>
+      <itemPath>Servers/out37</itemPath>
+      <itemPath>Servers/out38</itemPath>
+      <itemPath>Servers/out4</itemPath>
+      <itemPath>Servers/out5</itemPath>
+      <itemPath>Servers/out6</itemPath>
+      <itemPath>Servers/out7</itemPath>
+      <itemPath>Servers/out8</itemPath>
+      <itemPath>Servers/out9</itemPath>
+    </logicalFolder>
+    <logicalFolder name="Share" displayName="Share" projectFiles="true">
+      <logicalFolder name="SConnector" displayName="SConnector" projectFiles="true">
+        <logicalFolder name="SDecoded" displayName="SDecoded" projectFiles="true">
+          <logicalFolder name="SMessage" displayName="SMessage" projectFiles="true">
+            <logicalFolder name="SKernel" displayName="SKernel" projectFiles="true">
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIDirConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIDirConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIFileConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIFileConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIMessageConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SStream/SKernel/SIOMessageConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SODirConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SODirConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SOFileConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SOFileConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SOUdpConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SOUdpConnector.h</itemPath>
+            </logicalFolder>
+            <itemPath>../../Share/SConnector/SDecoded/SMessage/SDirConnector.h</itemPath>
+            <itemPath>../../Share/SConnector/SDecoded/SMessage/SFileConnector.h</itemPath>
+            <itemPath>../../Share/SConnector/SDecoded/SMessage/SLocConnector.h</itemPath>
+            <itemPath>../../Share/SConnector/SDecoded/SMessage/SUdpConnector.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="SStream" displayName="SStream" projectFiles="true">
+            <logicalFolder name="SKernel" displayName="SKernel" projectFiles="true">
+              <itemPath>../../Share/SConnector/SDecoded/SStream/SKernel/SIFileConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SStream/SKernel/SIFileConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SStream/SKernel/SIOStreamConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SStream/SKernel/SIStreamConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SStream/SKernel/SOFileConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SStream/SKernel/SOFileConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SStream/SKernel/SOStreamConnector.h</itemPath>
+            </logicalFolder>
+            <itemPath>../../Share/SConnector/SDecoded/SStream/SFileConnector.h</itemPath>
+            <itemPath>../../Share/SConnector/SDecoded/SStream/SLocConnector.h</itemPath>
+            <itemPath>../../Share/SConnector/SDecoded/SStream/STcpConnector.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="SEncoded" displayName="SEncoded" projectFiles="true">
+          <logicalFolder name="SMessage" displayName="SMessage" projectFiles="true">
+            <logicalFolder name="SKernel" displayName="SKernel" projectFiles="true">
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIDirConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIDirConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIFileConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIFileConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIIrcConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIIrcConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SStream/SKernel/SIMessageConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIOIrcConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIOIrcConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SStream/SKernel/SIOMessageConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SODirConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SODirConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SOFileConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SOFileConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SOIrcConnector.cpp</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SOIrcConnector.h</itemPath>
+            </logicalFolder>
+            <itemPath>../../Share/SConnector/SEncoded/SMessage/SDirConnector.h</itemPath>
+            <itemPath>../../Share/SConnector/SEncoded/SMessage/SFileConnector.h</itemPath>
+            <itemPath>../../Share/SConnector/SEncoded/SMessage/SIrcConnector.h</itemPath>
+            <itemPath>../../Share/SConnector/SEncoded/SMessage/SLocConnector.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="SStream" displayName="SStream" projectFiles="true">
+            <logicalFolder name="SKernel" displayName="SKernel" projectFiles="true">
+              <itemPath>../../Share/SConnector/SEncoded/SStream/SKernel/SIOStreamConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SStream/SKernel/SIStreamConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SStream/SKernel/SOStreamConnector.h</itemPath>
+            </logicalFolder>
+            <itemPath>../../Share/SConnector/SEncoded/SStream/SLocConnector.h</itemPath>
+            <itemPath>../../Share/SConnector/SEncoded/SStream/STcpConnector.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="SFunction" displayName="SFunction" projectFiles="true">
+        <itemPath>../../Share/SFunction/SDecode.h</itemPath>
+        <itemPath>../../Share/SFunction/SEncode.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="SInterface" displayName="SInterface" projectFiles="true">
+        <itemPath>../../Share/SInterface/SBufferShare.cpp</itemPath>
+        <itemPath>../../Share/SInterface/SBufferShare.h</itemPath>
+        <itemPath>../../Share/SInterface/SMachine.cpp</itemPath>
+        <itemPath>../../Share/SInterface/SMachine.h</itemPath>
+        <itemPath>../../Share/SInterface/SStreamCodec.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="SKernel" displayName="SKernel" projectFiles="true">
+        <logicalFolder name="SCodecV1" displayName="SCodecV1" projectFiles="true">
+          <itemPath>../../Share/SKernel/SCodecV1/SCodec.cpp</itemPath>
+          <itemPath>../../Share/SKernel/SCodecV1/SCodec.h</itemPath>
+          <itemPath>../../Share/SKernel/SCodecV1/SCodecDecoder.h</itemPath>
+          <itemPath>../../Share/SKernel/SCodecV1/SCodecEncoder.h</itemPath>
+          <itemPath>../../Share/SKernel/SCodecV1/SCodecStamp.cpp</itemPath>
+          <itemPath>../../Share/SKernel/SCodecV1/SCodecStamp.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="SCodecV2" displayName="SCodecV2" projectFiles="true">
+          <itemPath>../../Share/SKernel/SCodecV2/SCodec.cpp</itemPath>
+          <itemPath>../../Share/SKernel/SCodecV2/SCodec.h</itemPath>
+          <itemPath>../../Share/SKernel/SCodecV2/SCodecStamp.cpp</itemPath>
+          <itemPath>../../Share/SKernel/SCodecV2/SCodecStamp.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="SModule" displayName="SModule" projectFiles="true">
+          <itemPath>../../Share/SKernel/SModule/MConnectors.h</itemPath>
+          <itemPath>../../Share/SKernel/SModule/MFunctions.h</itemPath>
+          <itemPath>../../Share/SKernel/SModule/MProcess.h</itemPath>
+          <itemPath>../../Share/SKernel/SModule/MProcessTransform.cpp</itemPath>
+          <itemPath>../../Share/SKernel/SModule/MProcessYpsilon.cpp</itemPath>
+          <itemPath>../../Share/SKernel/SModule/MProperties.h</itemPath>
+        </logicalFolder>
+        <itemPath>../../Share/SKernel/SCache.h</itemPath>
+        <itemPath>../../Share/SKernel/SCodec.h</itemPath>
+        <itemPath>../../Share/SKernel/SConnector.cpp</itemPath>
+        <itemPath>../../Share/SKernel/SConnector.h</itemPath>
+        <itemPath>../../Share/SKernel/SFunction.h</itemPath>
+        <itemPath>../../Share/SKernel/SModule.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="Source" displayName="Source" projectFiles="true">
+      <itemPath>Source/main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="Space" displayName="Space" projectFiles="true">
+      <logicalFolder name="SKernel" displayName="SKernel" projectFiles="true">
+        <logicalFolder name="SAndroid" displayName="SAndroid" projectFiles="true">
+          <itemPath>../../Space/SKernel/SAndroid/SAndroidLog.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="SLinux" displayName="SLinux" projectFiles="true">
+          <itemPath>../../Space/SKernel/SLinux/SLinuxLog.h</itemPath>
+          <itemPath>../../Space/SKernel/SLinux/SLinuxTask.cpp</itemPath>
+          <itemPath>../../Space/SKernel/SLinux/SLinuxTask.h</itemPath>
+        </logicalFolder>
+        <itemPath>../../Space/SKernel/SAddress.cpp</itemPath>
+        <itemPath>../../Space/SKernel/SAddress.h</itemPath>
+        <itemPath>../../Space/SKernel/SBase64.cpp</itemPath>
+        <itemPath>../../Space/SKernel/SBase64.h</itemPath>
+        <itemPath>../../Space/SKernel/SBimap.h</itemPath>
+        <itemPath>../../Space/SKernel/SChain.h</itemPath>
+        <itemPath>../../Space/SKernel/SChannel.h</itemPath>
+        <itemPath>../../Space/SKernel/SCommand.h</itemPath>
+        <itemPath>../../Space/SKernel/SContainer.cpp</itemPath>
+        <itemPath>../../Space/SKernel/SContainer.h</itemPath>
+        <itemPath>../../Space/SKernel/SHash.cpp</itemPath>
+        <itemPath>../../Space/SKernel/SHash.h</itemPath>
+        <itemPath>../../Space/SKernel/SLocation.h</itemPath>
+        <itemPath>../../Space/SKernel/SLog.cpp</itemPath>
+        <itemPath>../../Space/SKernel/SLog.h</itemPath>
+        <itemPath>../../Space/SKernel/SMonitor.h</itemPath>
+        <itemPath>../../Space/SKernel/SProcess.h</itemPath>
+        <itemPath>../../Space/SKernel/SResource.h</itemPath>
+        <itemPath>../../Space/SKernel/SRoad.h</itemPath>
+        <itemPath>../../Space/SKernel/STask.h</itemPath>
+        <itemPath>../../Space/SKernel/STools.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="SMonitor" displayName="SMonitor" projectFiles="true">
+        <logicalFolder name="SLinux" displayName="SLinux" projectFiles="true">
+          <itemPath>../../Space/SMonitor/SLinux/SLinuxMonitor.h</itemPath>
+          <itemPath>../../Space/SMonitor/SLinux/SLinuxResourceMonitor.h</itemPath>
+          <itemPath>../../Space/SMonitor/SLinux/SLinuxRoadMonitor.h</itemPath>
+        </logicalFolder>
+        <itemPath>../../Space/SMonitor/SCommandMonitor.h</itemPath>
+        <itemPath>../../Space/SMonitor/SResourceMonitor.h</itemPath>
+        <itemPath>../../Space/SMonitor/SRoadMonitor.h</itemPath>
+        <itemPath>../../Space/SMonitor/SYpsilonMonitor.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="SResource" displayName="SResource" projectFiles="true">
+        <logicalFolder name="SLinux" displayName="SLinux" projectFiles="true">
+          <itemPath>../../Space/SResource/SLinux/SLinuxDirectory.cpp</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxDirectory.h</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxEvent.cpp</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxEvent.h</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxFile.cpp</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxFile.h</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxIRC.cpp</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxIRC.h</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxPoll.cpp</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxPoll.h</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxResource.cpp</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxResource.h</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxSocket.cpp</itemPath>
+          <itemPath>../../Space/SResource/SLinux/SLinuxSocket.h</itemPath>
+        </logicalFolder>
+        <itemPath>../../Space/SResource/SDirectoryResource.h</itemPath>
+        <itemPath>../../Space/SResource/SFileResource.h</itemPath>
+        <itemPath>../../Space/SResource/SIRCResource.h</itemPath>
+        <itemPath>../../Space/SResource/SLocalResource.h</itemPath>
+        <itemPath>../../Space/SResource/SPollResource.h</itemPath>
+        <itemPath>../../Space/SResource/SSocketResource.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>../../Share</Elem>
+    <Elem>../../Space</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <commandLine>-j2</commandLine>
+          <warningLevel>2</warningLevel>
+        </cTool>
+        <ccTool>
+          <standard>8</standard>
+          <incDir>
+            <pElem>../../Share</pElem>
+            <pElem>../../Space</pElem>
+          </incDir>
+          <commandLine>-D__LOG__</commandLine>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SDirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIDirConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIDirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SODirConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SODirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SOFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SOFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SOUdpConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SOUdpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SLocConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SUdpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIOMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIOStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SOFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SOFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SOStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SLocConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/STcpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SDirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SIrcConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIDirConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIDirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIIrcConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIIrcConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIOIrcConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIOIrcConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SODirConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SODirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SOFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SOFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SOIrcConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SOIrcConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SLocConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SIMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SIOMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SIOStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SIStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SOStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SLocConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/STcpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SFunction/SDecode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SFunction/SEncode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SBufferShare.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SBufferShare.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SMachine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SMachine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SStreamCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCache.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodec.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodec.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodecDecoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodecEncoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodecStamp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodecStamp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV2/SCodec.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV2/SCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV2/SCodecStamp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV2/SCodecStamp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SConnector.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SConnector.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SFunction.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MConnectors.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MFunctions.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MProcess.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MProcessTransform.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MProcessYpsilon.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MProperties.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SAddress.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SAddress.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SAndroid/SAndroidLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SBase64.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SBase64.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SBimap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SChain.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SChannel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SCommand.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SContainer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SContainer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SHash.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SHash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLinux/SLinuxLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLinux/SLinuxTask.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLinux/SLinuxTask.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLocation.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SMonitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SProcess.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SResource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SRoad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/STask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/STools.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SCommandMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SLinux/SLinuxMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SLinux/SLinuxResourceMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SLinux/SLinuxRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SResourceMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SYpsilonMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SDirectoryResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SFileResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SIRCResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxDirectory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxDirectory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxIRC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxIRC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxPoll.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxPoll.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxSocket.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxSocket.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLocalResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SPollResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SSocketResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="Scripts/Apps/fshare.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Apps/fsyshare.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Apps/syshare.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Apps/tshare.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_01.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_02.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_02_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_03.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_04.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_04_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_05.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_05_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_11.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_21.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_22.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_23.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_24.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_25.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_26.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_26_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_31.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_40.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_40_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_40_1_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_40_all.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_41.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_42.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_43.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_44.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_45.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_46.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_47.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_48.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_49.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_50.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_90.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_91.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_92.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_93.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_95.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_all.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/sys_share.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/sys_share_app.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/sys_share_format.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/sys_share_test.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/test.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out0" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out1" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out10" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out11" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out12" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out13" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out14" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out15" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out16" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out17" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out18" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out19" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out2" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out20" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out21" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out22" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out23" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out24" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out25" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out26" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out27" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out28" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out29" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out3" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out30" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out31" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out32" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out33" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out34" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out35" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out36" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out37" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out38" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out4" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out5" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out6" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out7" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out8" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out9" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Source/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SDirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIDirConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIDirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SODirConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SODirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SOFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SOFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SOUdpConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SOUdpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SLocConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SUdpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIOMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIOStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SOFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SOFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SOStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SLocConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/STcpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SDirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SIrcConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIDirConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIDirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIIrcConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIIrcConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIOIrcConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIOIrcConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SODirConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SODirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SOFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SOFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SOIrcConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SOIrcConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SLocConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SIMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SIOMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SIOStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SIStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SOStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SLocConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/STcpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SFunction/SDecode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SFunction/SEncode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SBufferShare.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SBufferShare.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SMachine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SMachine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SStreamCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCache.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodec.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodec.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodecDecoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodecEncoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodecStamp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodecStamp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV2/SCodec.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV2/SCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV2/SCodecStamp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV2/SCodecStamp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SConnector.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SConnector.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SFunction.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MConnectors.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MFunctions.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MProcess.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MProcessTransform.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MProcessYpsilon.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MProperties.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SAddress.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SAddress.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SAndroid/SAndroidLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SBase64.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SBase64.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SBimap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SChain.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SChannel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SCommand.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SContainer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SContainer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SHash.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SHash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLinux/SLinuxLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLinux/SLinuxTask.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLinux/SLinuxTask.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLocation.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SMonitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SProcess.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SResource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SRoad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/STask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/STools.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SCommandMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SLinux/SLinuxMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SLinux/SLinuxResourceMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SLinux/SLinuxRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SResourceMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SYpsilonMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SDirectoryResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SFileResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SIRCResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxDirectory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxDirectory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxIRC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxIRC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxPoll.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxPoll.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxSocket.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxSocket.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLocalResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SPollResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SSocketResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="Scripts/Apps/fshare.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Apps/fsyshare.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Apps/syshare.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Apps/tshare.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_01.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_02.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_02_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_03.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_04.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_04_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_05.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_05_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_11.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_21.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_22.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_23.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_24.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_25.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_26.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_26_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_31.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_40.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_40_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_40_1_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_40_all.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_41.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_42.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_43.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_44.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_45.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_46.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_47.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_48.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_49.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_50.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_90.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_91.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_92.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_93.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_95.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_all.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/sys_share.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/sys_share_app.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/sys_share_format.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/sys_share_test.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/test.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out0" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out1" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out10" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out11" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out12" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out13" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out14" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out15" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out16" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out17" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out18" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out19" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out2" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out20" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out21" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out22" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out23" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out24" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out25" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out26" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out27" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out28" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out29" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out3" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out30" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out31" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out32" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out33" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out34" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out35" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out36" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out37" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out38" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out4" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out5" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out6" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out7" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out8" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out9" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Source/main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug-64" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+          <incDir>
+            <pElem>../../Share</pElem>
+            <pElem>../../Space</pElem>
+          </incDir>
+          <commandLine>-m64</commandLine>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SDirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIDirConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIDirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SODirConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SODirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SOFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SOFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SOUdpConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SOUdpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SLocConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SUdpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIOMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIOStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SOFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SOFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SOStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/SLocConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SDecoded/SStream/STcpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SDirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SIrcConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIDirConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIDirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIIrcConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIIrcConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIOIrcConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SIOIrcConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SODirConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SODirConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SOFileConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SOFileConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SOIrcConnector.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SKernel/SOIrcConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SMessage/SLocConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SIMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SIOMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SIOStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SIStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SKernel/SOStreamConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/SLocConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SConnector/SEncoded/SStream/STcpConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SFunction/SDecode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SFunction/SEncode.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SBufferShare.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SBufferShare.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SMachine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SMachine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SInterface/SStreamCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCache.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodec.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodec.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodecDecoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodecEncoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodecStamp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV1/SCodecStamp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV2/SCodec.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV2/SCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV2/SCodecStamp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SCodecV2/SCodecStamp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SConnector.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SConnector.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SFunction.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MConnectors.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MFunctions.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MProcess.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MProcessTransform.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MProcessYpsilon.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Share/SKernel/SModule/MProperties.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SAddress.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SAddress.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SAndroid/SAndroidLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SBase64.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SBase64.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SBimap.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SChain.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SChannel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SCommand.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SContainer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SContainer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SHash.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SHash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLinux/SLinuxLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLinux/SLinuxTask.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLinux/SLinuxTask.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLocation.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SMonitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SProcess.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SResource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/SRoad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/STask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SKernel/STools.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SCommandMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SLinux/SLinuxMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SLinux/SLinuxResourceMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SLinux/SLinuxRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SResourceMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SMonitor/SYpsilonMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SDirectoryResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SFileResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SIRCResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxDirectory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxDirectory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxIRC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxIRC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxPoll.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxPoll.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxSocket.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLinux/SLinuxSocket.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SLocalResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SPollResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/SResource/SSocketResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="Scripts/Apps/fshare.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Apps/fsyshare.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Apps/syshare.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Apps/tshare.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_01.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_02.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_02_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_03.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_04.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_04_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_05.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_05_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_11.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_21.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_22.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_23.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_24.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_25.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_26.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_26_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_31.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_40.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_40_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_40_1_1.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_40_all.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_41.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_42.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_43.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_44.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_45.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_46.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_47.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_48.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_49.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_50.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_90.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_91.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_92.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_93.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_95.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/Tests/sys_share_all.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/sys_share.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/sys_share_app.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/sys_share_format.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/sys_share_test.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Scripts/test.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out0" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out1" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out10" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out11" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out12" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out13" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out14" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out15" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out16" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out17" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out18" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out19" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out2" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out20" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out21" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out22" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out23" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out24" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out25" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out26" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out27" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out28" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out29" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out3" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out30" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out31" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out32" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out33" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out34" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out35" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out36" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out37" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out38" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out4" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out5" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out6" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out7" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out8" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Servers/out9" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Source/main.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

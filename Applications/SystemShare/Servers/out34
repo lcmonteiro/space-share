@@ -1,0 +1,35 @@
+[
+    { "uri": "@irc.evolu7ion.fr:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.phrenzy.org:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@zoidberg.us.utonet.org:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.net-surf.eu:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@ircbar.hu.ircline.org:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@atlanta.ga.us.starlink.org:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@ashburn.va.us.undernet.org:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.boredicons.com:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@backup.knightirc.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@sundance.6irc.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.choopa.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.chanfix.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.seersirc.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@silph.co:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@sapphire.exchat.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.hagabard.com:6667/locate", "type": "irc", "verbose": 2 }, 
+
+    { "uri": "@trigun.dejatoons.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.amicachat.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@dynamo.digitalirc.org:6667/locate", "type": "irc", "verbose": 2 },
+
+ 
+    { "uri": "@eden.evilnet.org:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@bbc.fef.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@sapphire.sinsira.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.mzima.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@mimir.irc.worldnet.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@river.serenia.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@tweek.de.inside-irc.net:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.scenecritique.com:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.meganet.ru:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@budapest.hu.eu.undernet.org:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.infatech.net:6667/locate", "type": "irc", "verbose": 2 }
+]

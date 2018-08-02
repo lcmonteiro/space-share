@@ -1,0 +1,317 @@
+/* 
+ * File:   SDecode.h
+ * Author: Luis Monteiro
+ *
+ * Created on November 11, 2015, 9:49 AM
+ */
+#ifndef SDECODE_H
+#define	SDECODE_H
+/**
+ */
+#include <vector>
+#include <cmath>
+#include <sstream>
+/**
+ */
+#include "SKernel/SConnector.h"
+#include "SKernel/SCache.h"
+/**
+ *----------------------------------------------------------------------------------------------------------------------
+ * message context
+ *----------------------------------------------------------------------------------------------------------------------
+ */
+namespace Message {
+/**
+ * decode
+ */
+class SDecode : public STransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector> {
+        /**
+	 * define types
+	 */ 
+        using Super    = STransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
+        using Road     = typename Super::Road;
+        using Data     = typename Super::Data;
+        using Cache    = Message::SCache;
+public:
+	/**
+	 * SDecode 
+	 * @param stamp
+	 * @param nContainers
+	 */
+	SDecode(const Stamp& stamp, const uint32_t nContainers, const uint32_t energy = 3, const uint8_t verbose = 0)
+	: Super("Decode", energy, verbose), __cache(stamp, nContainers) {
+	}
+	SDecode(
+		const string& id, 
+		const Stamp& stamp, const uint32_t nContainers, const uint32_t energy = 3, const uint8_t verbose = 0
+	): Super(string("Decode(") + id + ")", energy, verbose), __cache(stamp, nContainers) {
+	}
+	/**
+	 * process
+	 */
+	void Drain(Road& out) {
+		/**
+		 * move cache
+		 */
+                __cache.Move();
+		/**
+		 * process
+		 */
+		processData(out);
+	}
+	/**
+	 * Recover
+	 */
+	void Recover() override {
+		/**
+		 * clear cache
+		 */
+                __cache.Clear();
+		/** 
+		 */
+		SFunction::Recover();
+	}
+protected:
+	/*-------------------------------------------------------------------------------------------------------------*
+	 * process Data
+	 *-------------------------------------------------------------------------------------------------------------*/
+	inline void processData(Road& out) {
+                for (Document& code: __cache.Pop()) {
+                        /**--------------------------------------------------------------------------------------------*
+                         * write
+                         *---------------------------------------------------------------------------------------------*/
+                        DEBUG("decode {" 
+                                << "p=" << code.GetPosition()
+                                << "}"
+                        );
+                        for (auto it = out.begin(), end = out.end(); it != end;) {
+                                try {
+                                        it->second->Write(code); ++it;
+                                } catch (ConnectorExceptionDEAD& ex) {
+                                        out.Repair(it);
+                                } catch (ConnectorExceptionTIMEOUT& ex) {
+                                }
+                        }
+                }
+	}
+	inline void processData(Data&& data, Road& out) {
+		DEBUG("receive= {" 
+                        << " p=" << data.GetPosition() 
+                        << " n=" << data.GetNumFrames() 
+                        << " s=" << data.size() 
+                        << " }"
+                );
+                /**-----------------------------------------------------------------------------------------------------
+                 * insert coded data
+                 *-----------------------------------------------------------------------------------------------------*/
+                if(__cache.Push(move(data))){
+                        /**
+                         * process
+                         */
+                        processData(out);
+                }
+	}
+private:
+	/**
+	 * container
+	 */
+	Cache __cache;
+};
+}
+/**
+ *----------------------------------------------------------------------------------------------------------------------
+ * stream context
+ *----------------------------------------------------------------------------------------------------------------------
+ */
+namespace Stream {
+/**
+ * decode
+ */
+class SDecode : public STransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector> {
+	/**
+	 * settings
+	 */
+	const size_t AUX_SIZE = 5;
+	/**
+	 * define types
+	 */ 
+        using Super    = STransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
+        using Road     = typename Super::Road;
+        using Data     = typename Super::Data;
+        using Cache    = Stream::SCache;
+public:
+	/**
+	 * SDecode Connector
+	 * @param nContainers
+	 * @param n
+	 */
+	SDecode(const Stamp& stamp, const uint32_t nContainers, const uint32_t energy = 3, const uint8_t verbose = 0)
+	: Super("Decode", energy, verbose), __cache(stamp, nContainers), __cache_aux(AUX_SIZE) {
+		for(auto&c :__cache_aux){ c = Cache(stamp, nContainers); }
+	}
+	SDecode(
+		const string& id, 
+		const Stamp& stamp, const uint32_t nContainers, const uint32_t energy = 3, const uint8_t verbose = 0
+	): Super(string("Decode(") + id + ")", energy, verbose), __cache(stamp, nContainers), __cache_aux(AUX_SIZE) {
+		for(auto&c :__cache_aux){ c = Cache(stamp, nContainers); }
+	}
+	/**
+	 * process
+	 */
+	void Drain(Road& out) {
+		/**
+		 * move main cache
+		 */
+		if(__cache_aux.front().Length()) {
+                        __cache.Move(); 
+                }
+                /**
+		 * move caches
+		 */
+		for(auto&c :__cache_aux) {
+                        c.Move(); 
+                }
+		/**
+		 * sort aux caches
+		 */
+		sortCache();
+		/**
+		 * try to swap caches 
+		 */
+		if (swapCache(__cache, __cache_aux.front())) {
+			/**
+                         * reset Connector
+                         */
+                        out.Reset();
+		} else {
+                        /**
+                         * process data
+                         */
+                        processData(out);
+                }
+	}
+	/**
+	 * Recover
+	 */
+	void Recover() override {
+		/**
+		 * clear cache
+		 */
+		__cache.Clear();
+		/**
+		 * clear aux cache
+		 */
+		for(auto&c :__cache_aux){
+                        c.Clear(); 
+                }
+		/** 
+		 */
+		SFunction::Recover();
+	}
+protected:
+	/*-------------------------------------------------------------------------------------------------------------*
+	 * process Data
+	 *-------------------------------------------------------------------------------------------------------------*/
+	inline void processData(Road& out){
+		 for (Document& code: __cache.Pop()) {
+			/**--------------------------------------------------------------------------------------------*
+			 * write
+			 *---------------------------------------------------------------------------------------------*/
+			DEBUG("decode::" << "pos=" << code.GetPosition());
+			for(auto it = out.begin(); it != out.end();){
+				try {
+					it->second->Write(code); ++it;
+				} catch (ConnectorExceptionDEAD& ex) {
+					out.Repair(it);
+				} catch (ConnectorExceptionTIMEOUT& ex){}
+			}
+			/**
+			 * reset cache aux
+			 */
+			DEBUG("decode::" << "clear all");
+			for(auto&c :__cache_aux){ c.Clear(); }
+		}
+	}
+	inline void processData(Data&& data, Road& out) {
+		/**----------------------------------------------------------------------------------------------------*
+		 * insert
+		 *-----------------------------------------------------------------------------------------------------*/
+		DEBUG("receive::" << "pos=" << data.GetPosition() << " n=" << data.GetNumFrames() << " s=" << data.size());
+		if (!__cache.Push(move(data))) {
+			/**
+			 * add to aux caches
+			 */
+			for (auto& c : __cache_aux) {
+				DEBUG("receive(aux)::" << "aux=" << c.Density() << " cur=" << __cache.Density());
+				if (c.Push(move(data))) {
+					/**
+					 * try to swap caches 
+					 */
+					if (swapCache(__cache.Shrink(c.Density()), c)) {
+						out.Reset();
+					}
+					return;
+				}
+			}
+			/**
+			 * sort aux caches
+			 */
+			sortCache();
+			/**
+			 * reset last aux cache
+			 */
+			__cache_aux.back().Clear();
+			__cache_aux.back().Push(move(data));
+			return;
+		}
+		/**----------------------------------------------------------------------------------------------------*
+		 * remove
+		 *-----------------------------------------------------------------------------------------------------*/
+		processData(out);
+	}
+	/**
+	 * sort cache 
+	 */
+	inline void sortCache(){
+		sort(__cache_aux.begin(), __cache_aux.end(), [](Cache& a, Cache& b) {
+			return a.Stronger(b);   
+		});
+	}
+	/**
+	 * try to swap caches
+	 */
+	inline bool swapCache(Cache& main, Cache& aux) {
+		if (aux.Stronger(main)) {
+			/**
+			 * log 
+			 */
+			WARNING("broken::"
+				<< " aux=" << aux.Density() << " cur=" << main.Density()
+				<< " aux=" << aux.Length() << " cur=" << main.Length()
+				<< " aux=" << aux.Weight() << " cur=" << main.Weight()
+			);
+			/**
+			 *  swap caches 
+			 */
+			swap(main, aux);
+			/**
+			 *  shrink 
+			 */
+			aux.Shrink();
+			return true;
+		}
+		return false;
+	}
+private:
+	/**
+	 * main container
+	 */
+	Cache __cache;
+	/**
+	 * aux containers
+	 */
+	vector<Cache> __cache_aux;
+};
+}
+#endif	/* SDECODE_H */
+

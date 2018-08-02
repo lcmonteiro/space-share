@@ -1,0 +1,484 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="SourceFiles" displayName="Source" projectFiles="true">
+      <itemPath>main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="Space" displayName="Space" projectFiles="true">
+      <logicalFolder name="Sinterface" displayName="Sinterface" projectFiles="true">
+      </logicalFolder>
+      <logicalFolder name="Skernel" displayName="Skernel" projectFiles="true">
+        <itemPath>../../Space/Skernel/SAddress.cpp</itemPath>
+        <itemPath>../../Space/Skernel/SAddress.h</itemPath>
+        <itemPath>../../Space/Skernel/SBase64.cpp</itemPath>
+        <itemPath>../../Space/Skernel/SBase64.h</itemPath>
+        <itemPath>../../Space/Skernel/SChannel.h</itemPath>
+        <itemPath>../../Space/Skernel/SContainer.cpp</itemPath>
+        <itemPath>../../Space/Skernel/SContainer.h</itemPath>
+        <itemPath>../../Space/Skernel/SFunction.h</itemPath>
+        <itemPath>../../Space/Skernel/SLog.h</itemPath>
+        <itemPath>../../Space/Skernel/SMonitor.h</itemPath>
+        <itemPath>../../Space/Skernel/SProcess.h</itemPath>
+        <itemPath>../../Space/Skernel/SResource.h</itemPath>
+        <itemPath>../../Space/Skernel/SRoad.h</itemPath>
+        <itemPath>../../Space/Skernel/SStream.cpp</itemPath>
+        <itemPath>../../Space/Skernel/SStream.h</itemPath>
+        <itemPath>../../Space/Skernel/STask.cpp</itemPath>
+        <itemPath>../../Space/Skernel/STask.h</itemPath>
+        <itemPath>../../Space/Skernel/STools.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Sstream" displayName="Sstream" projectFiles="true">
+        <logicalFolder name="Slinux" displayName="Slinux" projectFiles="true">
+          <itemPath>../../Space/Sstream/Slinux/SLinuxDir.cpp</itemPath>
+          <itemPath>../../Space/Sstream/Slinux/SLinuxDir.h</itemPath>
+          <itemPath>../../Space/Sstream/Slinux/SLinuxFile.cpp</itemPath>
+          <itemPath>../../Space/Sstream/Slinux/SLinuxFile.h</itemPath>
+          <itemPath>../../Space/Sstream/Slinux/SLinuxIRC.cpp</itemPath>
+          <itemPath>../../Space/Sstream/Slinux/SLinuxIRC.h</itemPath>
+          <itemPath>../../Space/Sstream/Slinux/SLinuxResource.cpp</itemPath>
+          <itemPath>../../Space/Sstream/Slinux/SLinuxResource.h</itemPath>
+          <itemPath>../../Space/Sstream/Slinux/SLinuxRoadMonitor.h</itemPath>
+          <itemPath>../../Space/Sstream/Slinux/SLinuxSocket.cpp</itemPath>
+          <itemPath>../../Space/Sstream/Slinux/SLinuxSocket.h</itemPath>
+        </logicalFolder>
+        <itemPath>../../Space/Sstream/SRoadMonitor.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+    <itemPath>format.py</itemPath>
+    <itemPath>/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers/servers</itemPath>
+    <itemPath>servers_debug</itemPath>
+    <itemPath>/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers/servers_result</itemPath>
+    <itemPath>/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers/servers_result_out</itemPath>
+    <itemPath>terminal.py</itemPath>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>../../Space</Elem>
+    <Elem>/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>../../Space</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="../../Space/Skernel/SAddress.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SAddress.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SBase64.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SBase64.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SChannel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SContainer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SContainer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SFunction.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SMonitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SProcess.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SResource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SRoad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SStream.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/STask.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/STask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/STools.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/SRoadMonitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxDir.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxDir.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxIRC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxIRC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxSocket.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxSocket.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers/servers"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers/servers_result"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers/servers_result_out"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="format.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="servers_debug" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="terminal.py" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="../../Space/Skernel/SAddress.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SAddress.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SBase64.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SBase64.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SChannel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SContainer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SContainer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SFunction.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SMonitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SProcess.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SResource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SRoad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SStream.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/STask.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/STask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/STools.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/SRoadMonitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxDir.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxDir.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxIRC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxIRC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxSocket.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxSocket.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers/servers"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers/servers_result"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers/servers_result_out"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="format.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="servers_debug" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="terminal.py" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Debug-64" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <ccTool>
+          <standard>8</standard>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>../../Space</pElem>
+          </incDir>
+          <commandLine>-m64</commandLine>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="../../Space/Skernel/SAddress.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../../Space/Skernel/SAddress.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SBase64.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../../Space/Skernel/SBase64.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SChannel.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SContainer.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../../Space/Skernel/SContainer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SFunction.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SMonitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SProcess.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SResource.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SRoad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/SStream.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../../Space/Skernel/SStream.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/STask.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../../Space/Skernel/STask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Skernel/STools.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/SRoadMonitor.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxDir.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxDir.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxIRC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxIRC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxSocket.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+      </item>
+      <item path="../../Space/Sstream/Slinux/SLinuxSocket.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers/servers"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers/servers_result"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="/home/monteiro/workspace/M2Bee/C++/ShareSpace2.0/Tests/TestIrcServers/servers_result_out"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="format.py" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="servers_debug" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="terminal.py" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

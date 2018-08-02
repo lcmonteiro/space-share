@@ -1,0 +1,12 @@
+# install
+chmod +x systemshare tshare
+cp systemshare tshare /usr/bin/
+# help
+tshare -h
+# create file
+tshare -e -t name -p /tmp/out1 /tmp/out2 /tmp/out3 -r 1
+# view
+tshare -t name
+# edit
+tshare -e -t name
+ 

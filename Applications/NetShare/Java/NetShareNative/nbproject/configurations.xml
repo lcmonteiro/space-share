@@ -1,0 +1,3917 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="100">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles" displayName="Header" projectFiles="true">
+      <itemPath>NetShareJNI.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="Kernel" displayName="Kernel" projectFiles="true">
+      <itemPath>../../Kernel/NetMachine.cpp</itemPath>
+      <itemPath>../../Kernel/NetMachine.h</itemPath>
+      <itemPath>../../Kernel/NetServers.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="Share" displayName="Share" projectFiles="true">
+      <logicalFolder name="Sfunction" displayName="Sfunction" projectFiles="true">
+        <itemPath>../../../../Share/Sfunction/SBreak.h</itemPath>
+        <itemPath>../../../../Share/Sfunction/SDecode.h</itemPath>
+        <itemPath>../../../../Share/Sfunction/SEncode.h</itemPath>
+        <itemPath>../../../../Share/Sfunction/SLoading.h</itemPath>
+        <itemPath>../../../../Share/Sfunction/SSaving.h</itemPath>
+        <itemPath>../../../../Share/Sfunction/SYpsilon.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Sinterface" displayName="Sinterface" projectFiles="true">
+        <itemPath>../../../../Share/Sinterface/SMachine.cpp</itemPath>
+        <itemPath>../../../../Share/Sinterface/SMachine.h</itemPath>
+        <itemPath>../../../../Share/Sinterface/SShare.cpp</itemPath>
+        <itemPath>../../../../Share/Sinterface/SShare.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Skernel" displayName="Skernel" projectFiles="true">
+        <logicalFolder name="SCodecV1" displayName="SCodecV1" projectFiles="true">
+          <itemPath>../../../../Share/Skernel/SCodecV1/SCodec.cpp</itemPath>
+          <itemPath>../../../../Share/Skernel/SCodecV1/SCodec.h</itemPath>
+          <itemPath>../../../../Share/Skernel/SCodecV1/SCodecDecoder.h</itemPath>
+          <itemPath>../../../../Share/Skernel/SCodecV1/SCodecEncoder.h</itemPath>
+          <itemPath>../../../../Share/Skernel/SCodecV1/SCodecStamp.cpp</itemPath>
+          <itemPath>../../../../Share/Skernel/SCodecV1/SCodecStamp.h</itemPath>
+        </logicalFolder>
+        <itemPath>../../../../Share/Skernel/SCache.h</itemPath>
+        <itemPath>../../../../Share/Skernel/SCodecI.h</itemPath>
+        <itemPath>../../../../Share/Skernel/SFunction.h</itemPath>
+        <itemPath>../../../../Share/Skernel/SStream.cpp</itemPath>
+        <itemPath>../../../../Share/Skernel/SStream.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Sstream" displayName="Sstream" projectFiles="true">
+        <logicalFolder name="Scode" displayName="Scode" projectFiles="true">
+          <logicalFolder name="Sbase" displayName="Sbase" projectFiles="true">
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SIDirStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SIDirStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SIFileStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SIFileStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SIIrcStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SIIrcStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SITcpStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SITcpStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SODirStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SODirStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SOFileStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SOFileStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SOIrcStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SOIrcStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SOTcpStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Scode/Sbase/SOTcpStream.h</itemPath>
+          </logicalFolder>
+          <itemPath>../../../../Share/Sstream/Scode/SDirStream.h</itemPath>
+          <itemPath>../../../../Share/Sstream/Scode/SFileStream.h</itemPath>
+          <itemPath>../../../../Share/Sstream/Scode/SIrcStream.h</itemPath>
+          <itemPath>../../../../Share/Sstream/Scode/STcpStream.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="Sdata" displayName="Sdata" projectFiles="true">
+          <logicalFolder name="Sbase" displayName="Sbase" projectFiles="true">
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SIFileStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SIFileStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SITcpStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SITcpStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SOFileStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SOFileStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.h</itemPath>
+          </logicalFolder>
+          <itemPath>../../../../Share/Sstream/Sdata/SFileStream.h</itemPath>
+          <itemPath>../../../../Share/Sstream/Sdata/STcpStream.h</itemPath>
+          <itemPath>../../../../Share/Sstream/Sdata/SUdpStream.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="Sitem" displayName="Sitem" projectFiles="true">
+          <logicalFolder name="Sbase" displayName="Sbase" projectFiles="true">
+            <itemPath>../../../../Share/Sstream/Sitem/Sbase/SIDirStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sitem/Sbase/SIDirStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Sitem/Sbase/SIFileStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sitem/Sbase/SIFileStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Sitem/Sbase/SODirStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sitem/Sbase/SODirStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Sitem/Sbase/SOFileStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sitem/Sbase/SOFileStream.h</itemPath>
+            <itemPath>../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.cpp</itemPath>
+            <itemPath>../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.h</itemPath>
+          </logicalFolder>
+          <itemPath>../../../../Share/Sstream/Sitem/SDirStream.h</itemPath>
+          <itemPath>../../../../Share/Sstream/Sitem/SFileStream.h</itemPath>
+          <itemPath>../../../../Share/Sstream/Sitem/SUdpStream.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="SourceFiles" displayName="Source" projectFiles="true">
+      <itemPath>NetShareJNI.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="Space" displayName="Space" projectFiles="true">
+      <logicalFolder name="Skernel" displayName="Skernel" projectFiles="true">
+        <logicalFolder name="Sandroid" displayName="Sandroid" projectFiles="true">
+          <itemPath>../../../../Space/Skernel/Sandroid/SAndroidLog.h</itemPath>
+        </logicalFolder>
+        <logicalFolder name="Slinux" displayName="Slinux" projectFiles="true">
+          <itemPath>../../../../Space/Skernel/Slinux/SLinuxLog.h</itemPath>
+          <itemPath>../../../../Space/Skernel/Slinux/SLinuxTask.cpp</itemPath>
+          <itemPath>../../../../Space/Skernel/Slinux/SLinuxTask.h</itemPath>
+        </logicalFolder>
+        <itemPath>../../../../Space/Skernel/SAddress.cpp</itemPath>
+        <itemPath>../../../../Space/Skernel/SAddress.h</itemPath>
+        <itemPath>../../../../Space/Skernel/SBase64.cpp</itemPath>
+        <itemPath>../../../../Space/Skernel/SBase64.h</itemPath>
+        <itemPath>../../../../Space/Skernel/SChannel.h</itemPath>
+        <itemPath>../../../../Space/Skernel/SContainer.cpp</itemPath>
+        <itemPath>../../../../Space/Skernel/SContainer.h</itemPath>
+        <itemPath>../../../../Space/Skernel/SHash.cpp</itemPath>
+        <itemPath>../../../../Space/Skernel/SHash.h</itemPath>
+        <itemPath>../../../../Space/Skernel/SLocation.h</itemPath>
+        <itemPath>../../../../Space/Skernel/SLog.cpp</itemPath>
+        <itemPath>../../../../Space/Skernel/SLog.h</itemPath>
+        <itemPath>../../../../Space/Skernel/SMonitor.h</itemPath>
+        <itemPath>../../../../Space/Skernel/SProcess.h</itemPath>
+        <itemPath>../../../../Space/Skernel/SResource.h</itemPath>
+        <itemPath>../../../../Space/Skernel/SRoad.h</itemPath>
+        <itemPath>../../../../Space/Skernel/STask.h</itemPath>
+        <itemPath>../../../../Space/Skernel/STools.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Smonitor" displayName="Smonitor" projectFiles="true">
+        <logicalFolder name="Slinux" displayName="Slinux" projectFiles="true">
+          <itemPath>../../../../Space/Smonitor/Slinux/SLinuxLocationMonitor.h</itemPath>
+          <itemPath>../../../../Space/Smonitor/Slinux/SLinuxMonitor.h</itemPath>
+          <itemPath>../../../../Space/Smonitor/Slinux/SLinuxRoadMonitor.h</itemPath>
+        </logicalFolder>
+        <itemPath>../../../../Space/Smonitor/SLocationMonitor.h</itemPath>
+        <itemPath>../../../../Space/Smonitor/SRoadMonitor.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="Sresource" displayName="Sresource" projectFiles="true">
+        <logicalFolder name="Slinux" displayName="Slinux" projectFiles="true">
+          <itemPath>../../../../Space/Sresource/Slinux/SLinuxDirectory.cpp</itemPath>
+          <itemPath>../../../../Space/Sresource/Slinux/SLinuxDirectory.h</itemPath>
+          <itemPath>../../../../Space/Sresource/Slinux/SLinuxEvent.cpp</itemPath>
+          <itemPath>../../../../Space/Sresource/Slinux/SLinuxEvent.h</itemPath>
+          <itemPath>../../../../Space/Sresource/Slinux/SLinuxFile.cpp</itemPath>
+          <itemPath>../../../../Space/Sresource/Slinux/SLinuxFile.h</itemPath>
+          <itemPath>../../../../Space/Sresource/Slinux/SLinuxIRC.cpp</itemPath>
+          <itemPath>../../../../Space/Sresource/Slinux/SLinuxIRC.h</itemPath>
+          <itemPath>../../../../Space/Sresource/Slinux/SLinuxResource.cpp</itemPath>
+          <itemPath>../../../../Space/Sresource/Slinux/SLinuxResource.h</itemPath>
+          <itemPath>../../../../Space/Sresource/Slinux/SLinuxSocket.cpp</itemPath>
+          <itemPath>../../../../Space/Sresource/Slinux/SLinuxSocket.h</itemPath>
+        </logicalFolder>
+        <itemPath>../../../../Space/Sresource/SDirectoryResource.h</itemPath>
+        <itemPath>../../../../Space/Sresource/SFileResource.h</itemPath>
+        <itemPath>../../../../Space/Sresource/SIRCResource.h</itemPath>
+        <itemPath>../../../../Space/Sresource/SSocketResource.h</itemPath>
+      </logicalFolder>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>../../Kernel</Elem>
+    <Elem>../../../../Share</Elem>
+    <Elem>../../../../Space</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <commandlineTool>gcc</commandlineTool>
+        </cTool>
+        <ccTool>
+          <standard>8</standard>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>../../Kernel</pElem>
+            <pElem>../../../../Share</pElem>
+            <pElem>../../../../Space</pElem>
+            <pElem>/home/monteiro/android-studio/jre/include</pElem>
+            <pElem>/home/monteiro/android-studio/jre/include/linux</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <commandlineTool>g++</commandlineTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="../../../../Share/Sfunction/SBreak.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SDecode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SEncode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SLoading.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SSaving.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SYpsilon.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SMachine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SMachine.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SShare.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SShare.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCache.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecI.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodec.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecDecoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecEncoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecStamp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecStamp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SFunction.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/STcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIDirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SITcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SITcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SODirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SODirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/STcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/SUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SITcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SITcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIDirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SODirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SODirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SAddress.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SAddress.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SBase64.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SBase64.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SChannel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SContainer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SContainer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SHash.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SHash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLocation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SProcess.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SRoad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/STask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/STools.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Sandroid/SAndroidLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxTask.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxTask.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/SLocationMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/SRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxLocationMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SDirectoryResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SFileResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SIRCResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SSocketResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxDirectory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxDirectory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxIRC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxIRC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxSocket.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxSocket.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Kernel/NetMachine.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Kernel/NetMachine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Kernel/NetServers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="NetShareJNI.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="NetShareJNI.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <standard>8</standard>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>../../Kernel</pElem>
+            <pElem>../../../../Share</pElem>
+            <pElem>../../../../Space</pElem>
+            <pElem>/home/monteiro/android-studio/jre/include</pElem>
+            <pElem>/home/monteiro/android-studio/jre/include/linux</pElem>
+          </incDir>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="../../../../Share/Sfunction/SBreak.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SDecode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SEncode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SLoading.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SSaving.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SYpsilon.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SMachine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SMachine.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SShare.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SShare.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCache.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecI.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodec.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecDecoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecEncoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecStamp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecStamp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SFunction.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/STcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIDirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SITcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SITcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SODirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SODirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/STcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/SUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SITcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SITcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIDirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SODirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SODirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SAddress.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SAddress.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SBase64.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SBase64.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SChannel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SContainer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SContainer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SHash.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SHash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLocation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SProcess.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SRoad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/STask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/STools.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Sandroid/SAndroidLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxTask.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxTask.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/SLocationMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/SRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxLocationMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SDirectoryResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SFileResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SIRCResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SSocketResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxDirectory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxDirectory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxIRC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxIRC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxSocket.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxSocket.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Kernel/NetMachine.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../Kernel/NetMachine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Kernel/NetServers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="NetShareJNI.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="NetShareJNI.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="AndroidARM64" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <commandlineTool>/opt/android-arm64/bin/aarch64-linux-android-gcc</commandlineTool>
+        </cTool>
+        <ccTool>
+          <standard>8</standard>
+          <commandlineTool>/opt/android-arm64/bin/aarch64-linux-android-g++</commandlineTool>
+          <incDir>
+            <pElem>../../Kernel</pElem>
+            <pElem>../../../../Share</pElem>
+            <pElem>../../../../Space</pElem>
+            <pElem>/home/monteiro/android-studio/jre/include</pElem>
+            <pElem>/home/monteiro/android-studio/jre/include/linux</pElem>
+          </incDir>
+        </ccTool>
+        <asmTool>
+          <commandlineTool>/opt/android-arm64/bin/aarch64-linux-android-as</commandlineTool>
+        </asmTool>
+        <linkerTool>
+          <commandlineTool>/opt/android-arm64/bin/aarch64-linux-android-g++</commandlineTool>
+          <commandLine>-llog -D__LOG__</commandLine>
+        </linkerTool>
+      </compileType>
+      <item path="../../../../Share/Sfunction/SBreak.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SDecode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SEncode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SLoading.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SSaving.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SYpsilon.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SMachine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SMachine.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SShare.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SShare.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCache.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecI.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodec.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecDecoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecEncoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecStamp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecStamp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SFunction.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/STcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIDirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SITcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SITcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SODirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SODirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/STcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/SUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SITcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SITcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIDirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SODirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SODirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SAddress.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SAddress.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SBase64.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SBase64.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SChannel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SContainer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SContainer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SHash.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SHash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLocation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SProcess.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SRoad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/STask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/STools.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Sandroid/SAndroidLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxTask.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxTask.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/SLocationMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/SRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxLocationMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SDirectoryResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SFileResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SIRCResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SSocketResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxDirectory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxDirectory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxIRC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxIRC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxSocket.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxSocket.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Kernel/NetMachine.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../../Kernel/NetMachine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Kernel/NetServers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="NetShareJNI.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="NetShareJNI.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="AndroidARM64-Release" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+          <commandlineTool>/opt/android-arm64/bin/aarch64-linux-android-gcc</commandlineTool>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <standard>8</standard>
+          <commandlineTool>/opt/android-arm64/bin/aarch64-linux-android-g++</commandlineTool>
+          <incDir>
+            <pElem>../../Kernel</pElem>
+            <pElem>../../../../Share</pElem>
+            <pElem>../../../../Space</pElem>
+            <pElem>/home/monteiro/android-studio/jre/include</pElem>
+            <pElem>/home/monteiro/android-studio/jre/include/linux</pElem>
+          </incDir>
+        </ccTool>
+        <asmTool>
+          <commandlineTool>/opt/android-arm64/bin/aarch64-linux-android-as</commandlineTool>
+        </asmTool>
+        <linkerTool>
+          <stripSymbols>true</stripSymbols>
+          <commandlineTool>/opt/android-arm64/bin/aarch64-linux-android-g++</commandlineTool>
+        </linkerTool>
+      </compileType>
+      <item path="../../../../Share/Sfunction/SBreak.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SDecode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SEncode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SLoading.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SSaving.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SYpsilon.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SMachine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SMachine.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SShare.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SShare.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCache.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecI.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodec.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecDecoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecEncoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecStamp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecStamp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SFunction.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/STcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIDirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SITcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SITcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SODirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SODirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/STcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/SUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SITcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SITcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIDirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SODirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SODirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SAddress.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SAddress.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SBase64.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SBase64.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SChannel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SContainer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SContainer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SHash.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SHash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLocation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SProcess.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SRoad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/STask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/STools.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Sandroid/SAndroidLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxTask.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxTask.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/SLocationMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/SRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxLocationMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SDirectoryResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SFileResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SIRCResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SSocketResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxDirectory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxDirectory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxIRC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxIRC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxSocket.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxSocket.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Kernel/NetMachine.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../../Kernel/NetMachine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Kernel/NetServers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="NetShareJNI.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="NetShareJNI.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="AndroidARM64-Release2" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+          <commandlineTool>/opt/android-arm64/bin/aarch64-linux-android-gcc</commandlineTool>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <standard>8</standard>
+          <commandlineTool>/opt/android-arm64/bin/aarch64-linux-android-g++</commandlineTool>
+          <incDir>
+            <pElem>../../Kernel</pElem>
+            <pElem>../../../../Share</pElem>
+            <pElem>../../../../Space</pElem>
+            <pElem>/home/monteiro/android-studio/jre/include</pElem>
+            <pElem>/home/monteiro/android-studio/jre/include/linux</pElem>
+          </incDir>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+        <linkerTool>
+          <stripSymbols>true</stripSymbols>
+          <commandlineTool>/opt/android-arm64/bin/aarch64-linux-android-g++</commandlineTool>
+        </linkerTool>
+      </compileType>
+      <item path="../../../../Share/Sfunction/SBreak.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SDecode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SEncode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SLoading.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SSaving.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SYpsilon.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SMachine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SMachine.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SShare.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SShare.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCache.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecI.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodec.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecDecoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecEncoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecStamp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecStamp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SFunction.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/STcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIDirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SITcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SITcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SODirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SODirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/STcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/SUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SITcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SITcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIDirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SODirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SODirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SAddress.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SAddress.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SBase64.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SBase64.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SChannel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SContainer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SContainer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SHash.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SHash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLocation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SProcess.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SRoad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/STask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/STools.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Sandroid/SAndroidLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxTask.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxTask.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/SLocationMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/SRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxLocationMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SDirectoryResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SFileResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SIRCResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SSocketResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxDirectory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxDirectory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxIRC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxIRC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxSocket.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxSocket.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Kernel/NetMachine.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../../Kernel/NetMachine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Kernel/NetServers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="NetShareJNI.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="NetShareJNI.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+    <conf name="AndroidARM32-Release" type="2">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+          <commandlineTool>/opt/android-arm/bin/arm-linux-androideabi-gcc</commandlineTool>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+          <standard>8</standard>
+          <commandlineTool>/opt/android-arm/bin/arm-linux-androideabi-g++</commandlineTool>
+          <incDir>
+            <pElem>../../Kernel</pElem>
+            <pElem>../../../../Share</pElem>
+            <pElem>../../../../Space</pElem>
+            <pElem>/home/monteiro/android-studio/jre/include</pElem>
+            <pElem>/home/monteiro/android-studio/jre/include/linux</pElem>
+          </incDir>
+        </ccTool>
+        <asmTool>
+          <commandlineTool>/opt/android-arm64/bin/aarch64-linux-android-as</commandlineTool>
+        </asmTool>
+        <linkerTool>
+          <stripSymbols>true</stripSymbols>
+          <commandlineTool>/opt/android-arm/bin/arm-linux-androideabi-g++</commandlineTool>
+        </linkerTool>
+      </compileType>
+      <item path="../../../../Share/Sfunction/SBreak.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SDecode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SEncode.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SLoading.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SSaving.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sfunction/SYpsilon.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SMachine.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SMachine.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SShare.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sinterface/SShare.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCache.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecI.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodec.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodec.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecDecoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecEncoder.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecStamp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SCodecV1/SCodecStamp.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SFunction.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Skernel/SStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/SIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/STcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIDirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SIOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SITcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SITcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SODirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SODirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOIrcStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOIrcStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Scode/Sbase/SOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/STcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/SUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SITcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SITcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SIUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOTcpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sdata/Sbase/SOUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/SUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIDirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIDirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SIUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SODirStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SODirStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOFileStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOFileStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Share/Sstream/Sitem/Sbase/SOUdpStream.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SAddress.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SAddress.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SBase64.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SBase64.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SChannel.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SContainer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SContainer.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SHash.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SHash.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLocation.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLog.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SLog.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SProcess.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/SRoad.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/STask.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/STools.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Sandroid/SAndroidLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxLog.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxTask.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Skernel/Slinux/SLinuxTask.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/SLocationMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/SRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxLocationMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Smonitor/Slinux/SLinuxRoadMonitor.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SDirectoryResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SFileResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SIRCResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/SSocketResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxDirectory.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxDirectory.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxEvent.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxEvent.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxFile.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxFile.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxIRC.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxIRC.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxResource.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxResource.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxSocket.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+      </item>
+      <item path="../../../../Space/Sresource/Slinux/SLinuxSocket.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="../../Kernel/NetMachine.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="../../Kernel/NetMachine.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../../Kernel/NetServers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="NetShareJNI.cpp" ex="false" tool="1" flavor2="8">
+      </item>
+      <item path="NetShareJNI.h" ex="false" tool="3" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

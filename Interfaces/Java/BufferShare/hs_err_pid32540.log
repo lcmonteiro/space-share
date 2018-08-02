@@ -1,0 +1,556 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x6324bbfe, pid=32540, tid=3060812608
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_65-b17) (build 1.8.0_65-b17)
+# Java VM: Java HotSpot(TM) Server VM (25.65-b01 mixed mode linux-x86 )
+# Problematic frame:
+# C  [libShareNative.so+0xdcbfe]  void std::swap<unsigned char*>(unsigned char*&, unsigned char*&)+0x4a
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0xb6507400):  JavaThread "main" [_thread_in_native, id=32542, stack(0xb66b4000,0xb6705000)]
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 1 (SEGV_MAPERR), si_addr: 0x00000000
+
+Registers:
+EAX=0x00000000, EBX=0x633a5000, ECX=0x00000000, EDX=0x00000000
+ESP=0xb6703d80, EBP=0xb6703da8, ESI=0xb6703ed4, EDI=0xb6507400
+EIP=0x6324bbfe, EFLAGS=0x00010282, CR2=0x00000000
+
+Top of Stack: (sp=0xb6703d80)
+0xb6703d80:   63bc3f68 6324bb5e 00000000 b6703e70
+0xb6703d90:   b6703e70 00000000 00000000 1e96ba00
+0xb6703da0:   b6703dd0 633a5000 b6703dc8 632496d6
+0xb6703db0:   b6703e70 00000000 b6703e08 632496c0
+0xb6703dc0:   b6703e30 633a5000 b6703de8 6324791a
+0xb6703dd0:   b6703e70 00000000 b6703e54 632478d8
+0xb6703de0:   00000038 633a5000 b6703e08 63245f6f
+0xb6703df0:   b6703e70 00000000 00000000 63245f4c 
+
+Instructions: (pc=0x6324bbfe)
+0x6324bbde:   ec 0c ff 75 e4 e8 a8 fc fe ff 83 c4 10 8b 00 89
+0x6324bbee:   45 f0 83 ec 0c ff 75 e0 e8 95 fc fe ff 83 c4 10
+0x6324bbfe:   8b 10 8b 45 e4 89 10 83 ec 0c 8d 45 f0 50 e8 7f
+0x6324bc0e:   fc fe ff 83 c4 10 8b 10 8b 45 e0 89 10 90 8b 45 
+
+Register to memory mapping:
+
+EAX=0x00000000 is an unknown value
+EBX=0x633a5000: <offset 0x236000> in /media/data/Workspace/M2Bee/C++/ShareSpace/Interfaces/Java/ShareNative/dist/Debug/GNU-Linux/libShareNative.so at 0x6316f000
+ECX=0x00000000 is an unknown value
+EDX=0x00000000 is an unknown value
+ESP=0xb6703d80 is pointing into the stack for thread: 0xb6507400
+EBP=0xb6703da8 is pointing into the stack for thread: 0xb6507400
+ESI=0xb6703ed4 is pointing into the stack for thread: 0xb6507400
+EDI=0xb6507400 is a thread
+
+
+Stack: [0xb66b4000,0xb6705000],  sp=0xb6703d80,  free space=319k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libShareNative.so+0xdcbfe]  void std::swap<unsigned char*>(unsigned char*&, unsigned char*&)+0x4a
+C  [libShareNative.so+0xda6d6]  std::_Vector_base<unsigned char, std::allocator<unsigned char> >::_Vector_impl::_M_swap_data(std::_Vector_base<unsigned char, std::allocator<unsigned char> >::_Vector_impl&)+0x22
+C  [libShareNative.so+0xd891a]  std::_Vector_base<unsigned char, std::allocator<unsigned char> >::_Vector_base(std::_Vector_base<unsigned char, std::allocator<unsigned char> >&&)+0x4e
+C  [libShareNative.so+0xd6f6f]  std::vector<unsigned char, std::allocator<unsigned char> >::vector(std::vector<unsigned char, std::allocator<unsigned char> >&&)+0x2f
+C  [libShareNative.so+0xd56db]  GetFrame(unsigned int)+0x74
+C  [libShareNative.so+0x118a05]  Java_Share_BufferShare_GetFrame+0x6f
+J 81  Share.BufferShare.GetFrame(I)[B (0 bytes) @ 0xa75c8b68 [0xa75c8ae0+0x88]
+J 117 C2 Share.IBufferShare$1.next()Ljava/lang/Object; (5 bytes) @ 0xa75d7ff0 [0xa75d7fc0+0x30]
+j  Share.Test.main([Ljava/lang/String;)V+167
+v  ~StubRoutines::call_stub
+V  [libjvm.so+0x4fbd4f]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x101f
+V  [libjvm.so+0x74bf89]  os::os_exception_wrapper(void (*)(JavaValue*, methodHandle*, JavaCallArguments*, Thread*), JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x19
+V  [libjvm.so+0x4fa31f]  JavaCalls::call(JavaValue*, methodHandle, JavaCallArguments*, Thread*)+0x2f
+V  [libjvm.so+0x5444cf]  jni_invoke_static(JNIEnv_*, JavaValue*, _jobject*, JNICallType, _jmethodID*, JNI_ArgumentPusher*, Thread*)+0x38f
+V  [libjvm.so+0x556f4f]  jni_CallStaticVoidMethod+0xdf
+C  [libjli.so+0x7666]  JavaMain+0x8d6
+C  [libpthread.so.0+0x62b5]  start_thread+0xe5
+C  [libc.so.6+0xe716e]  clone+0x6e
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J 81  Share.BufferShare.GetFrame(I)[B (0 bytes) @ 0xa75c8b24 [0xa75c8ae0+0x44]
+J 117 C2 Share.IBufferShare$1.next()Ljava/lang/Object; (5 bytes) @ 0xa75d7ff0 [0xa75d7fc0+0x30]
+j  Share.Test.main([Ljava/lang/String;)V+167
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x63baac00 JavaThread "Service Thread" daemon [_thread_blocked, id=32556, stack(0x6342c000,0x6347d000)]
+  0x63ba7800 JavaThread "C1 CompilerThread2" daemon [_thread_blocked, id=32555, stack(0x6347d000,0x634fe000)]
+  0x63ba6400 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=32554, stack(0x634fe000,0x6357f000)]
+  0x63ba4400 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=32553, stack(0x6357f000,0x63600000)]
+  0x63ba2c00 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=32552, stack(0x63a0d000,0x63a5e000)]
+  0x63b85c00 JavaThread "Finalizer" daemon [_thread_in_native, id=32551, stack(0x63a5e000,0x63aaf000)]
+  0x63b84400 JavaThread "Reference Handler" daemon [_thread_in_Java, id=32550, stack(0x63aaf000,0x63b00000)]
+=>0xb6507400 JavaThread "main" [_thread_in_native, id=32542, stack(0xb66b4000,0xb6705000)]
+
+Other Threads:
+  0x63b81000 VMThread [stack: 0x63c0c000,0x63c8d000] [id=32549]
+  0x63bb5c00 WatcherThread [stack: 0x633ab000,0x6342c000] [id=32557]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 19200K, used 1707K [0x91ac0000, 0x93000000, 0xa7000000)
+  eden space 16640K, 5% used [0x91ac0000,0x91bb8ca0,0x92b00000)
+  from space 2560K, 27% used [0x92b00000,0x92bb2030,0x92d80000)
+  to   space 2560K, 0% used [0x92d80000,0x92d80000,0x93000000)
+ ParOldGen       total 43776K, used 4K [0x67000000, 0x69ac0000, 0x91ac0000)
+  object space 43776K, 0% used [0x67000000,0x67001000,0x69ac0000)
+ Metaspace       used 1660K, capacity 2240K, committed 2328K, reserved 4400K
+
+Card table byte_map: [0x66dff000,0x67000000] byte_map_base: 0x66ac7000
+
+Marking Bits: (ParMarkBitMap*) 0xb7158380
+ Begin Bits: [0x64700000, 0x65700000)
+ End Bits:   [0x65700000, 0x66700000)
+
+Polling page: 0xb775c000
+
+CodeCache: size=245760Kb used=912Kb max_used=924Kb free=244847Kb
+ bounds [0xa7500000, 0xa7740000, 0xb6500000]
+ total_blobs=290 nmethods=137 adapters=69
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 50.014 Thread 0x63ba7800 nmethod 129 0xa75dbf08 code [0xa75dc020, 0xa75dc0e0]
+Event: 50.014 Thread 0x63ba7800  130       3       java.lang.ref.ReferenceQueue::remove (6 bytes)
+Event: 50.014 Thread 0x63ba7800 nmethod 130 0xa75cfd88 code [0xa75cfea0, 0xa75d000c]
+Event: 50.014 Thread 0x63ba7800  131       3       java.lang.ref.Finalizer::access$100 (6 bytes)
+Event: 50.014 Thread 0x63ba7800 nmethod 131 0xa75cfb08 code [0xa75cfc20, 0xa75cfcec]
+Event: 50.014 Thread 0x63ba7800  132   !   3       java.lang.ref.Finalizer::runFinalizer (62 bytes)
+Event: 50.015 Thread 0x63ba4400  133   !   4       java.lang.ref.ReferenceQueue::enqueue (119 bytes)
+Event: 50.015 Thread 0x63ba7800 nmethod 132 0xa75dd908 code [0xa75ddaa0, 0xa75de158]
+Event: 50.015 Thread 0x63ba7800  134       3       Share.IBufferShare::finalize (22 bytes)
+Event: 50.016 Thread 0x63ba7800 nmethod 134 0xa75dd108 code [0xa75dd280, 0xa75dd6c4]
+
+GC Heap History (2 events):
+Event: 49.994 GC heap before
+{Heap before GC invocations=1 (full 0):
+ PSYoungGen      total 19200K, used 16640K [0x91ac0000, 0x93000000, 0xa7000000)
+  eden space 16640K, 100% used [0x91ac0000,0x92b00000,0x92b00000)
+  from space 2560K, 0% used [0x92d80000,0x92d80000,0x93000000)
+  to   space 2560K, 0% used [0x92b00000,0x92b00000,0x92d80000)
+ ParOldGen       total 43776K, used 0K [0x67000000, 0x69ac0000, 0x91ac0000)
+  object space 43776K, 0% used [0x67000000,0x67000000,0x69ac0000)
+ Metaspace       used 1655K, capacity 2240K, committed 2328K, reserved 4400K
+Event: 50.005 GC heap after
+Heap after GC invocations=1 (full 0):
+ PSYoungGen      total 19200K, used 712K [0x91ac0000, 0x93000000, 0xa7000000)
+  eden space 16640K, 0% used [0x91ac0000,0x91ac0000,0x92b00000)
+  from space 2560K, 27% used [0x92b00000,0x92bb2030,0x92d80000)
+  to   space 2560K, 0% used [0x92d80000,0x92d80000,0x93000000)
+ ParOldGen       total 43776K, used 4K [0x67000000, 0x69ac0000, 0x91ac0000)
+  object space 43776K, 0% used [0x67000000,0x67001000,0x69ac0000)
+ Metaspace       used 1655K, capacity 2240K, committed 2328K, reserved 4400K
+}
+
+Deoptimization events (0 events):
+No events
+
+Internal exceptions (2 events):
+Event: 0.046 Thread 0xb6507400 Exception <a 'java/lang/NoSuchMethodError': Method sun.misc.Unsafe.defineClass(Ljava/lang/String;[BII)Ljava/lang/Class; name or signature does not match> (0x91ad0540) thrown at [/HUDSON/workspace/8-2-build-linux-i586/jdk8u65/4987/hotspot/src/share/vm/prim
+Event: 0.046 Thread 0xb6507400 Exception <a 'java/lang/NoSuchMethodError': Method sun.misc.Unsafe.prefetchRead(Ljava/lang/Object;J)V name or signature does not match> (0x91ad0810) thrown at [/HUDSON/workspace/8-2-build-linux-i586/jdk8u65/4987/hotspot/src/share/vm/prims/jni.cpp, line 39
+
+Events (10 events):
+Event: 0.105 loading class java/lang/UnsupportedOperationException
+Event: 0.105 loading class java/lang/UnsupportedOperationException done
+Event: 0.108 loading class java/util/concurrent/ConcurrentHashMap$ForwardingNode
+Event: 0.108 loading class java/util/concurrent/ConcurrentHashMap$ForwardingNode done
+Event: 0.109 loading class Share/IBufferShare$1
+Event: 0.109 loading class Share/IBufferShare$1 done
+Event: 4.104 Executing VM operation: EnableBiasedLocking
+Event: 4.104 Executing VM operation: EnableBiasedLocking done
+Event: 49.994 Executing VM operation: ParallelGCFailedAllocation
+Event: 50.006 Executing VM operation: ParallelGCFailedAllocation done
+
+
+Dynamic libraries:
+08048000-08049000 r-xp 00000000 08:03 333651     /home/monteiro/jdk1.8.0_65/bin/java
+08049000-0804a000 rw-p 00000000 08:03 333651     /home/monteiro/jdk1.8.0_65/bin/java
+08f26000-08f47000 rw-p 00000000 00:00 0          [heap]
+607af000-60a00000 rw-p 00000000 00:00 0 
+60a00000-60b81000 rw-p 00000000 00:00 0 
+60b81000-60c00000 ---p 00000000 00:00 0 
+60c00000-60e00000 rw-p 00000000 00:00 0 
+60e00000-61000000 rw-p 00000000 00:00 0 
+61000000-61200000 rw-p 00000000 00:00 0 
+61200000-61400000 rw-p 00000000 00:00 0 
+61400000-61600000 rw-p 00000000 00:00 0 
+61600000-61800000 rw-p 00000000 00:00 0 
+61800000-61a00000 rw-p 00000000 00:00 0 
+61a00000-61c00000 rw-p 00000000 00:00 0 
+61c00000-61e00000 rw-p 00000000 00:00 0 
+61e00000-62000000 rw-p 00000000 00:00 0 
+62000000-62200000 rw-p 00000000 00:00 0 
+62200000-62400000 rw-p 00000000 00:00 0 
+62400000-62500000 rw-p 00000000 00:00 0 
+62500000-62535000 rw-p 00000000 00:00 0 
+62535000-62600000 ---p 00000000 00:00 0 
+62600000-62800000 rw-p 00000000 00:00 0 
+62800000-62a00000 rw-p 00000000 00:00 0 
+62a00000-62c00000 rw-p 00000000 00:00 0 
+62c00000-62d00000 rw-p 00000000 00:00 0 
+62d00000-62df7000 rw-p 00000000 00:00 0 
+62df7000-62e00000 ---p 00000000 00:00 0 
+62e00000-63000000 rw-p 00000000 00:00 0 
+63000000-63100000 rw-p 00000000 00:00 0 
+6316f000-6339f000 r-xp 00000000 08:04 6424593    /media/data/Workspace/M2Bee/C++/ShareSpace/Interfaces/Java/ShareNative/dist/Debug/GNU-Linux/libShareNative.so
+6339f000-633a0000 ---p 00230000 08:04 6424593    /media/data/Workspace/M2Bee/C++/ShareSpace/Interfaces/Java/ShareNative/dist/Debug/GNU-Linux/libShareNative.so
+633a0000-633a5000 r--p 00230000 08:04 6424593    /media/data/Workspace/M2Bee/C++/ShareSpace/Interfaces/Java/ShareNative/dist/Debug/GNU-Linux/libShareNative.so
+633a5000-633a9000 rw-p 00235000 08:04 6424593    /media/data/Workspace/M2Bee/C++/ShareSpace/Interfaces/Java/ShareNative/dist/Debug/GNU-Linux/libShareNative.so
+633a9000-633ab000 rw-p 00000000 00:00 0 
+633ab000-633ac000 ---p 00000000 00:00 0 
+633ac000-6342c000 rw-p 00000000 00:00 0 
+6342c000-6342f000 ---p 00000000 00:00 0 
+6342f000-6347d000 rw-p 00000000 00:00 0 
+6347d000-63480000 ---p 00000000 00:00 0 
+63480000-634fe000 rw-p 00000000 00:00 0 
+634fe000-63501000 ---p 00000000 00:00 0 
+63501000-6357f000 rw-p 00000000 00:00 0 
+6357f000-63582000 ---p 00000000 00:00 0 
+63582000-63600000 rw-p 00000000 00:00 0 
+63600000-63800000 r--p 00000000 08:03 2365678    /usr/lib/locale/locale-archive
+63800000-63821000 rw-p 00000000 00:00 0 
+63821000-63900000 ---p 00000000 00:00 0 
+63900000-639f4000 rw-p 00000000 00:00 0 
+639f4000-63a00000 ---p 00000000 00:00 0 
+63a0d000-63a10000 ---p 00000000 00:00 0 
+63a10000-63a5e000 rw-p 00000000 00:00 0 
+63a5e000-63a61000 ---p 00000000 00:00 0 
+63a61000-63aaf000 rw-p 00000000 00:00 0 
+63aaf000-63ab2000 ---p 00000000 00:00 0 
+63ab2000-63b00000 rw-p 00000000 00:00 0 
+63b00000-63c00000 rw-p 00000000 00:00 0 
+63c0c000-63c0d000 ---p 00000000 00:00 0 
+63c0d000-63cdc000 rw-p 00000000 00:00 0 
+63cdc000-63eb4000 r--s 03d20000 08:03 333918     /home/monteiro/jdk1.8.0_65/jre/lib/rt.jar
+63eb4000-640fa000 rw-p 00000000 00:00 0 
+640fa000-64300000 ---p 00000000 00:00 0 
+64300000-66700000 rw-p 00000000 00:00 0 
+66700000-667ff000 rw-p 00000000 00:00 0 
+667ff000-66800000 ---p 00000000 00:00 0 
+66824000-6687f000 rw-p 00000000 00:00 0 
+6687f000-66880000 ---p 00000000 00:00 0 
+66880000-66900000 rw-p 00000000 00:00 0 
+66900000-66921000 rw-p 00000000 00:00 0 
+66921000-66a00000 ---p 00000000 00:00 0 
+66a00000-66a59000 rw-p 00000000 00:00 0 
+66a59000-66b00000 ---p 00000000 00:00 0 
+66b00000-66b21000 rw-p 00000000 00:00 0 
+66b21000-66c00000 ---p 00000000 00:00 0 
+66c28000-66c29000 ---p 00000000 00:00 0 
+66c29000-66cbf000 rw-p 00000000 00:00 0 
+66cbf000-66dff000 ---p 00000000 00:00 0 
+66dff000-66e15000 rw-p 00000000 00:00 0 
+66e15000-66f54000 ---p 00000000 00:00 0 
+66f54000-66f5f000 rw-p 00000000 00:00 0 
+66f5f000-66fff000 ---p 00000000 00:00 0 
+66fff000-69ac0000 rw-p 00000000 00:00 0 
+69ac0000-91ac0000 ---p 00000000 00:00 0 
+91ac0000-93000000 rw-p 00000000 00:00 0 
+93000000-a7000000 ---p 00000000 00:00 0 
+a703e000-a703f000 ---p 00000000 00:00 0 
+a703f000-a70bf000 rw-p 00000000 00:00 0 
+a70bf000-a70c0000 ---p 00000000 00:00 0 
+a70c0000-a7149000 rw-p 00000000 00:00 0 
+a7149000-a7500000 ---p 00000000 00:00 0 
+a7500000-a7740000 rwxp 00000000 00:00 0 
+a7740000-b6500000 ---p 00000000 00:00 0 
+b6500000-b65fb000 rw-p 00000000 00:00 0 
+b65fb000-b6600000 ---p 00000000 00:00 0 
+b661a000-b6632000 rw-p 00000000 00:00 0 
+b6632000-b663d000 r-xp 00000000 08:03 1598251    /lib/i386-linux-gnu/libnss_files-2.23.so
+b663d000-b663e000 r--p 0000a000 08:03 1598251    /lib/i386-linux-gnu/libnss_files-2.23.so
+b663e000-b663f000 rw-p 0000b000 08:03 1598251    /lib/i386-linux-gnu/libnss_files-2.23.so
+b663f000-b6645000 rw-p 00000000 00:00 0 
+b6645000-b6650000 r-xp 00000000 08:03 1598227    /lib/i386-linux-gnu/libnss_nis-2.23.so
+b6650000-b6651000 r--p 0000a000 08:03 1598227    /lib/i386-linux-gnu/libnss_nis-2.23.so
+b6651000-b6652000 rw-p 0000b000 08:03 1598227    /lib/i386-linux-gnu/libnss_nis-2.23.so
+b6652000-b6669000 r-xp 00000000 08:03 1598224    /lib/i386-linux-gnu/libnsl-2.23.so
+b6669000-b666a000 r--p 00016000 08:03 1598224    /lib/i386-linux-gnu/libnsl-2.23.so
+b666a000-b666b000 rw-p 00017000 08:03 1598224    /lib/i386-linux-gnu/libnsl-2.23.so
+b666b000-b666d000 rw-p 00000000 00:00 0 
+b666d000-b6675000 r-xp 00000000 08:03 1598205    /lib/i386-linux-gnu/libnss_compat-2.23.so
+b6675000-b6676000 r--p 00007000 08:03 1598205    /lib/i386-linux-gnu/libnss_compat-2.23.so
+b6676000-b6677000 rw-p 00008000 08:03 1598205    /lib/i386-linux-gnu/libnss_compat-2.23.so
+b6689000-b66a2000 r-xp 00000000 08:03 333874     /home/monteiro/jdk1.8.0_65/jre/lib/i386/libzip.so
+b66a2000-b66a3000 rw-p 00019000 08:03 333874     /home/monteiro/jdk1.8.0_65/jre/lib/i386/libzip.so
+b66a3000-b66ab000 rw-s 00000000 08:03 1839698    /tmp/hsperfdata_root/32540
+b66ab000-b66b2000 r-xp 00000000 08:03 1598638    /lib/i386-linux-gnu/librt-2.23.so
+b66b2000-b66b3000 r--p 00006000 08:03 1598638    /lib/i386-linux-gnu/librt-2.23.so
+b66b3000-b66b4000 rw-p 00007000 08:03 1598638    /lib/i386-linux-gnu/librt-2.23.so
+b66b4000-b66b7000 ---p 00000000 00:00 0 
+b66b7000-b6705000 rw-p 00000000 00:00 0 
+b6705000-b6758000 r-xp 00000000 08:03 1598365    /lib/i386-linux-gnu/libm-2.23.so
+b6758000-b6759000 r--p 00052000 08:03 1598365    /lib/i386-linux-gnu/libm-2.23.so
+b6759000-b675a000 rw-p 00053000 08:03 1598365    /lib/i386-linux-gnu/libm-2.23.so
+b675a000-b70da000 r-xp 00000000 08:03 333855     /home/monteiro/jdk1.8.0_65/jre/lib/i386/server/libjvm.so
+b70da000-b7147000 rw-p 00980000 08:03 333855     /home/monteiro/jdk1.8.0_65/jre/lib/i386/server/libjvm.so
+b7147000-b756d000 rw-p 00000000 00:00 0 
+b756d000-b771c000 r-xp 00000000 08:03 1598988    /lib/i386-linux-gnu/libc-2.23.so
+b771c000-b771d000 ---p 001af000 08:03 1598988    /lib/i386-linux-gnu/libc-2.23.so
+b771d000-b771f000 r--p 001af000 08:03 1598988    /lib/i386-linux-gnu/libc-2.23.so
+b771f000-b7720000 rw-p 001b1000 08:03 1598988    /lib/i386-linux-gnu/libc-2.23.so
+b7720000-b7723000 rw-p 00000000 00:00 0 
+b7723000-b7726000 r-xp 00000000 08:03 1599059    /lib/i386-linux-gnu/libdl-2.23.so
+b7726000-b7727000 r--p 00002000 08:03 1599059    /lib/i386-linux-gnu/libdl-2.23.so
+b7727000-b7728000 rw-p 00003000 08:03 1599059    /lib/i386-linux-gnu/libdl-2.23.so
+b7728000-b773c000 r-xp 00000000 08:03 283908     /home/monteiro/jdk1.8.0_65/lib/i386/jli/libjli.so
+b773c000-b773d000 rw-p 00014000 08:03 283908     /home/monteiro/jdk1.8.0_65/lib/i386/jli/libjli.so
+b773d000-b7756000 r-xp 00000000 08:03 1598705    /lib/i386-linux-gnu/libpthread-2.23.so
+b7756000-b7757000 r--p 00018000 08:03 1598705    /lib/i386-linux-gnu/libpthread-2.23.so
+b7757000-b7758000 rw-p 00019000 08:03 1598705    /lib/i386-linux-gnu/libpthread-2.23.so
+b7758000-b775a000 rw-p 00000000 00:00 0 
+b775a000-b775b000 r--p 002d4000 08:03 2365678    /usr/lib/locale/locale-archive
+b775b000-b775c000 rw-p 00000000 00:00 0 
+b775c000-b775d000 r--p 00000000 00:00 0 
+b775d000-b7781000 r-xp 00000000 08:03 333869     /home/monteiro/jdk1.8.0_65/jre/lib/i386/libjava.so
+b7781000-b7782000 rw-p 00023000 08:03 333869     /home/monteiro/jdk1.8.0_65/jre/lib/i386/libjava.so
+b7782000-b778d000 r-xp 00000000 08:03 333823     /home/monteiro/jdk1.8.0_65/jre/lib/i386/libverify.so
+b778d000-b778e000 rw-p 0000b000 08:03 333823     /home/monteiro/jdk1.8.0_65/jre/lib/i386/libverify.so
+b778e000-b7790000 rw-p 00000000 00:00 0 
+b7790000-b7792000 r--p 00000000 00:00 0          [vvar]
+b7792000-b7793000 r-xp 00000000 00:00 0          [vdso]
+b7793000-b77b5000 r-xp 00000000 08:03 1598679    /lib/i386-linux-gnu/ld-2.23.so
+b77b5000-b77b6000 rw-p 00000000 00:00 0 
+b77b6000-b77b7000 r--p 00022000 08:03 1598679    /lib/i386-linux-gnu/ld-2.23.so
+b77b7000-b77b8000 rw-p 00023000 08:03 1598679    /lib/i386-linux-gnu/ld-2.23.so
+bf9e4000-bf9e5000 rwxp 00000000 00:00 0 
+bfa17000-bfa38000 rw-p 00000000 00:00 0          [stack]
+
+VM Arguments:
+jvm_args: -Dfile.encoding=UTF-8 
+java_command: Share.Test
+java_class_path (initial): /media/data/Workspace/M2Bee/C++/ShareSpace/Interfaces/Java/Share/build/classes
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin
+USERNAME=root
+LD_LIBRARY_PATH=/home/monteiro/jdk1.8.0_65/jre/lib/amd64:/home/monteiro/jdk1.8.0_65/jre/lib/i386:
+SHELL=/bin/bash
+DISPLAY=:0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0x8cdbd0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0x8cdbd0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0x74db40], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: [libjvm.so+0x74db40], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGXFSZ: [libjvm.so+0x74db40], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0x74db40], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR1: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGUSR2: [libjvm.so+0x74f1c0], sa_mask[0]=00100000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0x750670], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: SIG_IGN, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGTERM: [libjvm.so+0x750670], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0x750670], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=16.04
+DISTRIB_CODENAME=xenial
+DISTRIB_DESCRIPTION="Ubuntu 16.04.1 LTS"
+
+uname:Linux 4.4.0-45-generic #66-Ubuntu SMP Wed Oct 19 14:12:05 UTC 2016 i686
+libc:glibc 2.23 NPTL 2.23 
+rlimit: STACK 8192k, CORE 0k, NPROC 62312, NOFILE 65536, AS infinity
+load average:2.34 1.57 1.28
+
+/proc/meminfo:
+MemTotal:        8014268 kB
+MemFree:          915124 kB
+MemAvailable:    2340860 kB
+Buffers:          343744 kB
+Cached:          2271420 kB
+SwapCached:        14256 kB
+Active:          5354164 kB
+Inactive:        1298352 kB
+Active(anon):    4074548 kB
+Inactive(anon):   706156 kB
+Active(file):    1279616 kB
+Inactive(file):   592196 kB
+Unevictable:        5844 kB
+Mlocked:            5844 kB
+HighTotal:       7197512 kB
+HighFree:         834304 kB
+LowTotal:         816756 kB
+LowFree:           80820 kB
+SwapTotal:       1048572 kB
+SwapFree:         516204 kB
+Dirty:              2192 kB
+Writeback:             0 kB
+AnonPages:       4038232 kB
+Mapped:           547652 kB
+Shmem:            743344 kB
+Slab:             355316 kB
+SReclaimable:     307408 kB
+SUnreclaim:        47908 kB
+KernelStack:        8624 kB
+PageTables:        37920 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     5055704 kB
+Committed_AS:   12923500 kB
+VmallocTotal:     122880 kB
+VmallocUsed:           0 kB
+VmallocChunk:          0 kB
+AnonHugePages:   2381824 kB
+CmaTotal:              0 kB
+CmaFree:               0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:       45048 kB
+DirectMap2M:      868352 kB
+
+
+CPU:total 4 (2 cores per cpu, 2 threads per core) family 6 model 37 stepping 2, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, aes, clmul, ht, tsc, tscinvbit
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 37
+model name	: Intel(R) Core(TM) i5 CPU       M 520  @ 2.40GHz
+stepping	: 2
+microcode	: 0x9
+cpu MHz		: 2400.000
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fdiv_bug	: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 11
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe nx rdtscp lm constant_tsc arch_perfmon pebs bts xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm sse4_1 sse4_2 popcnt aes lahf_lm tpr_shadow vnmi flexpriority ept vpid dtherm ida arat
+bugs		:
+bogomips	: 4788.07
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 37
+model name	: Intel(R) Core(TM) i5 CPU       M 520  @ 2.40GHz
+stepping	: 2
+microcode	: 0x9
+cpu MHz		: 2400.000
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fdiv_bug	: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 11
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe nx rdtscp lm constant_tsc arch_perfmon pebs bts xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm sse4_1 sse4_2 popcnt aes lahf_lm tpr_shadow vnmi flexpriority ept vpid dtherm ida arat
+bugs		:
+bogomips	: 4788.07
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 37
+model name	: Intel(R) Core(TM) i5 CPU       M 520  @ 2.40GHz
+stepping	: 2
+microcode	: 0x9
+cpu MHz		: 2400.000
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 2
+cpu cores	: 2
+apicid		: 4
+initial apicid	: 4
+fdiv_bug	: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 11
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe nx rdtscp lm constant_tsc arch_perfmon pebs bts xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm sse4_1 sse4_2 popcnt aes lahf_lm tpr_shadow vnmi flexpriority ept vpid dtherm ida arat
+bugs		:
+bogomips	: 4788.07
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 37
+model name	: Intel(R) Core(TM) i5 CPU       M 520  @ 2.40GHz
+stepping	: 2
+microcode	: 0x9
+cpu MHz		: 2400.000
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 2
+cpu cores	: 2
+apicid		: 5
+initial apicid	: 5
+fdiv_bug	: no
+f00f_bug	: no
+coma_bug	: no
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 11
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe nx rdtscp lm constant_tsc arch_perfmon pebs bts xtopology nonstop_tsc aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm sse4_1 sse4_2 popcnt aes lahf_lm tpr_shadow vnmi flexpriority ept vpid dtherm ida arat
+bugs		:
+bogomips	: 4788.07
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 8014268k(915124k free), swap 1048572k(516204k free)
+
+vm_info: Java HotSpot(TM) Server VM (25.65-b01) for linux-x86 JRE (1.8.0_65-b17), built on Oct  6 2015 15:34:53 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
+
+time: Fri Nov  4 00:41:26 2016
+elapsed time: 50 seconds (0d 0h 0m 50s)
+

@@ -1,0 +1,7 @@
+[
+    { "uri": "@chat4.koach.com:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc2.hu:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irc.anarxi.st:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@irp.irc.omnimaga.org:6667/locate", "type": "irc", "verbose": 2 }, 
+    { "uri": "@wildworld.nextirc.org:6667/locate", "type": "irc", "verbose": 2 }
+]
