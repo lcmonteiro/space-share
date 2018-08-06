@@ -110,7 +110,7 @@
               <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIFileConnector.cpp</itemPath>
               <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIFileConnector.h</itemPath>
               <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIMessageConnector.h</itemPath>
-              <itemPath>../../Share/SConnector/SDecoded/SStream/SKernel/SIOMessageConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIOMessageConnector.h</itemPath>
               <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.cpp</itemPath>
               <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.h</itemPath>
               <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SODirConnector.cpp</itemPath>
@@ -119,6 +119,9 @@
               <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SOFileConnector.h</itemPath>
               <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SOUdpConnector.cpp</itemPath>
               <itemPath>../../Share/SConnector/SDecoded/SMessage/SKernel/SOUdpConnector.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="STools" displayName="STools" projectFiles="true">
+              <itemPath>../../Share/SConnector/SDecoded/SMessage/STools/Default.h</itemPath>
             </logicalFolder>
             <itemPath>../../Share/SConnector/SDecoded/SMessage/SDirConnector.h</itemPath>
             <itemPath>../../Share/SConnector/SDecoded/SMessage/SFileConnector.h</itemPath>
@@ -149,10 +152,8 @@
               <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIFileConnector.h</itemPath>
               <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIIrcConnector.cpp</itemPath>
               <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIIrcConnector.h</itemPath>
-              <itemPath>../../Share/SConnector/SEncoded/SStream/SKernel/SIMessageConnector.h</itemPath>
               <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIOIrcConnector.cpp</itemPath>
               <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SIOIrcConnector.h</itemPath>
-              <itemPath>../../Share/SConnector/SEncoded/SStream/SKernel/SIOMessageConnector.h</itemPath>
               <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SODirConnector.cpp</itemPath>
               <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SODirConnector.h</itemPath>
               <itemPath>../../Share/SConnector/SEncoded/SMessage/SKernel/SOFileConnector.cpp</itemPath>
@@ -167,6 +168,8 @@
           </logicalFolder>
           <logicalFolder name="SStream" displayName="SStream" projectFiles="true">
             <logicalFolder name="SKernel" displayName="SKernel" projectFiles="true">
+              <itemPath>../../Share/SConnector/SEncoded/SStream/SKernel/SIMessageConnector.h</itemPath>
+              <itemPath>../../Share/SConnector/SEncoded/SStream/SKernel/SIOMessageConnector.h</itemPath>
               <itemPath>../../Share/SConnector/SEncoded/SStream/SKernel/SIOStreamConnector.h</itemPath>
               <itemPath>../../Share/SConnector/SEncoded/SStream/SKernel/SIStreamConnector.h</itemPath>
               <itemPath>../../Share/SConnector/SEncoded/SStream/SKernel/SOStreamConnector.h</itemPath>
@@ -368,6 +371,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIOMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.cpp"
             ex="false"
             tool="1"
@@ -413,6 +421,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/STools/Default.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../Share/SConnector/SDecoded/SMessage/SUdpConnector.h"
             ex="false"
             tool="3"
@@ -429,11 +442,6 @@
             flavor2="0">
       </item>
       <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIFileConnector.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIOMessageConnector.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1141,6 +1149,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIOMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.cpp"
             ex="false"
             tool="1"
@@ -1186,6 +1199,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/STools/Default.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../Share/SConnector/SDecoded/SMessage/SUdpConnector.h"
             ex="false"
             tool="3"
@@ -1202,11 +1220,6 @@
             flavor2="0">
       </item>
       <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIFileConnector.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIOMessageConnector.h"
             ex="false"
             tool="3"
             flavor2="0">
@@ -1915,6 +1928,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIOMessageConnector.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.cpp"
             ex="false"
             tool="1"
@@ -1960,6 +1978,11 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="../../Share/SConnector/SDecoded/SMessage/STools/Default.h"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="../../Share/SConnector/SDecoded/SMessage/SUdpConnector.h"
             ex="false"
             tool="3"
@@ -1976,11 +1999,6 @@
             flavor2="0">
       </item>
       <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIFileConnector.h"
-            ex="false"
-            tool="3"
-            flavor2="0">
-      </item>
-      <item path="../../Share/SConnector/SDecoded/SStream/SKernel/SIOMessageConnector.h"
             ex="false"
             tool="3"
             flavor2="0">
