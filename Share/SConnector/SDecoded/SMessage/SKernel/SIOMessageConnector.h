@@ -23,7 +23,7 @@ namespace Decoded {
 namespace Message {
 /**
  */
-template<class RESOURCE>
+template<class RESOURCE, class TOOL>
 class SIOMessageConnector : public SInOutputConnector {
 public:
 	/**
@@ -32,8 +32,8 @@ public:
 	SIOMessageConnector(
 		const string address,   // con address
 		const size_t nframes,   // num of frames 
-		const size_t maxmsgs    // max message size  
-	) : SInOutputConnector(address), __container(nframes), __buffer(maxmsgs), __res() {}
+		const size_t maxsmsg    // max size message  
+	) : SInOutputConnector(address), __container(nframes), __buffer(maxsmsg), __res() {}
 	/**
 	 * destructor
 	 */
@@ -55,17 +55,19 @@ protected:
                 /**-----------------------------------------------------------------------------------------------------
                  * Fill buffer
                  *----------------------------------------------------------------------------------------------------**/
-                __res.Fill(__buffer.);
+                __res.Fill(__buffer.Expand());
                 /**-----------------------------------------------------------------------------------------------------
-                 * Normalize buffer
+                 * extend and insert buffer size
                  *----------------------------------------------------------------------------------------------------**/
-                auto size = Normalize(__buffer, __container.size());
+                auto size = TOOL::Insert(__buffer, __container.size());
                 /**-----------------------------------------------------------------------------------------------------
                  * Fill container
                  *----------------------------------------------------------------------------------------------------**/
-                while (!__container.Full()) {
-                        __container.push_back(move(__buffer.Read(size)));
+                OFrame out(move(__buffer));
+                while(!__container.Full()) {
+                        __container.emplace_back(move(out.Read(size)));
                 }
+                __buffer = move(out);
                 /**-----------------------------------------------------------------------------------------------------
                  * swap containers
                  *----------------------------------------------------------------------------------------------------**/
@@ -89,10 +91,14 @@ protected:
                  *----------------------------------------------------------------------------------------------------**/
                 INFO("DATA::OUT::n=" <<container.size() << "=" << container.front());
                 /**-----------------------------------------------------------------------------------------------------
+                 * compress and remove buffer size
+                 *----------------------------------------------------------------------------------------------------**/
+                TOOL::Remove(__container);
+                /**-----------------------------------------------------------------------------------------------------
                  * write nframes
                  *----------------------------------------------------------------------------------------------------**/
-                for (auto& f : container) {
-                        __res.Drain(f);
+                for (auto it = container.begin(); it != container.end(); ++it) {
+                        __res.Drain(*it);
                 }
         }
 	/**
@@ -151,11 +157,23 @@ private:
 	/**
          * buffer
          */
-	Buffer __buffer;
+	Frame __buffer;
 	/**
 	 * resource 
 	 */
 	RESOURCE __res;
+        /**
+         * -------------------------------------------------------------------------------------------------------------
+	 * helpers
+	 * -------------------------------------------------------------------------------------------------------------
+         * normalize
+         */
+        inline size_t Normalize(Frame& frame, size_t scontainer) {
+                
+        }
+        inline Container& Normalize(Container& container) {
+                
+        }
 };
 /**
  * End namespace Message
