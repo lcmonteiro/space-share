@@ -48,10 +48,6 @@ Frame SLinuxResource::Read(size_t size) {
 	}
 	return f;
 }
-SLinuxResource& SLinuxResource::Fill(IFrame& f) {
-	f.Insert(Read(f.data(), f.size()));
-	return *this;
-}
 SLinuxResource& SLinuxResource::Drain(OFrame&& f) {
 	while (!f.Empty()) {
 		f.Remove(Write(f.Data(), f.Size()));

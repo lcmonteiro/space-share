@@ -85,10 +85,6 @@ public:
 	/**
          * fill frame
 	 */
-	SLinuxSocket& Fill(Frame& f) {
-		f.resize(Receive(f.data(), f.size()));
-		return *this;
-	}
 	template<class F>
 	SLinuxSocket& Fill(F& f) {
 		f.Insert(Receive(f.Data(), f.Size()));

@@ -56,9 +56,13 @@ public:
 	 */        
         Frame Read(size_t size);
 	/**
-         * fill IFrame
+         * fill frame
 	 */
-	SLinuxResource& Fill(IFrame& f);
+	template<class F>
+	SLinuxResource& Fill(F& f) {
+		f.Insert(Read(f.Data(), f.Size()));
+		return *this;
+	}
 	/**
          * drain Frame 
          */

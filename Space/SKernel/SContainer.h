@@ -105,16 +105,43 @@ public:
                 }
                 return *this;
         }
+        /**
+         * get data
+         */
+        inline pointer Data() {
+                return data();
+        }
+        /** 
+         * get size
+         */
+        inline size_t Size() {
+                return size();
+        }
+        /** 
+         * insert size
+         */
+        inline SFrame& Insert(size_t size){
+                resize(size);
+                return *this;
+        }
+        /**
+         * expand to capacity
+         */
+        inline SFrame& Expand() {
+                resize(capacity());
+                return *this;
+        }
 } Frame;
 /**
  */
 typedef class SIFrame : public Frame {
 public:
-        using Frame::Frame;
         /**
          * constructors
          */
         SIFrame(size_t sz = 0) : Frame(sz), __cur(begin()) {
+        }
+        SIFrame(Frame&& f) : Frame(move(f)), __cur(begin()) {
         }
         SIFrame(SIFrame&& f) = default;
         /**
@@ -128,6 +155,7 @@ public:
                 return *this;
         }
         /**
+         * get data
          */
         inline pointer Data() {
                 return __cur.base();
@@ -141,7 +169,7 @@ public:
         /** 
          * insert size
          */
-        inline SIFrame& Insert(int size) {
+        inline SIFrame& Insert(size_t size) {
                 __cur += size;
                 return *this;
         }
