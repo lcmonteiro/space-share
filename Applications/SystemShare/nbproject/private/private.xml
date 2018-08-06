@@ -6,20 +6,6 @@
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Space/SKernel/SAddress.h</file>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Space/SKernel/SResource.h</file>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Share/SConnector/SDecoded/SStream/SKernel/SIOStreamConnector.h</file>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Share/SKernel/SConnector.h</file>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Space/SResource/SLinux/SLinuxResource.h</file>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Share/SConnector/SEncoded/SStream/SKernel/SIStreamConnector.h</file>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Share/SConnector/SDecoded/SMessage/SKernel/SIMessageConnector.h</file>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Share/SConnector/SDecoded/SStream/SKernel/SIStreamConnector.h</file>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Share/SConnector/SDecoded/SStream/SKernel/SIOMessageConnector.h</file>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Space/SResource/SLinux/SLinuxSocket.h</file>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Share/SConnector/SEncoded/SMessage/SKernel/SIDirConnector.h</file>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Share/SConnector/SEncoded/SStream/SKernel/SIOMessageConnector.h</file>
-            <file>file:/home/monteiro/Workspace/m2bee/C++/ShareSpace-dev/Space/SKernel/SContainer.h</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>
