@@ -9,6 +9,8 @@
 #define MSGTOOLDEFAULT_H
 
 #include <stddef.h>
+#include <vector>
+#include <math.h>
 
 /**
  * Begin namespace Decoded
@@ -21,6 +23,7 @@ namespace Message {
 /**
  */        
 class SDefault {
+public:
         /**
 	 * constructor
 	 */
@@ -30,13 +33,28 @@ class SDefault {
 	 */
 	virtual ~SDefault() = default;
         /**
+         * Split frame 
          */
-        inline size_t Insert() {
-                
+        static inline Container& Split(Frame& frame, Container& container) {
+                // process chunks size
+                size_t size = std::ceil(
+                        static_cast<float_t>(frame.Size() + sizeof (framesize_t)) / static_cast<float_t>(container.size())
+                );
+                // resize frame and add size
+                frame.Insert(size * container.size()).Number<framesize_t>(frame.Size());
+                // container fill up 
+                OFrame out(move(frame));
+                while(!container.Full()) {
+                        container.emplace_back(move(out.Read(size)));
+                }
+                frame = move(out);
+                // return a processed container
+                return container;
         }
         /**
+         * Join
          */
-        inline size_t Remove() {
+        static inline Frame& Join(const Container& container, Frame& frame) {
                 
         }
 };

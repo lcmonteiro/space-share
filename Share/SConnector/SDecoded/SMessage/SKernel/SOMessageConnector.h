@@ -1,11 +1,11 @@
 /* 
- * File:   SIMessageConnector.h
+ * File:   SOMessageConnector.h
  * Author: Luis Monteiro
  *
  * Created on June 6, 2018, 11:47 PM
  */
-#ifndef SIMESSAGECONNECTOR_H
-#define SIMESSAGECONNECTOR_H
+#ifndef SOMESSAGECONNECTOR_H
+#define SOMESSAGECONNECTOR_H
 /**
  * Space
  */
@@ -24,55 +24,38 @@ namespace Message {
 /**
  */
 template<class RESOURCE, class TOOL>
-class SIMessageConnector : public SInputConnector {
+class SOMessageConnector : public SOutputConnector {
 public:
 	/**
 	 * constructor
 	 */
-	SIMessageConnector(
-		const string address,   // con address
-		const size_t nframes,   // num of frames 
-		const size_t maxsmsg    // max size message  
-	) : SInputConnector(address), __container(nframes), __buffer(maxsmsg), __res() {}
+	SOMessageConnector(
+		const string address  // con address
+	) : SOutputConnector(address), __buffer(), __res() {}
 	/**
 	 * destructor
 	 */
-	virtual ~SIMessageConnector() = default;
-	/**
-	 * inline overrides
-	 */
-	inline Resource& GetResource() override {
-		return __res.Base();
-	}
+	virtual ~SOMessageConnector() = default;
 protected:
 	/**
          * -------------------------------------------------------------------------------------------------------------
-	 * I functions
+	 * O functions
 	 * -------------------------------------------------------------------------------------------------------------
-         * read
+         * write
          */
-	Container _read() override {
-                Container container(__container.capacity());
-                /**-----------------------------------------------------------------------------------------------------
-                 * Fill buffer
-                 *----------------------------------------------------------------------------------------------------**/
-                __res.Fill(__buffer.Expand());
-                /**-----------------------------------------------------------------------------------------------------
-                 * split buffer 
-                 *----------------------------------------------------------------------------------------------------**/
-                TOOL::Split(__buffer, __container);
-                /**-----------------------------------------------------------------------------------------------------
-                 * swap containers
-                 *----------------------------------------------------------------------------------------------------**/
-                swap(__container, container);	
+	void _write(const Container& container) override {
                 /**-----------------------------------------------------------------------------------------------------
                  * info
                  *----------------------------------------------------------------------------------------------------**/
-                INFO("DATA(read)::IN::n=" << container.size() << "=" << container.front());
+                INFO("DATA::OUT::n=" <<container.size() << "=" << container.front());
                 /**-----------------------------------------------------------------------------------------------------
-                 * return filled container
+                 * compress and remove buffer size
                  *----------------------------------------------------------------------------------------------------**/
-                return container;
+                TOOL::Join(container, __buffer);
+                /**-----------------------------------------------------------------------------------------------------
+                 * write nframes
+                 *----------------------------------------------------------------------------------------------------**/
+                __res.Drain(__buffer);
         }
 	/**
          * -------------------------------------------------------------------------------------------------------------
@@ -124,10 +107,6 @@ protected:
 	}
 private:
 	/**
-	 * container
-	 */
-	Container __container;
-	/**
          * buffer
          */
 	Frame __buffer;
@@ -146,5 +125,5 @@ private:
 }
 /**
  */
-#endif /* SIMESSAGECONNECTOR_H */
+#endif /* SOMESSAGECONNECTOR_H */
 

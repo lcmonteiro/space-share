@@ -1,75 +1,140 @@
 /* 
- * Container:   SUdpConnector.h
+ * File:   SUdpMessageConnector.h
  * Author: Luis Monteiro
  *
- * Created on November 26, 2015, 12:37 PM
+ * Created on December 6, 2016, 11:17 PM
  */
-#ifndef SUDPCONNECTOR_H
-#define SUDPCONNECTOR_H
+#ifndef SUDPMESSAGECONNECTOR_H
+#define SUDPMESSAGECONNECTOR_H
 /**
+ * Space
  */
 #include "SKernel/SContainer.h"
 #include "SKernel/SConnector.h"
+#include "SResource/SSocketResource.h"
+
 /**
- * Base connectors
+ * Share
  */
-#include "SKernel/SIUdpConnector.h"
-#include "SKernel/SOUdpConnector.h"
+#include "SKernel/SIOMessageConnector.h"
+#include "SKernel/SIMessageConnector.h"
+#include "SKernel/SOMessageConnector.h"
+/**
+ * tools
+ */
+#include "STools/SDefault.h"
 /**
  * Begin namespace Decoded
  */
 namespace Decoded {
 /**
- * Begin namespace Message
+ * Begin namespace Stream
  */
 namespace Message {
 /**
- * Input UDP Connector break template
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Resource adapter
+ * ---------------------------------------------------------------------------------------------------------------------
  */
-template<class S>
-class SIUdpConnectorT : public S {
+class ResourceAdapterUdp : private SSocketResource {
 public:
+        using SSocketResource::SSocketResource;
+        using SSocketResource::operator=;
+        /**
+         * interfaces
+         */
+        inline SSocketResource& Base() {
+                return *this;
+        }
+        inline void Wait(const Address& uri) {
+                SSocketResource::Wait(uri.Host(), uri.Port(), STREAM);
+        }
+        inline void Fill(Frame& buf) {
+                SSocketResource::Fill(buf);
+	}
+        inline void Drain(const Frame& buf) {
+                SSocketResource::Drain(buf);
+        }
+        inline bool Good() {
+                SSocketResource::Good();
+        }
+        inline void Reset() {
+                *this = SSocketResource();
+        }
+};    
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Input UDP Connector
+ * ---------------------------------------------------------------------------------------------------------------------
+ * template
+ */
+template<class R, class T>
+class SIUdpConnectorT : public SIMessageConnector<R, T> {
+public:
+        using SIMessageConnector<R, T>::SIMessageConnector;
+        /**
+         */
+        SIUdpConnectorT() = delete;
 	/**
 	 * make
 	 */
 	template<typename...Args>
-	static Decoded::IConnector Make(Args &&...args) {
+	static IConnector Make(Args &&...args) {
 		return make_shared<SIUdpConnectorT>(forward<Args>(args)...);
 	}
-	/**
-	 * constructor
-	 */
-	SIUdpConnectorT(
-		const string address,
-		const string local,
-		const size_t nframes
-	) : S(address, local, nframes) {}
 };
 /**
- * Output UDP Connector template
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Output UDP Connector
+ * ---------------------------------------------------------------------------------------------------------------------
+ * template
  */
-template<class S>
-class SOUdpConnectorT : public S {
+template<class R, class T>
+class SOUdpConnectorT : public SOMessageConnector<R, T> {
 public:
+        using SOMessageConnector<R, T>::SOMessageConnector;
+        /**
+         */
+        SOUdpConnectorT() = delete;
 	/**
 	 * make
 	 */
 	template<typename...Args>
-	static Decoded::OConnector Make(Args &&...args) {
+	static OConnector Make(Args &&...args) {
 		return make_shared<SOUdpConnectorT>(forward<Args>(args)...);
 	}
-	/**
-	 * constructor
-	 */
-	SOUdpConnectorT(const string address, const string local) : S(address, local) {}
 };
 /**
- * definitions	
+ * ---------------------------------------------------------------------------------------------------------------------
+ * IO UDP Connector
+ * ---------------------------------------------------------------------------------------------------------------------
+ * template
  */
-typedef SIUdpConnectorT<SIUdpConnector> IUdpConnector;
-typedef SOUdpConnectorT<SOUdpConnector> OUdpConnector;
+template<class R, class T>
+class SIOUdpConnectorT : public SIOMessageConnector<R, T> {
+public:
+        using SIOMessageConnector<R, T>::SIOMessageConnector;
+        /**
+         */
+        SIOUdpConnectorT() = delete;
+	/**
+	 * make
+	 */
+	template<typename...Args>
+	static IOConnector Make(Args &&...args) {
+		return make_shared<SIOUdpConnectorT>(forward<Args>(args)...);
+	}
+};
 /**
- * End namespace Message
+ * ---------------------------------------------------------------------------------------------------------------------
+ * definition
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+typedef SIOUdpConnectorT<ResourceAdapterUdp, SDefault> IOUdpConnector;
+typedef SIUdpConnectorT<ResourceAdapterUdp, SDefault>  IUdpConnector;
+typedef SOUdpConnectorT<ResourceAdapterUdp, SDefault>  OUdpConnector;
+/**
+ * End namespace Stream
  */
 }
 /**
@@ -78,5 +143,5 @@ typedef SOUdpConnectorT<SOUdpConnector> OUdpConnector;
 }
 /**
  */
-#endif /* SUDPCONNECTOR_H */
+#endif /* SUDPMESSAGECONNECTOR_H */
 

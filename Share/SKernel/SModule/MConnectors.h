@@ -59,8 +59,8 @@ namespace Input {
                                 {SConnector::Key(Properties ::MESSAGE_LOCAL), [](const Process::Group& o) {
                                         auto in = Decoded::Message::IUdpConnector::Make(
                                                 Process::Command::Peek(o, Properties::URI,  string("127.0.0.1:1357")),
-                                                Process::Command::Peek(o, Properties::BIND, string("127.0.0.1:1359")),
-                                                Process::Command::Peek(o, Properties::NFRAMES, 50)
+                                                Process::Command::Peek(o, Properties::NFRAMES, 50),
+                                                Process::Command::Peek(o, Properties::SFRAMES, 1550)
                                         );
                                         in->SetVerbose(Process::Command::Peek(o, Properties::VERBOSE, 0));
                                         in->SetEnergy(Process::Command::Peek(o,  Properties::ENERGY,  0));
@@ -118,8 +118,7 @@ namespace Output {
                         static map<SConnector::Key, function <Decoded::OConnector(const Process::Group&)>> GENERATOR {
                                 {SConnector::Key(Properties::MESSAGE_UDP), [](const Process::Group& o) {
                                         auto out = Decoded::Message::OUdpConnector::Make(
-                                                Process::Command::Peek(o, Properties::URI,  string("127.0.0.1:9751")),
-                                                Process::Command::Peek(o, Properties::BIND, string("127.0.0.1:9753"))
+                                                Process::Command::Peek(o, Properties::URI,  string("127.0.0.1:9751"))
                                         );
                                         out->SetVerbose(Process::Command::Peek(o, Properties::VERBOSE, 0));
                                         out->SetEnergy(Process::Command::Peek(o,  Properties::ENERGY,  1));
