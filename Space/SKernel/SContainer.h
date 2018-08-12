@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   SContainer.h
  * Author: Luis Monteiro
  *
@@ -7,7 +7,7 @@
 #ifndef SCONTAINER_H
 #define        SCONTAINER_H
 /**
- * 
+ *
  */
 #include <map>
 #include <vector>
@@ -35,7 +35,7 @@ ForwardIt _rotate(ForwardIt first, ForwardIt n_first, ForwardIt last)
 /*---------------------------------------------------------------------------------------------------------------------*
  * Definitions
  *---------------------------------------------------------------------------------------------------------------------*/
-typedef uint64_t filesize_t;        
+typedef uint64_t filesize_t;
 typedef uint32_t reference_t;
 typedef uint16_t numframes_t;
 typedef uint32_t framesize_t;
@@ -49,7 +49,7 @@ public:
 
 } ContainerException;
 /*---------------------------------------------------------------------------------------------------------------------*
- * Frame 
+ * Frame
  *---------------------------------------------------------------------------------------------------------------------*/
 using __FRAME__ = std::vector<uint8_t>;
 /**
@@ -72,7 +72,7 @@ public:
                 reserve(capacity); assign(size, val);
         }
         /**
-         * sum values  
+         * sum values
          */
         uint32_t Sum(uint32_t max) {
                 uint32_t s = 0;
@@ -86,22 +86,27 @@ public:
          */
         template <class T>
         T Number() const {
+                // set iterator position
+                auto rit = rbegin();
+                for (auto i = 1; (i < sizeof (T)) && (rit != rend()); ++i, ++rit);
+                // decode number
                 T result = 0;
-                unsigned int i = 0;
-                for (const_iterator it = begin(); (it != end()) && (i < sizeof (T)); ++it, ++i) {
+                for (auto it = rit.base(); it != end(); ++it) {
                         result <<= 8;
                         result |= T(*it);
                 }
                 return result;
         }
         /**
-         * 
+         *
          */
         template <class T>
         SFrame& Number(T val) {
-                unsigned int i = 0;
-                for (iterator it = end(); (it != begin()) && (i < sizeof (T)); val >>= 8, ++i) {
-                        *(--it) = value_type(val);
+                // encode number
+                size_t i = 0;
+                for (auto it = rbegin(); (it != rend()) && (i < sizeof (T)); ++it, ++i) {
+                        *it = value_type(val);
+                        val >>= 8;
                 }
                 return *this;
         }
@@ -111,16 +116,16 @@ public:
         inline pointer Data() {
                 return data();
         }
-        /** 
+        /**
          * get size
          */
         inline size_t Size() {
                 return size();
         }
-        /** 
+        /**
          * insert size
          */
-        inline SFrame& Insert(size_t size){
+        inline SFrame& Insert(size_t size) {
                 resize(size);
                 return *this;
         }
@@ -145,7 +150,7 @@ public:
         }
         SIFrame(SIFrame&& f) = default;
         /**
-         * move operator 
+         * move operator
          */
         SIFrame& operator=(SIFrame&& f) = default;
         /**
@@ -160,13 +165,22 @@ public:
         inline pointer Data() {
                 return __cur.base();
         }
-        /** 
+        /**
          * get size
          */
         inline size_t Size() {
                 return distance(__cur, end());
         }
-        /** 
+        /**
+         * reserve size
+         */
+        inline SIFrame& Reserve(size_t size) {
+                if (size > Size()) {
+                        Frame::resize(Frame::size() + size);
+                }
+                return *this;
+        }
+        /**
          * insert size
          */
         inline SIFrame& Insert(size_t size) {
@@ -235,13 +249,13 @@ public:
         inline pointer Data() {
                 return __cur.base();
         }
-        /** 
+        /**
          * get size
          */
         inline size_t Size() {
                 return distance(__cur, end());
         }
-        /** 
+        /**
          * remove size
          */
         inline SOFrame& Remove(size_t size) {
@@ -292,12 +306,12 @@ public:
         /**
          * constructors
          */
-        SIBreakFrame() : Frame(), 
+        SIBreakFrame() : Frame(),
         __beg(begin()), __cur(begin()), __end(end()), __lim(end()){
         }
-        SIBreakFrame(size_t size) : Frame(size), 
-        __beg(next(begin(), sizeof (uint16_t))), 
-        __cur(begin()), 
+        SIBreakFrame(size_t size) : Frame(size),
+        __beg(next(begin(), sizeof (uint16_t))),
+        __cur(begin()),
         __end(prev(end(), sizeof (uint16_t))),
         __lim(prev(end(), sizeof (uint16_t) - OFFSET)){
                 *__cur++ = 0;
@@ -305,7 +319,7 @@ public:
         }
         SIBreakFrame(SIBreakFrame&& f) = default;
         /**
-         * move operator 
+         * move operator
          */
         SIBreakFrame& operator=(SIBreakFrame&& f) = default;
         /**
@@ -331,7 +345,7 @@ public:
         inline pointer Data() {
                 return __cur.base();
         }
-        /** 
+        /**
          */
         inline size_t Size() {
                 return distance(__cur, __end);
@@ -360,7 +374,7 @@ public:
         /**
          * constructors
          */
-        SOBreakFrame(Frame& f) : Frame(f), 
+        SOBreakFrame(Frame& f) : Frame(f),
         __cur(begin()), __size(0), __lim(prev(end(), sizeof (uint16_t) - OFFSET)){
                 __size = __read_size(__cur);
         }
@@ -387,7 +401,7 @@ public:
         inline pointer Data() {
                 return __cur.base();
         }
-        /** 
+        /**
          */
         inline size_t Size() const {
                 return __size;
@@ -409,12 +423,12 @@ private:
          */
         inline size_t __read_size(iterator& cur){
                 return uint16_t(*cur++) | (uint16_t(*cur++) << 8);
-        } 
+        }
 };
 
 //typedef SOBreakFrame<1500> OBreakFrame;
 /*---------------------------------------------------------------------------------------------------------------------*
- * Container 
+ * Container
  *---------------------------------------------------------------------------------------------------------------------*/
 using __CONTAINER__ = std::vector<Frame>;
 /**
@@ -442,7 +456,7 @@ public:
         }
 } Container;
 /*---------------------------------------------------------------------------------------------------------------------*
- * Buffer 
+ * Buffer
  *---------------------------------------------------------------------------------------------------------------------*/
 using __BUFFER__ = std::basic_stringstream<uint8_t>;
 /**
@@ -455,7 +469,7 @@ public:
         SBuffer():__BUFFER__(){
                 exceptions(std::ios::failbit);
         }
-        SBuffer(const Frame& frame):__BUFFER__(){
+        SBuffer(const Frame& frame):__BUFFER__() {
                 exceptions(std::ios::failbit);
                 Write(frame);
         }
@@ -507,7 +521,7 @@ public:
          */
         inline SBuffer& Fill(IFrame& f) {
                 //
-                do{ f.Insert(readsome(f.Data(), f.Size())); } while (gcount()); 
+                do{ f.Insert(readsome(f.Data(), f.Size())); } while (gcount());
                 //
                 return *this;
         }
@@ -523,17 +537,17 @@ public:
         SContext()
         : __init(0), __position(0), __numFrames(0), __frameSize(0){
         }
-        SContext(size_t position, size_t numFrames, size_t frameSize) 
+        SContext(size_t position, size_t numFrames, size_t frameSize)
         : __init(3), __position(position), __numFrames(numFrames), __frameSize(frameSize) {
         }
-        SContext(size_t position, size_t numFrames) 
+        SContext(size_t position, size_t numFrames)
         : __init(2), __position(position), __numFrames(numFrames), __frameSize(0) {
         }
         /**
          * default constructors
          */
         SContext(SContext&& c) = default;
-        
+
         SContext(const SContext& c) = default;
         /**
          * destructor
@@ -559,7 +573,7 @@ public:
                 return __frameSize;
         }
         /**
-         * operator 
+         * operator
          */
         inline bool operator<(const SContext& context) const {
                 return __position < context.__position;
@@ -579,9 +593,9 @@ public:
          * default constructors
          */
         SDocument() = default;
-        
+
         SDocument(SDocument&& d) = default;
-        
+
         SDocument(const SDocument& d) = default;
         /**
          * context constructor
@@ -613,7 +627,7 @@ public:
          */
         SDocument& operator=(SDocument&& doc) = default;
         /**
-         * copy operator 
+         * copy operator
          */
         SDocument& operator=(const SDocument& doc) = default;
         /**
@@ -627,14 +641,14 @@ public:
                         pop_back();
                 }
                 return d;
-        }        
+        }
         /**
          * insert elements
          */
         inline SDocument& Insert(SDocument doc){
                 std::move(std::begin(doc), std::end(doc), std::back_inserter(*this));
                 return *this;
-        }                                
+        }
 } Document;
 /**
  */
@@ -647,7 +661,7 @@ public:
         SIDocument() : __capacity(0) {
         }
         SIDocument(SIDocument&& d) = default;
-        
+
         SIDocument(const SIDocument& d) = default;
         /**
          * destructor
@@ -658,7 +672,7 @@ public:
          */
         SIDocument& operator=(SIDocument&& doc) = default;
         /**
-         * copy operator 
+         * copy operator
          */
         SIDocument& operator=(const SIDocument& doc) = default;
         /**
@@ -670,12 +684,12 @@ public:
          */
         inline bool Full() {
                 return (__init > 3) && (size() >= __capacity);
-        }                
+        }
 protected:
         /**
          * capacity
          */
-        numframes_t __capacity;        
+        numframes_t __capacity;
 } IDocument;
 /*---------------------------------------------------------------------------------------------------------------------*
  * Utilities

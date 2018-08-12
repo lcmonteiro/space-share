@@ -21,7 +21,7 @@ namespace Decoded {
  */
 namespace Message {
 /**
- */        
+ */
 class SDefault {
 public:
         /**
@@ -33,29 +33,38 @@ public:
 	 */
 	virtual ~SDefault() = default;
         /**
-         * Split frame 
+         * Split buffer
          */
-        static inline Container& Split(Frame& frame, Container& container) {
+        static inline Container& Split(Frame& buf, Container& chunks) {
                 // process chunks size
-                size_t size = std::ceil(
-                        static_cast<float_t>(frame.Size() + sizeof (framesize_t)) / static_cast<float_t>(container.size())
-                );
+                auto res = div((int)(buf.Size() + sizeof (framesize_t)), (int)chunks.size());
+                // normalize chunks size
+                size_t size = res.rem > 0 ? res.quot + 1 : res.quot;
                 // resize frame and add size
-                frame.Insert(size * container.size()).Number<framesize_t>(frame.Size());
-                // container fill up 
-                OFrame out(move(frame));
-                while(!container.Full()) {
-                        container.emplace_back(move(out.Read(size)));
+                buf.Insert(size * chunks.size()).Number<framesize_t>(buf.Size());
+                // container fill up
+                OFrame out(move(buf));
+                while(!chunks.Full()) {
+                        chunks.emplace_back(move(out.Read(size)));
                 }
-                frame = move(out);
+                buf = move(out);
                 // return a processed container
-                return container;
+                return chunks;
         }
         /**
-         * Join
+         * Join buffer
          */
-        static inline Frame& Join(const Container& container, Frame& frame) {
-                
+        static inline Frame& Join(const Container& chunks, Frame& buf) {
+                // fill up buffer
+                IFrame in(move(buf));
+                for(auto& c: chunks) {
+                        in.Reserve(c.size()).Write(c);
+                }
+                buf = move(in);
+                // read buffer size
+                buf.Insert(buf.Number<framesize_t>());
+                // return a processed buffer
+                return buf;
         }
 };
 /**
