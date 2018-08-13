@@ -6,7 +6,7 @@
  */
 
 #ifndef SMSGTOOLDEFAULT_H
-#define MSGTOOLDEFAULT_H
+#define SMSGTOOLDEFAULT_H
 
 #include <stddef.h>
 #include <vector>

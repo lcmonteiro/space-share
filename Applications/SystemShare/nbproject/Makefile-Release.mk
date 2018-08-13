@@ -37,10 +37,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/_ext/4b4f2d1c/SIDirConnector.o \
 	${OBJECTDIR}/_ext/4b4f2d1c/SIFileConnector.o \
-	${OBJECTDIR}/_ext/4b4f2d1c/SIUdpConnector.o \
 	${OBJECTDIR}/_ext/4b4f2d1c/SODirConnector.o \
 	${OBJECTDIR}/_ext/4b4f2d1c/SOFileConnector.o \
-	${OBJECTDIR}/_ext/4b4f2d1c/SOUdpConnector.o \
 	${OBJECTDIR}/_ext/59b61bad/SIFileConnector.o \
 	${OBJECTDIR}/_ext/59b61bad/SOFileConnector.o \
 	${OBJECTDIR}/_ext/e30f1f44/SIDirConnector.o \
@@ -107,10 +105,6 @@ ${OBJECTDIR}/_ext/4b4f2d1c/SIFileConnector.o: ../../Share/SConnector/SDecoded/SM
 	${MKDIR} -p ${OBJECTDIR}/_ext/4b4f2d1c
 	$(COMPILE.cc) -O2 -o ${OBJECTDIR}/_ext/4b4f2d1c/SIFileConnector.o ../../Share/SConnector/SDecoded/SMessage/SKernel/SIFileConnector.cpp
 
-${OBJECTDIR}/_ext/4b4f2d1c/SIUdpConnector.o: ../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.cpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/4b4f2d1c
-	$(COMPILE.cc) -O2 -o ${OBJECTDIR}/_ext/4b4f2d1c/SIUdpConnector.o ../../Share/SConnector/SDecoded/SMessage/SKernel/SIUdpConnector.cpp
-
 ${OBJECTDIR}/_ext/4b4f2d1c/SODirConnector.o: ../../Share/SConnector/SDecoded/SMessage/SKernel/SODirConnector.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/4b4f2d1c
 	$(COMPILE.cc) -O2 -o ${OBJECTDIR}/_ext/4b4f2d1c/SODirConnector.o ../../Share/SConnector/SDecoded/SMessage/SKernel/SODirConnector.cpp
@@ -118,10 +112,6 @@ ${OBJECTDIR}/_ext/4b4f2d1c/SODirConnector.o: ../../Share/SConnector/SDecoded/SMe
 ${OBJECTDIR}/_ext/4b4f2d1c/SOFileConnector.o: ../../Share/SConnector/SDecoded/SMessage/SKernel/SOFileConnector.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/4b4f2d1c
 	$(COMPILE.cc) -O2 -o ${OBJECTDIR}/_ext/4b4f2d1c/SOFileConnector.o ../../Share/SConnector/SDecoded/SMessage/SKernel/SOFileConnector.cpp
-
-${OBJECTDIR}/_ext/4b4f2d1c/SOUdpConnector.o: ../../Share/SConnector/SDecoded/SMessage/SKernel/SOUdpConnector.cpp
-	${MKDIR} -p ${OBJECTDIR}/_ext/4b4f2d1c
-	$(COMPILE.cc) -O2 -o ${OBJECTDIR}/_ext/4b4f2d1c/SOUdpConnector.o ../../Share/SConnector/SDecoded/SMessage/SKernel/SOUdpConnector.cpp
 
 ${OBJECTDIR}/_ext/59b61bad/SIFileConnector.o: ../../Share/SConnector/SDecoded/SStream/SKernel/SIFileConnector.cpp
 	${MKDIR} -p ${OBJECTDIR}/_ext/59b61bad
