@@ -1,72 +1,141 @@
-/** 
- * File:   SFileConnector.h
+/* 
+ * File:   SMessageConnector.h
  * Author: Luis Monteiro
  *
- * Created on December 2, 2016, 2:13 PM
+ * Created on December 6, 2016, 11:17 PM
  */
-#ifndef SFILESTREAMCODED_H
-#define SFILESTREAMCODED_H
+#ifndef SLOCMESSAGECONNECTORCODED_H
+#define SLOCMESSAGECONNECTORCODED_H
 /**
+ * Space
  */
 #include "SKernel/SContainer.h"
 #include "SKernel/SConnector.h"
 /**
- * Base coded streams
+ * Share
  */
-#include "Sbase/SIFileConnector.h"
-#include "Sbase/SOFileConnector.h"
+#include "SKernel/SIMessageConnector.h"
+#include "SKernel/SOMessageConnector.h"
+#include "SKernel/SIOMessageConnector.h"
 /**
- * Begin namespace Item
+ * Begin namespace Encoded
  */
-namespace Code {
+namespace Encoded {
 /**
- * Input FILE Connector coded template
+ * Begin namespace Data
  */
-template<class T>
-class SIFileConnectorT : public T {
+namespace Message {
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Resource adapter
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+class ResourceAdapterLoc : private SSocketResource {
 public:
+        using SSocketResource::SSocketResource;
+        using SSocketResource::operator=;
+        /**
+         * interfaces
+         */
+        inline SSocketResource& Base() {
+                return *this;
+        }
+        inline void Wait(const Address& uri) {
+                SSocketResource::Bind(uri.Path(), MESSAGE);
+        }
+        inline void Fill(IFrame& buf) {
+                SSocketResource::Fill(buf);
+	}
+        inline void Drain(const Frame& buf) {
+                SSocketResource::Drain(buf);
+        }
+        inline bool Good() {
+                SSocketResource::Good();
+        }
+        inline void Reset() {
+                *this = SSocketResource();
+        }
+};    
+/**
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Input Local Connector
+ * ---------------------------------------------------------------------------------------------------------------------
+ * template
+ */
+template<class R>
+class SILocConnectorT : public SIMessageConnector<R> {
+public:
+        using SIMessageConnector<R>::SIMessageConnector;
+        /**
+         */
+        SILocConnectorT() = delete;
 	/**
 	 * make
 	 */
 	template<typename...Args>
-	static Code::IConnector Make(Args &&...args) {
-		return make_shared<SIFileConnectorT>(forward<Args>(args)...);
-	}
-	/**
-	 * constructor
-	 */
-	SIFileConnectorT(const string address) : T(address) {
+	static IConnector Make(Args &&...args) {
+		return make_shared<SILocConnectorT>(forward<Args>(args)...);
 	}
 };
 /**
- * Output FILE Connector coded template
+ * ---------------------------------------------------------------------------------------------------------------------
+ * Output Local Connector
+ * ---------------------------------------------------------------------------------------------------------------------
+ * template
  */
-template<class T>
-class SOFileConnectorT : public T {
+template<class R>
+class SOLocConnectorT : public SOMessageConnector<R> {
 public:
+        using SOMessageConnector<R>::SOMessageConnector;
+        /**
+         */
+        SOLocConnectorT() = delete;
 	/**
 	 * make
 	 */
 	template<typename...Args>
-	static Code::OConnector Make(Args &&...args) {
-		return make_shared<SOFileConnectorT>(forward<Args>(args)...);
-	}
-	/**
-	 * constructor
-	 */
-	SOFileConnectorT(const string address) : T(address) {
+	static OConnector Make(Args &&...args) {
+		return make_shared<SOLocConnectorT>(forward<Args>(args)...);
 	}
 };
 /**
- * definitions
+ * ---------------------------------------------------------------------------------------------------------------------
+ * IO Local Connector
+ * ---------------------------------------------------------------------------------------------------------------------
+ * template
  */
-typedef SIFileConnectorT<SIFileConnector> IFileConnector;
-typedef SOFileConnectorT<SOFileConnector> OFileConnector;
+template<class R>
+class SIOLocConnectorT : public SIOMessageConnector<R> {
+public:
+        using SIOMessageConnector<R>::SIOMessageConnector;
+        /**
+         */
+        SIOLocConnectorT() = delete;
+	/**
+	 * make
+	 */
+	template<typename...Args>
+	static IOConnector Make(Args &&...args) {
+		return make_shared<SIOLocConnectorT>(forward<Args>(args)...);
+	}
+};
 /**
- * End namespace Item
+ * ---------------------------------------------------------------------------------------------------------------------
+ * definition
+ * ---------------------------------------------------------------------------------------------------------------------
+ */
+typedef SIOLocConnectorT<ResourceAdapterLoc> IOLocConnector;
+typedef SILocConnectorT<ResourceAdapterLoc>  ILocConnector;
+typedef SOLocConnectorT<ResourceAdapterLoc>  OLocConnector;
+/**
+ * End namespace Message
+ */
+}
+/**
+ * End namespace Encoded
  */
 }
 /**
  */
-#endif /* SFILESTREAMCODED_H */
+#endif /* SLOCMESSAGECONNECTORCODED_H */
 
