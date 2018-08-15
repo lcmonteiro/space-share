@@ -20,7 +20,7 @@
 /**
  */
 template <class W>
-class SEncodeT : public STransform<SConnector::Key, Decoded::IConnector, Container, Encoded::OConnector> {
+class SEncodeT : public SFunctionTransform<SConnector::Key, Decoded::IConnector, Container, Encoded::OConnector> {
 	/**
 	 * settings
 	 */
@@ -28,7 +28,7 @@ class SEncodeT : public STransform<SConnector::Key, Decoded::IConnector, Contain
 	/**
 	 * define types
 	 */ 
-        using Super    = STransform<SConnector::Key, Decoded::IConnector, Container, Encoded::OConnector>;
+        using Super    = SFunctionTransform<SConnector::Key, Decoded::IConnector, Container, Encoded::OConnector>;
         using Road     = typename Super::Road;
         using Data     = typename Super::Data;
         using Location = typename Road::Location;

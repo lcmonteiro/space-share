@@ -95,29 +95,29 @@ int main(int argc, char** argv) {
          */
         SMachine m("system.share", {
                 Module::Config {
-                        Module::Group {
+                        Module::Base {
                                 { "uri",  "encoder"},
                                 { "type", "encode"}
                         },
-                        Module::Group {
+                        Module::Function {
                                 {"type", "message"}
                         },
-                        Module::Groups {
-                                Module::Group {
+                        Module::Inputs {
+                                Module::Input {
                                         { "uri",  "/tmp/in"},
                                         { "type", "message.local"}
                                 }
                         },
-                        Module::Groups {
-                                Module::Group { 
+                        Module::Outputs {
+                                Module::Output { 
                                         { "uri",  "/tmp/out.1"},
                                         { "type", "message.file"}
                                 },
-                                Module::Group {
+                                Module::Output {
                                         { "uri",  "/tmp/out.2"},
                                         { "type", "message.file"}
                                 },
-                                Module::Group {
+                                Module::Output {
                                         { "uri",  "/tmp/out.3"},
                                         { "type", "message.file"}
                                 }

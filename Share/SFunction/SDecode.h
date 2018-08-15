@@ -24,11 +24,11 @@ namespace Message {
 /**
  * decode
  */
-class SDecode : public STransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector> {
+class SDecode : public SFunctionTransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector> {
         /**
 	 * define types
 	 */ 
-        using Super    = STransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
+        using Super    = SFunctionTransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
         using Road     = typename Super::Road;
         using Data     = typename Super::Data;
         using Cache    = Message::SCache;
@@ -80,7 +80,7 @@ protected:
                         /**--------------------------------------------------------------------------------------------*
                          * write
                          *---------------------------------------------------------------------------------------------*/
-                        DEBUG("decode {" 
+                        DEBUG("decode={" 
                                 << "p=" << code.GetPosition()
                                 << "}"
                         );
@@ -95,7 +95,7 @@ protected:
                 }
 	}
 	inline void processData(Data&& data, Road& out) {
-		DEBUG("receive= {" 
+		DEBUG("receive={" 
                         << " p=" << data.GetPosition() 
                         << " n=" << data.GetNumFrames() 
                         << " s=" << data.size() 
@@ -127,7 +127,7 @@ namespace Stream {
 /**
  * decode
  */
-class SDecode : public STransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector> {
+class SDecode : public SFunctionTransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector> {
 	/**
 	 * settings
 	 */
@@ -135,7 +135,7 @@ class SDecode : public STransform<SConnector::Key, Encoded::IConnector, Document
 	/**
 	 * define types
 	 */ 
-        using Super    = STransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
+        using Super    = SFunctionTransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
         using Road     = typename Super::Road;
         using Data     = typename Super::Data;
         using Cache    = Stream::SCache;

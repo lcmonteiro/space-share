@@ -105,7 +105,7 @@ public:
  * transform template 
  *---------------------------------------------------------------------------------------------------------------------*/
 template<class K, class I, class D, class O>
-class STransform : public SFunction {
+class SFunctionTransform : public SFunction {
 public:
         /**
          * 
@@ -172,11 +172,11 @@ protected:
  * ypsilon template 
  *---------------------------------------------------------------------------------------------------------------------*/
 template<class IO, class IN, class OUT>
-class SYpsilon : public SFunction {
+class SFunctionYpsilon : public SFunction {
 public:
 	/**
 	 */
-	SYpsilon(uint32_t timeout, const uint32_t energy = 1, const uint8_t verbose = 0)
+	SFunctionYpsilon(uint32_t timeout, const uint32_t energy = 1, const uint8_t verbose = 0)
 	: SFunction("ypsilon", energy, verbose), __timeout(timeout) {
 		Recover();
 	}

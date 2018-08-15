@@ -42,7 +42,7 @@ namespace SModule {
                                 // set energy
                                 in->SetEnergy(Command::template Peek<int>(o, Properties::ENERGY));
                         } catch(range_error&) {
-                                using Builder = typename Input::Builder<typename I::Object>;
+                                using Builder = typename SInput::Builder<typename I::Object>;
                                 // build a new object
                                 input.Insert(Command::template Peek<Key>(o, Properties::URI), Builder::Build(o));
                         }
@@ -68,7 +68,7 @@ namespace SModule {
                                 // set energy
                                 out->SetEnergy(Command::template Peek<int>(o, Properties::ENERGY));
                         } catch(range_error&) {
-                                using Builder = typename Output::Builder<typename O::Object>;
+                                using Builder = typename SOutput::Builder<typename O::Object>;
                                 // build a new object
                                 output.Insert(Command::template Peek<Key>(o, Properties::URI), Builder::Build(o));
                         }
@@ -81,7 +81,7 @@ namespace SModule {
  * ---------------------------------------------------------------------------------------------------------------------
  */
 template<class I, class D, class O>
-int SModule::Process::Transform(const Group& opt, const Groups& in_opt, const Groups& out_opt) {
+int SModule::Process::Transform(const Function& opt, const Inputs& in_opt, const Outputs& out_opt) {
         /**
          * exceptions
          */
@@ -95,9 +95,9 @@ int SModule::Process::Transform(const Group& opt, const Groups& in_opt, const Gr
         /**
          * builders 
          */
-        using IBuilder = Input::Builder<I>;
-        using TBuilder = Transform::Builder<I, D, O>;
-        using OBuilder = Output::Builder<O>;
+        using IBuilder = SInput::Builder<I>;
+        using TBuilder = STransform::Builder<I, D, O>;
+        using OBuilder = SOutput::Builder<O>;
         /**
          * command monitor
          */
@@ -279,10 +279,10 @@ int SModule::Process::Transform(const Group& opt, const Groups& in_opt, const Gr
  * template implementations
  */
 template int SModule::Process::Transform<Decoded::IConnector, Container, Encoded::OConnector>(
-        const SProcess::Group& opt, const SProcess::Groups& in_opt, const SProcess::Groups& out_opt
+        const SProcess::Function& opt, const SProcess::Inputs& in_opt, const SProcess::Outputs& out_opt
 );
 template int SModule::Process::Transform<Encoded::IConnector, Document, Decoded::OConnector>(
-        const SProcess::Group& opt, const SProcess::Groups& in_opt, const SProcess::Groups& out_opt
+        const SProcess::Function& opt, const SProcess::Inputs& in_opt, const SProcess::Outputs& out_opt
 );
 /**
  * -------------------------------------------------------------------------------------------------------------

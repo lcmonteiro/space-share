@@ -54,8 +54,12 @@ public:
         using Key     = string;
         using Value   = string;
         using Command = SCommand<Key, Value>;   
-        using Group   = Command::Group;
-        using Groups  = Command::Groups;
+        using Base    = Command::Group;
+        using Function= Command::Group;
+        using Input   = Command::Group;
+        using Output  = Command::Group;
+        using Inputs  = Command::Groups;
+        using Outputs = Command::Groups;
         /**
          * -------------------------------------------------------------------------------------------------------------
          * Tags
@@ -77,7 +81,7 @@ public:
          * -------------------------------------------------------------------------------------------------------------
          * main constructor
          */
-        SProcess(const Key& uri, Group opt, Group f_opt, Groups i_opt, Groups o_opt) 
+        SProcess(const Key& uri, Base opt, Function f_opt, Inputs i_opt, Outputs o_opt) 
         : SLog(Command::Peek(opt, VERBOSE,  0)), __uri(uri), 
         __f_typ(Command::Peek(opt, TYPE, string())), 
         __f_opt(move(f_opt)), 
@@ -151,21 +155,21 @@ protected:
          **
          * function options
          */
-        Group __f_opt;
+        Function __f_opt;
         /**
          * input options
          */
-        Groups __i_opt;
+        Inputs __i_opt;
         /**
          * output options
          */
-        Groups __o_opt;
+        Outputs __o_opt;
         /**
          * -------------------------------------------------------------------------------------------------------------
          * Execute
          * -------------------------------------------------------------------------------------------------------------
          */
-        virtual int Execute(const Key& func, const Group& opt, const Groups& i_opt, const Groups& o_opt) = 0;
+        virtual int Execute(const Key& func, const Function& opt, const Inputs& i_opt, const Outputs& o_opt) = 0;
         /**
          * -------------------------------------------------------------------------------------------------------------
          * Utilities

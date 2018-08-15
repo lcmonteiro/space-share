@@ -24,7 +24,7 @@
  * ---------------------------------------------------------------------------------------------------------------------
  */
 template<class IO, class I, class O>
-int SModule::Process::Ypsilon(const Group& opt, const Groups& in_opt, const Groups& out_opt) {
+int SModule::Process::Ypsilon(const Function& opt, const Inputs& in_opt, const Outputs& out_opt) {
         /**
          * exceptions
          */
@@ -40,10 +40,10 @@ int SModule::Process::Ypsilon(const Group& opt, const Groups& in_opt, const Grou
         /**
          * builders 
          */
-        using IOBuilder = IOput::Builder<IO>;
-        using IBuilder  = Input::Builder<I>;
-        using YBuilder  = Ypsilon::Builder<IO, I, O>;
-        using OBuilder  = Output::Builder<O>;  
+        using IOBuilder = SIOput::Builder<IO>;
+        using IBuilder  = SInput::Builder<I>;
+        using YBuilder  = SYpsilon::Builder<IO, I, O>;
+        using OBuilder  = SOutput::Builder<O>;  
         /**
          * input timeout 
          */
@@ -195,8 +195,8 @@ int SModule::Process::Ypsilon(const Group& opt, const Groups& in_opt, const Grou
  * template implementations
  */
 template int SModule::Process::Ypsilon<Decoded::IOConnector, Decoded::IConnector, Decoded::OConnector>(
-        const SProcess::Group& opt, const SProcess::Groups& in_opt, const SProcess::Groups& out_opt
+        const SProcess::Function& opt, const SProcess::Inputs& in_opt, const SProcess::Outputs& out_opt
 );
 template int SModule::Process::Ypsilon<Encoded::IOConnector, Encoded::IConnector, Encoded::OConnector>(
-        const SProcess::Group& opt, const SProcess::Groups& in_opt, const SProcess::Groups& out_opt
+        const SProcess::Function& opt, const SProcess::Inputs& in_opt, const SProcess::Outputs& out_opt
 );

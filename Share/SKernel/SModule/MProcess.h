@@ -40,7 +40,7 @@ public:
         /**
          * function type
          */
-        typedef function<int(const Group&, const Groups&, const Groups&)> Function;
+        typedef function<int(const Function&, const Inputs&, const Outputs&)> pFunction;
         /**
          * module configuration definition 
          *      0 - module settings, 
@@ -48,7 +48,7 @@ public:
          *      2 - input settings, 
          *      3 - output settings
          */
-        typedef tuple<Group, Group, Groups, Groups> Config;        
+        typedef tuple<Base, Function, Inputs, Outputs> Config;        
         /**
          * -------------------------------------------------------------------------------------------------------------
          * Constructor
@@ -85,18 +85,18 @@ protected:
          * Execute
          * -------------------------------------------------------------------------------------------------------------
          */
-        int Execute(const Key& func, const Group& opt, const Groups& in_opt, const Groups& out_opt) override {
-                static map<Key, Function> funcs({
-                        {Properties::DECODE_Y, [this](const Group& f, const Groups& i, const Groups& o) {
+        int Execute(const Key& func, const Function& opt, const Inputs& in_opt, const Outputs& out_opt) override {
+                static map<Key, pFunction> funcs({
+                        {Properties::DECODE_Y, [this](const Function& f, const Inputs& i, const Outputs& o) {
                                 return Ypsilon<Decoded::IOConnector, Decoded::IConnector, Decoded::OConnector>(f, i, o);
                         }},
-                        {Properties::ENCODE, [this](const Group& f, const Groups& i, const Groups& o) {
+                        {Properties::ENCODE, [this](const Function& f, const Inputs& i, const Outputs& o) {
                                 return Transform<Decoded::IConnector, Container, Encoded::OConnector>(f, i, o);
                         }},
-                        {Properties::ENCODE_Y, [this](const Group& f, const Groups& i, const Groups& o) {
+                        {Properties::ENCODE_Y, [this](const Function& f, const Inputs& i, const Outputs& o) {
                                 return Ypsilon<Encoded::IOConnector, Encoded::IConnector, Encoded::OConnector>(f, i, o);
                         }},
-                        {Properties::DECODE, [this](const Group& f, const Groups& i, const Groups& o) {
+                        {Properties::DECODE, [this](const Function& f, const Inputs& i, const Outputs& o) {
                                 return Transform<Encoded::IConnector, Document, Decoded::OConnector>(f, i, o);
                         }}
                 });
@@ -129,12 +129,12 @@ private:
          * transform process
          */
         template<class I, class D, class O>
-        int Transform(const Group& opt, const Groups& i_opt, const Groups& o_opt);
+        int Transform(const Function& opt, const Inputs& i_opt, const Outputs& o_opt);
         /**
          * transform process
          */
         template<class IO, class I, class O>
-        int Ypsilon(const Group& opt, const Groups& i_opt, const Groups& o_opt);
+        int Ypsilon(const Function& opt, const Inputs& i_opt, const Outputs& o_opt);
         /**
          * --------------------------------------------------------------------------------------------------------------
          * Helpers
