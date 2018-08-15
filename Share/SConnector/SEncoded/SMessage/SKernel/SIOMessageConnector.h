@@ -1,11 +1,11 @@
 /* 
- * File:   SIOStreamConnector.h
+ * File:   SIOMessageConnector.h
  * Author: Luis Monteiro
  *
  * Created on December 11, 2016, 1:25 AM
  */
-#ifndef SIOSTREAMCONNECTORCODED_H
-#define SIOSTREAMCONNECTORCODED_H
+#ifndef SIOMESSAGECONNECTORCODED_H
+#define SIOMESSAGECONNECTORCODED_H
 /**
  * Space
  */
@@ -18,22 +18,25 @@
  */
 namespace Encoded {
 /**
- * Begin namespace Stream
+ * Begin namespace Message
  */
-namespace Stream {
+namespace Message {
 /**
  */
 template<class RESOURCE>
-class SIOStreamConnector : public SInOutputConnector {
+class SIOMessageConnector : public SInOutputConnector {
 public:
 	/**
 	 * constructor
 	 */
-	SIOStreamConnector(const string address);
+	SIOMessageConnector(
+                const string address,   // connection address
+                const size_t maxsmsg    // max size message 
+        ) : SInOutputConnector(address), __buffer(maxsmsg), __res() {}
 	/**
 	 * destructor
 	 */
-	virtual ~SIOStreamConnector() = default;
+	virtual ~SIOMessageConnector() = default;
 	/**
 	 * inline overrides
 	 */
@@ -49,98 +52,84 @@ protected:
          */
 	Document _read() override { 
                 /**-----------------------------------------------------------------------------------------------------
+                 * Fill buffer
+                 *----------------------------------------------------------------------------------------------------**/
+                __res.Fill(__buffer.Expand());
+                /**-----------------------------------------------------------------------------------------------------
                  * read context
-                 *------------------------------------------------------------------------------------**/
-                OFrame header(move(__buffer));
-                auto position = header.Read(sizeof (reference_t)).Number<reference_t>();
-                auto nframest = header.Read(sizeof (numframes_t)).Number<numframes_t>();
-                auto nframesp = header.Read(sizeof (numframes_t)).Number<numframes_t>();
-                auto framelen = header.Read(sizeof (framesize_t)).Number<framesize_t>();
-                /**-------------------------------------------------------------------------------------
-                 * info
-                 *------------------------------------------------------------------------------------**/
-                INFO("CODE::IN::"
+                 *----------------------------------------------------------------------------------------------------**/
+                OFrame frame(move(__buffer));
+                auto position = frame.Read(sizeof (reference_t)).Number<reference_t>();
+                auto nframest = frame.Read(sizeof (numframes_t)).Number<numframes_t>();
+                auto nframesp = frame.Read(sizeof (numframes_t)).Number<numframes_t>();
+                auto framelen = frame.Read(sizeof (framesize_t)).Number<framesize_t>();
+                /**-----------------------------------------------------------------------------------------------------
+                 * log
+                 *----------------------------------------------------------------------------------------------------**/
+                INFO("CODE::IN::" 
                         << "pos=" << position << " " 
-                        << "n="	  << nframest << " " 
+                        << "n="   << nframest << " " 
                         << "sz="  << nframesp << " " 
                         << "len=" << framelen
                 );
-                /**-------------------------------------------------------------------------------------
-                 * prepare frame
-                 *------------------------------------------------------------------------------------**/
-                __buffer = IFrame(framelen);
-                /**-------------------------------------------------------------------------------------
-                 * prepare document
-                 *------------------------------------------------------------------------------------**/
-                __container = Document(Container(nframesp), Context(position, nframest, framelen));
-
-                /**-------------------------------------------------------------------------------------
-                 * Fill container
-                 *------------------------------------------------------------------------------------**/
-                for (IFrame frame; !__container.Full(); __container.push_back(move(frame))) {
-                        /**-----------------------------------------------------------------------------
-                         * Fill buffer
-                         *----------------------------------------------------------------------------**/
-                        while (!__buffer.Full()) {
-                                __res.Fill(__buffer);
-                        }
-                        /**-----------------------------------------------------------------------------
-                         * swap buffers
-                         *----------------------------------------------------------------------------**/
-                        frame = IFrame(__buffer.size());
-                        swap(__buffer, frame);
+                /**-----------------------------------------------------------------------------------------------------
+                 * read nframes
+                 *----------------------------------------------------------------------------------------------------**/
+                Document container(Context(position, nframest, framelen));
+                container.reserve(nframesp);
+                while(!container.Full()){
+                        container.push_back(frame.Read(framelen));
                 }
-                        
-                return __container;
-        }
-	/**
-         * drain 
-         */
-	list<Document> _drain() override {
                 /**-----------------------------------------------------------------------------------------------------
-                 * info
+                 * reuse buffer
                  *----------------------------------------------------------------------------------------------------**/
-                INFO("CODE(drain)::IN::n=" << __container.size());
+                __buffer = move(frame);
                 /**-----------------------------------------------------------------------------------------------------
-                 * next state
+                 * return container
                  *----------------------------------------------------------------------------------------------------**/
-                __state = 0;
-                /**-----------------------------------------------------------------------------------------------------
-                 * drain container
-                 *----------------------------------------------------------------------------------------------------**/
-                if(__container.empty()){
-                        return {};
-                }
-                return {move(__container)};
+                return container;
         }
 	/**
          * write
          */
 	void _write(const Document& container) override {
-                static Frame SEQ({1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233});
+                const size_t HEADER_SIZE = sizeof (reference_t) + sizeof (numframes_t) * 2  + sizeof (framesize_t);
                 /**-----------------------------------------------------------------------------------------------------
-                 * write sequence
-                 *----------------------------------------------------------------------------------------------------**/
-                __res.Drain(SEQ);
-                /**-----------------------------------------------------------------------------------------------------
-                 * write context
-                 *----------------------------------------------------------------------------------------------------**/
-                __res.Drain(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));
-                __res.Drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.GetNumFrames()));
-                __res.Drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.size()));
-                __res.Drain(Frame(sizeof (framesize_t)).Number<framesize_t>(container.GetFrameSize()));
-                /**-----------------------------------------------------------------------------------------------------
-                 * info
+                 * log info
                  *----------------------------------------------------------------------------------------------------**/
                 INFO("CODE::OUT::"
-                        << "pos=" << container.GetPosition() << " " << "n=" << container.GetNumFrames() << " "
-                        << "sz=" << container.GetFrameSize() << " " << "len=" << container.size()
+                        << "pos=" << container.GetPosition()  << " " 
+                        << "n="   << container.GetNumFrames() << " "
+                        << "sz="  << container.GetFrameSize() << " " 
+                        << "len=" << container.size()
                 );
                 /**-----------------------------------------------------------------------------------------------------
-                 * write nframes
+                 * process container
                  *----------------------------------------------------------------------------------------------------**/
-                for (auto& f : container) {
-                        __res.Drain(f);
+                __buffer.Expand();
+                for (auto& c : STools::Split(move(container), __buffer.Size() - HEADER_SIZE)) {
+                        IFrame msg(move(__buffer));
+                        /**---------------------------------------------------------------------------------------------
+                         * write context
+                         *--------------------------------------------------------------------------------------------**/
+                        msg.Write(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));
+                        msg.Write(Frame(sizeof (numframes_t)).Number<numframes_t>(container.GetNumFrames()));
+                        msg.Write(Frame(sizeof (numframes_t)).Number<numframes_t>(c.size()));
+                        msg.Write(Frame(sizeof (framesize_t)).Number<framesize_t>(container.GetFrameSize()));
+                        /**---------------------------------------------------------------------------------------------
+                         * write container
+                         *--------------------------------------------------------------------------------------------**/
+                        for (auto& f : container) {        
+                                msg.Write(f);
+                        }
+                        /**---------------------------------------------------------------------------------------------
+                         * write message
+                         *--------------------------------------------------------------------------------------------**/
+                        __res.Drain(msg);
+                        /**---------------------------------------------------------------------------------------------
+                         * reuse buffer
+                         *--------------------------------------------------------------------------------------------**/
+                        (__buffer = move(msg)).Expand();
                 }
         }
 	/**
@@ -193,10 +182,6 @@ protected:
 	}
 private:
 	/**
-	 * container
-	 */
-	Document __container;
-	/**
          * buffer
          */
 	IFrame __buffer;
@@ -206,12 +191,12 @@ private:
 	RESOURCE __res;
 };
 /**
- * End namespace Stream
+ * End namespace Message
  */
 }
 /**
  * End namespace Encoded
  */
 }
-#endif /* SIOSTREAMCONNECTORCODED_H */
+#endif /* SIOMESSAGECONNECTORCODED_H */
 

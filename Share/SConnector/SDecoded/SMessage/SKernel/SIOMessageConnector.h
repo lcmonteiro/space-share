@@ -30,7 +30,7 @@ public:
 	 * constructor
 	 */
 	SIOMessageConnector(
-		const string address,   // con address
+		const string address,   // connection address
 		const size_t nframes,   // num of frames 
 		const size_t maxsmsg    // max size message  
 	) : SInOutputConnector(address), __container(nframes), __buffer(maxsmsg), __res() {}
