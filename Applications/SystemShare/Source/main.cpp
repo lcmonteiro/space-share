@@ -74,7 +74,6 @@ static void stop(int sig) {
 }
 static void Null(int sig) {
 }
-#include "SMonitor/SResourceMonitor.h"
 int main(int argc, char** argv) {        
 	srand(time(NULL));      
 	/**------------------------------------------------------------------------------------------------------------*
