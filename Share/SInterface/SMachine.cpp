@@ -48,7 +48,7 @@ SMachine::SMachine(const Key& uri, const vector<string> conf) : __uri(uri) {
  * process
  */
 bool SMachine::Process(chrono::milliseconds timeout) {
-        Frame frame(100);
+        Frame frame(0x1000);
         try {
                 /**
                  * wait data
