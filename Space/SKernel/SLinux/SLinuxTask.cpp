@@ -12,7 +12,10 @@
 /**
  */
 #include "SLinuxTask.h"
-#include "SMonitor/SLinux/SLinuxResourceMonitor.h"
+/**
+ * Space Monitor
+ */
+#include "SLinuxResourceMonitor.h"
 /**
  * definitions
  */

@@ -12,12 +12,12 @@
 #ifdef __linux__
 /**
  */
-#include "./SLinux/SLinuxTask.h"
+#include "SLinuxTask.h"
 /**
  */
 class STask : public SLinuxTask {
 public:
-        using SLinuxTask::SLinuxTask;
+    using SLinuxTask::SLinuxTask;
 };
 /**
  */

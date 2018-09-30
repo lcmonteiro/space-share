@@ -8,7 +8,7 @@
 #define SRESOURCEMONITOR_H
 /**
  */
-#include "SKernel/SResource.h"
+#include "SResource.h"
 /*---------------------------------------------------------------------------------------------------------------------*
  * ResourceMonitor template
  *---------------------------------------------------------------------------------------------------------------------*/
@@ -20,11 +20,11 @@
 #ifdef __linux__
 /**
  */
-#include "SLinux/SLinuxResourceMonitor.h"
+#include "SLinuxResourceMonitor.h"
 /**
  */
 class SResourceMonitor : public SLinuxResourceMonitor {
-	using SLinuxResourceMonitor::SLinuxResourceMonitor;
+    using SLinuxResourceMonitor::SLinuxResourceMonitor;
 };
 /**
  */

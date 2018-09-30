@@ -8,7 +8,7 @@
 #define SLOCALRESOURCE_H
 /**
  */
-#include "SMonitor/SResourceMonitor.h"
+#include "SResourceMonitor.h"
 /**
  * ---------------------------------------------------------------------------------------------------------------------
  * linux platform 
@@ -17,36 +17,36 @@
 #ifdef __linux__
 /**
  */
-#include "SLinux/SLinuxSocket.h"
+#include "SLinuxSocket.h"
 /**
  * message
  */
 namespace Message {
-        class SLocalResource : public SLinuxSocket {
-        public:
-                using SLinuxSocket::SLinuxSocket;
-                /**
-                 * connect
-                 */
-                inline void Connect(const string& host) {
-                        SLinuxSocket::Connect(host, SLinuxSocket::DGRAM);
-                }
-                /**
-                 * bind
-                 */
-                inline void Bind(const string& host) {
-                        SLinuxSocket::Bind(host, SLinuxSocket::DGRAM);
-                }
-                /**
-                 * wait
-                 */
-                inline SLocalResource& Wait(chrono::milliseconds timeout) {
-                        if(!SLinuxResourceMonitor::Wait(*this, timeout).Valid()) {
-                                throw IResourceExceptionABORT();
-                        }
-                        return *this;
-                }
-        };
+    class SLocalResource : public SLinuxSocket {
+    public:
+        using SLinuxSocket::SLinuxSocket;
+        /**
+         * connect
+         */
+        inline void Connect(const string& host) {
+            SLinuxSocket::Connect(host, SLinuxSocket::DGRAM);
+        }
+        /**
+         * bind
+         */
+        inline void Bind(const string& host) {
+            SLinuxSocket::Bind(host, SLinuxSocket::DGRAM);
+        }
+        /**
+         * wait
+         */
+        inline SLocalResource& Wait(chrono::milliseconds timeout) {
+            if(!SLinuxResourceMonitor::Wait(*this, timeout).Valid()) {
+                throw IResourceExceptionABORT();
+            }
+            return *this;
+        }
+    };
 }
 /**
  * stream

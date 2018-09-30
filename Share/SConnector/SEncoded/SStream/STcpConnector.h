@@ -7,16 +7,19 @@
 #ifndef STCPSTREAMCONNECTORCODED_H
 #define STCPSTREAMCONNECTORCODED_H
 /**
- * Space
+ * Space Kernel
  */
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
+#include "SContainer.h"
 /**
- * Share
+ * Share Kernel
  */
-#include "SKernel/SIStreamConnector.h"
-#include "SKernel/SOStreamConnector.h"
-#include "SKernel/SIOStreamConnector.h"
+#include "SConnector.h"
+/**
+ * Stream Kernel
+ */
+#include "SIStreamConnector.h"
+#include "SOStreamConnector.h"
+#include "SIOStreamConnector.h"
 /**
  * Begin namespace Encoded
  */
@@ -32,29 +35,29 @@ namespace Stream {
  */
 class ResourceAdapterTcp : private SSocketResource {
 public:
-        using SSocketResource::SSocketResource;
-        using SSocketResource::operator=;
-        /**
-         * interfaces
-         */
-        inline SSocketResource& Base() {
-                return *this;
-        }
-        inline void Connect(const Address& uri) {
-                SSocketResource::Connect(uri.Host(), uri.Port(), STREAM);
-        }
-        inline void Fill(IFrame& buf) {
-                SSocketResource::Fill(buf);
-	}
-        inline void Drain(const Frame& buf) {
-                SSocketResource::Drain(buf);
-        }
-        inline bool Good() {
-                SSocketResource::Good();
-        }
-        inline void Reset() {
-                *this = SSocketResource();
-        }
+    using SSocketResource::SSocketResource;
+    using SSocketResource::operator=;
+    /**
+     * interfaces
+     */
+    inline SSocketResource& Base() {
+        return *this;
+    }
+    inline void Connect(const Address& uri) {
+        SSocketResource::Connect(uri.Host(), uri.Port(), STREAM);
+    }
+    inline void Fill(IFrame& buf) {
+        SSocketResource::Fill(buf);
+    }
+    inline void Drain(const Frame& buf) {
+        SSocketResource::Drain(buf);
+    }
+    inline bool Good() {
+        SSocketResource::Good();
+    }
+    inline void Reset() {
+        *this = SSocketResource();
+    }
 };    
 /**
  * ---------------------------------------------------------------------------------------------------------------------
@@ -65,17 +68,17 @@ public:
 template<class R>
 class SITcpConnectorT : public SIStreamConnector<R> {
 public:
-        using SIStreamConnector<R>::SIStreamConnector;
-        /**
-         */
-        SITcpConnectorT() = delete;
-	/**
-	 * make
-	 */
-	template<typename...Args>
-	static IConnector Make(Args &&...args) {
-		return make_shared<SITcpConnectorT>(forward<Args>(args)...);
-	}
+    using SIStreamConnector<R>::SIStreamConnector;
+    /**
+     */
+    SITcpConnectorT() = delete;
+    /**
+     * make
+     */
+    template<typename...Args>
+    static IConnector Make(Args &&...args) {
+        return make_shared<SITcpConnectorT>(forward<Args>(args)...);
+    }
 };
 /**
  * ---------------------------------------------------------------------------------------------------------------------
@@ -86,17 +89,17 @@ public:
 template<class R>
 class SOTcpConnectorT : public SOStreamConnector<R> {
 public:
-        using SOStreamConnector<R>::SOStreamConnector;
-        /**
-         */
-        SOTcpConnectorT() = delete;
-	/**
-	 * make
-	 */
-	template<typename...Args>
-	static OConnector Make(Args &&...args) {
-		return make_shared<SOTcpConnectorT>(forward<Args>(args)...);
-	}
+    using SOStreamConnector<R>::SOStreamConnector;
+    /**
+     */
+    SOTcpConnectorT() = delete;
+    /**
+     * make
+     */
+    template<typename...Args>
+    static OConnector Make(Args &&...args) {
+        return make_shared<SOTcpConnectorT>(forward<Args>(args)...);
+    }
 };
 /**
  * ---------------------------------------------------------------------------------------------------------------------
@@ -107,17 +110,17 @@ public:
 template<class R>
 class SIOTcpConnectorT : public SIOStreamConnector<R> {
 public:
-        using SIOStreamConnector<R>::SIOStreamConnector;
-        /**
-         */
-        SIOTcpConnectorT() = delete;
-	/**
-	 * make
-	 */
-	template<typename...Args>
-	static IOConnector Make(Args &&...args) {
-		return make_shared<SIOTcpConnectorT>(forward<Args>(args)...);
-	}
+    using SIOStreamConnector<R>::SIOStreamConnector;
+    /**
+     */
+    SIOTcpConnectorT() = delete;
+    /**
+     * make
+     */
+    template<typename...Args>
+    static IOConnector Make(Args &&...args) {
+        return make_shared<SIOTcpConnectorT>(forward<Args>(args)...);
+    }
 };
 /**
  * ---------------------------------------------------------------------------------------------------------------------

@@ -7,12 +7,17 @@
 #ifndef SOFILESTREAMSOCKET_H
 #define SOFILESTREAMSOCKET_H
 /**
- * Space
+ * Space Resource
  */
-#include "SResource/SFileResource.h"
-//
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
+#include "SFileResource.h"
+/**
+ * Space Kernel
+ */
+#include "SContainer.h"
+/**
+ * Share Kernel
+ */
+#include "SConnector.h"
 /**
  * Begin namespace Decoded
  */
@@ -25,47 +30,47 @@ namespace Message {
  */
 class SOFileConnector : public SOutputConnector {
 public:
-	/**
-	 * constructor
-	 */
-	SOFileConnector(const string address);
-	/**
-	 * destructor
-	 */
-	virtual ~SOFileConnector() = default;
-	/**
-	 */
+    /**
+     * constructor
+     */
+    SOFileConnector(const string address);
+    /**
+     * destructor
+     */
+    virtual ~SOFileConnector() = default;
+    /**
+     */
 protected:
-	/*-------------------------------------------------------------------------------------------------------------*
-	 * IO functions
-	 *-------------------------------------------------------------------------------------------------------------*/
-	void _write(const Container& container) override;
-	/*-------------------------------------------------------------------------------------------------------------*
-	 * control functions
-	 *-------------------------------------------------------------------------------------------------------------*/
-	inline void _open() override {
-		__res = SOFileResource(__uri);
-	}
-	inline bool _good() override{
-		return __res.Valid();
-	}
-	inline void _close() override {
-		__res = SOFileResource();
-	}
+    /*-------------------------------------------------------------------------------------------------------------*
+     * IO functions
+     *-------------------------------------------------------------------------------------------------------------*/
+    void _write(const Container& container) override;
+    /*-------------------------------------------------------------------------------------------------------------*
+     * control functions
+     *-------------------------------------------------------------------------------------------------------------*/
+    inline void _open() override {
+        __res = SOFileResource(__uri);
+    }
+    inline bool _good() override{
+        return __res.Valid();
+    }
+    inline void _close() override {
+        __res = SOFileResource();
+    }
 private:
-	/**
-	 * resource 
-	 */
-	SOFileResource __res;
-	/**
-	 */
-	Buffer __buffer;
-	/**
-	 */
-	Frame __path;
-	/**
-	 */
-	filesize_t __size;
+    /**
+     * resource 
+     */
+    SOFileResource __res;
+    /**
+     */
+    Buffer __buffer;
+    /**
+     */
+    Frame __path;
+    /**
+     */
+    filesize_t __size;
 };
 /**
  * End namespace Message

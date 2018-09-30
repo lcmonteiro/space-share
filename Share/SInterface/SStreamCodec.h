@@ -10,9 +10,13 @@
  */
 #include <map>
 /**
+ * Share Kernel
  */
-#include "SKernel/SCodecI.h"
-#include "SKernel/SContainer.h"
+#include "SCodec.h"
+/**
+ * Space Kernel
+ */
+#include "SContainer.h"
 /**
  * 
  */
@@ -20,12 +24,12 @@ using namespace std;
 /**
  *  
  */
-class SConnectorCodec {
+class SStreamCodec {
 public:
         /*-------------------------------------------------------------------------------------------------------------*
          * Encode
          *-------------------------------------------------------------------------------------------------------------*/
-        template<class IS, class OS, CodecStamp::Type T =CodecStamp::FILE>
+        template<class IS, class OS, CodecStamp::Type T =CodecStamp::MESSAGE>
         static void Encode(IS in, vector<pair<size_t, OS>> out, size_t chunks, uint64_t seed){
                 typedef typename IS::char_type* ipointer;
                 typedef typename OS::char_type* opointer;
@@ -81,7 +85,7 @@ public:
         /*-------------------------------------------------------------------------------------------------------------*
          * Decode
          *-------------------------------------------------------------------------------------------------------------*/
-        template<class IS, class OS, CodecStamp::Type T =CodecStamp::FILE>
+        template<class IS, class OS, CodecStamp::Type T =CodecStamp::MESSAGE>
         static void Decode(vector<pair<size_t, IS>> in, OS out, size_t chunks, uint64_t seed){
                 typedef typename IS::char_type* ipointer;
                 typedef typename OS::char_type* opointer;

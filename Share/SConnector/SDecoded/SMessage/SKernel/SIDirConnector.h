@@ -7,11 +7,17 @@
 #ifndef SIDIRCONNECTORSOCKET_H
 #define SIDIRCONNECTORSOCKET_H
 /**
- * Space
+ * Space Resource
  */
-#include "SResource/SDirectoryResource.h"
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
+#include "SDirectoryResource.h"
+/**
+ * Space Kernel
+ */
+#include "SContainer.h"
+/**
+ * Share Kernel
+ */
+#include "SConnector.h"
 /**
  * Begin namespace Decoded
  */
@@ -24,47 +30,47 @@ namespace Message {
  */
 class SIDirConnector : public SInputConnector {
 public:
-	/**
-	 * constructor
-	 */
-	SIDirConnector(const string address, const string file);
-	/**
-	 * destructor
-	 */
-	virtual ~SIDirConnector() = default;
-	/**
-	 * inline overrides
-	 */
-	inline Resource& GetResource() override {
-		return __res;
-	}
+    /**
+     * constructor
+     */
+    SIDirConnector(const string address, const string file);
+    /**
+     * destructor
+     */
+    virtual ~SIDirConnector() = default;
+    /**
+     * inline overrides
+     */
+    inline Resource& GetResource() override {
+        return __res;
+    }
 protected:
-	/*-------------------------------------------------------------------------------------------------------------*
-	 * IO functions
-	 *-------------------------------------------------------------------------------------------------------------*/
-	Container _read() override;
-	/*-------------------------------------------------------------------------------------------------------------*
-	 * control functions
-	 *-------------------------------------------------------------------------------------------------------------*/
-	void _open() override;
-	/**
-	 * inline control overrides
-	 */
-	inline bool _good() override {
-		return __res.Valid();
-	}
-	inline void _close() override {
-		__res = SDirectoryResource();
-	}
+    /*-------------------------------------------------------------------------------------------------------------*
+     * IO functions
+     *-------------------------------------------------------------------------------------------------------------*/
+    Container _read() override;
+    /*-------------------------------------------------------------------------------------------------------------*
+     * control functions
+     *-------------------------------------------------------------------------------------------------------------*/
+    void _open() override;
+    /**
+     * inline control overrides
+     */
+    inline bool _good() override {
+        return __res.Valid();
+    }
+    inline void _close() override {
+        __res = SDirectoryResource();
+    }
 private:
-	/**
-	 * resource 
-	 */
-	SDirectoryResource __res;
-	/**
-	 * properties
-	 */
-	string __file;
+    /**
+     * resource 
+     */
+    SDirectoryResource __res;
+    /**
+     * properties
+     */
+    string __file;
 };
 /**
  * End namespace Message

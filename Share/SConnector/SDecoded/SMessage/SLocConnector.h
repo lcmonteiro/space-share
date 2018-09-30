@@ -7,22 +7,21 @@
 #ifndef SLOCMESSAGECONNECTOR_H
 #define SLOCMESSAGECONNECTOR_H
 /**
- * Space
+ * Space Kernel
  */
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
-#include "SResource/SSocketResource.h"
-
+#include "SContainer.h"
+#include "SConnector.h"
+#include "SSocketResource.h"
 /**
- * Share
+ * Message Kernel
  */
-#include "SKernel/SIOMessageConnector.h"
-#include "SKernel/SIMessageConnector.h"
-#include "SKernel/SOMessageConnector.h"
+#include "SIOMessageConnector.h"
+#include "SIMessageConnector.h"
+#include "SOMessageConnector.h"
 /**
- * tools
+ * Message Tools
  */
-#include "STools/SDefault.h"
+#include "SDefault.h"
 /**
  * Begin namespace Decoded
  */
@@ -38,29 +37,29 @@ namespace Message {
  */
 class ResourceAdapterLoc : private SSocketResource {
 public:
-        using SSocketResource::SSocketResource;
-        using SSocketResource::operator=;
-        /**
-         * interfaces
-         */
-        inline SSocketResource& Base() {
-                return *this;
-        }
-        inline void Wait(const Address& uri) {
-                SSocketResource::Wait(uri.Host(), uri.Port(), STREAM);
-        }
-        inline void Fill(Frame& buf) {
-                SSocketResource::Fill(buf);
-	}
-        inline void Drain(const Frame& buf) {
-                SSocketResource::Drain(buf);
-        }
-        inline bool Good() {
-                SSocketResource::Good();
-        }
-        inline void Reset() {
-                *this = SSocketResource();
-        }
+    using SSocketResource::SSocketResource;
+    using SSocketResource::operator=;
+    /**
+     * interfaces
+     */
+    inline SSocketResource& Base() {
+        return *this;
+    }
+    inline void Wait(const Address& uri) {
+        SSocketResource::Wait(uri.Host(), uri.Port(), STREAM);
+    }
+    inline void Fill(Frame& buf) {
+        SSocketResource::Fill(buf);
+    }
+    inline void Drain(const Frame& buf) {
+        SSocketResource::Drain(buf);
+    }
+    inline bool Good() {
+        SSocketResource::Good();
+    }
+    inline void Reset() {
+        *this = SSocketResource();
+    }
 };    
 /**
  * ---------------------------------------------------------------------------------------------------------------------
@@ -71,17 +70,17 @@ public:
 template<class R, class T>
 class SILocConnectorT : public SIMessageConnector<R, T> {
 public:
-        using SIMessageConnector<R, T>::SIMessageConnector;
-        /**
-         */
-        SILocConnectorT() = delete;
-	/**
-	 * make
-	 */
-	template<typename...Args>
-	static IConnector Make(Args &&...args) {
-		return make_shared<SILocConnectorT>(forward<Args>(args)...);
-	}
+    using SIMessageConnector<R, T>::SIMessageConnector;
+    /**
+     */
+    SILocConnectorT() = delete;
+    /**
+     * make
+     */
+    template<typename...Args>
+    static IConnector Make(Args &&...args) {
+        return make_shared<SILocConnectorT>(forward<Args>(args)...);
+    }
 };
 /**
  * ---------------------------------------------------------------------------------------------------------------------
@@ -92,17 +91,17 @@ public:
 template<class R, class T>
 class SOLocConnectorT : public SOMessageConnector<R, T> {
 public:
-        using SOMessageConnector<R, T>::SOMessageConnector;
-        /**
-         */
-        SOLocConnectorT() = delete;
-	/**
-	 * make
-	 */
-	template<typename...Args>
-	static OConnector Make(Args &&...args) {
-		return make_shared<SOLocConnectorT>(forward<Args>(args)...);
-	}
+    using SOMessageConnector<R, T>::SOMessageConnector;
+    /**
+     */
+    SOLocConnectorT() = delete;
+    /**
+     * make
+     */
+    template<typename...Args>
+    static OConnector Make(Args &&...args) {
+        return make_shared<SOLocConnectorT>(forward<Args>(args)...);
+    }
 };
 /**
  * ---------------------------------------------------------------------------------------------------------------------
@@ -113,17 +112,17 @@ public:
 template<class R, class T>
 class SIOLocConnectorT : public SIOMessageConnector<R, T> {
 public:
-        using SIOMessageConnector<R, T>::SIOMessageConnector;
-        /**
-         */
-        SIOLocConnectorT() = delete;
-	/**
-	 * make
-	 */
-	template<typename...Args>
-	static IOConnector Make(Args &&...args) {
-		return make_shared<SIOLocConnectorT>(forward<Args>(args)...);
-	}
+    using SIOMessageConnector<R, T>::SIOMessageConnector;
+    /**
+     */
+    SIOLocConnectorT() = delete;
+    /**
+     * make
+     */
+    template<typename...Args>
+    static IOConnector Make(Args &&...args) {
+        return make_shared<SIOLocConnectorT>(forward<Args>(args)...);
+    }
 };
 /**
  * ---------------------------------------------------------------------------------------------------------------------

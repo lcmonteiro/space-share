@@ -7,12 +7,15 @@
 #ifndef SLOCSTREAMCONNECTORCODED_H
 #define SLOCSTREAMCONNECTORCODED_H
 /**
- * Space
+ * Space Kernel
  */
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
+#include "SContainer.h"
 /**
- * Share
+ * Share Kernel
+ */
+#include "SConnector.h"
+/**
+ * Stream Kernel
  */
 #include "SKernel/SIStreamConnector.h"
 #include "SKernel/SOStreamConnector.h"
@@ -32,29 +35,29 @@ namespace Stream {
  */
 class ResourceAdapterLoc : private SSocketResource {
 public:
-        using SSocketResource::SSocketResource;
-        using SSocketResource::operator=;
-        /**
-         * interfaces
-         */
-        inline SSocketResource& Base() {
-                return *this;
-        }
-        inline void Wait(const Address& uri) {
-                SSocketResource::Bind(uri.Path(), STREAM);
-        }
-        inline void Fill(IFrame& buf) {
-                SSocketResource::Fill(buf);
-	}
-        inline void Drain(const Frame& buf) {
-                SSocketResource::Drain(buf);
-        }
-        inline bool Good() {
-                SSocketResource::Good();
-        }
-        inline void Reset() {
-                *this = SSocketResource();
-        }
+    using SSocketResource::SSocketResource;
+    using SSocketResource::operator=;
+    /**
+     * interfaces
+     */
+    inline SSocketResource& Base() {
+        return *this;
+    }
+    inline void Wait(const Address& uri) {
+        SSocketResource::Bind(uri.Path(), STREAM);
+    }
+    inline void Fill(IFrame& buf) {
+        SSocketResource::Fill(buf);
+    }
+    inline void Drain(const Frame& buf) {
+        SSocketResource::Drain(buf);
+    }
+    inline bool Good() {
+        SSocketResource::Good();
+    }
+    inline void Reset() {
+        *this = SSocketResource();
+    }
 };    
 /**
  * ---------------------------------------------------------------------------------------------------------------------
@@ -65,17 +68,17 @@ public:
 template<class R>
 class SILocConnectorT : public SIStreamConnector<R> {
 public:
-        using SIStreamConnector<R>::SIStreamConnector;
-        /**
-         */
-        SILocConnectorT() = delete;
-	/**
-	 * make
-	 */
-	template<typename...Args>
-	static IConnector Make(Args &&...args) {
-		return make_shared<SILocConnectorT>(forward<Args>(args)...);
-	}
+    using SIStreamConnector<R>::SIStreamConnector;
+    /**
+     */
+    SILocConnectorT() = delete;
+    /**
+     * make
+     */
+    template<typename...Args>
+    static IConnector Make(Args &&...args) {
+        return make_shared<SILocConnectorT>(forward<Args>(args)...);
+    }
 };
 /**
  * ---------------------------------------------------------------------------------------------------------------------
@@ -86,17 +89,17 @@ public:
 template<class R>
 class SOLocConnectorT : public SOStreamConnector<R> {
 public:
-        using SOStreamConnector<R>::SOStreamConnector;
-        /**
-         */
-        SOLocConnectorT() = delete;
-	/**
-	 * make
-	 */
-	template<typename...Args>
-	static OConnector Make(Args &&...args) {
-		return make_shared<SOLocConnectorT>(forward<Args>(args)...);
-	}
+    using SOStreamConnector<R>::SOStreamConnector;
+    /**
+     */
+    SOLocConnectorT() = delete;
+    /**
+     * make
+     */
+    template<typename...Args>
+    static OConnector Make(Args &&...args) {
+        return make_shared<SOLocConnectorT>(forward<Args>(args)...);
+    }
 };
 /**
  * ---------------------------------------------------------------------------------------------------------------------
@@ -107,17 +110,17 @@ public:
 template<class R>
 class SIOLocConnectorT : public SIOStreamConnector<R> {
 public:
-        using SIOStreamConnector<R>::SIOStreamConnector;
-        /**
-         */
-        SIOLocConnectorT() = delete;
-	/**
-	 * make
-	 */
-	template<typename...Args>
-	static IOConnector Make(Args &&...args) {
-		return make_shared<SIOLocConnectorT>(forward<Args>(args)...);
-	}
+    using SIOStreamConnector<R>::SIOStreamConnector;
+    /**
+     */
+    SIOLocConnectorT() = delete;
+    /**
+     * make
+     */
+    template<typename...Args>
+    static IOConnector Make(Args &&...args) {
+        return make_shared<SIOLocConnectorT>(forward<Args>(args)...);
+    }
 };
 /**
  * ---------------------------------------------------------------------------------------------------------------------

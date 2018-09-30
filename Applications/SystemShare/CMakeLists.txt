@@ -1,12 +1,12 @@
-cmake_minimum_required (VERSION 2.8.11)
-#
+cmake_minimum_required (VERSION 3.8)
+# project
 project (SystemShare)
-# Set the output folder where your program will be created
-set(CMAKE_BINARY_DIR ${CMAKE_SOURCE_DIR}/bin)
-# include directories
-include_directories(../../Space ../../Share)
-# 
-add_subdirectory(../../Space)
-#
-add_subdirectory(../../Share)
-
+# target
+add_executable(SystemShare 
+	./Source/main.cpp
+)
+# dependencies 
+target_link_libraries(SystemShare
+PRIVATE
+	ShareInterface
+)

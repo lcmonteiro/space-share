@@ -12,7 +12,7 @@
 #include <fcntl.h>
 #include <netdb.h>
 /**
- * std
+ * C++ std
  */
 #include <cstring>
 #include <cstdio>
@@ -21,13 +21,14 @@
 #include <chrono>
 #include <random>
 /**
- * sync
+ * Space Kernel
  */
-#include "SKernel/SBase64.h" 
+#include "SBase64.h" 
+#include "STask.h"
 /**
+ * Local
  */
 #include "SOIrcConnector.h"
-#include "SKernel/STask.h"
 /**
  * Begin namespace Encoded
  */

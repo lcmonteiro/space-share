@@ -7,12 +7,17 @@
 #ifndef SIFILECONNECTORSOCKET_H
 #define SIFILECONNECTORSOCKET_H
 /**
- * Space
+ * Space Resource
  */
-#include "SResource/SFileResource.h"
-//
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
+#include "SFileResource.h"
+/**
+ * Space Kernel
+ */
+#include "SContainer.h"
+/**
+ * Share Kernel
+ */
+#include "SConnector.h"
 /**
  * Begin namespace Decoded
  */
@@ -25,46 +30,46 @@ namespace Message {
  */
 class SIFileConnector : public SInputConnector {
 public:
-	/**
-	 * constructor
-	 */
-	SIFileConnector(const string address, const size_t nframesize);
-	/**
-	 * destructor
-	 */
-	virtual ~SIFileConnector() = default;
-	/**
-	 * inline overrides
-	 */
-	inline Resource& GetResource() override{
-		return __res;
-	}
+    /**
+     * constructor
+     */
+    SIFileConnector(const string address, const size_t nframesize);
+    /**
+     * destructor
+     */
+    virtual ~SIFileConnector() = default;
+    /**
+     * inline overrides
+     */
+    inline Resource& GetResource() override{
+        return __res;
+    }
 protected:
-	/*-------------------------------------------------------------------------------------------------------------*
-	 * IO functions
-	 *-------------------------------------------------------------------------------------------------------------*/
-	Container _read() override;
-	/*-------------------------------------------------------------------------------------------------------------*
-	 * control functions
-	 *-------------------------------------------------------------------------------------------------------------*/
-	inline void _open() override {
-		__res = SIFileResource(__uri);
-	}
-	inline bool _good() override{
-		return __res.Good();
-	}
-	inline void _close() override {
-		__res = SIFileResource();
-	}
+    /*-------------------------------------------------------------------------------------------------------------*
+     * IO functions
+     *-------------------------------------------------------------------------------------------------------------*/
+    Container _read() override;
+    /*-------------------------------------------------------------------------------------------------------------*
+     * control functions
+     *-------------------------------------------------------------------------------------------------------------*/
+    inline void _open() override {
+        __res = SIFileResource(__uri);
+    }
+    inline bool _good() override{
+        return __res.Good();
+    }
+    inline void _close() override {
+        __res = SIFileResource();
+    }
 private:
-	/**
-	 * resource 
-	 */
-	SIFileResource __res;
-	/**
-	 * frame size
-	 */
-	size_t __sframes;
+    /**
+     * resource 
+     */
+    SIFileResource __res;
+    /**
+     * frame size
+     */
+    size_t __sframes;
 };
 /**
  * End namespace Message

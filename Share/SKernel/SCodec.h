@@ -20,12 +20,12 @@
 #include "SCodecV1/SCodecStamp.h"
 /**
  */
-typedef v1::SCodecEncoder       CodecEncoder;
-typedef v1::SCodecDecoder	CodecDecoder;
-typedef v1::SCodecStamp		CodecStamp;
-typedef v1::SCodec		Codec;
-typedef v1::Stamp		Stamp;
-typedef v1::StampReference	StampReference;
+typedef v1::SCodecEncoder	CodecEncoder;
+typedef v1::SCodecDecoder   CodecDecoder;
+typedef v1::SCodecStamp 	CodecStamp;
+typedef v1::SCodec    		Codec;
+typedef v1::Stamp    		Stamp;
+typedef v1::StampReference  StampReference;
 /**
  */
 #endif /* SCODECI_H */

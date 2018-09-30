@@ -9,10 +9,10 @@
 /**
  * space
  */
-#include "SKernel/SModule/MProcess.h"
+#include "SModule/MProcess.h"
 /**
  */
-typedef SModule::Process        Module;
+typedef SModule::Process	Module;
 /**
  */
 #endif /* SMODULE_H */

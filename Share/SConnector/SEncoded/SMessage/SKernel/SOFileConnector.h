@@ -7,13 +7,17 @@
 #ifndef SOFILESTREAMCODED_H
 #define SOFILESTREAMCODED_H
 /**
- * Space
+ * Space Resource
  */
-#include "SResource/SFileResource.h"
+#include "SFileResource.h"
 /**
+ * Space Kernel
  */
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
+#include "SContainer.h"
+/**
+ * Share Kernel
+ */
+#include "SConnector.h"
 /**
  * Begin namespace Encoded
  */
@@ -26,38 +30,38 @@ namespace Message {
  */
 class SOFileConnector : public SOutputConnector {
 public:
-	/**
-	 * constructor
-	 */
-	SOFileConnector(const string address);
-	/**
-	 * destructor
-	 */
-	virtual ~SOFileConnector() = default;
-	/**
-	 */
+    /**
+     * constructor
+     */
+    SOFileConnector(const string address);
+    /**
+     * destructor
+     */
+    virtual ~SOFileConnector() = default;
+    /**
+     */
 protected:
-	/*-------------------------------------------------------------------------------------------------------------*
-	 * IO functions
-	 *-------------------------------------------------------------------------------------------------------------*/
-	void _write(const Document& container) override;
-	/*-------------------------------------------------------------------------------------------------------------*
-	 * control functions
-	 *-------------------------------------------------------------------------------------------------------------*/
-	inline void _open() override {
-		__res = SOFileResource(__uri);
-	}
-	inline bool _good() override{
-		return __res.Valid();
-	}
-	inline void _close() override {
-		__res = SOFileResource();
-	}
+    /*-------------------------------------------------------------------------------------------------------------*
+     * IO functions
+     *-------------------------------------------------------------------------------------------------------------*/
+    void _write(const Document& container) override;
+    /*-------------------------------------------------------------------------------------------------------------*
+     * control functions
+     *-------------------------------------------------------------------------------------------------------------*/
+    inline void _open() override {
+        __res = SOFileResource(__uri);
+    }
+    inline bool _good() override{
+        return __res.Valid();
+    }
+    inline void _close() override {
+        __res = SOFileResource();
+    }
 private:
-	/**
-	 * resource 
-	 */
-	SOFileResource __res;
+    /**
+     * resource 
+     */
+    SOFileResource __res;
 };
 /**
  * End namespace Message

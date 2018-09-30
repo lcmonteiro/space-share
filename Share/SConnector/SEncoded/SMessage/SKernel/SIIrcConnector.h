@@ -11,16 +11,20 @@
  */
 #include <random>
 /**
- * Space
+ * Space Resource
  */
-#include "SResource/SIRCResource.h"
+#include "SIRCResource.h"
 /**
+ * Space Kernel
  */
-#include "SKernel/SContainer.h"
-#include "SKernel/SAddress.h"
-#include "SKernel/SChannel.h"
-#include "SKernel/SConnector.h"
-#include "SKernel/STask.h"
+#include "SContainer.h"
+#include "SAddress.h"
+#include "SChannel.h"
+#include "STask.h"
+/**
+ * Share Kernel
+ */
+#include "SConnector.h"
 /**
  * Begin namespace Encoded
  */

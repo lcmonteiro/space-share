@@ -14,11 +14,15 @@
 #ifndef SFILESTREAMDATA_H
 #define SFILESTREAMDATA_H
 /**
+ * Space Kernel
  */
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
+#include "SContainer.h"
 /**
- * Base data streams
+ * Share Kernel
+ */
+#include "SConnector.h"
+/**
+ * Stream Kernel
  */
 #include "Sbase/SIFileConnector.h"
 #include "Sbase/SOFileConnector.h"
@@ -32,22 +36,22 @@ namespace Stream {
 template<class T>
 class SIFileConnectorT : public T {
 public:
-	/**
-	 * make
-	 */
-	template<typename...Args>
-	static IConnector Make(Args &&...args) {
-		return make_shared<SIFileConnectorT>(forward<Args>(args)...);
-	}
-	/**
-	 * constructor
-	 */
-	SIFileConnectorT(
-		const string address,
-		const size_t nframes,
-		const size_t sframes
-	) : T(address, nframes, sframes) {
-	}
+    /**
+     * make
+     */
+    template<typename...Args>
+    static IConnector Make(Args &&...args) {
+        return make_shared<SIFileConnectorT>(forward<Args>(args)...);
+    }
+    /**
+     * constructor
+     */
+    SIFileConnectorT(
+        const string address,
+        const size_t nframes,
+        const size_t sframes
+    ) : T(address, nframes, sframes) {
+    }
 };
 /**
  * Output File Connector template
@@ -55,18 +59,18 @@ public:
 template<class T>
 class SOFileConnectorT : public T {
 public:
-	/**
-	 * make
-	 */
-	template<typename...Args>
-	static OConnector Make(Args &&...args) {
-		return make_shared<SOFileConnectorT>(forward<Args>(args)...);
-	}
-	/**
-	 * constructor
-	 */
-	SOFileConnectorT(const string address) : T(address) {
-	}
+    /**
+     * make
+     */
+    template<typename...Args>
+    static OConnector Make(Args &&...args) {
+        return make_shared<SOFileConnectorT>(forward<Args>(args)...);
+    }
+    /**
+     * constructor
+     */
+    SOFileConnectorT(const string address) : T(address) {
+    }
 };
 /**
  * definitions

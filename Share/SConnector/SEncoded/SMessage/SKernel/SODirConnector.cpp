@@ -17,7 +17,7 @@
 /**
  * Space
  */
-#include "SResource/SFileResource.h"
+#include "SFileResource.h"
 /**
  */
 #include "SODirConnector.h"

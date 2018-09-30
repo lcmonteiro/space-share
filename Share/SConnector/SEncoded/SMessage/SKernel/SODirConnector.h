@@ -7,13 +7,17 @@
 #ifndef SODIRSTREAM_H
 #define SODIRSTREAM_H
 /**
- * Space
+ * Space Resource
  */
-#include "SResource/SDirectoryResource.h"
+#include "SDirectoryResource.h"
 /**
+ * Space Kernel
  */
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
+#include "SContainer.h"
+/**
+ * Share Kernel
+ */
+#include "SConnector.h"
 /**
  * Begin namespace Encoded
  */
