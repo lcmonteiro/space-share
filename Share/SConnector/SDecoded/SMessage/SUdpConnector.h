@@ -46,7 +46,7 @@ public:
         return *this;
     }
     inline void Wait(const Address& uri) {
-        SSocketResource::Wait(uri.Host(), uri.Port(), STREAM);
+        SSocketResource::Wait(uri.Host(), uri.Port(), DGRAM);
     }
     inline void Fill(Frame& buf) {
         SSocketResource::Fill(buf);

@@ -91,7 +91,7 @@ int SModule::Process::Transform(const Function& opt, const Inputs& in_opt, const
      * connectors
      */
     using RoadMonitor = SRoadMonitor<SConnector::Key, I>;
-    using Road    = SRoad<SConnector::Key, O>;
+    using Road        = SRoad<SConnector::Key, O>;
     /**
      * builders 
      */
@@ -250,7 +250,7 @@ int SModule::Process::Transform(const Function& opt, const Inputs& in_opt, const
             /**
              * log in status 
              */
-            WARNING("<IN>  " << Status(in));
+            WARNING("IN = {" << Status(in) << " }");
             /**
              */
             if(Kill(func, energy)){

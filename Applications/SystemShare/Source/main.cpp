@@ -85,9 +85,6 @@ int main(int argc, char** argv) {
      * process
      *-------------------------------------------------------------------------------------------------------------*/
     STask::Enable();
-    
-    
-    SResourceMonitor r (chrono::milliseconds(100), &STask::Instance());
     /**
      * configure machine
      */
@@ -95,10 +92,12 @@ int main(int argc, char** argv) {
         Module::Config {
             Module::Base {
                 { "uri",  "encoder"},
-                { "type", "encode"}
+                { "type", "encode"},
+                { "verbose", "4"}
             },
             Module::Function {
-                {"type", "message"}
+                {"type", "message"},
+                { "verbose", "4"}
             },
             Module::Inputs {
                 Module::Input {

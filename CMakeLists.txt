@@ -1,6 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 # project name
 project (SpaceShare)
+# definitions
+add_definitions(-D__LOG__)
 # folder for Applications
 add_subdirectory(Applications)
 # folder for Share algorithms
