@@ -64,7 +64,7 @@ using namespace std;
     os << "\t" << "-e, -i udp -r PATH []"<< endl;                                                   \
     os << "AUTHOR:"<< endl;                                                                         \
     os << "\t" << "Luis Monteiro <monteiro.lcm@gmail.com>"<< endl;                                  \
-}while(0)
+} while(0)
 /**--------------------------------------------------------------------------------------------------------------------*
  * main
  *---------------------------------------------------------------------------------------------------------------------*/
@@ -101,8 +101,9 @@ int main(int argc, char** argv) {
             },
             Module::Inputs {
                 Module::Input {
-                    { "uri",  "/tmp/in"},
-                    { "type", "message.local"}
+                    { "uri",  "127.0.0.1:1357"},
+                    { "type", "message.udp"},
+                    { "verbose", "4"}
                 }
             },
             Module::Outputs {

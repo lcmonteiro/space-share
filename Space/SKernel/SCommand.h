@@ -81,7 +81,7 @@ public:
          * Peek  
          * -------------------------------------------------------------------------------------------------------------
          */        
-        template <class T>
+        template <class T=string>
         static inline T Peek(const Group& opt, const KEY& id) {
                 T val;
                 istringstream(opt.at(id)) >> val;

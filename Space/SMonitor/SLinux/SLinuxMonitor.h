@@ -64,18 +64,16 @@ protected:
         /**
          * wait
          */
-        unsigned int r;
+        int r = 0;
         if ((r = poll(loc.data(), loc.size(), timeout.count())) < 0) {
             throw MonitorException(make_error_code(errc(errno)));
         }
         /**
          * check
          */
-        if (r > 0) {
-            for (size_t i = 0; i < loc.size(); ++i) {
-                if (loc[i].revents & loc[i].events) {
-                    res.push_back(i);
-                }
+        for (size_t i = 0, n = r; (i < loc.size()) && (res.size() < n); ++i) {
+            if (loc[i].revents & loc[i].events) {
+                res.push_back(i);
             }
         }
         return res;

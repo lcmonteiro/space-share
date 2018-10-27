@@ -35,19 +35,16 @@ public:
     /**
      * default constructor
      */
-    SLinuxTask() : thread() {
-    }
+    SLinuxTask() = default;
     /**
      * move constructor
      */
-    SLinuxTask(SLinuxTask&& t) {
-        swap(t);
-    }
+    SLinuxTask(SLinuxTask&& t) = default;
     /**
      * template constructor
      */
     template<typename Func, typename... Args> explicit
-    SLinuxTask(Func&& f, Args&&... args) : thread(f, args...) {
+    SLinuxTask(Func&& f, Args&&... args) : thread(f, args...), __event() {
         __Insert(get_id(), this);
     }
     /**

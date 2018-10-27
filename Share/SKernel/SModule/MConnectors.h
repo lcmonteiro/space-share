@@ -56,9 +56,19 @@ namespace SInput {
     struct Builder<Decoded::IConnector> {
         static inline Decoded::IConnector Build(const Process::Function& o) {
             static map<SConnector::Key, function <Decoded::IConnector(const Process::Function&)>> GENERATOR {
-                {SConnector::Key(Properties ::MESSAGE_LOCAL), [](const Process::Function& o) {
+                {SConnector::Key(Properties::MESSAGE_LOCAL), [](const Process::Function& o) {
                     auto in = Decoded::Message::ILocConnector::Make(
-                        Process::Command::Peek(o, Properties::URI,  string("127.0.0.1:1357")),
+                        Process::Command::Peek(o, Properties::URI),
+                        Process::Command::Peek(o, Properties::NFRAMES, 50),
+                        Process::Command::Peek(o, Properties::SFRAMES, 1550)
+                    );
+                    in->SetVerbose(Process::Command::Peek(o, Properties::VERBOSE, 0));
+                    in->SetEnergy(Process::Command::Peek(o,  Properties::ENERGY,  0));
+                    return in;
+                }},
+                {SConnector::Key(Properties::MESSAGE_UDP), [](const Process::Function& o) {
+                    auto in = Decoded::Message::IUdpConnector::Make(
+                        Process::Command::Peek(o, Properties::URI),
                         Process::Command::Peek(o, Properties::NFRAMES, 50),
                         Process::Command::Peek(o, Properties::SFRAMES, 1550)
                     );
