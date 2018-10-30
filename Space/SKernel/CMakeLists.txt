@@ -20,3 +20,5 @@ target_link_libraries(SpaceKernel
 PUBLIC 
 	SpaceKernelLinux
 )
+#
+add_executable(VarTest SVariable.cpp)
