@@ -127,8 +127,8 @@ int SModule::Process::Transform(const Function& opt, const Inputs& in_opt, const
      * configure outputs
      */
     Road out(
-        Command::Peek(opt, Properties::NOMINAL, in_opt.size()), 
-        Command::Peek(opt, Properties::MINIMUM, Properties::NOMINAL, in_opt.size())
+        Command::Peek(opt, Properties::NOMINAL, out_opt.size()), 
+        Command::Peek(opt, Properties::MINIMUM, Properties::NOMINAL, out_opt.size())
     );
     for(auto o: out_opt){
         out.Insert(Command::Peek<Key>(o, Properties::URI), OBuilder::Build(o));
