@@ -1,59 +1,49 @@
 #include <initializer_list>
-#include <iostream>
-#include <string>
+#include <ostream>
 #include <map>
-#include <list>
 
-using namespace std;
-
-template <class Key>
-class SVariable
+template <typename Key>
+class SVariable : public std::map<Key, SVariable<Key>>
 {
+    using Map = std::map<Key, SVariable<Key>>;
   public:
-    using Map = map<Key, SVariable>;
+    using Map::Map;
     /**
      * constructors
      */
-    SVariable() : __map() {
+    SVariable() = default;
+
+    SVariable(const Key &k) : Map() {
+        emplace(k, SVariable());
     }
-    SVariable(const Key& k) : __map() {
-        __map[k] = SVariable();
-    }
-    SVariable(const char* k) : __map() {
-        __map[k] = SVariable();
-    }
-    SVariable(initializer_list<pair<const Key, SVariable>> l) : __map() {
-        for (auto v : l) {
-             __map[v.first] = v.second;
-        }
+    template <typename = std::enable_if_t<std::is_base_of<std::string, Key>::value>>
+    SVariable(const char *k) : Map() {
+        emplace(k, SVariable());
     }
     /**
      * operators 
      */
-    SVariable &operator[](Key k) {
-        return __map[k];
-    }
     operator Key() const {
-        Key out = 0;
-        for(auto& v :__map) out += v.first;
+        Key out{};
+        for (auto &v : *this) out += v.first;
         return out;
     }
-    friend ostream& operator<< (ostream &out, const SVariable &v){
-        out << Key(v);
+    /**
+     * 
+     */
+    friend std::ostream &operator<<(std::ostream &out, const SVariable &var) {
+        out << Key(var);
         return out;
     }
-  private:
-    Map __map;
 };
 
+#include <iostream>
+#include <string>
 int main()
 {
-    SVariable<float> a {
-        {1, {
-            {2, 2},
-            {3, 4}
-        }}
-    };
+    int i{};
+    SVariable<std::string> a{
+        {"1", {{"2", "2"}, {"3", "4"}}}};
 
-    cout << "-------->" << a[1][2] << endl;
+    std::cout << "-------->" << a["1"]["2"] << std::endl;
 }

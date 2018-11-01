@@ -1,3 +1,7 @@
 *private*/
 *.xml
+<<<<<<< HEAD
 *uild*/
+=======
+*build
+>>>>>>> 6eda1d547e786e4ff450919f4d9265b8c4b1bf0e
