@@ -44,7 +44,7 @@ public:
      * template constructor
      */
     template<typename Func, typename... Args> explicit
-    SLinuxTask(Func&& f, Args&&... args) : thread(f, args...), __event() {
+    SLinuxTask(Func&& f, Args&&... args) : thread(f, args...), __event(0) {
         __Insert(get_id(), this);
     }
     /**
@@ -73,10 +73,7 @@ public:
     /**
      * move operator
      */
-    SLinuxTask& operator=(SLinuxTask&& t) {
-        swap(t);
-        return *this;
-    }
+    SLinuxTask& operator=(SLinuxTask&& t) = default;
     /**
      * base function 
      */
