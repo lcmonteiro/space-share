@@ -14,11 +14,11 @@ class SVariable : public std::map<Key, SVariable<Key>>
     SVariable() = default;
 
     SVariable(const Key &k) : Map() {
-        emplace(k, SVariable());
+        this->atemplace(k, SVariable());
     }
     template <typename = std::enable_if_t<std::is_base_of<std::string, Key>::value>>
     SVariable(const char *k) : Map() {
-        emplace(k, SVariable());
+        this->emplace(k, SVariable());
     }
     /**
      * operators 

@@ -1,4 +1,5 @@
-cmake_minimum_required (VERSION 3.8)
+cmake_minimum_required (VERSION 3.10)
+enable_testing()
 # project name
 project (SpaceShare)
 # definitions
@@ -9,6 +10,8 @@ add_subdirectory(Applications)
 add_subdirectory(Share)
 # folder for common use
 add_subdirectory(Space)
+# folder for common use
+add_subdirectory(Test)
 # target
 add_library(SpaceShare 
 INTERFACE
