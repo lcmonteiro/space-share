@@ -3,17 +3,18 @@ project (Test)
 # Configure google-test as a downloadable library.
 include(GoogleTest.cmake)
 #
-add_executable(
-    TestSample
-    #INTERFACE
-    TestSample.cpp
-)
-
-# This will automatically handle all of the lib linkage and include dirs
-target_link_libraries(
-    TestSample
-PRIVATE
-    GTest::GTest GTest::Main
-)
-add_test(NAME TestSample COMMAND TestSample)
+function(add_gtests target sources)
+    add_executable (
+        ${target} ${sources}
+    )
+    target_link_libraries(
+        ${target}
+    PRIVATE
+       GTest::GTest GTest::Main
+    )
+    add_test(NAME ${target} COMMAND ${target})
+endfunction()
+#
+# add Test sample
+add_gtests(TestSample TestSample.cpp)
 
