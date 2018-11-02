@@ -37,7 +37,7 @@ class SVariable : public std::map<Key, SVariable<Key>>
     }
 };
 
-#include <iostream>
+/* #include <iostream>
 #include <string>
 int main()
 {
@@ -46,4 +46,4 @@ int main()
         {"1", {{"2", "2"}, {"3", "4"}}}};
 
     std::cout << "-------->" << a["1"]["2"] << std::endl;
-}
+} */
