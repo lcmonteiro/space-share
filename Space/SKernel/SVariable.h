@@ -48,39 +48,56 @@ class SVariable : public std::map<Key, SVariable<Key>>
         return out;
     }
     /**
-     * serialize 
+     * iostream operator
      */
     friend std::ostream &operator<<(std::ostream &out, const SVariable &var) {
-       if(!var.empty()) {
-            out << "[";
-            for(auto& v : var){
-                out << v.first << v.second;
-            }
-            out << "]";
-        }
-        return out;
+        return __serialize(out, var);
     }
     friend std::istream &operator>>(std::istream &in, SVariable &var) {
         static std::locale l(in.getloc(), new SCType({'[',']'}));
         //
         in.imbue(l);
+        //
+        var = __unserialize(in);
+        //
+        return in;
+    }
+private:
+    /**
+     * serialize
+     */
+    static std::ostream& __serialize(std::ostream &out, const SVariable &var) {
+        if(!var.empty()) {
+            out << "[";
+            for(auto& v : var){
+                out << v.first;
+                __serialize(out, v.second);
+            }
+            out << "]";
+        }
+        return out;
+    }
+    /**
+     * unserialize
+     */
+    static SVariable __unserialize(std::istream &in) {
+        SVariable var;
         while(in.good()){    
             Key k;
             in >> k;
             switch(in.get()) {
                 case '[' :{
-                    var.emplace(k, SVariable());
-                    in >> var[k];
+                    var.emplace(k, __unserialize(in));
                     break;
                 }
                 case ']' :{
                     var.emplace(k, SVariable());
-                    return in;
+                    return var;
                 }
                 default:;
             }
         }
-        return in;
+        return var;
     }
 };
 #endif /* SVARIABLE_H */

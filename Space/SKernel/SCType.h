@@ -21,7 +21,7 @@ class SCType : public std::ctype<char> {
                         std::ctype<char>::classic_table() + std::ctype<char>::table_size
                 );
                 for(auto s :spaces) {
-                    table[s] |= space;
+                    table[s] ^= space;
                 }
                 return table.data();
         }
@@ -29,4 +29,8 @@ public:
         SCType(std::vector<char> s ) : std::ctype<char>(make_table(s)) {
         }
 };
+/**
+ * Guard
+ */
+
 #endif /* SCTYPE_H */
