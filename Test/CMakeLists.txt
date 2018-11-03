@@ -3,20 +3,24 @@ project (Test)
 # Configure google-test as a downloadable library.
 include(GoogleTest.cmake)
 #
-function(add_gtests target sources targets)
+function(add_gtests)
+    set(options)
+    set(oneValue   TARGET)
+    set(multiValue SOURCES TARGETS)
+    cmake_parse_arguments(ARG "${options}" "${oneValue}" "${multiValue}" ${ARGN} )
     add_executable (
-        ${target} ${sources}
+        ${ARG_TARGET} ${ARG_SOURCES}
     )
     target_link_libraries(
-        ${target}
+        ${ARG_TARGET}
     PRIVATE
-       GTest::GTest GTest::Main ${targets}
+       GTest::GTest GTest::Main ${ARG_TARGETS}
     )
-    add_test(NAME ${target} COMMAND ${target})
+    add_test(NAME ${ARG_TARGET} COMMAND ${ARG_TARGET})
 endfunction()
 #
 # add Test sample
-add_gtests(TestSample TestSample.cpp Space)
+add_gtests(TARGET TestSample SOURCES TestSample.cpp)
 #
 # Tests subdirectories
 #

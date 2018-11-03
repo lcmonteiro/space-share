@@ -2,10 +2,11 @@ cmake_minimum_required (VERSION 3.10)
 #
 # add
 # 
-set(sources
-    "TestKernel/TestVariable.cpp"
-)
-set(targets 
+add_gtests(
+TARGET 
+    TestKernel 
+SOURCES 
+    TestKernel/TestVariable.cpp
+TARGETS
     SpaceKernel
 )
-add_gtests(TestKernel "TestKernel/TestVariable.cpp" SpaceKernel)
