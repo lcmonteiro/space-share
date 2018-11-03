@@ -1,8 +1,21 @@
-#include <initializer_list>
+/*
+ * File:   SVariable.h
+ * Author: Luis Monteiro
+ *
+ * Created on November 2, 2018, 10:34 PM
+ */
+#ifndef SVARIABLE_H
+#define SVARIABLE_H
+/**
+ * std
+ */
 #include <iostream>
-#include <vector>
 #include <map>
-
+/**
+ */
+#include "SCType.h"
+/**
+ */
 template <typename Key>
 class SVariable : public std::map<Key, SVariable<Key>>
 {
@@ -48,25 +61,9 @@ class SVariable : public std::map<Key, SVariable<Key>>
         return out;
     }
     friend std::istream &operator>>(std::istream &in, SVariable &var) {
-        class myctype : public std::ctype<char> {
-                static mask* make_table(std::vector<char> spaces) {
-                        static std::vector<mask> table(
-                                std::ctype<char>::classic_table(),
-                                std::ctype<char>::classic_table() + std::ctype<char>::table_size
-                        );
-                        for(auto s :spaces) {
-                            table[s] |= space;
-                        }
-                        return table.data();
-                }
-        public:
-                myctype(std::vector<char> s ) : std::ctype<char>(make_table(s)) {
-                }
-        };
-        static myctype ct({'[',']'});
-        
-        in.imbue(std::locale(in.getloc(), new myctype({'[',']'})));
-
+        static std::locale l(in.getloc(), new SCType({'[',']'}));
+        //
+        in.imbue(l);
         while(in.good()){    
             Key k;
             in >> k;
@@ -80,11 +77,10 @@ class SVariable : public std::map<Key, SVariable<Key>>
                     var.emplace(k, SVariable());
                     return in;
                 }
-                default:{
-                    return in;
-                }
+                default:;
             }
         }
         return in;
     }
 };
+#endif /* SVARIABLE_H */
