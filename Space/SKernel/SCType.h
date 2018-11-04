@@ -29,8 +29,5 @@ public:
         SCType(std::vector<char> s ) : std::ctype<char>(make_table(s)) {
         }
 };
-/**
- * Guard
- */
 
 #endif /* SCTYPE_H */

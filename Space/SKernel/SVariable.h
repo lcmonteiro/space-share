@@ -16,9 +16,12 @@
 #include "SCType.h"
 /**
  */
-template <typename Key>
+template <typename Key, char Enter='[', char Leave=']'>
 class SVariable : public std::map<Key, SVariable<Key>>
 {
+    /**
+     * private types
+     */
     using Map = std::map<Key, SVariable<Key>>;
   public:
     /**
@@ -40,7 +43,7 @@ class SVariable : public std::map<Key, SVariable<Key>>
         this->emplace(k, SVariable());
     }
     /**
-     * operators 
+     * get operator 
      */
     operator Key() const {
         Key out{};
@@ -54,50 +57,50 @@ class SVariable : public std::map<Key, SVariable<Key>>
         return __serialize(out, var);
     }
     friend std::istream &operator>>(std::istream &in, SVariable &var) {
-        static std::locale l(in.getloc(), new SCType({'[',']'}));
-        //
-        in.imbue(l);
-        //
-        var = __unserialize(in);
-        //
-        return in;
+        in.imbue(__loc);
+        return __unserialize(in, var);
     }
 private:
+    static std::locale __loc;
     /**
      * serialize
      */
     static std::ostream& __serialize(std::ostream &out, const SVariable &var) {
         if(!var.empty()) {
-            out << "[";
+            out << Enter;
             for(auto& v : var){
                 out << v.first;
                 __serialize(out, v.second);
             }
-            out << "]";
+            out << Leave;
         }
         return out;
     }
     /**
      * unserialize
      */
-    static SVariable __unserialize(std::istream &in) {
-        SVariable var;
+    static std::istream& __unserialize(std::istream& in, SVariable& var) {
         while(in.good()){    
             Key k;
             in >> k;
             switch(in.get()) {
-                case '[' :{
-                    var.emplace(k, __unserialize(in));
+                case Enter :{
+                    var.emplace(k, SVariable());
+                    // unserialize recursive 
+                    __unserialize(in, var[k]);
                     break;
                 }
-                case ']' :{
+                case Leave :{
                     var.emplace(k, SVariable());
-                    return var;
+                    return in;
                 }
                 default:;
             }
         }
-        return var;
+        return in;
     }
 };
+template<typename Key, char Enter, char Leave> 
+std::locale SVariable<Key, Enter, Leave>::__loc(std::locale(), new SCType({'[',']'}));
+
 #endif /* SVARIABLE_H */
