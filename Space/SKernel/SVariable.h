@@ -12,8 +12,9 @@
 #include <iostream>
 #include <map>
 /**
+ * helper
  */
-#include "SCType.h"
+#include "SHelper/SCType.h"
 /**
  */
 template <typename Key, char Enter='[', char Leave=']'>
