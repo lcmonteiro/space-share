@@ -7,6 +7,7 @@ TARGET
     TestKernel 
 SOURCES 
     TestKernel/TestVariable.cpp
+    TestKernel/TestCommand.cpp
 TARGETS
     SpaceKernel
 )
