@@ -17,35 +17,69 @@
  */
 using namespace std;
 /**
+ * Filter Type
  */
-template <class KEY, class VAL>
+#define COMMAND_T(_name_, _args_...) struct  _name_ {      \
+        static bool Find(string k) {                       \
+                static set<string> SET{_args_};            \
+                return SET.count(k) > 0;                   \
+        }                                                  \
+}
+/**
+ * Variable
+ */
+#define COMMAND(_name_, _args_...)                         \
+COMMAND_T(_f_##_name_, _args_);                            \
+SCommand<_f_##_name_> _name_
+/**
+ */
+template<class Filter> 
 class SCommand {
+        using Key = string;
+        using Val = string;
 public:
         /**
          * -------------------------------------------------------------------------------------------------------------
          * definitions
          * -------------------------------------------------------------------------------------------------------------
          */
-        using Filter  = set<KEY>;
-        using Group   = map<KEY, VAL>;
+        using Group   = map<Key, Val>;
         using Groups  = list<Group>;
-        using Options = map<KEY, Groups>;
+        using Options = map<Key, Groups>;
+        /**
+         * -------------------------------------------------------------------------------------------------------------
+         * constructure
+         * -------------------------------------------------------------------------------------------------------------
+         */
+        SCommand() = default;
+
+        SCommand(SCommand&&)=default;
+        
+        SCommand(const SCommand&)=default;
+        
+        SCommand(initializer_list<Options::value_type> p):__config(p){}
+        /**
+         * -------------------------------------------------------------------------------------------------------------
+         * Operators
+         * -------------------------------------------------------------------------------------------------------------
+         */
+        inline Groups& operator[](string tag) {
+                return __config[tag]; 
+        }
         /**
          * -------------------------------------------------------------------------------------------------------------
          * Unserialize
          * -------------------------------------------------------------------------------------------------------------
          */
-        static Options Unserialize(Filter filter, string line) {
-                using Wrapper = reference_wrapper<Group>;
-                // options parsed
-                Options options;
+        inline SCommand& Unserialize(string line) {
+                using Wrapper = std::reference_wrapper<Group>;
                 // parse loop
                 regex exp("-(\\w+)|--(\\w+)=(\\w+)"); 
                 for (auto i = sregex_iterator(line.begin(), line.end(), exp), end = sregex_iterator(); i != end;) {
                         // check start group 
-                        if (filter.count(i->str(1))) {
+                        if (Filter::Find(i->str(1))) {
                                 // insert group
-                                auto& group = Insert(options, i->str(1));
+                                auto& group = Insert(__config, i->str(1));
                                 // fill group
                                 for (++i; (i != end) && i->str(2).size() && i->str(3).size(); ++i) {        
                                         Insert(group, i->str(2), i->str(3));
@@ -54,26 +88,23 @@ public:
                         }
                         ++i;
                 }
-                return options;
+                return *this;
         }
         /**
          * -------------------------------------------------------------------------------------------------------------
          * Serialize
          * -------------------------------------------------------------------------------------------------------------
          */
-        static string Serialize(Filter filter, Options opts) {
+        inline string Serialize() {
                 ostringstream out;
-                for(auto& k : filter) {
-                        auto it = opts.find(k);
-                        if (it != opts.end()) {
-                                for(auto& g : it->second){
-                                        out << "-" << it->first << " ";
-                                        for (auto&p : g){
-                                                out << "--" << p.first << "=" << p.second << " ";
-                                        }
+                for(auto c : __config) {
+                        for(auto& g : c.second){
+                                out << "-" << c.first << " ";
+                                for (auto&p : g){
+                                        out << "--" << p.first << "=" << p.second << " ";
                                 }
-                        } 
-                }
+                        }
+                } 
                 return out.str();
         }
         /**
@@ -82,13 +113,13 @@ public:
          * -------------------------------------------------------------------------------------------------------------
          */        
         template <class T=string>
-        static inline T Peek(const Group& opt, const KEY& id) {
+        static inline T Peek(const Group& opt, const Key& id) {
                 T val;
                 istringstream(opt.at(id)) >> val;
                 return val;
         }
         template <class T>
-        static inline T Peek(const Group& opt, const KEY& id, const T& def) {
+        static inline T Peek(const Group& opt, const Key& id, const T& def) {
                 try {
                         return Peek<T>(opt, id);
                 } catch (...) {
@@ -96,20 +127,27 @@ public:
                 }
         }
         template <class T>
-        static inline T Peek(const Group& opt, const KEY& id1, const KEY& id2, const T& def) {
+        static inline T Peek(const Group& opt, const Key& id1, const Key& id2, const T& def) {
                 try {
                         return Peek<T>(opt, id1);
                 } catch (...) {
                         return Peek<T>(opt, id2, def);
                 }
         }
+protected:
+        /**
+         * -------------------------------------------------------------------------------------------------------------
+         * objects
+         * -------------------------------------------------------------------------------------------------------------
+         */
+        Options __config;
 private:
         /**
          * -------------------------------------------------------------------------------------------------------------
          * helpers
          * -------------------------------------------------------------------------------------------------------------
          */
-        static inline Group& Insert(Options& opts, const KEY& key){
+        static inline Group& Insert(Options& opts, const Key& key){
                 auto it = opts.find(key);
                 if (it != opts.end()) {
                         it->second.emplace_back(Group());
@@ -118,9 +156,8 @@ private:
                 }
                 return it->second.back();
         }
-        static inline void Insert(Group& group, const KEY& key, const VAL& val){
+        static inline void Insert(Group& group, const Key& key, const Val& val){
                 group[key] = val;
         }
 };
 #endif /* SCOMMAND_H */
-
