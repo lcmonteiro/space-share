@@ -10,33 +10,15 @@
  */
 #include <string>
 #include <regex>
-#include <list>
+#include <vector>
 #include <map>
-#include <set>
 /**
  */
 using namespace std;
 /**
- * Filter Type
  */
-#define COMMAND_T(_name_, _args_...) struct  _name_ {      \
-        static bool Find(string k) {                       \
-                static set<string> SET{_args_};            \
-                return SET.count(k) > 0;                   \
-        }                                                  \
-}
-/**
- * Variable
- */
-#define COMMAND(_name_, _args_...)                         \
-COMMAND_T(_f_##_name_, _args_);                            \
-SCommand<_f_##_name_> _name_
-/**
- */
-template<class Filter> 
+template<class Key, class Val> 
 class SCommand {
-        using Key = string;
-        using Val = string;
 public:
         /**
          * -------------------------------------------------------------------------------------------------------------
@@ -44,7 +26,7 @@ public:
          * -------------------------------------------------------------------------------------------------------------
          */
         using Group   = map<Key, Val>;
-        using Groups  = list<Group>;
+        using Groups  = vector<Group>;
         using Options = map<Key, Groups>;
         /**
          * -------------------------------------------------------------------------------------------------------------
@@ -53,18 +35,18 @@ public:
          */
         SCommand() = default;
 
-        SCommand(SCommand&&)=default;
+        SCommand(SCommand&&) = default;
         
-        SCommand(const SCommand&)=default;
+        SCommand(const SCommand&) = default;
         
-        SCommand(initializer_list<Options::value_type> p):__config(p){}
+        SCommand(initializer_list<typename Options::value_type> o):__opts(o){}
         /**
          * -------------------------------------------------------------------------------------------------------------
-         * Operators
+         * access
          * -------------------------------------------------------------------------------------------------------------
          */
-        inline Groups& operator[](string tag) {
-                return __config[tag]; 
+        inline const Groups& at(const Key& k) const {
+                return __opts.at(k); 
         }
         /**
          * -------------------------------------------------------------------------------------------------------------
@@ -76,17 +58,12 @@ public:
                 // parse loop
                 regex exp("-(\\w+)|--(\\w+)=(\\w+)"); 
                 for (auto i = sregex_iterator(line.begin(), line.end(), exp), end = sregex_iterator(); i != end;) {
-                        // check start group 
-                        if (Filter::Find(i->str(1))) {
-                                // insert group
-                                auto& group = Insert(__config, i->str(1));
-                                // fill group
-                                for (++i; (i != end) && i->str(2).size() && i->str(3).size(); ++i) {        
-                                        Insert(group, i->str(2), i->str(3));
-                                }
-                                continue;
-                        }
-                        ++i;
+                        // insert group
+                        auto& group = __insert(__transform<Key>(i->str(1)));
+                        // fill group
+                        for (++i; (i != end) && i->str(2).size() && i->str(3).size(); ++i) {        
+                                __insert(group, __transform<Key>(i->str(2)), __transform<Val>(i->str(3)));
+                        }                                
                 }
                 return *this;
         }
@@ -97,9 +74,9 @@ public:
          */
         inline string Serialize() {
                 ostringstream out;
-                for(auto c : __config) {
-                        for(auto& g : c.second){
-                                out << "-" << c.first << " ";
+                for(auto o : __opts) {
+                        for(auto& g : o.second){
+                                out << "-" << o.first << " ";
                                 for (auto&p : g){
                                         out << "--" << p.first << "=" << p.second << " ";
                                 }
@@ -140,14 +117,14 @@ protected:
          * objects
          * -------------------------------------------------------------------------------------------------------------
          */
-        Options __config;
+        Options __opts;
 private:
         /**
          * -------------------------------------------------------------------------------------------------------------
-         * helpers
+         * insert
          * -------------------------------------------------------------------------------------------------------------
          */
-        static inline Group& Insert(Options& opts, const Key& key){
+        static inline Group& __insert(Options& opts, const Key& key){
                 auto it = opts.find(key);
                 if (it != opts.end()) {
                         it->second.emplace_back(Group());
@@ -156,8 +133,19 @@ private:
                 }
                 return it->second.back();
         }
-        static inline void Insert(Group& group, const Key& key, const Val& val){
+        static inline void __insert(Group& group, const Key& key, const Val& val){
                 group[key] = val;
+        }
+        /**
+         * -------------------------------------------------------------------------------------------------------------
+         * helpers
+         * -------------------------------------------------------------------------------------------------------------
+         */
+        template <class T>
+        static inline T __transform(string& s) {
+                T val;
+                istringstream(s) >> val;
+                return val;
         }
 };
 #endif /* SCOMMAND_H */
