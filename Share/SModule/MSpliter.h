@@ -67,7 +67,7 @@ protected:
      * Execute
      * -----------------------------------------------------------------------------------------------------------------
      */
-    int Execute(const Command& cmd) override{
+    int Execute(const Command& cmd) override {
 
     }
 
