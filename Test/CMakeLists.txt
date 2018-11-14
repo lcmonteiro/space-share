@@ -24,4 +24,5 @@ add_gtests(TARGET TestSample SOURCES TestSample.cpp)
 #
 # Tests subdirectories
 #
+add_subdirectory(TestShare)
 add_subdirectory(TestSpace)

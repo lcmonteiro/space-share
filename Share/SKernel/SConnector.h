@@ -8,6 +8,7 @@
 #define SCONNECTOR_H
 /**
  */
+#include <random>
 #include <list>
 #include <ctime>
 #include <memory>

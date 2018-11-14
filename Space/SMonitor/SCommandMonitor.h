@@ -19,12 +19,10 @@ public:
          * types
          */
         using Command  = C;
-        using Filter   = typename Command::Filter;
-        using Options  = typename Command::Options;
 	/**
 	 * constructor
 	 */
-	SCommandMonitor(std::string& uri, Filter filter) : __res(), __filter(filter) {
+	SCommandMonitor(std::string& uri) : __res() {
                 __res.Bind(uri);
 	}
 	/**
@@ -40,7 +38,7 @@ public:
         /**
          * read command
          */
-        inline Options Read(size_t max = 1024) {
+        inline Command& Read(size_t max = 1024) {
                 Frame frame(max);
                 /**
                  * read data
@@ -49,7 +47,7 @@ public:
                 /**
                  * parse data
                  */
-                return Command::Unserialize(__filter, string(frame.begin(), frame.end()));
+                return Command::Unserialize(string(frame.begin(), frame.end()));
         }
 private:
         /**

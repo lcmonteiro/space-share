@@ -8,14 +8,14 @@
 #define SMODULE_PROPERTIES_H
 /**
  */
-#include "SProcess.h"
+#include "SModule.h"
 /** 
  */
-namespace SModule {
+namespace Module {
     /**
      */
     namespace Properties {
-        using Tag = const SProcess::Key;
+        using Tag = string;
         /**
          * -----------------------------------------------------------------------------------------------------
          * modules types

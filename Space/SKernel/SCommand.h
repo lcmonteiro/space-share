@@ -19,6 +19,7 @@ using namespace std;
  */
 template<class Key, class Val> 
 class SCommand {
+        const char* Syntax = "-(\\w+)|--(\\w+)=(\\w+)";
 public:
         /**
          * -------------------------------------------------------------------------------------------------------------
@@ -32,14 +33,33 @@ public:
          * -------------------------------------------------------------------------------------------------------------
          * constructure
          * -------------------------------------------------------------------------------------------------------------
+         * default
          */
         SCommand() = default;
 
         SCommand(SCommand&&) = default;
         
         SCommand(const SCommand&) = default;
-        
+        /***
+         * main
+         */
         SCommand(initializer_list<typename Options::value_type> o):__opts(o){}
+        /***
+         * unserialize
+         */
+        SCommand(string line) : __opts() {
+                using Wrapper = std::reference_wrapper<Group>;
+                // parse loop
+                regex exp(Syntax); 
+                for (auto i = sregex_iterator(line.begin(), line.end(), exp), end = sregex_iterator(); i != end;) {
+                        // insert group
+                        auto& group = __insert(__transform<Key>(i->str(1)));
+                        // fill group
+                        for (++i; (i != end) && i->str(2).size() && i->str(3).size(); ++i) {        
+                                __insert(group, __transform<Key>(i->str(2)), __transform<Val>(i->str(3)));
+                        }                                
+                }
+        }
         /**
          * -------------------------------------------------------------------------------------------------------------
          * access
@@ -50,31 +70,11 @@ public:
         }
         /**
          * -------------------------------------------------------------------------------------------------------------
-         * Unserialize
-         * -------------------------------------------------------------------------------------------------------------
-         */
-        inline SCommand& Unserialize(string line) {
-                using Wrapper = std::reference_wrapper<Group>;
-                // parse loop
-                regex exp("-(\\w+)|--(\\w+)=(\\w+)"); 
-                for (auto i = sregex_iterator(line.begin(), line.end(), exp), end = sregex_iterator(); i != end;) {
-                        // insert group
-                        auto& group = __insert(__transform<Key>(i->str(1)));
-                        // fill group
-                        for (++i; (i != end) && i->str(2).size() && i->str(3).size(); ++i) {        
-                                __insert(group, __transform<Key>(i->str(2)), __transform<Val>(i->str(3)));
-                        }                                
-                }
-                return *this;
-        }
-        /**
-         * -------------------------------------------------------------------------------------------------------------
          * Serialize
          * -------------------------------------------------------------------------------------------------------------
          */
-        inline string Serialize() {
-                ostringstream out;
-                for(auto o : __opts) {
+        friend std::ostream &operator<<(std::ostream &out, const SCommand &cmd) {
+                for(auto o : cmd.__opts) {
                         for(auto& g : o.second){
                                 out << "-" << o.first << " ";
                                 for (auto&p : g){
@@ -82,7 +82,7 @@ public:
                                 }
                         }
                 } 
-                return out.str();
+                return out;
         }
         /**
          * -------------------------------------------------------------------------------------------------------------

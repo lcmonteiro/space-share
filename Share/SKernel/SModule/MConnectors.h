@@ -33,19 +33,19 @@
  * Module name space
  *----------------------------------------------------------------------------------------------------------------------
  */
-namespace SModule {
+namespace Module {
 /**
  *----------------------------------------------------------------------------------------------------------------------
  * Input
  *----------------------------------------------------------------------------------------------------------------------
  */
-namespace SInput {
+namespace Input {
     /**
      * Template Builder
      */
     template <class I>
     struct Builder {
-        static inline I Build(const Process::Function& o){
+        static inline I Build(const SModule::Command::Group& o){
             return nullptr;
         }
     };
@@ -54,31 +54,31 @@ namespace SInput {
      */
     template <>
     struct Builder<Decoded::IConnector> {
-        static inline Decoded::IConnector Build(const Process::Function& o) {
-            static map<SConnector::Key, function <Decoded::IConnector(const Process::Function&)>> GENERATOR {
-                {SConnector::Key(Properties::MESSAGE_LOCAL), [](const Process::Function& o) {
+        static inline Decoded::IConnector Build(const SModule::Command::Group& o) {
+            static map<SConnector::Key, function <Decoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
+                {SConnector::Key(Properties::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::ILocConnector::Make(
-                        Process::Command::Peek(o, Properties::URI),
-                        Process::Command::Peek(o, Properties::NFRAMES, 50),
-                        Process::Command::Peek(o, Properties::SFRAMES, 1550)
+                        SModule::Command::Peek(o, Properties::URI),
+                        SModule::Command::Peek(o, Properties::NFRAMES, 50),
+                        SModule::Command::Peek(o, Properties::SFRAMES, 1550)
                     );
-                    in->SetVerbose(Process::Command::Peek(o, Properties::VERBOSE, 0));
-                    in->SetEnergy(Process::Command::Peek(o,  Properties::ENERGY,  0));
+                    in->SetVerbose(SModule::Command::Peek(o, Properties::VERBOSE, 0));
+                    in->SetEnergy(SModule::Command::Peek(o,  Properties::ENERGY,  0));
                     return in;
                 }},
-                {SConnector::Key(Properties::MESSAGE_UDP), [](const Process::Function& o) {
+                {SConnector::Key(Properties::MESSAGE_UDP), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::IUdpConnector::Make(
-                        Process::Command::Peek(o, Properties::URI),
-                        Process::Command::Peek(o, Properties::NFRAMES, 50),
-                        Process::Command::Peek(o, Properties::SFRAMES, 1550)
+                        SModule::Command::Peek(o, Properties::URI),
+                        SModule::Command::Peek(o, Properties::NFRAMES, 50),
+                        SModule::Command::Peek(o, Properties::SFRAMES, 1550)
                     );
-                    in->SetVerbose(Process::Command::Peek(o, Properties::VERBOSE, 0));
-                    in->SetEnergy(Process::Command::Peek(o,  Properties::ENERGY,  0));
+                    in->SetVerbose(SModule::Command::Peek(o, Properties::VERBOSE, 0));
+                    in->SetEnergy(SModule::Command::Peek(o,  Properties::ENERGY,  0));
                     return in;
                 }}
             };
             return GENERATOR[
-                Process::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::MESSAGE_LOCAL))
+                SModule::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::MESSAGE_LOCAL))
             ](o);
         }
     };
@@ -87,19 +87,19 @@ namespace SInput {
      */
     template <>
     struct Builder<Encoded::IConnector> {
-        static inline Encoded::IConnector Build(const Process::Function& o){
-            static map<SConnector::Key, function <Encoded::IConnector(const Process::Function&)>> GENERATOR {
-                {SConnector::Key(Properties::MESSAGE_FILE), [](const Process::Input& o) {
+        static inline Encoded::IConnector Build(const SModule::Command::Group& o){
+            static map<SConnector::Key, function <Encoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
+                {SConnector::Key(Properties::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto in = Encoded::Message::IFileConnector::Make(
-                        Process::Command::Peek(o, Properties::URI, string("/tmp/coded"))
+                        SModule::Command::Peek(o, Properties::URI, string("/tmp/coded"))
                     );
-                    in->SetVerbose(Process::Command::Peek(o, Properties::VERBOSE, 0));
-                    in->SetEnergy(Process::Command::Peek(o,  Properties::ENERGY,  1));
+                    in->SetVerbose(SModule::Command::Peek(o, Properties::VERBOSE, 0));
+                    in->SetEnergy(SModule::Command::Peek(o,  Properties::ENERGY,  1));
                     return in;
                 }}
             };
             return GENERATOR[
-                Process::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
+                SModule::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
             ](o);
         }
     };
@@ -109,13 +109,13 @@ namespace SInput {
  * Output
  *----------------------------------------------------------------------------------------------------------------------
  */
-namespace SOutput {
+namespace Output {
     /**
      * Template Builder
      */
     template <class O>
     struct Builder {
-        static inline O Build(const Process::Function o){
+        static inline O Build(const SModule::Command::Group o){
             return nullptr;
         }
     };
@@ -124,19 +124,19 @@ namespace SOutput {
      */
     template <>
     struct Builder<Decoded::OConnector> {
-        static inline Decoded::OConnector Build(const Process::Function& o) {
-            static map<SConnector::Key, function <Decoded::OConnector(const Process::Function&)>> GENERATOR {
-                {SConnector::Key(Properties::MESSAGE_UDP), [](const Process::Function& o) {
+        static inline Decoded::OConnector Build(const SModule::Command::Group& o) {
+            static map<SConnector::Key, function <Decoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
+                {SConnector::Key(Properties::MESSAGE_UDP), [](const SModule::Command::Group& o) {
                     auto out = Decoded::Message::OUdpConnector::Make(
-                        Process::Command::Peek(o, Properties::URI,  string("127.0.0.1:9751"))
+                        SModule::Command::Peek(o, Properties::URI,  string("127.0.0.1:9751"))
                     );
-                    out->SetVerbose(Process::Command::Peek(o, Properties::VERBOSE, 0));
-                    out->SetEnergy(Process::Command::Peek(o,  Properties::ENERGY,  1));
+                    out->SetVerbose(SModule::Command::Peek(o, Properties::VERBOSE, 0));
+                    out->SetEnergy(SModule::Command::Peek(o,  Properties::ENERGY,  1));
                     return out;
                 }}
             };
             return GENERATOR[
-                Process::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::MESSAGE_UDP))
+                SModule::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::MESSAGE_UDP))
             ](o);
         }
     };
@@ -145,19 +145,19 @@ namespace SOutput {
      */
     template <>
     struct Builder<Encoded::OConnector> {
-        static inline Encoded::OConnector Build(const Process::Function& o){
-            static map<SConnector::Key, function <Encoded::OConnector(const Process::Function&)>> GENERATOR {
-                {SConnector::Key(Properties::MESSAGE_FILE), [](const Process::Function& o) {
+        static inline Encoded::OConnector Build(const SModule::Command::Group& o){
+            static map<SConnector::Key, function <Encoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
+                {SConnector::Key(Properties::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto out = Encoded::Message::OFileConnector::Make(
-                        Process::Command::Peek(o, Properties::URI, string("/tmp/code"))
+                        SModule::Command::Peek(o, Properties::URI, string("/tmp/code"))
                     );
-                    out->SetVerbose(Process::Command::Peek(o, Properties::VERBOSE, 0));
-                    out->SetEnergy(Process::Command::Peek(o,  Properties::ENERGY,  1));
+                    out->SetVerbose(SModule::Command::Peek(o, Properties::VERBOSE, 0));
+                    out->SetEnergy(SModule::Command::Peek(o,  Properties::ENERGY,  1));
                     return out;
                 }}
             };
             return GENERATOR[
-                Process::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
+                SModule::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
             ](o);
         }
     };
@@ -167,13 +167,13 @@ namespace SOutput {
  * (In|Out)put
  *----------------------------------------------------------------------------------------------------------------------
  */
-namespace SIOput {
+namespace IOput {
     /**
      * Template Builder
      */
     template <class O>
     struct Builder {
-        static inline O Build(const Process::Function& o){
+        static inline O Build(const SModule::Command::Group& o){
             return nullptr;
         }
     };
@@ -182,21 +182,21 @@ namespace SIOput {
      */
     template <>
     struct Builder<Decoded::IOConnector> {
-        static inline Decoded::IOConnector Build(const Process::Function& o) {
-            static map<SConnector::Key, function <Decoded::IOConnector(const Process::Function&)>> GENERATOR {
-                {SConnector::Key(Properties::STREAM_LOCAL), [](const Process::Function& o) {
+        static inline Decoded::IOConnector Build(const SModule::Command::Group& o) {
+            static map<SConnector::Key, function <Decoded::IOConnector(const SModule::Command::Group&)>> GENERATOR {
+                {SConnector::Key(Properties::STREAM_LOCAL), [](const SModule::Command::Group& o) {
                     auto io = Decoded::Stream::IOLocConnector::Make(
-                        Process::Command::Peek(o, Properties::URI,  string("/tmp/data.y")),
-                        Process::Command::Peek(o, Properties::NFRAMES, 50),
-                        Process::Command::Peek(o, Properties::SFRAMES, 4096)
+                        SModule::Command::Peek(o, Properties::URI,  string("/tmp/data.y")),
+                        SModule::Command::Peek(o, Properties::NFRAMES, 50),
+                        SModule::Command::Peek(o, Properties::SFRAMES, 4096)
                     );
-                    io->SetVerbose(Process::Command::Peek(o, Properties::VERBOSE, 0));
-                    io->SetEnergy(Process::Command::Peek(o,  Properties::ENERGY,  1));
+                    io->SetVerbose(SModule::Command::Peek(o, Properties::VERBOSE, 0));
+                    io->SetEnergy(SModule::Command::Peek(o,  Properties::ENERGY,  1));
                     return io;
                 }}
             };
             return GENERATOR[
-                Process::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
+                SModule::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
             ](o);
         }
     };
@@ -205,12 +205,12 @@ namespace SIOput {
      */
     template <>
     struct Builder<Encoded::IOConnector> {
-        static inline Encoded::IOConnector Build(const Process::Function& o){
-            static map<SConnector::Key, function <Encoded::IOConnector(const Process::Function&)>> GENERATOR {
+        static inline Encoded::IOConnector Build(const SModule::Command::Group& o){
+            static map<SConnector::Key, function <Encoded::IOConnector(const SModule::Command::Group&)>> GENERATOR {
                 
             };
             return GENERATOR[
-                Process::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
+                SModule::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
             ](o);
         }
     };
