@@ -8,5 +8,5 @@ TARGET
 SOURCES
     TestKernel/TestModule.cpp
 TARGETS
-    ShareKernelModule
+    ShareModule
 )

@@ -5,7 +5,7 @@
  * Created on November 11, 2015, 9:49 AM
  */
 #ifndef SENCODE_FUNCTION_H
-#define    SENCODE_FUNCTION_H
+#define SENCODE_FUNCTION_H
 /**
  * C++ 
  */

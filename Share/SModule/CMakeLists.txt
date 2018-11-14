@@ -1,19 +1,18 @@
 cmake_minimum_required (VERSION 3.8)
 # target
-add_library(ShareKernelModule STATIC
+add_library(ShareModule STATIC
 	#MTransform.cpp
 	MYpsilon.cpp
 )
 # includes
-target_include_directories(ShareKernelModule PUBLIC
+target_include_directories(ShareModule PUBLIC
 	.
 )
 # target dependencies
-target_link_libraries(ShareKernelModule 
+target_link_libraries(ShareModule 
 PRIVATE 
 	ShareKernel
 PUBLIC
-	SpaceKernel
 	SpaceMonitor
 	SpaceResource
 	ShareConnector

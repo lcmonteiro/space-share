@@ -24,7 +24,7 @@
  * ---------------------------------------------------------------------------------------------------------------------
  * process command
  */
-namespace SModule {
+namespace Module {
     template<class C, class I, class F, class O>
     void ProcessCommand(C& cmd, I& input, F& func, O& output) {
         using Command = typename C::Command;

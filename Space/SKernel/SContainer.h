@@ -5,7 +5,7 @@
  * Created on November 23, 2016, 10:21 AM
  */
 #ifndef SCONTAINER_H
-#define        SCONTAINER_H
+#define SCONTAINER_H
 /**
  *
  */

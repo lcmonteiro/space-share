@@ -6,7 +6,11 @@
  */
 #ifndef SCOMMANDMONITOR_H
 #define SCOMMANDMONITOR_H
-#include <string>
+/**
+ * Space
+ */
+#include <SContainer.h>
+#include <SAddress.h>
 /**
  */
 using namespace std;
@@ -19,11 +23,12 @@ public:
          * types
          */
         using Command  = C;
+        using Resource = R;
 	/**
 	 * constructor
 	 */
-	SCommandMonitor(std::string& uri) : __res() {
-                __res.Bind(uri);
+	SCommandMonitor(const SAddress& add) : __res() {
+                __res.Bind(add.Host());
 	}
 	/**
 	 * destructor
@@ -39,25 +44,21 @@ public:
          * read command
          */
         inline Command& Read(size_t max = 1024) {
-                Frame frame(max);
+                SFrame frame(max);
                 /**
-                 * read data
+                 * read data up to max 
                  */
                 __res.Fill(frame);
                 /**
-                 * parse data
+                 * create a comand (parse a command)
                  */
-                return Command::Unserialize(string(frame.begin(), frame.end()));
+                return Command(string(frame.begin(), frame.end()));
         }
 private:
         /**
          * resource
          */
-	R __res;
-        /**
-         * filter
-         */
-        Filter __filter;
+	Resource __res;
 };
 /**
  */

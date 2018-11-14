@@ -7,6 +7,8 @@ add_subdirectory(SConnector)
 add_subdirectory(SFunction)
 # folder for interfaces
 add_subdirectory(SInterface)
+# folder for Modules
+add_subdirectory(SModule)
 # folder for kernel
 add_subdirectory(SKernel)
 # target
