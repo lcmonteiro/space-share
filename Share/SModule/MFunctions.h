@@ -132,7 +132,7 @@ namespace Transform {
  * Ypsilon functions
  *----------------------------------------------------------------------------------------------------------------------
  */
-namespace Ypsilon {
+namespace Spliter {
     /**
      * Template Base Builder
      */

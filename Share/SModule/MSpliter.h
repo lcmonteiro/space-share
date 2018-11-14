@@ -1,11 +1,11 @@
 /** 
- * File:   MYpsilon.h
+ * File:   MSpliter.h
  * Author: Luis Monteiro
  *
  * Created on January 26, 2017, 5:59 PM
  */
-#ifndef MYPSILON_H
-#define MYPSILON_H
+#ifndef MSpliter_H
+#define MSpliter_H
 /**
  */
 #include <tuple>
@@ -39,7 +39,7 @@ namespace Module {
 /**
  */
 template<class IO, class I, class O>
-class MYpsilon : public SModule {
+class MSpliter : public SModule {
     /**
      * exceptions
      */
@@ -58,7 +58,7 @@ class MYpsilon : public SModule {
     using IOBuilder = IOput::Builder<IO>;
     using IBuilder  = Input::Builder<I>;
     using OBuilder  = Output::Builder<O>;
-    using YBuilder  = Ypsilon::Builder<IO, I, O>;  
+    using YBuilder  = Spliter::Builder<IO, I, O>;  
 public:   
     using SModule::SModule;
 protected:
@@ -71,7 +71,7 @@ protected:
 
     }
 
-    int Ypsilon(const Group& fn_opt, const Groups& in_opt, const Groups& io_opt, const Groups& out_opt) {
+    int Spliter(const Group& fn_opt, const Groups& in_opt, const Groups& io_opt, const Groups& out_opt) {
         /**
          * input timeout 
          */
@@ -185,5 +185,5 @@ protected:
     }
 };
 }
-#endif /* MYPSILON_H */
+#endif /* MSpliter_H */
 
