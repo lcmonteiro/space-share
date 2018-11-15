@@ -71,35 +71,35 @@ protected:
         /**
          * input timeout 
          */
-        chrono::milliseconds timeout(Command::Peek(cmd.at("").at(0), Properties::TIMEOUT, 1000));
+        chrono::milliseconds timeout(cmd[""][0].get(Properties::TIMEOUT, 1000));
         /**
          * process delay
          */
-        chrono::milliseconds delay(Command::Peek(cmd.at("").at(0), Properties::DELAY, 10));
+        chrono::milliseconds delay(cmd[""][0].get(Properties::DELAY, 10));
         STask::Sleep(delay);
         /**
          * configure IOs
          */
         IOLocation io;
-        for(auto& o: cmd.at("X")) {
+        for(auto& o: cmd["X"]) {
             io.Insert(IOBuilder::Build(o));
         }
         ILocation in;
-        for(auto& o: cmd.at("I")) {
+        for(auto& o: cmd["I"]) {
             in.Insert(IBuilder::Build(o));
         }
         OLocation out;
-        for(auto& o: cmd.at("O")) {
+        for(auto& o: cmd["O"]) {
             out.Insert(OBuilder::Build(o));
         }
         /**
          * configure function
          */
-        auto func = YBuilder::Build(cmd.at("F").at(0));
+        auto func = YBuilder::Build(cmd["F"][0]);
         /**
          * start energy
          */
-        auto energy = Command::Peek(cmd.at("F").at(0), Properties::ENERGY, size_t(1));
+        auto energy = cmd["F"][0].get(Properties::ENERGY, size_t(1));
         /**
          * main loop 
          */

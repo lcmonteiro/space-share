@@ -27,33 +27,46 @@ public:
          * -------------------------------------------------------------------------------------------------------------
          */
         class Group : public map<Key, Val> {
+                using map<Key, Val>::at;
         public:
                 using map<Key, Val>::map;
+                // change
+                inline const Val& operator[](const Key& k) const {
+                        return at(k); 
+                }
                 // extra
-                template <class T>
-                inline const T AT(const Key& k) const {
+                template <class T=Val>
+                inline const T get(const Key& k) const {
                         T val;
                         istringstream(at(k)) >> val;
                         return val; 
                 }
                 template <class T>
-                inline const T AT(const Key& k, const T& d) const {
+                inline const T get(const Key& k, const T& d) const {
                         try {
-                                return AT<T>(k);
+                                return get<T>(k);
                         } catch (...) {
                                 return d;
                         }
                 }
                 template <class T>
-                inline const T AT(const Key& k1, const Key& k2, const T& d) {
+                inline const T get(const Key& k1, const Key& k2, const T& d) {
                         try {
-                                return AT<T>(k1);
+                                return get<T>(k1);
                         } catch (...) {
-                                return AT<T>(k2, d);
+                                return get<T>(k2, d);
                         }
                 }
         };
-        using Groups  = vector<Group>;
+        class Groups: public vector<Group> {
+                using vector<Group>::at;
+        public:
+                using vector<Group>::vector;
+                // change
+                inline const Group& operator[](size_t i) const {
+                        return at(i); 
+                }
+        };
         using Options = map<Key, Groups>;
         /**
          * -------------------------------------------------------------------------------------------------------------
@@ -91,7 +104,7 @@ public:
          * access
          * -------------------------------------------------------------------------------------------------------------
          */
-        inline const Groups& at(const Key& k) const {
+        inline const Groups& operator[](const Key& k) const {
                 return __opts.at(k); 
         }
         /**
@@ -109,33 +122,6 @@ public:
                         }
                 } 
                 return out;
-        }
-        /**
-         * -------------------------------------------------------------------------------------------------------------
-         * Peek  
-         * -------------------------------------------------------------------------------------------------------------
-         */        
-        template <class T=string>
-        static inline T Peek(const Group& opt, const Key& id) {
-                T val;
-                istringstream(opt.at(id)) >> val;
-                return val;
-        }
-        template <class T>
-        static inline T Peek(const Group& opt, const Key& id, const T& def) {
-                try {
-                        return Peek<T>(opt, id);
-                } catch (...) {
-                        return def;
-                }
-        }
-        template <class T>
-        static inline T Peek(const Group& opt, const Key& id1, const Key& id2, const T& def) {
-                try {
-                        return Peek<T>(opt, id1);
-                } catch (...) {
-                        return Peek<T>(opt, id2, def);
-                }
         }
 protected:
         /**

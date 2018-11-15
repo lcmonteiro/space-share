@@ -9,7 +9,7 @@ TEST(SProcess, Create)
         using SProcess<string, string>::SProcess;
     protected:
         int Execute(const Command & c) override {
-            return stoi(c.at("I").at(0).at("A"));
+            return stoi(c["I"][0]["A"]);
         }
     };
     SProcess1 p("uri", 0, {

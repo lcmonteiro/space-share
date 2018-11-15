@@ -40,9 +40,7 @@ public:
      * main constructor
      */
     SModule(const Command& cmd)
-    : SProcess(
-        Command::Peek(cmd.at("").at(0), URI),
-        Command::Peek(cmd.at("").at(0), VERBOSE, 0), cmd) {}
+    : SProcess(cmd[""][0][URI], cmd[""][0].get(VERBOSE, 0), cmd) {}
     /**
      * default constructors
      */

@@ -58,27 +58,27 @@ namespace Input {
             static map<SConnector::Key, function <Decoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(Properties::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::ILocConnector::Make(
-                        SModule::Command::Peek(o, Properties::URI),
-                        SModule::Command::Peek(o, Properties::NFRAMES, 50),
-                        SModule::Command::Peek(o, Properties::SFRAMES, 1550)
+                        o.get(Properties::URI),
+                        o.get(Properties::NFRAMES, 50),
+                        o.get(Properties::SFRAMES, 1550)
                     );
-                    in->SetVerbose(SModule::Command::Peek(o, Properties::VERBOSE, 0));
-                    in->SetEnergy(SModule::Command::Peek(o,  Properties::ENERGY,  0));
+                    in->SetVerbose(o.get(Properties::VERBOSE, 0));
+                    in->SetEnergy(o.get(Properties::ENERGY,   0));
                     return in;
                 }},
                 {SConnector::Key(Properties::MESSAGE_UDP), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::IUdpConnector::Make(
-                        SModule::Command::Peek(o, Properties::URI),
-                        SModule::Command::Peek(o, Properties::NFRAMES, 50),
-                        SModule::Command::Peek(o, Properties::SFRAMES, 1550)
+                        o.get(Properties::URI),
+                        o.get(Properties::NFRAMES, 50),
+                        o.get(Properties::SFRAMES, 1550)
                     );
-                    in->SetVerbose(SModule::Command::Peek(o, Properties::VERBOSE, 0));
-                    in->SetEnergy(SModule::Command::Peek(o,  Properties::ENERGY,  0));
+                    in->SetVerbose(o.get(Properties::VERBOSE, 0));
+                    in->SetEnergy(o.get( Properties::ENERGY,  0));
                     return in;
                 }}
             };
             return GENERATOR[
-                SModule::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::MESSAGE_LOCAL))
+                o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_LOCAL))
             ](o);
         }
     };
@@ -91,15 +91,15 @@ namespace Input {
             static map<SConnector::Key, function <Encoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(Properties::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto in = Encoded::Message::IFileConnector::Make(
-                        SModule::Command::Peek(o, Properties::URI, string("/tmp/coded"))
+                        o.get(Properties::URI, string("/tmp/coded"))
                     );
-                    in->SetVerbose(SModule::Command::Peek(o, Properties::VERBOSE, 0));
-                    in->SetEnergy(SModule::Command::Peek(o,  Properties::ENERGY,  1));
+                    in->SetVerbose(o.get(Properties::VERBOSE, 0));
+                    in->SetEnergy(o.get(Properties::ENERGY,   1));
                     return in;
                 }}
             };
             return GENERATOR[
-                SModule::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
+                o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
             ](o);
         }
     };
@@ -128,15 +128,15 @@ namespace Output {
             static map<SConnector::Key, function <Decoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(Properties::MESSAGE_UDP), [](const SModule::Command::Group& o) {
                     auto out = Decoded::Message::OUdpConnector::Make(
-                        SModule::Command::Peek(o, Properties::URI,  string("127.0.0.1:9751"))
+                        o.get(Properties::URI,  string("127.0.0.1:9751"))
                     );
-                    out->SetVerbose(SModule::Command::Peek(o, Properties::VERBOSE, 0));
-                    out->SetEnergy(SModule::Command::Peek(o,  Properties::ENERGY,  1));
+                    out->SetVerbose(o.get(Properties::VERBOSE, 0));
+                    out->SetEnergy(o.get(Properties::ENERGY,   1));
                     return out;
                 }}
             };
             return GENERATOR[
-                SModule::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::MESSAGE_UDP))
+                o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_UDP))
             ](o);
         }
     };
@@ -149,15 +149,15 @@ namespace Output {
             static map<SConnector::Key, function <Encoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(Properties::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto out = Encoded::Message::OFileConnector::Make(
-                        SModule::Command::Peek(o, Properties::URI, string("/tmp/code"))
+                        o.get(Properties::URI, string("/tmp/code"))
                     );
-                    out->SetVerbose(SModule::Command::Peek(o, Properties::VERBOSE, 0));
-                    out->SetEnergy(SModule::Command::Peek(o,  Properties::ENERGY,  1));
+                    out->SetVerbose(o.get(Properties::VERBOSE, 0));
+                    out->SetEnergy(o.get(Properties::ENERGY,   1));
                     return out;
                 }}
             };
             return GENERATOR[
-                SModule::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
+                o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
             ](o);
         }
     };
@@ -186,17 +186,17 @@ namespace IOput {
             static map<SConnector::Key, function <Decoded::IOConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(Properties::STREAM_LOCAL), [](const SModule::Command::Group& o) {
                     auto io = Decoded::Stream::IOLocConnector::Make(
-                        SModule::Command::Peek(o, Properties::URI,  string("/tmp/data.y")),
-                        SModule::Command::Peek(o, Properties::NFRAMES, 50),
-                        SModule::Command::Peek(o, Properties::SFRAMES, 4096)
+                        o.get(Properties::URI,     string("/tmp/data.y")),
+                        o.get(Properties::NFRAMES, 50),
+                        o.get(Properties::SFRAMES, 4096)
                     );
-                    io->SetVerbose(SModule::Command::Peek(o, Properties::VERBOSE, 0));
-                    io->SetEnergy(SModule::Command::Peek(o,  Properties::ENERGY,  1));
+                    io->SetVerbose(o.get(Properties::VERBOSE, 0));
+                    io->SetEnergy(o.get(Properties::ENERGY,   1));
                     return io;
                 }}
             };
             return GENERATOR[
-                SModule::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
+                o.get(Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
             ](o);
         }
     };
@@ -210,7 +210,7 @@ namespace IOput {
                 
             };
             return GENERATOR[
-                SModule::Command::Peek(o, Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
+                o.get(Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
             ](o);
         }
     };

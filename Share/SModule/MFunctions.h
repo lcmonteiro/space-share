@@ -83,17 +83,17 @@ namespace Transform {
                      * create function
                      */
                     return make_shared<Message::SEncode>(Helpers::CreateStamp(
-                        SModule::Command::Peek(o, Properties::TYPE,   Properties::MESSAGE),
-                        SModule::Command::Peek(o, Properties::SECRET, string(""))
-                    ), 
-                        SModule::Command::Peek(o, Properties::CACHE,  10),
-                        SModule::Command::Peek(o, Properties::ENERGY, 10),
-                        SModule::Command::Peek(o, Properties::VERBOSE, 1)
+                            o.get(Properties::TYPE,   Properties::MESSAGE),
+                            o.get(Properties::SECRET, string(""))
+                        ), 
+                        o.get(Properties::CACHE,  10),
+                        o.get(Properties::ENERGY, 10),
+                        o.get(Properties::VERBOSE, 1)
                     );
                 }}
             };
             return GENERATOR[
-                SModule::Command::Peek(o, Properties::TYPE, Properties::MESSAGE)
+                o.get(Properties::TYPE, Properties::MESSAGE)
             ](o);
             
         }
@@ -112,17 +112,17 @@ namespace Transform {
                      * create function
                      */
                     return make_shared<Message::SDecode>(Helpers::CreateStamp(
-                        SModule::Command::Peek(o, Properties::TYPE,   Properties::MESSAGE),
-                        SModule::Command::Peek(o, Properties::SECRET, SConnector::Key())
-                    ), 
-                        SModule::Command::Peek(o, Properties::CACHE,  10),
-                        SModule::Command::Peek(o, Properties::ENERGY, 10),
-                        SModule::Command::Peek(o, Properties::VERBOSE, 1)
+                            o.get(Properties::TYPE,   Properties::MESSAGE),
+                            o.get(Properties::SECRET, SConnector::Key())
+                        ), 
+                        o.get(Properties::CACHE,  10),
+                        o.get(Properties::ENERGY, 10),
+                        o.get(Properties::VERBOSE, 1)
                     );
                 }}
             };
             return GENERATOR[
-                SModule::Command::Peek(o, Properties::TYPE, Properties::MESSAGE)
+                o.get(Properties::TYPE, Properties::MESSAGE)
             ](o);
         }
     };
@@ -148,9 +148,9 @@ namespace Spliter {
         using Pointer = typename BaseBuilder<IO, I, O>::Pointer;
         static inline Pointer Build(const SModule::Command::Group& o){
             return make_shared<SFunctionYpsilon<IO, I, O>>(
-                SModule::Command::Peek(o, Properties::TIMEOUT, 1000), 
-                SModule::Command::Peek(o, Properties::ENERGY,  2), 
-                SModule::Command::Peek(o, Properties::VERBOSE, 1)
+                o.get(Properties::TIMEOUT, 1000), 
+                o.get(Properties::ENERGY,  2), 
+                o.get(Properties::VERBOSE, 1)
             );
         }
     };

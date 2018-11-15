@@ -18,11 +18,11 @@ TEST(SCommand, Create)
         }}},
     };
     //use case 1 -> positive
-    EXPECT_EQ(c.at("I").at(0).at("A"), "a");
-    EXPECT_EQ(c.at("O").at(0).at("B"), "b");
-    EXPECT_EQ(c.at("X").at(0).at("C"), "c");
+    EXPECT_EQ(c["I"][0]["A"], "a");
+    EXPECT_EQ(c["O"][0]["B"], "b");
+    EXPECT_EQ(c["X"][0]["C"], "c");
     // use case 2 -> negative
-    EXPECT_THROW(c.at("D"), out_of_range);
+    EXPECT_THROW(c["D"], out_of_range);
 }
 
 TEST(SCommand, Constant)
@@ -33,7 +33,7 @@ TEST(SCommand, Constant)
         }}}
     };
     //use case 1 -> positive
-    EXPECT_EQ(c.at("I").at(0).at("A"), "a");
+    EXPECT_EQ(c["I"][0]["A"], "a");
 }
 
 TEST(SCommand, Group)
@@ -44,5 +44,5 @@ TEST(SCommand, Group)
         }}}
     };
     //use case 1 -> positive
-    EXPECT_EQ(c.at("I").at(0).AT("A", 1), 1);
+    EXPECT_EQ(c["I"][0].get("A", 1), 1);
 }
