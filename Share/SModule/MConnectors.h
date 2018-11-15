@@ -77,9 +77,13 @@ namespace Input {
                     return in;
                 }}
             };
-            return GENERATOR[
-                o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_LOCAL))
-            ](o);
+            try {
+                return GENERATOR[
+                    o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_LOCAL))
+                ](o);
+            } catch(...) {
+                throw runtime_error("invalid input");
+            }
         }
     };
     /**
@@ -98,9 +102,13 @@ namespace Input {
                     return in;
                 }}
             };
-            return GENERATOR[
-                o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
-            ](o);
+            try {
+                return GENERATOR[
+                    o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
+                ](o);
+            } catch(...) {
+                throw runtime_error("invalid input");
+            }
         }
     };
 };
@@ -135,9 +143,13 @@ namespace Output {
                     return out;
                 }}
             };
-            return GENERATOR[
-                o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_UDP))
-            ](o);
+            try{
+                return GENERATOR[
+                    o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_UDP))
+                ](o);
+            } catch(...) {
+                throw runtime_error("invalid output");
+            }
         }
     };
     /**
@@ -156,9 +168,13 @@ namespace Output {
                     return out;
                 }}
             };
-            return GENERATOR[
-                o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
-            ](o);
+            try {
+                return GENERATOR[
+                    o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
+                ](o);
+            } catch(...) {
+                throw runtime_error("invalid output");
+            }
         }
     };
 }
@@ -195,9 +211,13 @@ namespace IOput {
                     return io;
                 }}
             };
-            return GENERATOR[
-                o.get(Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
-            ](o);
+            try {
+                return GENERATOR[
+                    o.get(Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
+                ](o);
+            } catch(...) {
+                throw runtime_error("invalid input/output");
+            }
         }
     };
     /**
@@ -209,9 +229,13 @@ namespace IOput {
             static map<SConnector::Key, function <Encoded::IOConnector(const SModule::Command::Group&)>> GENERATOR {
                 
             };
-            return GENERATOR[
-                o.get(Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
-            ](o);
+            try {
+                return GENERATOR[
+                    o.get(Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
+                ](o);
+            } catch(...) {
+                throw runtime_error("invalid input/output");
+            }
         }
     };
 }

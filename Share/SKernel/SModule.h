@@ -16,8 +16,8 @@
 /**
  */
 class SModule : public SProcess<string, string> {
-    const char* URI     = "uri";
-    const char* VERBOSE = "verbose";
+    static constexpr const char* URI     = "uri";
+    static constexpr const char* VERBOSE = "verbose";
 public:   
     using Key = string;
     using Val = string;
