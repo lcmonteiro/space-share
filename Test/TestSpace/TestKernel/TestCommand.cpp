@@ -35,3 +35,14 @@ TEST(SCommand, Constant)
     //use case 1 -> positive
     EXPECT_EQ(c.at("I").at(0).at("A"), "a");
 }
+
+TEST(SCommand, Group)
+{
+    const SCommand<string, string> c {
+        {"I", {{
+            {"A", "1"}
+        }}}
+    };
+    //use case 1 -> positive
+    EXPECT_EQ(c.at("I").at(0).AT("A", 1), 1);
+}

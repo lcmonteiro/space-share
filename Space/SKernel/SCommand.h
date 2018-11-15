@@ -26,7 +26,33 @@ public:
          * definitions
          * -------------------------------------------------------------------------------------------------------------
          */
-        using Group   = map<Key, Val>;
+        class Group : public map<Key, Val> {
+        public:
+                using map<Key, Val>::map;
+                // extra
+                template <class T>
+                inline const T AT(const Key& k) const {
+                        T val;
+                        istringstream(at(k)) >> val;
+                        return val; 
+                }
+                template <class T>
+                inline const T AT(const Key& k, const T& d) const {
+                        try {
+                                return AT<T>(k);
+                        } catch (...) {
+                                return d;
+                        }
+                }
+                template <class T>
+                inline const T AT(const Key& k1, const Key& k2, const T& d) {
+                        try {
+                                return AT<T>(k1);
+                        } catch (...) {
+                                return AT<T>(k2, d);
+                        }
+                }
+        };
         using Groups  = vector<Group>;
         using Options = map<Key, Groups>;
         /**
