@@ -34,11 +34,11 @@ public:
 	 * process constructor
 	 */
 	SAddress(
-		const string addr, 
-		const string user = "", 
-		const string host = "", 
+		const string& addr, 
+		const string& user = "", 
+		const string& host = "", 
 		const uint16_t port = 0, 
-		const string path = ""
+		const string& path = ""
 	);
 	/**
 	 * destructor

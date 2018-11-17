@@ -4,32 +4,12 @@
  *
  * Created on January 26, 2017, 5:59 PM
  */
-#ifndef MSpliter_H
-#define MSpliter_H
+#ifndef MSPLITER_H
+#define MSPLITER_H
 /**
+ * Module
  */
-#include <tuple>
-#include <chrono>
-/**
- * Buildres
- */
-#include "MConnectors.h"
-#include "MFunctions.h"
-/**
- * space kernel
- */
-#include "SProcess.h"
-#include "SConnector.h"
-#include "SLocation.h"
-/**
- * space monitor
- */
-#include "SRoadMonitor.h"
-#include "SCommandMonitor.h"
-/**
- * space resource
- */
-#include "SLocalResource.h"  
+#include "MBasis.h"
 /**
  *----------------------------------------------------------------------------------------------------------------------
  * Module name space
@@ -39,7 +19,7 @@ namespace Module {
 /**
  */
 template<class IO, class I, class O>
-class MSpliter : public SModule {
+class MSpliter : public MBasis {
     /**
      * exceptions
      */
@@ -60,7 +40,7 @@ class MSpliter : public SModule {
     using OBuilder  = Output::Builder<O>;
     using YBuilder  = Spliter::Builder<IO, I, O>;  
 public:   
-    using SModule::SModule;
+    using MBasis::MBasis;
 protected:
     /**
      * -----------------------------------------------------------------------------------------------------------------
@@ -181,5 +161,5 @@ protected:
     }
 };
 }
-#endif /* MSpliter_H */
+#endif /* MSPLITER_H */
 

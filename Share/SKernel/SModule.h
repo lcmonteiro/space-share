@@ -18,9 +18,9 @@
 class SModule : public SProcess<string, string> {
     static constexpr const char* URI     = "uri";
     static constexpr const char* VERBOSE = "verbose";
+    static constexpr const char* ENERGY  = "energy";
 public:   
-    using Key = string;
-    using Val = string;
+    
     /**
      * -----------------------------------------------------------------------------------------------------------------
      * Definitions
@@ -29,7 +29,10 @@ public:
      */
     typedef enum {OPEN = 0, OWAIT, IWAIT, PROCESS, UPDATE} State;
     /**
-     * 
+     */
+    using Key = string;
+    using Val = string;
+    /**
      */
     using Group  = Command::Group;
     using Groups = Command::Groups;
@@ -40,7 +43,7 @@ public:
      * main constructor
      */
     SModule(const Command& cmd)
-    : SProcess(cmd[""][0][URI], cmd[""][0].get(VERBOSE, 0), cmd) {}
+    : SProcess(cmd[""][0][URI], cmd[""][0].get(VERBOSE, 0), cmd), __state(OPEN) {}
     /**
      * default constructors
      */

@@ -50,7 +50,7 @@ public:
                         }
                 }
                 template <class T>
-                inline const T get(const Key& k1, const Key& k2, const T& d) {
+                inline const T get(const Key& k1, const Key& k2, const T& d) const {
                         try {
                                 return get<T>(k1);
                         } catch (...) {

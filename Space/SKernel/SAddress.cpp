@@ -37,11 +37,11 @@ static string Get(string data, const string def) {
  * parse 
  */
 SAddress::SAddress(
-	const string addr, 
-	const string user, 
-	const string host, 
+	const string& addr, 
+	const string& user, 
+	const string& host, 
 	const uint16_t port, 
-	const string path
+	const string& path
 ):string(addr) {
 	smatch sm;
 	if (!regex_match(*this, sm, std::regex(__ADDRESS_FMT__))) {

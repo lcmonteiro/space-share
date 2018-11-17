@@ -1,236 +1,192 @@
-// /** 
-//  * File:   MProcess.h
-//  * Author: Luis Monteiro
-//  *
-//  * Created on January 26, 2017, 5:59 PM
-//  */
-// #ifndef SMODULE_PROCESS_H
-// #define SMODULE_PROCESS_H
-// /**
-//  */
-// #include <tuple>
-// #include <chrono>
-// /**
-//  */
-// #include "MProperties.h"
-// /**
-//  * space kernel
-//  */
-// #include "SProcess.h"
-// #include "SConnector.h"
-// #include "SLocation.h"
-// /**
-//  * space monitor
-//  */
-// #include "SRoadMonitor.h"
-// #include "SCommandMonitor.h"
-// /**
-//  * space resource
-//  */
-// #include "SLocalResource.h"
-// /**
-//  * 
-//  */
-// namespace SModule {  
-// /**
-//  */
-// class Process : public SProcess {
-// public:
-//     /**
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * Definitions
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * state type
-//      */
-//     typedef enum { OPEN = 0, OWAIT, IWAIT, PROCESS, UPDATE } State;
-//     /**
-//      * function type
-//      */
-//     typedef function<int(const Function&, const Inputs&, const Outputs&)> pFunction;
-//     /**
-//      * module configuration definition 
-//      *      0 - module settings, 
-//      *      1 - function settings, 
-//      *      2 - input settings, 
-//      *      3 - output settings
-//      */
-//     typedef tuple<Base, Function, Inputs, Outputs> Config;    
-//     /**
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * Constructor
-//      * -----------------------------------------------------------------------------------------------------------------
-//      */
-//     Process(const Key& uri, const Config& conf) 
-//     : SProcess(uri, get<0>(conf), get<1>(conf), get<2>(conf), get<3>(conf)), __state(OPEN) {
-//     }
-//     /**
-//      * default constructors
-//      */
-//     Process()          = default;
-//     Process(Process&&) = default;
-//     /**
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * Destructor
-//      * -----------------------------------------------------------------------------------------------------------------
-//      */
-//     virtual ~Process() = default;
-//     /**
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * Check state
-//      * -----------------------------------------------------------------------------------------------------------------
-//      */
-//     inline State GetState(void) {
-//         return __state;
-//     }
-//     inline bool IsState(State s) {
-//         return __state == s;
-//     }
-// protected:
-//     /**
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * Execute
-//      * -----------------------------------------------------------------------------------------------------------------
-//      */
-//     int Execute(const Key& func, const Function& opt, const Inputs& in_opt, const Outputs& out_opt) override {
-//         static map<Key, pFunction> funcs({
-//             {Properties::DECODE_Y, [this](const Function& f, const Inputs& i, const Outputs& o) {
-//                 return Ypsilon<Decoded::IOConnector, Decoded::IConnector, Decoded::OConnector>(f, i, o);
-//             }},
-//             {Properties::ENCODE, [this](const Function& f, const Inputs& i, const Outputs& o) {
-//                 return Transform<Decoded::IConnector, Container, Encoded::OConnector>(f, i, o);
-//             }},
-//             {Properties::ENCODE_Y, [this](const Function& f, const Inputs& i, const Outputs& o) {
-//                 return Ypsilon<Encoded::IOConnector, Encoded::IConnector, Encoded::OConnector>(f, i, o);
-//             }},
-//             {Properties::DECODE, [this](const Function& f, const Inputs& i, const Outputs& o) {
-//                 return Transform<Encoded::IConnector, Document, Decoded::OConnector>(f, i, o);
-//             }}
-//         });
-//         return funcs.at(func)(opt, in_opt, out_opt);
-//     }
-//     /**
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * Attributes
-//      * -----------------------------------------------------------------------------------------------------------------
-//      */
-//     inline void SetState(State s) {
-//         __state = s;
-//     }
-// private:
-//     /**
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * Communication
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * command link
-//      */
-//     typedef SCommandMonitor<Command, Message::SLocalResource> CommandMonitor;
-//     /**
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * Processes 
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * function state 
-//      */
-//     State __state;
-//     /**
-//      * transform process
-//      */
-//     template<class I, class D, class O>
-//     int Transform(const Function& opt, const Inputs& i_opt, const Outputs& o_opt);
-//     /**
-//      * transform process
-//      */
-//     template<class IO, class I, class O>
-//     int Ypsilon(const Function& opt, const Inputs& i_opt, const Outputs& o_opt);
-//     /**
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * Helpers
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * update resource
-//      */
-//     template<class R>
-//     R& Update(chrono::milliseconds timeout, R& r) {
-//         using Clock = chrono::steady_clock;
-//         using Engine = default_random_engine;
-//         using Distribuition = uniform_int_distribution<>;
-//         /**
-//          * waiting loop 
-//          */
-//         Engine gen{random_device{}()}; Distribuition dis{100, 500};
-//         for (auto now = Clock::now(), end = now + timeout; now < end; now = Clock::now()) {
-//             try {
-//                 r.Update();
-//             } catch(RoadDetached& e){
-//                 STask::Sleep(chrono::milliseconds(dis(gen)));
-//                 continue;
-//             }
-//             return r;
-//         }
-//         r.Update();
-//         return r;
-//     }
-//     template<class R1, class R2>
-//     void Update(chrono::milliseconds timeout, R1& r1, R2 r2) {
-//         using Clock = chrono::steady_clock;
-//         using Engine = default_random_engine;
-//         using Distribuition = uniform_int_distribution<>;
-//         /**
-//          * waiting loop 
-//          */
-//         auto gen = Engine{random_device{}()}; 
-//         auto dis = Distribuition{100, 500}; 
-//         auto end = Clock::now() + timeout; 
-//         do {
-//             try {
-//                 r1.Update();
-//                 r2.Update();
-//             } catch(RoadDetached& e){
-//                 STask::Sleep(chrono::milliseconds(dis(gen)));
-//                 continue;
-//             }
-//         } while(Clock::now() < end);
-//     }
-//     /**
-//      * verify function
-//      */
-//     template<class F>
-//     bool Dead(F& func, size_t& energy){
-//         if (func->Dead()) {
-//             if (--energy == 0) {
-//                 func->Recover();
-//                 return true;
-//             }
-//             func->Recover();
-//         }
-//         return false;
-//     }
-//     /**
-//      * kill process check
-//      */
-//     template<class F>
-//     bool Kill(F& func, size_t& energy){
-//         if (IsState(PROCESS)) {
-//             if (--energy == 0) {
-//                 func->Recover();
-//                 return true;
-//             }
-//             func->Recover();
-//         }
-//         return false;
-//     }
-//     /**
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * Utilities
-//      * -----------------------------------------------------------------------------------------------------------------
-//      * full status
-//      */
-//     template<class T>
-//     string Status(T& r);
-//     /**
-//      * status summary 
-//      */
-//     template<class T>
-//     string Summary(T& r);
-// };
-// }
-// #endif /* SMODULE_PROCESS_H */
+/** 
+ * File:   MSpread.h
+ * Author: Luis Monteiro
+ *
+ * Created on November 16, 2018, 5:59 PM
+ */
+#ifndef MSPREAD_H
+#define MSPREAD_H
+/**
+ * Module
+ */
+#include "MBasis.h" 
+/**
+ *----------------------------------------------------------------------------------------------------------------------
+ * Module name space
+ *----------------------------------------------------------------------------------------------------------------------
+ */
+namespace Module {
+/**
+ */
+template<class I, class D, class O>
+class MSpread : public MBasis {
+    /**
+     * exceptions
+     */
+    using IRoadExceptionDETACHED = SRoadExceptionDETACHED<I>;
+    using ORoadExceptionDETACHED = SRoadExceptionDETACHED<O>;
+    /** 
+     * connectors
+     */
+    using RoadMonitor = SRoadMonitor<SConnector::Key, I>;
+    using Road        = SRoad<SConnector::Key, O>;
+    /**
+     * builders 
+     */
+    using IBuilder = Input::Builder<I>;
+    using TBuilder = Spread::Builder<I, D, O>;
+    using OBuilder = Output::Builder<O>;  
+public:   
+    using MBasis::MBasis;
+protected:
+    /**
+     * -----------------------------------------------------------------------------------------------------------------
+     * Execute
+     * -----------------------------------------------------------------------------------------------------------------
+     */
+    int Execute(const Command& cmd) override {
+        /**
+         * input timeout
+         */
+        chrono::milliseconds timeout(cmd[""][0].get(Properties::TIMEOUT, 1000));
+        /**
+         * process delay
+         */
+        chrono::milliseconds delay(cmd[""][0].get(Properties::TIMEOUT, 10));
+        STask::Sleep(delay);
+        /**
+         * configure inputs
+         */
+        RoadMonitor in(timeout, 
+            cmd[""][0].get(Properties::NOMINAL, cmd["I"].size()), 
+            cmd[""][0].get(Properties::MINIMUM, Properties::NOMINAL, cmd["I"].size())
+        );
+        for(auto& o: cmd["I"]) {
+            in.Insert(o[Properties::URI], IBuilder::Build(o));
+        }
+        /**
+         * configure outputs
+         */
+        Road out(
+            cmd[""][0].get(Properties::NOMINAL, cmd["O"].size()), 
+            cmd[""][0].get(Properties::MINIMUM, Properties::NOMINAL, cmd["O"].size())
+        );
+        for(auto o: cmd["O"]) {
+            out.Insert(o[Properties::URI], OBuilder::Build(o));
+        }
+        /**
+         * configure function
+         */
+        auto func = TBuilder::Build(cmd["F"][0]);
+        /**
+         * Process
+         */
+        auto energy = cmd[""][0].get(Properties::ENERGY, size_t(1));
+        /**
+         * main loop 
+         */
+        while (STask::Sleep()) {
+            try {
+                /**
+                 * ---------------------------------------------------------------------------------------------
+                 * process
+                 * ---------------------------------------------------------------------------------------------
+                 */
+                switch(GetState()) {
+                    default: {
+                        SetState(OPEN);
+                    }
+                    case OPEN: {
+                        out.Open();
+                        SetState(OWAIT);
+                    }
+                    case OWAIT: {
+                        /**
+                         * check commands
+                         */
+                        if(!SResourceMonitor(&__cmd).Check().empty()) {
+                            ProcessCommand(__cmd, in, func, out);
+                        }
+                        Update(timeout, out);
+                        in.Open();
+                        SetState(IWAIT);
+                    }
+                    case IWAIT: {
+                        /**
+                         * check commands
+                         */
+                        if(!SResourceMonitor(&__cmd).Check().empty()) {
+                            ProcessCommand(__cmd, in, func, out);
+                        }
+                        Update(timeout, in);
+                        SetState(PROCESS);
+                    }
+                    case PROCESS: {
+                        /** 
+                         * monitor commands and inputs
+                         */
+                        try {                           
+                            for(auto& i : SResourceMonitor(timeout, &__cmd, &in).Wait()) {
+                                switch(i){
+                                    case 1: {
+                                        ProcessCommand(__cmd, in, func, out);
+                                        break;
+                                    }
+                                    case 2: {
+                                        func->Process(in, out);
+                                        break;
+                                    }
+                                }
+                            }                        
+                        } catch (MonitorExceptionTIMEOUT & ex) {
+                            func->Drain(Update(timeout, out));
+                            SetState(UPDATE);
+                            throw;
+                        }
+                        SetState(UPDATE);
+                    }
+                    case UPDATE : {
+                        Update(timeout, in, out);
+                        SetState(PROCESS);
+                    }
+                }
+            } 
+            /**----------------------------------------------------------------------------------------
+             * exceptions
+             *---------------------------------------------------------------------------------------**/
+            catch (ORoadExceptionDETACHED & ex) {
+                WARNING("OUT = {" << Status(out) << " }");
+                if(Kill(func, energy)){
+                    WARNING("Exit = { what: " << ex.what() << ", summary: " << Summary(in) << " }");
+                    return -1;
+                }
+                in.Close();
+                SetState(OWAIT);
+            }  catch (IRoadExceptionDETACHED & ex) {
+                WARNING("IN = {" << Status(in) << " }");
+                if(Kill(func, energy)){
+                    WARNING("Exit = { what: " << ex.what() << ", summary: " << Summary(in) << " }");
+                    return -1;
+                }
+                SetState(IWAIT);
+            } catch (MonitorExceptionTIMEOUT & ex) {
+                
+            } catch (exception& ex) {
+                ERROR("Exit = { what: " << ex.what() << ", summary: " << Summary(in) << " }");
+                return -1;
+            } catch (...) {
+                ERROR("Exit = { summary:" << Summary(in) << " }");
+                return -1;
+            }
+            INFO("Process = { energy:" << energy << ", inputs:" << Status(in) << " }");
+        }
+        /**
+         * Finish
+         */
+        INFO("Exit = { summary: " << Summary(in) << " }");
+        return 0;
+    }
+};
+}
+#endif /* MSPREAD_H */
 
