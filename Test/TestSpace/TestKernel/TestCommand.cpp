@@ -46,3 +46,10 @@ TEST(SCommand, Group)
     //use case 1 -> positive
     EXPECT_EQ(c["I"][0].get("A", 1), 1);
 }
+
+TEST(SCommand, String)
+{
+    SCommand<string, string> c (string(""));
+    //use case 1 -> positive
+    EXPECT_EQ(c["I"][0].get("A", 1), 1);
+}

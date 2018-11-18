@@ -86,13 +86,13 @@ public:
         /***
          * unserialize
          */
-        SCommand(string line) : __opts() {
+        SCommand(const string& line) : __opts() {
                 using Wrapper = std::reference_wrapper<Group>;
                 // parse loop
                 regex exp(Syntax); 
                 for (auto i = sregex_iterator(line.begin(), line.end(), exp), end = sregex_iterator(); i != end;) {
                         // insert group
-                        auto& group = __insert(__transform<Key>(i->str(1)));
+                        auto& group = __insert(__opts, __transform<Key>(i->str(1)));
                         // fill group
                         for (++i; (i != end) && i->str(2).size() && i->str(3).size(); ++i) {        
                                 __insert(group, __transform<Key>(i->str(2)), __transform<Val>(i->str(3)));
@@ -123,6 +123,7 @@ public:
                 } 
                 return out;
         }
+
 protected:
         /**
          * -------------------------------------------------------------------------------------------------------------
@@ -131,6 +132,11 @@ protected:
          */
         Options __opts;
 private:
+        /**
+         * -------------------------------------------------------------------------------------------------------------
+         * unserialize
+         * -------------------------------------------------------------------------------------------------------------
+         */
         /**
          * -------------------------------------------------------------------------------------------------------------
          * insert
@@ -146,7 +152,7 @@ private:
                 return it->second.back();
         }
         static inline void __insert(Group& group, const Key& key, const Val& val){
-                group[key] = val;
+                group.emplace(key, val);
         }
         /**
          * -------------------------------------------------------------------------------------------------------------
@@ -154,7 +160,7 @@ private:
          * -------------------------------------------------------------------------------------------------------------
          */
         template <class T>
-        static inline T __transform(string& s) {
+        static inline T __transform(const string& s) {
                 T val;
                 istringstream(s) >> val;
                 return val;

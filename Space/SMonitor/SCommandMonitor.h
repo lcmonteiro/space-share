@@ -43,7 +43,7 @@ public:
         /**
          * read command
          */
-        inline Command& Read(size_t max = 1024) {
+        inline Command Read(size_t max = 1024) {
                 SFrame frame(max);
                 /**
                  * read data up to max 

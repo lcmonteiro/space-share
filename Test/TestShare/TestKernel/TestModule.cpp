@@ -33,7 +33,7 @@ TEST(SModule, CreateSpliter)
 
 TEST(SModule, CreateSpread)
 {
-    typedef Module::MSpread<Decoded::IConnector, Connector, Decoded::OConnector> Spread;
+    typedef Module::MSpread<Decoded::IConnector, Container, Encoded::OConnector> Spread;
     // build 
     Spread s ({
         {"", {{
