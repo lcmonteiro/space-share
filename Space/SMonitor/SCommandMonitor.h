@@ -45,13 +45,9 @@ public:
          */
         inline Command Read(size_t max = 1024) {
                 SFrame frame(max);
-                /**
-                 * read data up to max 
-                 */
+                //read data up to max 
                 __res.Fill(frame);
-                /**
-                 * create a comand (parse a command)
-                 */
+                // create a comand (by parse a command)
                 return Command(string(frame.begin(), frame.end()));
         }
 private:
