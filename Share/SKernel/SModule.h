@@ -107,7 +107,7 @@ protected:
         return r;
     }
     template<class R1, class R2>
-    void Update(chrono::milliseconds timeout, R1& r1, R2 r2) {
+    void Update(chrono::milliseconds timeout, R1& r1, R2& r2) {
         using Clock = chrono::steady_clock;
         using Engine = default_random_engine;
         using Distribuition = uniform_int_distribution<>;

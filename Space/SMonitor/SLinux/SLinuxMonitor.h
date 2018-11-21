@@ -35,6 +35,10 @@ public:
      */
     virtual ~SLinuxMonitor() = default;
     /**
+     * operators
+     */
+    SLinuxMonitor& operator=(SLinuxMonitor &&) = default;
+    /**
      * wait
      */
     static inline void Wait(const chrono::milliseconds& timeout) {

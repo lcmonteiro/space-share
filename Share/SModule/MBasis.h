@@ -36,25 +36,52 @@ public:
      * -------------------------------------------------------------------------------------------------------------
      * main constructor
      */
-    MBasis(const Command& cmd): SModule(cmd), __cmd(__uri) {}
+    MBasis(const Command& cmd): SModule(cmd), __monitor(__uri){}
 protected:
     /**
-     * monitor
+     * -----------------------------------------------------------------------------------------------------------------
+     * Execute
+     * -----------------------------------------------------------------------------------------------------------------
      */
-    SCommandMonitor<Command, Message::SLocalResource> __cmd;
+    int Execute() override {
+        INFO("INI = {}");
+        __init();
+        INFO("RUN = {}");
+        while(true) {
+            try {
+                __process();
+            }  catch (exception& ex) {
+                ERROR("END = { what: " << ex.what() << " }");
+                return -1;
+            } catch (...) {
+                ERROR("END = {}");
+                return -1;
+            }
+        }
+        INFO("END = {}");
+        return 0;
+    }
+    virtual void __init() {}
+    virtual void __process() {}
+    /**
+     * ----------------------------------------------------------------------------------------------------------------
+     * monitor
+     * ----------------------------------------------------------------------------------------------------------------
+     */
+    SCommandMonitor<Command, Message::SLocalResource> __monitor;
     /**
      * processe comand 
      */
-    template<class C, class I, class F, class O>
-    void ProcessCommand(C& cmd, I& input, F& func, O& output) {
+    template<class I, class F, class O>
+    void ProcessCommand(I& input, F& func, O& output) {
         /**
          * unserialize command
          */
-        auto options = cmd.Read();
+        auto cmd = __monitor.Read();
         /**
          * update inputs
          */
-        for(auto& o : options["I"]) {     
+        for(auto& o : cmd["I"]) {     
             using Key = typename I::Key;
             try {
                 auto& in = input.Find(o[URI]);
@@ -69,7 +96,7 @@ protected:
         /**
          * update function
          */
-        for(auto& o : options["F"]) {
+        for(auto& o : cmd["F"]) {
             try {
                 // set energy
                 //func->SetEnergy(o[ENERGY]);
@@ -80,7 +107,7 @@ protected:
         /**
          * update outputs
          */
-        for(auto& o : options["O"]) {       
+        for(auto& o : cmd["O"]) {       
             using Key = typename O::Key;
             try {
                 auto& out = output.Find(o[URI]);

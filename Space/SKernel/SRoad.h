@@ -125,8 +125,14 @@ public:
     /**
      * constructor
      */
-    SRoad(uint32_t nominal, uint32_t minimum = 0) : __nominal(nominal), __minimum(minimum), __revison(0) {
+    SRoad() = default;
+
+    SRoad(uint32_t nominal, uint32_t minimum = 0): __nominal(nominal), __minimum(minimum), __revison(0) {
     }
+    /**
+     * operators
+     */
+    SRoad& operator=(SRoad &&) = default;
     /**
      * -----------------------------------------------------------------------------------------------------------------
      * main interfaces

@@ -38,12 +38,19 @@ public:
     /**
      * constructor
      */
+    SLinuxRoadMonitor() = default;
+    /**
+     */
     SLinuxRoadMonitor(chrono::milliseconds timeout) : __timeout(timeout) {
     }
     /**
      * destructor
      */
     virtual ~SLinuxRoadMonitor() = default;
+    /**
+     * operator
+     */
+    SLinuxRoadMonitor& operator=(SLinuxRoadMonitor &&) = default;
     /**
      * -------------------------------------------------------------------------------------------------------------
      * interface

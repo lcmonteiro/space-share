@@ -49,6 +49,10 @@ public:
      */
     virtual ~SRoadMonitorT() = default;
     /**
+     * operators
+     */
+    SRoadMonitorT& operator=(SRoadMonitorT &&) = default;
+    /**
      * update and wait
      */
     list<Location> Wait() {
