@@ -26,11 +26,11 @@ namespace Message {
 /**
  * decode
  */
-class SDecode : public SFunctionTransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector> {
+class SDecode : public SFunctionSpread<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector> {
     /**
      * define types
      */ 
-    using Super    = SFunctionTransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
+    using Super    = SFunctionSpread<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
     using Road     = typename Super::Road;
     using Data     = typename Super::Data;
     using Cache    = Message::SCache;
@@ -129,7 +129,7 @@ namespace Stream {
 /**
  * decode
  */
-class SDecode : public SFunctionTransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector> {
+class SDecode : public SFunctionSpread<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector> {
     /**
      * settings
      */
@@ -137,7 +137,7 @@ class SDecode : public SFunctionTransform<SConnector::Key, Encoded::IConnector, 
     /**
      * define types
      */ 
-    using Super    = SFunctionTransform<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
+    using Super    = SFunctionSpread<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
     using Road     = typename Super::Road;
     using Data     = typename Super::Data;
     using Cache    = Stream::SCache;

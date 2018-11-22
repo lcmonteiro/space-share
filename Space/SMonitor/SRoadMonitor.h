@@ -41,7 +41,7 @@ public:
      * @param nominal
      * @param min
      */
-    SRoadMonitorT(chrono::milliseconds timeout, uint32_t nominal = 0, uint32_t min = 0)
+    SRoadMonitorT(time_t timeout, size_t nominal = 0, size_t min = 0)
     : Road(nominal, min), Monitor(timeout), __rev(0) {
     }
     /**

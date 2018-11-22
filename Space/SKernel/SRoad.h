@@ -126,8 +126,12 @@ public:
      * constructor
      */
     SRoad() = default;
-
-    SRoad(uint32_t nominal, uint32_t minimum = 0): __nominal(nominal), __minimum(minimum), __revison(0) {
+    /**
+     * main constructor
+     * @param nominal
+     * @param min
+     */
+    SRoad(size_t nominal, size_t minimum = 0): __nominal(nominal), __minimum(minimum), __revison(0) {
     }
     /**
      * operators

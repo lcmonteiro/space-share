@@ -17,9 +17,26 @@
  */
 #include "SLog.h"
 #include "SRoadMonitor.h"
-#include "SYpsilonMonitor.h"
+#include "SResourceMonitor.h"
 /**
- */
+ * ---------------------------------------------------------------------------------------------------------------------*
+ * exceptions 
+ * ---------------------------------------------------------------------------------------------------------------------
+ **/
+typedef class SFunctionException : public logic_error {
+public:
+    using logic_error::logic_error;
+    /**
+     * constructor
+     */
+    SFunctionException(const string& msg):logic_error(msg){
+    }
+} FunctionException;
+/**
+ * ---------------------------------------------------------------------------------------------------------------------*
+ * function base 
+ * ---------------------------------------------------------------------------------------------------------------------
+ **/
 class SFunction: public SLog {
 public:
     /**
@@ -27,7 +44,7 @@ public:
      */
     SFunction(string id, size_t energy = UINT32_MAX, uint8_t verbose = 0)
         : SLog(verbose), __id(id), __capacity(energy) {
-        refresh();
+        Recover();
     }
     /**
      * destructor
@@ -90,22 +107,10 @@ protected:
     }
 };
 /*---------------------------------------------------------------------------------------------------------------------*
- * exceptions 
- *---------------------------------------------------------------------------------------------------------------------*/
-typedef class SFunctionException : public logic_error {
-public:
-    using logic_error::logic_error;
-    /**
-     * constructor
-     */
-    SFunctionException(const string& msg):logic_error(msg){
-    }
-} FunctionException;
-/*---------------------------------------------------------------------------------------------------------------------*
- * transform template 
+ * spread template 
  *---------------------------------------------------------------------------------------------------------------------*/
 template<class K, class I, class D, class O>
-class SFunctionTransform : public SFunction {
+class SFunctionSpread : public SFunction {
 public:
     /**
      * 
@@ -169,23 +174,22 @@ protected:
     virtual void processData(Road& out) = 0;
 };
 /*---------------------------------------------------------------------------------------------------------------------*
- * ypsilon template 
+ * Spliter template 
  *---------------------------------------------------------------------------------------------------------------------*/
 template<class IO, class IN, class OUT>
-class SFunctionYpsilon : public SFunction {
+class SFunctionSpliter : public SFunction {
 public:
     /**
      */
-    SFunctionYpsilon(uint32_t timeout, const uint32_t energy = 1, const uint8_t verbose = 0)
-    : SFunction("ypsilon", energy, verbose), __timeout(timeout) {
-        Recover();
+    SFunctionSpliter(uint32_t timeout, const uint32_t energy = 1, const uint8_t verbose = 0)
+    : SFunction("spliter", energy, verbose), __timeout(timeout) {
     }
     /**------------------------------------------------------------------------------------------------------------*
      * process
      *-------------------------------------------------------------------------------------------------------------*/
     void Process(IO& io, IN& in, OUT& out) {
         try {
-            for (auto& i : SYpsilonMonitor<IO, IN>(io, in, __timeout).Wait()) {
+            for (auto& i : SResourceMonitor(__timeout, io, in).Wait()) {
                 if (i == 0) {
                     processContainer(io, out);
                     continue;

@@ -41,7 +41,7 @@ public:
     SLinuxRoadMonitor() = default;
     /**
      */
-    SLinuxRoadMonitor(chrono::milliseconds timeout) : __timeout(timeout) {
+    SLinuxRoadMonitor(time_t timeout) : __timeout(timeout) {
     }
     /**
      * destructor

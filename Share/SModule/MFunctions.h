@@ -57,7 +57,7 @@ namespace Spread {
      */
     template <class I, class D, class O>
     struct BaseBuilder {
-        using Pointer = shared_ptr<SFunctionTransform<SConnector::Key, I, D, O>>;
+        using Pointer = shared_ptr<SFunctionSpread<SConnector::Key, I, D, O>>;
     };
     /**
      * Template Builder
@@ -138,7 +138,7 @@ namespace Spliter {
      */
     template <class IO, class I, class O>
     struct BaseBuilder {
-        using Pointer = shared_ptr<SFunctionYpsilon<IO, I, O>>;
+        using Pointer = shared_ptr<SFunctionSpliter<IO, I, O>>;
     };
     /**
      * Template Builder
@@ -147,7 +147,7 @@ namespace Spliter {
     struct Builder : BaseBuilder<IO, I, O> {
         using Pointer = typename BaseBuilder<IO, I, O>::Pointer;
         static inline Pointer Build(const SModule::Command::Group& o){
-            return make_shared<SFunctionYpsilon<IO, I, O>>(
+            return make_shared<SFunctionSpliter<IO, I, O>>(
                 o.get(Properties::TIMEOUT, 1000), 
                 o.get(Properties::ENERGY,  2), 
                 o.get(Properties::VERBOSE, 1)

@@ -8,8 +8,8 @@ TEST(SProcess, Create)
     public:
         using SProcess<string, string>::SProcess;
     protected:
-        int Execute(const Command & c) override {
-            return stoi(c["I"][0]["A"]);
+        int Execute() override {
+            return stoi(__cmd["I"][0]["A"]);
         }
     };
     SProcess1 p("uri", 0, {

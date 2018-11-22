@@ -21,46 +21,55 @@ namespace Module {
 template<class I, class D, class O>
 class MSpread : public MBasis {
     /**
-     * exceptions
+     * exception types
      */
     using IRoadExceptionDETACHED = SRoadExceptionDETACHED<I>;
     using ORoadExceptionDETACHED = SRoadExceptionDETACHED<O>;
     /**
-     * builders 
+     * builder types
      */
     using IBuilder = Input::Builder<I>;
     using FBuilder = Spread::Builder<I, D, O>;
     using OBuilder = Output::Builder<O>; 
     /** 
-     * connectors
+     * connector types
      */
     using RoadMonitor = SRoadMonitor<SConnector::Key, I>;
     using Road        = SRoad<SConnector::Key, O>;
     /**
-     * function
+     * function type
      */
     using Function = typename FBuilder::Pointer;
-public:   
+public:
+    /**
+     * --------------------------------------------------------------------------------------------
+     * constructor
+     * --------------------------------------------------------------------------------------------
+     */
     MSpread(const Command& cmd): MBasis(cmd), 
-    __delay(cmd[""][0].get(Properties::DELAY, 10)),
-    __energy(cmd[""][0].get(Properties::ENERGY, 1)),
-    __timeout(cmd[""][0].get(Properties::TIMEOUT, 1000))  {
-        /**
-         * configure input
-         */
-        __in = RoadMonitor(
-            chrono::milliseconds(cmd[""][0].get(Properties::TIMEOUT, 10)), 
-            cmd[""][0].get(Properties::NOMINAL, cmd["I"].size()),
-            cmd[""][0].get(Properties::MINIMUM, Properties::NOMINAL, cmd["I"].size())
-        );   
-        /**
-         * configure output
-         */
-        __out = Road(
-            cmd[""][0].get(Properties::NOMINAL, cmd["O"].size()),
-            cmd[""][0].get(Properties::MINIMUM, Properties::NOMINAL, cmd["O"].size())
-        );    
-    }
+    // delay start
+    __delay(
+        cmd[""][0].get(Properties::DELAY, 10)
+    ),
+    // module energy 
+    __energy(
+        cmd[""][0].get(Properties::ENERGY, 1)
+    ),
+    // module time
+    __timeout(
+        cmd[""][0].get(Properties::TIMEOUT, 1000)
+    ),
+    // input connections
+    __in(
+        cmd[""][0].get(Properties::TIMEOUT, 10), 
+        cmd[""][0].get(Properties::NOMINAL, cmd["I"].size()),
+        cmd[""][0].get(Properties::MINIMUM, Properties::NOMINAL, cmd["I"].size())
+    ),
+    // output connections
+    __out(
+        cmd[""][0].get(Properties::NOMINAL, cmd["O"].size()),
+        cmd[""][0].get(Properties::MINIMUM, Properties::NOMINAL, cmd["O"].size())
+    ){}
 protected:
     /**
      * -----------------------------------------------------------------------------------------------------------------
@@ -92,40 +101,31 @@ protected:
      * -----------------------------------------------------------------------------------------------------------------
      * Execute
      * -----------------------------------------------------------------------------------------------------------------
+     * init execution
      */
     void __init() {
-        /**
-         * delay the process
-         */
+        // delay the process
         STask::Sleep(__delay);
-        /**
-         * create and insert inputs
-         */
+        // create and insert inputs
         for(auto& o: __cmd["I"]) {
             __in.Insert(o[Properties::URI], IBuilder::Build(o));
         }
-        /**
-         * create and insert outputs
-         */
+        // create and insert outputs
         for(auto o: __cmd["O"]) {
             __out.Insert(o[Properties::URI], OBuilder::Build(o));
         }
-        /**
-         * create and assigned function
-         */
+        // create and assigned function
         __pfunc = FBuilder::Build(__cmd["F"][0]);
     }
-
+    /**
+     * process
+     */
     void __process() override {
-        /**
-         * check commands
-         */
+        // procces commands
         while(!SResourceMonitor(&__monitor).Check().empty()) {
             ProcessCommand(__in, __pfunc, __out);
         }
-        /**
-         * state machine
-         */
+        // state machine
         INFO("Process={ energy:" << __energy << ", inputs:" << Status(__in) << " }");
         try {
             switch(GetState()) {
@@ -184,8 +184,6 @@ protected:
             SetState(IWAIT);
         }
     }
-
-    
     // int Execute(const Command& cmd) override {
     //     /**
     //      * input timeout
