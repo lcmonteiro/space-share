@@ -132,13 +132,13 @@ protected:
      */
     template<class F>
     bool Dead(F& func, size_t& energy){
-        if (func->Dead()) {
-            if (--energy == 0) {
-                func->Recover();
-                return true;
-            }
-            func->Recover();
-        }
+        // if (func->Dead()) {
+        //     if (--energy == 0) {
+        //         func->Recover();
+        //         return true;
+        //     }
+        //     func->Recover();
+        // }
         return false;
     }
     /**

@@ -16,6 +16,7 @@
  * Space Kernel
  */
 #include "SLog.h"
+#include "SEnergy.h"
 #include "SRoadMonitor.h"
 #include "SResourceMonitor.h"
 /**
@@ -32,18 +33,28 @@ public:
     SFunctionException(const string& msg):logic_error(msg){
     }
 } FunctionException;
+
+typedef class SFunctionExceptionDead : public SFunctionException {
+public:
+    using SFunctionException::SFunctionException;
+    /**
+     * constructor
+     */
+    SFunctionExceptionDead(string s) : SFunctionException(s) {
+    }
+} FunctionExceptionDEAD;
 /**
  * ---------------------------------------------------------------------------------------------------------------------*
  * function base 
  * ---------------------------------------------------------------------------------------------------------------------
  **/
-class SFunction: public SLog {
+class SFunction: public SLog, public SEnergy<FunctionExceptionDEAD> {
 public:
     /**
      * constructor
      */
     SFunction(string id, size_t energy = UINT32_MAX, uint8_t verbose = 0)
-        : SLog(verbose), __id(id), __capacity(energy) {
+        : SLog(verbose), SEnergy(energy), __id(id) {
         Recover();
     }
     /**
@@ -51,42 +62,16 @@ public:
      */
     virtual ~SFunction() = default;
     /**
-     * check if function is dead
-     */
-    inline bool Dead() {
-        return (__energy == 0) ? true : (--__energy == 0);
-    }
-    /**
-     * set energy
-     */
-    inline void SetEnergy(size_t energy) {
-        __energy = energy;
-    }
-    /**
      * recover function
      */
     virtual void Recover() {
-        refresh();
+        SEnergy::Restore();
     }
 protected:
     /**
      * function id
      */
     string __id;
-    /**
-     * energy capacity
-     */
-    size_t __capacity;
-    /**
-     * energy level
-     */
-    size_t __energy;
-    /**
-     * refresh energy
-     */
-    inline void refresh() {
-        __energy = __capacity;
-    }
     /*-------------------------------------------------------------------------------------------------------------*
      * logging
      *-------------------------------------------------------------------------------------------------------------*/
@@ -156,7 +141,7 @@ public:
              *---------------------------------------------------------------------------------------------*/
             throw;
         }
-        refresh();
+        SEnergy::Restore();
     }
     /**
      * drain
@@ -205,7 +190,7 @@ public:
             // resend exception
             throw;
         }
-        refresh();
+        SEnergy::Restore();
     }
 protected:
     /*-------------------------------------------------------------------------------------------------------------*

@@ -112,8 +112,35 @@ protected:
                         out.Update(timeout);
                         SetState(PROCESS);
                     }
+                    // case PROCESS: {
+                    //     func->Process(io.Update(timeout), in.Update(timeout), out.Update(timeout));
+                    // }
                     case PROCESS: {
-                        func->Process(io.Update(timeout), in.Update(timeout), out.Update(timeout));
+                        try {                           
+                            for(auto& i : SResourceMonitor(timeout, &__monitor, io, in).Wait()) {
+                                switch(i){
+                                    case 2:
+                                    case 3: {
+                                        while(true) {
+                                            func->Process(io, in, out);    
+                                        }
+                                        break;
+                                    }
+                                }
+                            }                        
+                        } catch (MonitorExceptionTIMEOUT & ex) {
+                            func->Decay();
+                        }
+                        SetState(UPDATE);
+                    }
+                    case UPDATE : {
+
+                        io.Update(timeout);
+                        in.Update(timeout);
+                        out.Update(timeout);
+                    
+                        //Update(__timeout, __in, __out);
+                        SetState(PROCESS);
                     }
                 }
             } 

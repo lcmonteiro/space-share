@@ -159,6 +159,7 @@ protected:
                         }                        
                     } catch (MonitorExceptionTIMEOUT & ex) {
                         __pfunc->Drain(Update(__timeout, __out));
+                        __pfunc->Decay();
                     }
                     SetState(UPDATE);
                 }
