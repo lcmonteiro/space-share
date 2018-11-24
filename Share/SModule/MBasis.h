@@ -65,34 +65,56 @@ protected:
     virtual void __process() {}
     /**
      * ----------------------------------------------------------------------------------------------------------------
-     * monitor
+     * process command
      * ----------------------------------------------------------------------------------------------------------------
      */
     SCommandMonitor<Command, Message::SLocalResource> __monitor;
     /**
-     * processe comand 
+     * unserialize command
      */
-    template<class I, class F, class O>
-    void ProcessCommand(I& input, F& func, O& output) {
-        /**
-         * unserialize command
-         */
-        auto cmd = __monitor.Read();
-        /**
-         * update inputs
-         */
+    inline Command ReadCommand() {
+        return __monitor.Read();
+    } 
+    /**
+     * update inputs
+     */
+    template<class I>
+    Command UpdateInputs(I& input, Command&& cmd) { 
         for(auto& o : cmd["I"]) {     
             using Key = typename I::Key;
             try {
                 auto& in = input.Find(o[URI]);
                 // set energy
-                // in->SetEnergy(o.get<int>(ENERGY));
+                in->SetEnergy(o.get<int>(ENERGY));
             } catch(range_error&) {
                 using Builder = typename Module::Input::Builder<typename I::Object>;
                 // build a new object
                 input.Insert(o[URI], Builder::Build(o));
             }
         }
+        return cmd;
+    }
+    /**
+     * update outputs
+     */
+    template<class O>
+    Command UpdateOutputs(O& output, Command&& cmd) {
+        for(auto& o : cmd["O"]) {       
+            using Key = typename O::Key;
+            try {
+                auto& out = output.Find(o[URI]);
+                // set energy
+                out->SetEnergy(o.get<int>(ENERGY));
+            } catch(range_error&) {
+                using Builder = typename Output::Builder<typename O::Object>;
+                // build a new object
+                output.Insert(o[URI], Builder::Build(o));
+            }
+        }
+        return cmd; 
+    }
+    template<class F>
+    Command UpdateFunction(F& func, Command&& cmd) {
         /**
          * update function
          */
@@ -104,21 +126,37 @@ protected:
             
             }
         }
+        return cmd;
+    }
+    /**
+     * update resources 
+     */
+    template<class P, class... R>
+    void Update(chrono::milliseconds timeout, P process, R&... resource) {
+        using Clock = chrono::steady_clock;
+        using Engine = default_random_engine;
+        using Distribuition = uniform_int_distribution<>;
         /**
-         * update outputs
+         * waiting loop 
          */
-        for(auto& o : cmd["O"]) {       
-            using Key = typename O::Key;
+        auto gen = Engine{random_device{}()}; 
+        auto dis = Distribuition{100, 500}; 
+        auto end = Clock::now() + timeout; 
+        do {
             try {
-                auto& out = output.Find(o[URI]);
-                // set energy
-                //out->SetEnergy(o[ENERGY]);
-            } catch(range_error&) {
-                using Builder = typename Output::Builder<typename O::Object>;
-                // build a new object
-                output.Insert(o[URI], Builder::Build(o));
+                auto x = {(resource.Update(),0)...};
+            } catch(RoadDetached& e) {
+                // check if a command arrive in random time 
+                try {
+                    // wait    command
+                    SResourceMonitor(chrono::milliseconds(dis(gen)), &__monitor).Wait();
+                    // process commad
+                    process();
+                } catch(MonitorExceptionTIMEOUT& ) {
+                    continue;
+                }
             }
-        } 
+        } while(Clock::now() < end);
     }
     /**
      * 
@@ -173,6 +211,7 @@ protected:
         /**/
         return out.str();
     }
+
 };
 }
 #endif /* MBASIS */

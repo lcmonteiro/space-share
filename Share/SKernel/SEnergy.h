@@ -16,13 +16,26 @@
 template <class EX>
 class SEnergy {
 public:
-    SEnergy(size_t energy):__energy(energy), __capacity(energy){
+    /**
+     * constructor
+     */
+    SEnergy(size_t energy=0):__energy(energy), __capacity(energy){
     }
-
+    /**
+     * Get energy value
+     */
+    inline size_t Get() {
+        return __energy;
+    }
+    /**
+     * Decrement energy
+     */
     inline void Decay() {
         if(__energy--==0) throw EX("no energy");
     }
-
+    /**
+     * Restore energy
+     */
     inline void Restore() {
         __energy = __capacity;
     }
