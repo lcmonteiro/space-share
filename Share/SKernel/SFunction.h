@@ -91,30 +91,30 @@ protected:
         SLog::__CRITITAL(__id, msg);
     }
 };
-/*---------------------------------------------------------------------------------------------------------------------*
+/*-------------------------------------------------------------------------------------
  * spread template 
- *---------------------------------------------------------------------------------------------------------------------*/
+ *-----------------------------------------------------------------------------------**/
 template<class K, class I, class D, class O>
 class SFunctionSpread : public SFunction {
 public:
     /**
-     * 
+     * type definitions
      */
-    using RoadMonitor = SRoadMonitor<K, I>;
-    using Road    = SRoad<K, O>;
-    using Data    = D;
+    using IRoad = SRoadMonitor<K, I>;
+    using ORoad = SRoad<K, O>;
+    using Data  = D;
     /**
      * constructor
      */
     using SFunction::SFunction;
-    /**
-     * process
-     */
-    void Process(RoadMonitor& in, Road& out) {
+    /**--------------------------------------------------------------------------------
+     * process 
+     *-------------------------------------------------------------------------------**/
+    void Process(IRoad& in, ORoad& out) {
         try {
-            /**--------------------------------------------------------------------------------------------*
+            /**
              * waiting, read and process container
-             *---------------------------------------------------------------------------------------------*/
+             **/
             for (auto& it : in.Wait()) {
                 try {
                     processData(it->second->Read(), out);
@@ -125,117 +125,125 @@ public:
                     in.Repair(it);
                 } catch (ConnectorExceptionTIMEOUT& ex){}
             }
-            /**
-             */
         } catch (MonitorException& ex) {
-            /*---------------------------------------------------------------------------------------------*
+            /**
              * drain and process container
-             *---------------------------------------------------------------------------------------------*/
+             **/
             for (auto s : in) {
                 try {
                     for(auto& d: s.second->Drain()){ processData(move(d), out); }
                 } catch (...) {}
             }
-            /*---------------------------------------------------------------------------------------------*
+            /**
              * send exception
-             *---------------------------------------------------------------------------------------------*/
+             **/
             throw;
         }
         SEnergy::Restore();
     }
-    /**
+    /**--------------------------------------------------------------------------------
      * drain
-     */
-    void Drain(Road& out) {
+     *-------------------------------------------------------------------------------**/
+    void Drain(ORoad& out) {
         processData(out);
     }
-    
 protected:
-    /*-------------------------------------------------------------------------------------------------------------*
+    /**--------------------------------------------------------------------------------
      * process Data
-     *-------------------------------------------------------------------------------------------------------------*/
-    virtual void processData(Data&& data, Road& out) = 0;
+     *-------------------------------------------------------------------------------**/
+    virtual void processData(Data&& data, ORoad& out) = 0;
     
-    virtual void processData(Road& out) = 0;
+    virtual void processData(ORoad& out) = 0;
 };
-/*---------------------------------------------------------------------------------------------------------------------*
+/*-------------------------------------------------------------------------------------
  * Spliter template 
- *---------------------------------------------------------------------------------------------------------------------*/
-template<class IO, class IN, class OUT>
+ *-----------------------------------------------------------------------------------**/
+template<class K, class IO, class IN, class OUT>
 class SFunctionSpliter : public SFunction {
 public:
     /**
+     * type definitions
      */
-    SFunctionSpliter(uint32_t timeout, const uint32_t energy = 1, const uint8_t verbose = 0)
-    : SFunction("spliter", energy, verbose), __timeout(timeout) {
-    }
-    /**------------------------------------------------------------------------------------------------------------*
+    using IORoad = SRoadMonitor<K, IO>;
+    using IRoad  = SRoadMonitor<K, IN>;
+    using ORoad  = SRoad<K, OUT>;
+    /**
+     * base constructor
+     */
+    using SFunction::SFunction;
+    /**
+     * default constructor
+     */ 
+    SFunctionSpliter(size_t energy = UINT32_MAX, uint8_t verbose = 0)
+    : SFunction("Spliter", energy, verbose){}
+    /**--------------------------------------------------------------------------------
      * process
-     *-------------------------------------------------------------------------------------------------------------*/
-    void Process(IO& io, IN& in, OUT& out) {
+     *-------------------------------------------------------------------------------**/
+    void Process(IORoad& io, IRoad& in, ORoad& out) {
         try {
-            for (auto& i : SResourceMonitor(__timeout, io, in).Wait()) {
+            for (auto& i : SResourceMonitor(&io, &in).Wait()) {
                 if (i == 0) {
-                    processContainer(io, out);
+                    processRoad(io, out);
                     continue;
                 }
                 if (i == 1) {
-                    processContainer(in, io);
+                    processRoad(in, io);
                     continue;
                 }
             }
         } catch (MonitorException& ex) {
-            // drain containers
-            drainContainers(io, in, out);
+            // drain roads
+            drainRoad(io, out);
+            drainRoad(in, io);
             // resend exception
             throw;
         }
         SEnergy::Restore();
     }
 protected:
-    /*-------------------------------------------------------------------------------------------------------------*
-     * process container
-     *-------------------------------------------------------------------------------------------------------------*/
+    /*---------------------------------------------------------------------------------
+     * process road
+     *-------------------------------------------------------------------------------**/
     template<class I, class O>
-    void processContainer(I& in, O& out) {
-        try {
-            out->Write(in->Read());
-        } catch (IConnectorExceptionDEAD& ex) {
+    void processRoad(I& in, O& out) {
+        for (auto& it : in.Wait()) {
             try {
-                for (auto& d : in->Drain()) {out->Write(move(d));}
-            } catch (...) {}
-            in->Repair();
-        } catch (OConnectorExceptionDEAD& ex) {
-            out->Repair();
-        } catch (ConnectorExceptionTIMEOUT& ex) {
+                processData(it->second->Read(), out);
+            } catch (ConnectorExceptionDEAD& ex) {
+                try {
+                    for(auto& d: it->second->Drain()){ processData(move(d), out); }
+                } catch (...) {}
+                in.Repair(it);
+            } catch (ConnectorExceptionTIMEOUT& ex){}
         }
     }
-    /*-------------------------------------------------------------------------------------------------------------*
-     * drain container
-     *-------------------------------------------------------------------------------------------------------------*/
+    /*---------------------------------------------------------------------------------
+     * drain road 
+     *-------------------------------------------------------------------------------**/
     template<class I, class O>
-    void drainContainers(IO& io, I& in, O& out) {
-    
-        try {
-            for (auto& d : io->Drain()) { out->Write(move(d)); }
-        } catch (IConnectorExceptionDEAD& ex) {
-            io->Repair();
-        } catch (OConnectorExceptionDEAD& ex) {
-            out->Repair();
-        }
-        try {
-            for (auto& d : in->Drain()) { io->Write(move(d)); }
-        } catch (IConnectorExceptionDEAD& ex) {
-            in->Repair();
-        } catch (OConnectorExceptionDEAD& ex) {
-            io->Repair();
+    void drainRoad(I& in, O& out){
+        for (auto it = in.begin(), end = in.end(); it != end;) {
+            try {
+                for (auto& d : it->second->Drain()) { processData(move(d), out); }
+            } catch (IConnectorExceptionDEAD& ex) {
+                in.Repair(it);
+            }
         }
     }
-private:
-    /**
-     * settings
-     */
-    chrono::milliseconds __timeout;
+    /*---------------------------------------------------------------------------------
+     * process data 
+     *-------------------------------------------------------------------------------**/
+    template<class D, class O>
+    inline void processData(D&& data, O& out) {
+        for (auto it = out.begin(), end = out.end(); it != end;) {
+            try {
+                it->second->Write(data); ++it;
+            } catch (ConnectorExceptionDEAD& ex) {
+                out.Repair(it);
+            } catch (ConnectorExceptionTIMEOUT& ex) {
+            }
+        }
+    }
 };
 /**
  */

@@ -31,7 +31,7 @@ class SDecode : public SFunctionSpread<SConnector::Key, Encoded::IConnector, Doc
      * define types
      */ 
     using Super    = SFunctionSpread<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
-    using Road     = typename Super::Road;
+    using ORoad    = typename Super::ORoad;
     using Data     = typename Super::Data;
     using Cache    = Message::SCache;
 public:
@@ -51,7 +51,7 @@ public:
     /**
      * process
      */
-    void Drain(Road& out) {
+    void Drain(ORoad& out) {
 	    /**
 	     * move cache
 	     */
@@ -77,7 +77,7 @@ protected:
     /*-------------------------------------------------------------------------------------------------------------*
      * process Data
      *-------------------------------------------------------------------------------------------------------------*/
-    inline void processData(Road& out) {
+    inline void processData(ORoad& out) {
 	    for (Document& code: __cache.Pop()) {
 	        /**------------------------------------------------------------------------------------------------*
 	         * write
@@ -96,7 +96,7 @@ protected:
 	        }
         }
     }
-	inline void processData(Data&& data, Road& out) {
+	inline void processData(Data&& data, ORoad& out) {
 	    DEBUG("receive={" 
 	        << " p=" << data.GetPosition() 
 	        << " n=" << data.GetNumFrames() 
@@ -138,7 +138,7 @@ class SDecode : public SFunctionSpread<SConnector::Key, Encoded::IConnector, Doc
      * define types
      */ 
     using Super    = SFunctionSpread<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
-    using Road     = typename Super::Road;
+    using Road     = typename Super::ORoad;
     using Data     = typename Super::Data;
     using Cache    = Stream::SCache;
 public:

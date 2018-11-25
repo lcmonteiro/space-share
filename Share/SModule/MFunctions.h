@@ -48,7 +48,7 @@ namespace Helpers {
 }
 /**
  *----------------------------------------------------------------------------------------------------------------------
- * Transform functions
+ * Spread functions
  *----------------------------------------------------------------------------------------------------------------------
  */
 namespace Spread {
@@ -129,7 +129,7 @@ namespace Spread {
 }
 /**
  *----------------------------------------------------------------------------------------------------------------------
- * Ypsilon functions
+ * Spliter functions
  *----------------------------------------------------------------------------------------------------------------------
  */
 namespace Spliter {
@@ -138,7 +138,7 @@ namespace Spliter {
      */
     template <class IO, class I, class O>
     struct BaseBuilder {
-        using Pointer = shared_ptr<SFunctionSpliter<IO, I, O>>;
+        using Pointer = shared_ptr<SFunctionSpliter<SConnector::Key, IO, I, O>>;
     };
     /**
      * Template Builder
@@ -147,9 +147,8 @@ namespace Spliter {
     struct Builder : BaseBuilder<IO, I, O> {
         using Pointer = typename BaseBuilder<IO, I, O>::Pointer;
         static inline Pointer Build(const SModule::Command::Group& o){
-            return make_shared<SFunctionSpliter<IO, I, O>>(
-                o.get(Properties::TIMEOUT, 1000), 
-                o.get(Properties::ENERGY,  2), 
+            return make_shared<SFunctionSpliter<SConnector::Key, IO, I, O>>(
+                o.get(Properties::ENERGY,  10), 
                 o.get(Properties::VERBOSE, 1)
             );
         }

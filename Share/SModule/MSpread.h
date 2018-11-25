@@ -34,8 +34,8 @@ class MSpread : public MDefault {
     /** 
      * connector types
      */
-    using RoadMonitor = SRoadMonitor<SConnector::Key, I>;
-    using Road        = SRoad<SConnector::Key, O>;
+    using IRoad = SRoadMonitor<SConnector::Key, I>;
+    using ORoad = SRoad<SConnector::Key, O>;
     /**
      * function type
      */
@@ -65,11 +65,11 @@ protected:
      * -----------------------------------------------------------------------------------------------------------------
      * inputs
      */
-    RoadMonitor __in;
+    IRoad __in;
     /**
      * outputs
      */
-    Road __out;
+    ORoad __out;
     /**
      */
     Function __func;

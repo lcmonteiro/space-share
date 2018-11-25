@@ -29,9 +29,9 @@ class SEncodeT : public SFunctionSpread<SConnector::Key, Decoded::IConnector, Co
      * define types
      */ 
     using Super    = SFunctionSpread<SConnector::Key, Decoded::IConnector, Container, Encoded::OConnector>;
-    using Road     = typename Super::Road;
+    using ORoad    = typename Super::ORoad;
     using Data     = typename Super::Data;
-    using Location = typename Road::Location;
+    using Location = typename ORoad::Location;
     using Encoder  = CodecEncoder;
     using Walker   = W;
 public:
@@ -66,9 +66,9 @@ protected:
     /*-------------------------------------------------------------------------------------------------------------*
      * process container
      *-------------------------------------------------------------------------------------------------------------*/
-    void processData(Road& out) override {    
+    void processData(ORoad& out) override {    
     }
-    void processData(Data&& data, Road& out) override {
+    void processData(Data&& data, ORoad& out) override {
 	    /**
 	     * create encoder
 	     */
