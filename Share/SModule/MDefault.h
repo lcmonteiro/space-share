@@ -1,11 +1,11 @@
 /** 
- * File:   MBasis.h
+ * File:   MDefault.h
  * Author: Luis Monteiro
  *
  * Created on November 16, 2017, 5:59 PM
  */
-#ifndef MBASIS
-#define MBASIS
+#ifndef MDEFAULT
+#define MDEFAULT
 /**
  * Builders
  */
@@ -28,7 +28,7 @@
 namespace Module {
 /**
  */
-class MBasis : public SModule {  
+class MDefault : public SModule {  
 public:   
     /**
      * -------------------------------------------------------------------------------------------------------------
@@ -36,8 +36,31 @@ public:
      * -------------------------------------------------------------------------------------------------------------
      * main constructor
      */
-    MBasis(const Command& cmd): SModule(cmd), __monitor(__uri){}
+    MDefault(const Command& cmd): SModule(cmd), 
+    // delay start
+    __delay(
+        cmd[""][0].get(Properties::DELAY, 10)
+    ),
+    // module max period
+    __timeout(
+        cmd[""][0].get(Properties::TIMEOUT, 1000)
+    ),
+    // monitor
+    __monitor(__uri){}
 protected:
+    using Clock     = chrono::steady_clock;
+    using TimePoint = Clock::time_point;
+    /**
+     * -----------------------------------------------------------------------------------------------------------------
+     * Variables
+     * -----------------------------------------------------------------------------------------------------------------
+     * process delay
+     */
+    chrono::milliseconds __delay;
+    /**
+     * process max period
+     */
+    chrono::milliseconds __timeout;
     /**
      * -----------------------------------------------------------------------------------------------------------------
      * Execute
@@ -45,11 +68,16 @@ protected:
      */
     int Execute() override {
         INFO("INI = {}");
+        // delay the process
+        STask::Sleep(__delay);
+        // init the process 
         __init();
+        // run the precess
         INFO("RUN = {}");
         while(true) {
+            TimePoint end = Clock::now() + __timeout;
             try {
-                __process();
+                __process(end);
             }  catch (exception& ex) {
                 ERROR("END = { what: " << ex.what() << " }");
                 return -1;
@@ -62,7 +90,7 @@ protected:
         return 0;
     }
     virtual void __init() {}
-    virtual void __process() {}
+    virtual void __process(const TimePoint& end) {}
     /**
      * ----------------------------------------------------------------------------------------------------------------
      * process command
@@ -70,7 +98,7 @@ protected:
      */
     SCommandMonitor<Command, Message::SLocalResource> __monitor;
     /**
-     * unserialize command
+     * command unserialize 
      */
     inline Command ReadCommand() {
         return __monitor.Read();
@@ -113,6 +141,9 @@ protected:
         }
         return cmd; 
     }
+    /**
+     * update function
+     */
     template<class F>
     Command UpdateFunction(F& func, Command&& cmd) {
         /**
@@ -129,11 +160,31 @@ protected:
         return cmd;
     }
     /**
+     * command monitor
+     */
+    template<class P, class... R>
+    bool Monitor(const TimePoint& end, P process, R... resource) {
+        auto timeout = chrono::duration_cast<chrono::milliseconds>(end-Clock::now());
+        for(auto& i : SResourceMonitor(timeout, &__monitor, forward<R>(resource)...).Wait()) {
+            switch(i) {
+                case 1: {
+                    // process commad
+                    process();
+                    break;
+                }
+                default: {
+                    // process resources
+                    return true;
+                }
+            }
+        }
+        return false; 
+    }
+    /**
      * update resources 
      */
     template<class P, class... R>
-    void Update(chrono::milliseconds timeout, P process, R&... resource) {
-        using Clock = chrono::steady_clock;
+    void Update(const TimePoint& end, P process, R... resource) {
         using Engine = default_random_engine;
         using Distribuition = uniform_int_distribution<>;
         /**
@@ -141,10 +192,9 @@ protected:
          */
         auto gen = Engine{random_device{}()}; 
         auto dis = Distribuition{100, 500}; 
-        auto end = Clock::now() + timeout; 
         do {
             try {
-                auto x = {(resource.Update(),0)...};
+                auto x = {(resource->Update(),0)...};
             } catch(RoadDetached& e) {
                 // check if a command arrive in random time 
                 try {
@@ -159,39 +209,10 @@ protected:
         } while(Clock::now() < end);
     }
     /**
-     * 
+     * get status summary of module
      */
     template<class T>
     string Status(T& r) {
-        ostringstream out;
-        /**
-         * get information 
-         */
-    //    auto info = r.Sizes();
-    //    /**
-    //     *  print good
-    //     */
-    //    size_t good = 0; 
-    //    for (auto& s : info.first) {
-    //        good += s;
-    //        out << std::setw(2) << s << ' ';
-    //    }
-    //    out << '\t' << '\t';
-    //    /**
-    //     * print bad 
-    //     */
-    //    size_t bad = 0;
-    //    for (auto& s : info.second) {
-    //        bad += s;
-    //        out << std::setw(2) << s << ' ';
-    //    }
-    //    out <<'\t' << '(' << good << '/' << bad << ')' << '\t' << float(good) / float(good + bad);
-        /**/
-        return out.str();
-    }
-
-    template<class T>
-    string Summary(T& r) {
         ostringstream out;
         /**
          *  print good
@@ -199,7 +220,6 @@ protected:
         out << "Good: ";
         for (auto i = r.begin(), e = r.end(); i != e; ++i) {
             out << i->second->Uri() << ' ';
-                
         }
         /**
          * print bad 
@@ -214,5 +234,5 @@ protected:
 
 };
 }
-#endif /* MBASIS */
+#endif /* MDEFAULT */
 

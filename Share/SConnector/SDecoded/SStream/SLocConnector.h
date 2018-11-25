@@ -50,7 +50,7 @@ public:
         SSocketResource::Drain(buf);
     }
     inline bool Good() {
-        SSocketResource::Good();
+        return SSocketResource::Good();
     }
     inline void Reset() {
         *this = SSocketResource();
