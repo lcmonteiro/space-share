@@ -181,6 +181,17 @@ protected:
         return false; 
     }
     /**
+     * wait resources
+     */
+    inline vector<size_t> Wait(SResourceMonitor& monitor, const TimePoint& end) {
+        auto timeout = chrono::duration_cast<chrono::milliseconds>(end-Clock::now());
+        if(timeout > chrono::milliseconds::zero()) {
+            return monitor.Wait(timeout);
+        }
+        monitor = SResourceMonitor();
+        return {};
+    }
+    /**
      * update resources 
      */
     template<class P, class... R>

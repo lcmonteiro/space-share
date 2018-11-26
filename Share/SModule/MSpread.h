@@ -102,7 +102,9 @@ protected:
             );
         };
         // state machine
-        INFO("Process={ energy:" << SEnergy::Get() << ", inputs:" << Status(__in) << " }");
+        INFO("Process:" 
+           << "{ energy:" << SEnergy::Get() << ", input:" << Status(__in) << " }"
+        );
         try {
             switch(GetState()) {
                 default: {
@@ -127,17 +129,16 @@ protected:
                 }
                 case PROCESS: {
                     try { 
-                        if(Monitor(end, ProcessCmd, &__in)){
-                            try{
-                                while(Clock::now() < end) {
-                                    __func->Process(__in, __out);    
+                        if(Monitor(end, ProcessCmd, &__in)) {
+                            SResourceMonitor m (&__in);
+                            while(m.Good()) {
+                                for(auto& i : Wait(m, end)) {
+                                    __func->Process(__in, __out);
                                 }
-                            } catch (MonitorExceptionTIMEOUT & ex) {
-                                //TODO: print
                             }
                         }                        
                     } catch (MonitorExceptionTIMEOUT & ex) {
-                        __func->Drain(__out);
+                        __func->Drain(__in, __out);
                         __func->Decay();
                     }
                     SetState(UPDATE);

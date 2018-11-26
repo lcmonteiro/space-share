@@ -61,6 +61,12 @@ public:
         return __poll;
     }
     /**
+     * get timeout
+     */
+    inline chrono::milliseconds GetTimeout(){
+        return __timeout;
+    }
+    /**
      * update and wait
      */
     inline list<Location> Wait(Road& road) {

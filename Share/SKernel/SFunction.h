@@ -20,9 +20,9 @@
 #include "SRoadMonitor.h"
 #include "SResourceMonitor.h"
 /**
- * ---------------------------------------------------------------------------------------------------------------------*
+ * ------------------------------------------------------------------------------------
  * exceptions 
- * ---------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------
  **/
 typedef class SFunctionException : public logic_error {
 public:
@@ -44,9 +44,9 @@ public:
     }
 } FunctionExceptionDEAD;
 /**
- * ---------------------------------------------------------------------------------------------------------------------*
+ * ------------------------------------------------------------------------------------
  * function base 
- * ---------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------
  **/
 class SFunction: public SLog, public SEnergy<FunctionExceptionDEAD> {
 public:
@@ -72,9 +72,9 @@ protected:
      * function id
      */
     string __id;
-    /*-------------------------------------------------------------------------------------------------------------*
+    /*---------------------------------------------------------------------------------
      * logging
-     *-------------------------------------------------------------------------------------------------------------*/
+     *-------------------------------------------------------------------------------**/
     inline void __DEBUG(const string& msg) {
         SLog::__DEBUG(__id, msg);
     }
@@ -144,10 +144,25 @@ public:
     /**--------------------------------------------------------------------------------
      * drain
      *-------------------------------------------------------------------------------**/
-    void Drain(ORoad& out) {
+    void Drain(IRoad& in, ORoad& out) {
+        // drain road
+        drainRoad(in, out);
+        // process 
         processData(out);
     }
 protected:
+    /*---------------------------------------------------------------------------------
+     * drain road 
+     *-------------------------------------------------------------------------------**/
+    inline void drainRoad(IRoad& in, ORoad& out){
+        for (auto it = in.begin(), end = in.end(); it != end;) {
+            try {
+                for (auto& d : it->second->Drain()) { processData(move(d), out); }
+            } catch (IConnectorExceptionDEAD& ex) {
+                in.Repair(it);
+            }
+        }
+    }
     /**--------------------------------------------------------------------------------
      * process Data
      *-------------------------------------------------------------------------------**/
@@ -179,26 +194,36 @@ public:
     /**--------------------------------------------------------------------------------
      * process
      *-------------------------------------------------------------------------------**/
-    void Process(IORoad& io, IRoad& in, ORoad& out) {
-        try {
-            for (auto& i : SResourceMonitor(&io, &in).Wait()) {
-                if (i == 0) {
-                    processRoad(io, out);
-                    continue;
-                }
-                if (i == 1) {
-                    processRoad(in, io);
-                    continue;
-                }
+    inline void Process(IORoad& io, IRoad& in, ORoad& out) {
+        for (auto& i : SResourceMonitor(
+            std::min(io.GetTimeout(), in.GetTimeout()), &io, &in
+        ).Wait()) {
+            if (i == 0) {
+                processRoad(io, out);
+                continue;
             }
-        } catch (MonitorException& ex) {
-            // drain roads
-            drainRoad(io, out);
-            drainRoad(in, io);
-            // resend exception
-            throw;
+            if (i == 1) {
+                processRoad(in, io);
+                continue;
+            }
         }
         SEnergy::Restore();
+    }
+    inline void Process(IORoad& io, ORoad& out) {
+        processRoad(io, out);
+        SEnergy::Restore();
+    }
+    inline void Process(IRoad& in, IORoad& io) {
+        processRoad(in, io);
+        SEnergy::Restore();
+    }
+    /**--------------------------------------------------------------------------------
+     * drain
+     *-------------------------------------------------------------------------------**/
+    inline void Drain(IORoad& io, IRoad& in, ORoad& out) {
+        // drain roads
+        drainRoad(io, out);
+        drainRoad(in, io);
     }
 protected:
     /*---------------------------------------------------------------------------------

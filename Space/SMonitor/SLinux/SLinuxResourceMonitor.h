@@ -42,24 +42,46 @@ public:
     : SLinuxResourceMonitor(chrono::milliseconds(0), arg, forward<Args>(args)...) {
     }
     /**
+     * default constructor
+     */
+    SLinuxResourceMonitor() = default;
+    /**
      * destructor
      */
     virtual ~SLinuxResourceMonitor() = default;
     /**
-     * -------------------------------------------------------------------------------------------------------------
-     * interface
-     * -------------------------------------------------------------------------------------------------------------
+     * move operator
+     */ 
+    SLinuxResourceMonitor& operator=(SLinuxResourceMonitor&&) = default;
+    /**
+     * check monitor
      */
+    inline bool Good() {
+        return !(__loc.empty() || __timeout < chrono::milliseconds::zero());
+    }
+    /**
+     * -------------------------------------------------------------------------------------------------------------
+     * wait interface
+     * -------------------------------------------------------------------------------------------------------------
+     * wait 
+     */
+    inline vector<size_t> Wait(chrono::milliseconds timeout) {
+        return Wait(__loc, timeout);
+    }
     inline vector<size_t> Wait() {
-        // wait
         return Wait(__loc, __timeout);
     }
+    /**
+     * check
+     */
+    inline vector<size_t> Check(chrono::milliseconds timeout) {
+        return Check(__loc, timeout);
+    }
     inline vector<size_t> Check() {
-        // check
         return Check(__loc, __timeout);
     }
     /**
-     * wait for one resource
+     * wait just one resource
      */
     static inline SLinuxResource& Wait(SLinuxResource& res, const chrono::milliseconds& timeout) {
         Locations loc {SLinuxMonitor::CreateLocation(res.GetHandler())};
