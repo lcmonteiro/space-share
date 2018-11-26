@@ -44,11 +44,10 @@ public:
  * ---------------------------------------------------------------------------------------------------------------------
  **/
 class SModule : public SProcess<string, string>, public SEnergy<ModuleExceptionDEAD> {
+public:   
     static constexpr const char* URI     = "uri";
     static constexpr const char* VERBOSE = "verbose";
     static constexpr const char* ENERGY  = "energy";
-public:   
-    
     /**
      * -----------------------------------------------------------------------------------------------------------------
      * Definitions

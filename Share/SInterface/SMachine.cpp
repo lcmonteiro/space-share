@@ -19,7 +19,7 @@
  *----------------------------------------------------------------------------------------------------------------------
  * main constructor
  */
-SMachine::SMachine(const Key& uri, const vector<Module::Config> conf) : __uri(uri) {    
+SMachine::SMachine(const Key& uri, const vector<SModule::Command> conf) : __uri(uri) {    
     /**
      * create link
      */
@@ -28,9 +28,7 @@ SMachine::SMachine(const Key& uri, const vector<Module::Config> conf) : __uri(ur
      * create modules
      */
     for(auto& c : conf) {
-        InsertModule(
-            MakeURI(Module::Command::Peek<Module::Key>(get<0>(c), Module::URI)), c
-        );
+        InsertModule(MakeURI(c[""][0][SModule::URI]), c);
     }    
 }
 

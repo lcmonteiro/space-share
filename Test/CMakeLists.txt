@@ -6,7 +6,7 @@ include(GoogleTest.cmake)
 function(add_gtests)
     set(options)
     set(oneValue   TARGET)
-    set(multiValue SOURCES TARGETS)
+    set(multiValue SOURCES DEPENDS)
     cmake_parse_arguments(ARG "${options}" "${oneValue}" "${multiValue}" ${ARGN} )
     add_executable (
         ${ARG_TARGET} ${ARG_SOURCES}
@@ -14,7 +14,7 @@ function(add_gtests)
     target_link_libraries(
         ${ARG_TARGET}
     PRIVATE
-       GTest::GTest GTest::Main ${ARG_TARGETS}
+       GTest::GTest GTest::Main ${ARG_DEPENDS}
     )
     add_test(NAME ${ARG_TARGET} COMMAND ${ARG_TARGET})
 endfunction()

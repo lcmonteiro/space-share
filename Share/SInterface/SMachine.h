@@ -15,7 +15,6 @@
 /**
  * Space Kernel
  */
-#include "STask.h"
 #include "SLocalResource.h"
 /**
  * Share Kernel
@@ -29,16 +28,14 @@ public:
     /**
      * machine identification
      */
-    using Key = Module::Key;
+    using Key = SModule::Key;
     /**
      * -----------------------------------------------------------------------------------------------------------------
      * Constructors / Destructor
      * -----------------------------------------------------------------------------------------------------------------
-     * main constructors
+     * main constructor
      */
-    SMachine(const Key& uri, const vector<Module::Config> conf = {});
-    
-    SMachine(const Key& uri, const vector<string> conf = {});
+    SMachine(const Key& uri, const vector<SModule::Command> conf = {});
     /**
      * move constructor
      */
@@ -69,10 +66,10 @@ public:
      * @param s - state
      * @return  - number of modules in that state 
      */
-    inline int IsState(Module::State s) {
+    inline int IsState(SModule::State s) {
         int n = 0;
         for(auto& m:__modules){
-            n += m.second.IsState(s) ? 1 : 0;
+            n += m.second->IsState(s) ? 1 : 0;
         }
         return n;
     }
@@ -81,7 +78,7 @@ public:
      * @return - good rate
      */
     inline float Good() {
-        return float(IsState(Module::PROCESS)) / __modules.size();
+        return float(IsState(SModule::PROCESS)) / __modules.size();
     }
     /**
      * bad
@@ -109,15 +106,15 @@ protected:
     /**
      * insert module
      */
-    void InsertModule(Module::Key id, Module::Config config);
+    void InsertModule(SModule::Key id, SModule::Command cmd);
     /**
      * update module
      */
-    void UpdateModule(Module::Key id, Module::Config config);
+    void UpdateModule(SModule::Key id, SModule::Command cmd);
     /**
      * remove module
      */
-    void RemoveModule(Module::Key id);
+    void RemoveModule(SModule::Key id);
 private:
     /**
      * -----------------------------------------------------------------------------------------------------------------
@@ -125,7 +122,7 @@ private:
      * -----------------------------------------------------------------------------------------------------------------
      * private definitions
      */
-    typedef map<Module::Key, Module> Modules; 
+    typedef map<SModule::Key, unique_ptr<SModule>> Modules; 
     /**
      * machine modules
      */
@@ -140,15 +137,15 @@ private:
      * -----------------------------------------------------------------------------------------------------------------
      * make configuration
      */
-    inline Module::Config MakeConfig(Module::Command::Options opt) {
-        return Module::Config {
-            opt.at("M").front(), opt.at("F").front(), opt.at("I"), opt.at("O")
-        };
-    }
+    // inline Module::Config MakeConfig(Module::Command::Options opt) {
+    //     return Module::Config {
+    //         opt.at("M").front(), opt.at("F").front(), opt.at("I"), opt.at("O")
+    //     };
+    // }
     /**
      * make to uri 
      */
-    inline Module::Key MakeURI(Module::Key uri) {
+    inline SModule::Key MakeURI(SModule::Key uri) {
         return (__uri + "." + uri);
     }
 };
