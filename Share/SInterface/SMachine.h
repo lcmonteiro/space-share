@@ -16,6 +16,7 @@
  * Space Kernel
  */
 #include "SLocalResource.h"
+#include "SCommandMonitor.h"
 /**
  * Share Kernel
  */
@@ -23,12 +24,12 @@
 /**
  */
 class SMachine {
-    using Channel = Message::SLocalResource;
 public:
     /**
      * machine identification
      */
-    using Key = SModule::Key;
+    using Command = SModule::Command;
+    using Key     = SModule::Key;
     /**
      * -----------------------------------------------------------------------------------------------------------------
      * Constructors / Destructor
@@ -102,35 +103,36 @@ protected:
     /**
      * process data
      */
-    void ProcessData(string line);
+    void ProcessData(Command cmd);
     /**
      * insert module
      */
-    void InsertModule(SModule::Key id, SModule::Command cmd);
+    void InsertModule(Key id, const Command& cmd);
     /**
      * update module
      */
-    void UpdateModule(SModule::Key id, SModule::Command cmd);
+    void UpdateModule(Key id, const Command& cmd);
     /**
      * remove module
      */
-    void RemoveModule(SModule::Key id);
+    void RemoveModule(Key id);
 private:
     /**
      * -----------------------------------------------------------------------------------------------------------------
      * Variables
      * -----------------------------------------------------------------------------------------------------------------
      * private definitions
-     */
-    typedef map<SModule::Key, unique_ptr<SModule>> Modules; 
+     */ 
+    using Modules = map<SModule::Key, unique_ptr<SModule>>;
+    using Monitor = SCommandMonitor<SModule::Command, Message::SLocalResource>;
     /**
      * machine modules
      */
     Modules __modules;
     /**
-     * link to machine
+     * command monitor
      */
-    Channel __link;
+    Monitor __monitor;
     /**
      * -----------------------------------------------------------------------------------------------------------------
      * Helpers

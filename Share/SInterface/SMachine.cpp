@@ -19,30 +19,13 @@
  *----------------------------------------------------------------------------------------------------------------------
  * main constructor
  */
-SMachine::SMachine(const Key& uri, const vector<SModule::Command> conf) : __uri(uri) {    
-    /**
-     * create link
-     */
-    __link.Bind(uri);
+SMachine::SMachine(const Key& uri, const vector<SModule::Command> conf) : __monitor(uri) {    
     /**
      * create modules
      */
     for(auto& c : conf) {
         InsertModule(MakeURI(c[""][0][SModule::URI]), c);
     }    
-}
-
-SMachine::SMachine(const Key& uri, const vector<string> conf) : __uri(uri) {
-    /**
-     * create link
-     */
-    __link.Bind(uri);
-    /**
-     * create modules
-     */
-    for(auto& c : conf) {
-        ProcessData(c);
-    }  
 }
 /**
  *----------------------------------------------------------------------------------------------------------------------
@@ -51,16 +34,15 @@ SMachine::SMachine(const Key& uri, const vector<string> conf) : __uri(uri) {
  * process
  */
 bool SMachine::Process(chrono::milliseconds timeout) {
-    Frame frame(0x1000);
     try {
         /**
          * wait data
          */
-        __link.Wait(timeout).Fill(frame);
+        SResourceMonitor(timeout, &__monitor).Wait();
         /**
          * process data
          */
-        ProcessData(string(frame.begin(), frame.end()));
+        ProcessData(__monitor.Read());
         /** 
          */
     } catch (ResourceExceptionTIMEOUT& ex) {
@@ -81,42 +63,39 @@ bool SMachine::Process(chrono::milliseconds timeout) {
  * I = input
  * O = output
  */
-void SMachine::ProcessData(string data) {
-    /**
-     * parse data
-     */
-    auto cmd = Module::Command::Unserialize({"M", "F", "I", "O"}, data);
+void SMachine::ProcessData(Command cmd) {
     /**
      * uri - resource identify
      */
     for(auto& m : cmd["M"]) {
         try {
-            InsertModule(MakeURI(m[Module::URI]), MakeConfig(cmd));
+            InsertModule(MakeURI(m[SModule::URI]), cmd);
         } catch(...){
-            UpdateModule(MakeURI(m[Module::URI]), MakeConfig(cmd));
+            UpdateModule(MakeURI(m[SModule::URI]), cmd);
         }
     }
 }
 /**
  * insert module
  */
-void SMachine::InsertModule(Module::Key uri, Module::Config config) {
+void SMachine::InsertModule(Key uri, const Command& cmd) {
     /**
      * install module
      */
-    __modules.emplace(std::piecewise_construct,
-        std::forward_as_tuple(uri),
-        std::forward_as_tuple(uri, config)
-    );
+    // __modules.emplace(make_unique<S>
+    //     std::piecewise_construct,
+    //     std::forward_as_tuple(uri),
+    //     std::forward_as_tuple(uri, config)
+    // );
     /**
      * start module
      */
-    __modules[uri].Detach();
+    //__modules[uri].Detach();
 }
 /**
  * update module
  */
-void SMachine::UpdateModule(Module::Key uri, Module::Config config) {
+void SMachine::UpdateModule(Key uri, const Command& cmd) {
 
 }
 /**
