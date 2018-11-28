@@ -201,7 +201,7 @@ protected:
     /**
      * stream identifier
      */
-    Address __uri;
+    SAddress __uri;
     /**
      * worker
      */

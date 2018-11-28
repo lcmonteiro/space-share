@@ -19,7 +19,7 @@
  *----------------------------------------------------------------------------------------------------------------------
  * main constructor
  */
-SMachine::SMachine(const Key& uri, const vector<SModule::Command> conf) : __monitor(uri) {    
+SMachine::SMachine(const SAddress& uri, const vector<SModule::Command> conf) : __monitor(uri) {    
     /**
      * create modules
      */

@@ -43,7 +43,7 @@ public:
     inline SSocketResource& Base() {
         return *this;
     }
-    inline void Connect(const Address& uri) {
+    inline void Connect(const SAddress& uri) {
         SSocketResource::Connect(uri.Host(), uri.Port(), STREAM);
     }
     inline void Fill(IFrame& buf) {

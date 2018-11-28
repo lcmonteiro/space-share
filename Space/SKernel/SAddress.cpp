@@ -1,12 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
+/** 
  * File:   SAddress.cpp
- * Author: root
+ * Author: Luis Monteiro
  * 
  * Created on November 21, 2016, 12:10 PM
  */
@@ -37,21 +31,48 @@ static string Get(string data, const string def) {
  * parse 
  */
 SAddress::SAddress(
-	const string& addr, 
-	const string& user, 
-	const string& host, 
-	const uint16_t port, 
-	const string& path
+	const string& addr
 ):string(addr) {
 	smatch sm;
 	if (!regex_match(*this, sm, std::regex(__ADDRESS_FMT__))) {
 		throw logic_error("bad address format");
 	}
 	/**
-	 * save
+	 * save parameter
 	 */
-	__name = Get(sm[1].str(), user);
-	__host = Get(sm[2].str(), host);
-	__port = Get(sm[3].str(), port);
-	__path = Get(sm[4].str(), path);
+	__name = Get(sm[1].str(), "");
+	__host = Get(sm[2].str(), "");
+	__port = Get(sm[3].str(), 0);
+	__path = Get(sm[4].str(), "");
+}
+/**
+ * 
+ */
+SAddress::SAddress(
+	const string& user, 
+	const string& host, 
+	const uint16_t port, 
+	const string& path
+):string(), __name(user), __host(host), __port(port), __path(path) {
+	ostringstream os;
+	// save name
+	if(!__name.empty()) { 
+		os << __name; 
+	}
+	// save host
+	if(!__host.empty()) { 
+		if(os.tellp()) { os << "@"; }
+		os << __host;	
+	}
+	// save port
+	if(__port){
+		if(os.tellp()) { os << ":";	}
+		os << __port;
+	} 
+	// save path
+	if(!__path.empty()){
+		if(os.tellp()) { os << "/";	}
+		os << __path;
+	} 
+	assign(os.str());
 }

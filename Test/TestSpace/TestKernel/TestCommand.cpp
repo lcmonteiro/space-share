@@ -49,7 +49,7 @@ TEST(SCommand, Group)
 
 TEST(SCommand, String)
 {
-    SCommand<string, string> c (string(""));
+    SCommand<string, string> c ("-I --a 1");
     //use case 1 -> positive
-    EXPECT_EQ(c["I"][0].get("A", 1), 1);
+    EXPECT_EQ(c["I"][0].get("a", 1), 1);
 }

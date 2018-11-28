@@ -10,6 +10,7 @@
  */
 #include "SLog.h"
 #include "STask.h"
+#include "SAddress.h"
 #include "SCommand.h"
 /**
  */
@@ -29,7 +30,7 @@ public:
      * -------------------------------------------------------------------------------------------------------------
      * main constructor
      */
-    SProcess(const Key& uri, uint8_t verbose, const Command& cmd)
+    SProcess(const SAddress& uri, uint8_t verbose, const Command& cmd)
     : SLog(verbose), __uri(uri), __cmd(cmd), __worker() {  
     }
     /**
@@ -83,7 +84,7 @@ protected:
      * -------------------------------------------------------------------------------------------------------------
      * uri 
      */
-    Key __uri;
+    SAddress __uri;
     /**
      * cmd 
      */

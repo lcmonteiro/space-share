@@ -9,6 +9,7 @@ SOURCES
     TestKernel/TestVariable.cpp
     TestKernel/TestCommand.cpp
     TestKernel/TestProcess.cpp
+    TestKernel/TestAddress.cpp
 DEPENDS
     SpaceKernel
 )

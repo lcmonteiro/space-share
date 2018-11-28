@@ -43,7 +43,7 @@ public:
     inline SSocketResource& Base() {
         return *this;
     }
-    inline void Wait(const Address& uri) {
+    inline void Wait(const SAddress& uri) {
         SSocketResource::Bind(uri.Path(), STREAM);
     }
     inline void Fill(IFrame& buf) {

@@ -20,10 +20,10 @@
 using namespace std;
 /**
  */
-typedef class SAddress : public string {
+class SAddress : public string {
 public:
 	/**
-	 * constructor
+	 * defaut constructor
 	 */
 	SAddress() = default;
 
@@ -33,13 +33,19 @@ public:
 	/**
 	 * process constructor
 	 */
-	SAddress(
-		const string& addr, 
-		const string& user = "", 
-		const string& host = "", 
-		const uint16_t port = 0, 
-		const string& path = ""
+	SAddress( 
+		const string& addr
 	);
+	SAddress(
+		const string& user, 
+		const string& host, 
+		const uint16_t port, 
+		const string& path
+	);
+	/**
+	 * derivated constructor
+	 */
+	SAddress(const char* addr): SAddress(string(addr)){}
 	/**
 	 * destructor
 	 */
@@ -48,9 +54,11 @@ public:
 	 * move operator
 	 */
 	SAddress& operator=(SAddress&& addr) = default;
-        /**
+	/**
+	 * copy operator 
          * copy operator 
-         */
+	 * copy operator 
+	 */
 	SAddress& operator=(const SAddress& addr) = default;
 	/**
 	 * accessors
@@ -73,6 +81,17 @@ public:
 	inline const string& Channel() {
 		return __path;
 	}
+	/**
+	 * friends
+	 */
+  	friend SAddress operator+(const SAddress& lhs, const SAddress& rhs) {
+		return SAddress(
+		  	lhs.User() + "_" + rhs.User(),
+			lhs.Host() + "." + rhs.Host(),
+		  	lhs.Port() + rhs.Port(),
+		  	lhs.Path() + "/" + rhs.Path()
+		);
+	}
 private:
 	/**
 	 * attributes
@@ -81,7 +100,6 @@ private:
 	string __host;
 	uint16_t __port;
 	string __path;
-} Address;
+};
 
 #endif /* SADDRESS_H */
-

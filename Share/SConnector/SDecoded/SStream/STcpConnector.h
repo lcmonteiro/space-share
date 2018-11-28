@@ -40,7 +40,7 @@ public:
     inline SSocketResource& Base() {
         return *this;
     }
-    inline void Wait(const Address& uri) {
+    inline void Wait(const SAddress& uri) {
         SSocketResource::Wait(uri.Host(), uri.Port(), STREAM);
     }
     inline void Fill(IFrame& buf) {

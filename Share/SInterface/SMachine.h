@@ -36,7 +36,7 @@ public:
      * -----------------------------------------------------------------------------------------------------------------
      * main constructor
      */
-    SMachine(const Key& uri, const vector<SModule::Command> conf = {});
+    SMachine(const SAddress& uri, const vector<SModule::Command> conf = {});
     /**
      * move constructor
      */
@@ -99,7 +99,7 @@ protected:
     /**
      * machine uri
      */
-    const Key __uri;
+    SAddress __uri;
     /**
      * process data
      */
@@ -137,18 +137,10 @@ private:
      * -----------------------------------------------------------------------------------------------------------------
      * Helpers
      * -----------------------------------------------------------------------------------------------------------------
-     * make configuration
-     */
-    // inline Module::Config MakeConfig(Module::Command::Options opt) {
-    //     return Module::Config {
-    //         opt.at("M").front(), opt.at("F").front(), opt.at("I"), opt.at("O")
-    //     };
-    // }
-    /**
      * make to uri 
      */
-    inline SModule::Key MakeURI(SModule::Key uri) {
-        return (__uri + "." + uri);
+    inline SAddress MakeURI(SAddress uri) {
+        return (__uri + uri);
     }
 };
 
