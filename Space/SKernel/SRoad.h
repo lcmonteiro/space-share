@@ -243,15 +243,23 @@ public:
          * repairing
          */
         Area& repairing = __process[Repairing];
-        for (auto it = repairing.begin() , e = repairing.end(); it != e; ++it) {
-            it->second->Break();
+        for (auto it = repairing.begin() , e = repairing.end(); it != e;) {
+            try {
+                it->second->Break(); ++it;
+            } catch(...) {
+                it = jump(it, Repairing, Dead);
+            }
         }
         /**
          * running
          */
         Area& running = __process[Running];
-        for (auto it = running.begin(), e = running.end(); it != e; ++it) {
-            it->second->Break();
+        for (auto it = running.begin(), e = running.end(); it != e;) {
+            try {
+                it->second->Break(); ++it;
+            } catch(...) {
+                it = jump(it, Running, Dead);
+            }
         }
     }
     /**
@@ -262,15 +270,24 @@ public:
          * repairing
          */
         Area& repairing = __process[Repairing];
-        for (auto it = repairing.begin() , e = repairing.end(); it != e; ++it) {
-            it->second->Repair();
+        for (auto it = repairing.begin() , e = repairing.end(); it != e;) {
+            try {
+                it->second->Repair(); ++it;
+            } catch(...) {
+                it = jump(it, Repairing, Dead);
+            }
         }
         /**
          * running
          */
         Area& running = __process[Running];
-        for (auto it = running.begin(), e = running.end(); it != e; it=jump(it, Running, Repairing)) {
-            it->second->Repair();   
+        for (auto it = running.begin(), e = running.end(); it != e; ) {
+            try {
+                it->second->Repair();
+                it = jump(it, Running, Repairing);
+            } catch(...) {
+                it = jump(it, Running, Dead);
+            }
         }
     }
     /**

@@ -19,28 +19,62 @@ public:
     /**
      * constructor
      */
-    SEnergy(size_t energy=0):__energy(energy), __capacity(energy){
+    SEnergy(size_t energy=0):__prev(energy), __curr(energy), __capacity(energy){
+    }
+    /**
+     * check if is empty
+     */
+    inline bool Empty() {
+        return (__curr == 0) && (__prev == 0);
     }
     /**
      * Get energy value
      */
     inline size_t Get() {
-        return __energy;
+        return __prev;
+    }
+    /**
+     * Set energy value
+     */
+    inline void Set(size_t energy) {
+        if(energy > __capacity){
+            __curr = __prev = __capacity = energy;
+        } else {
+            __curr = __prev = energy;
+        }
     }
     /**
      * Decrement energy
      */
     inline void Decay() {
-        if(__energy--==0) throw EX("no energy");
+        // update previous
+        __prev = __curr;
+        // check and decrement current
+        if(__curr ==0 ) {
+            throw EX("no energy");
+        } else {
+            --__curr;
+        }
+    }
+    /**
+     * Cancel decay
+     */
+    inline void Cancel() {
+        if(__prev ==0 ) {
+            throw EX("no energy");
+        } else {
+            __curr = __prev;
+        }
     }
     /**
      * Restore energy
      */
     inline void Restore() {
-        __energy = __capacity;
+        __curr = __prev = __capacity;
     }
-protected:
-    size_t __energy;
+private:
+    size_t __prev;
+    size_t __curr;
     size_t __capacity;
 };
 
