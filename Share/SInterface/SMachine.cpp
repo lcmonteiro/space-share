@@ -82,15 +82,11 @@ void SMachine::InsertModule(Key uri, const Command& cmd) {
     /**
      * install module
      */
-    // __modules.emplace(make_unique<S>
-    //     std::piecewise_construct,
-    //     std::forward_as_tuple(uri),
-    //     std::forward_as_tuple(uri, config)
-    // );
+    __modules.emplace(uri, SModule::Create(cmd));
     /**
      * start module
      */
-    //__modules[uri].Detach();
+    __modules[uri]->Detach();
 }
 /**
  * update module

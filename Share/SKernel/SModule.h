@@ -63,6 +63,25 @@ public:
      */
     using Group  = Command::Group;
     using Groups = Command::Groups;
+    using Link   = shared_ptr<SModule>;
+    /**
+     * -----------------------------------------------------------------------------------------------------------------
+     * Fabric
+     * -----------------------------------------------------------------------------------------------------------------
+     */
+    static Link Create(const Command& cmd) {
+        static map<Key, function <Link(const Command& cmd)>> GENERATOR {
+            {"encode", [](const Command& cmd) {
+                auto in = nullptr;
+                return in;
+            }}
+        };
+        try {
+            return GENERATOR[""](cmd);
+        } catch(...) {
+            throw runtime_error("invalid input");
+        }
+    }
     /**
      * -------------------------------------------------------------------------------------------------------------
      * Constructors
@@ -112,55 +131,27 @@ protected:
         __state = s;
     }
     
-    /**
-     * verify function
-     */
-    template<class F>
-    bool Dead(F& func, size_t& energy){
-        // if (func->Dead()) {
-        //     if (--energy == 0) {
-        //         func->Recover();
-        //         return true;
-        //     }
-        //     func->Recover();
-        // }
-        return false;
-    }
-    /**
-     * kill process check
-     */
-    template<class F>
-    bool Kill(F& func, size_t& energy){
-        if (IsState(PROCESS)) {
-            if (--energy == 0) {
-                func->Recover();
-                return true;
-            }
-            func->Recover();
-        }
-        return false;
-    }
-    template<class T>
-    void SUpdate(vector<T>& out, vector<T>& err) {
-        for (auto o = out.begin(), e = err.begin(); o != out.end() && e != err.end(); ++o, ++e) {
-            for (auto it = e->begin(); it != e->end();) {
-                if (it->second->Good()) {
-                    o->insert(*it);
-                    it = e->erase(it);
-                    continue;
-                }
-                ++it;
-            }
-        }
-    }
-    template<class T>
-    size_t Size(vector<T>& vec) {
-        auto n = 0;
-        for (auto& e : vec) {
-            n += e.size();
-        }
-        return n;
-    }
+    // template<class T>
+    // void SUpdate(vector<T>& out, vector<T>& err) {
+    //     for (auto o = out.begin(), e = err.begin(); o != out.end() && e != err.end(); ++o, ++e) {
+    //         for (auto it = e->begin(); it != e->end();) {
+    //             if (it->second->Good()) {
+    //                 o->insert(*it);
+    //                 it = e->erase(it);
+    //                 continue;
+    //             }
+    //             ++it;
+    //         }
+    //     }
+    // }
+    // template<class T>
+    // size_t Size(vector<T>& vec) {
+    //     auto n = 0;
+    //     for (auto& e : vec) {
+    //         n += e.size();
+    //     }
+    //     return n;
+    // }
     
 };
 

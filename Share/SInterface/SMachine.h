@@ -123,7 +123,7 @@ private:
      * -----------------------------------------------------------------------------------------------------------------
      * private definitions
      */ 
-    using Modules = map<SModule::Key, unique_ptr<SModule>>;
+    using Modules = map<SModule::Key, SModule::Link>;
     using Monitor = SCommandMonitor<SModule::Command, Message::SLocalResource>;
     /**
      * machine modules
