@@ -13,7 +13,7 @@ TEST(SAddress, Create)
     // use case 2 -> negative
 }
 
-TEST(SAddress, Sum)
+TEST(SAddress, Sum1)
 {
     SAddress a("lm@host.pt/test");
     SAddress b("cc@local.com/sample");
@@ -24,5 +24,14 @@ TEST(SAddress, Sum)
     EXPECT_EQ(s.Port(), 0);
     EXPECT_EQ(s.Path(), "test/sample");    
     // use case 2 -> negative
+}
+
+TEST(SAddress, Sum2)
+{
+    SAddress a("system");
+    SAddress b("test");
+    //use case 1 -> positive
+    auto s = a + b;
+    EXPECT_EQ("system.test", s);
 }
 

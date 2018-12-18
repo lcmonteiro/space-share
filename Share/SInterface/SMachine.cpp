@@ -19,12 +19,13 @@
  *----------------------------------------------------------------------------------------------------------------------
  * main constructor
  */
-SMachine::SMachine(const SAddress& uri, const vector<SModule::Command> conf) : __monitor(uri) {    
+SMachine::SMachine(const SAddress& uri, const vector<SModule::Command> conf) 
+: __uri(uri), __monitor(uri) {    
     /**
      * create modules
      */
     for(auto& c : conf) {
-        InsertModule(MakeURI(c[""][0][SModule::URI]), c);
+        ProcessData(c);
     }    
 }
 /**
@@ -63,11 +64,11 @@ bool SMachine::Process(chrono::milliseconds timeout) {
  * I = input
  * O = output
  */
-void SMachine::ProcessData(Command cmd) {
+void SMachine::ProcessData(const Command& cmd) {
     /**
      * uri - resource identify
      */
-    for(auto& m : cmd["M"]) {
+    for(auto& m : cmd[MODULE]) {
         try {
             InsertModule(MakeURI(m[SModule::URI]), cmd);
         } catch(...){
@@ -119,7 +120,7 @@ void SMachine::RemoveModule(Key uri) {
 //    cout << endl;
 //    for (auto& e : get<2>(t.second)) {
 //        for (auto& a : e.second) {
-//        cout << a.first << ":" << a.second << ", ";
+//        cout << a.first << ":" << a.second << ", ";ter
 //        }
 //        cout << endl;
 //    }

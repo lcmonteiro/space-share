@@ -86,10 +86,10 @@ public:
 	 */
   	friend SAddress operator+(const SAddress& lhs, const SAddress& rhs) {
 		return SAddress(
-		  	lhs.User() + "_" + rhs.User(),
-			lhs.Host() + "." + rhs.Host(),
+		  	Merge(lhs.User(), "_", rhs.User()),
+			Merge(lhs.Host(), ".", rhs.Host()),
 		  	lhs.Port() + rhs.Port(),
-		  	lhs.Path() + "/" + rhs.Path()
+		  	Merge(lhs.Path(), "/", rhs.Path())
 		);
 	}
 private:
@@ -100,6 +100,15 @@ private:
 	string __host;
 	uint16_t __port;
 	string __path;
+	/**
+	 * utils
+	 */
+	static string Merge(string s1, string sep, string s2){
+		if(s1.empty() || s2.empty()){
+			return s1 + s2;
+		}
+		return s1 + sep + s2;
+	}
 };
 
 #endif /* SADDRESS_H */
