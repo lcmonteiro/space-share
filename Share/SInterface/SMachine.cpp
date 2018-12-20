@@ -47,9 +47,7 @@ bool SMachine::Process(chrono::milliseconds timeout) {
         /** 
          */
     } catch (ResourceExceptionTIMEOUT& ex) {
-        cout << ex.what() << endl;
     } catch (MonitorExceptionTIMEOUT& ex) {
-        cout << ex.what() << endl;
     }
     return true;
 }

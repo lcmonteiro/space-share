@@ -1,10 +1,16 @@
 #include <gtest/gtest.h>
+
 #include <SMachine.h>
+#include <SFileResource.h>
 
 using namespace std;
-TEST(SMachine, UDP)
+TEST(SMachine, FILE)
 {
     STask::Enable();
+    /**
+     * create file
+     */
+    SRandomFileResource<> data("/tmp/data", 1000);
     /**
      * configure machine
      */
@@ -16,7 +22,7 @@ TEST(SMachine, UDP)
             {"type", "message"}, { "verbose", "4"}
         }}},
         {"I", {{
-            { "uri", "127.0.0.1:1357"}, { "type", "message.udp"}, { "verbose", "4"}
+            { "uri", "/tmp/data"}, { "type", "message.file"}, { "verbose", "4"}
         }}},
         {"O",{
             {
@@ -33,8 +39,7 @@ TEST(SMachine, UDP)
     /**
      * start machine
      */
-    
-
+    m.Process(chrono::seconds(1));
     /**
      * stop machine
      */

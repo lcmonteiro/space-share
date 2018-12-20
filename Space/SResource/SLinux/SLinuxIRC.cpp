@@ -22,7 +22,7 @@
  * Space Kernel
  */
 #include "SBase64.h"
-#include "STools.h"
+#include "SRandom.h"
 /**
  * Local
  */
@@ -64,7 +64,7 @@ void SLinuxIRC::Join(string user, string channel, int timeout) {
      * validation
      *-------------------------------------------------------------------------------------------------------------*/
     if(user.empty()){
-        user = STools::RamdomName(8);
+        user = SRandom::RName(8);
     }
     /*-------------------------------------------------------------------------------------------------------------*
      * functions
@@ -73,7 +73,7 @@ void SLinuxIRC::Join(string user, string channel, int timeout) {
         /**
          * set user and channel
          */
-        __name = user, __nick = STools::RamdomName(8),  __channel = channel;
+        __name = user, __nick = SRandom::RName(8),  __channel = channel;
         /**
          * Register
          */
