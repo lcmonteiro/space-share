@@ -50,11 +50,11 @@ public:
     /**
      * keys
      */
-    static constexpr const char* MODULE = "M";
-    static constexpr const char* FUNC   = "F";
-    static constexpr const char* IN     = "I";
-    static constexpr const char* OUT    = "O";
-    static constexpr const char* INOUT  = "X";
+    const char* MODULE = "M";
+    const char* FUNC   = "F";
+    const char* IN     = "I";
+    const char* OUT    = "O";
+    const char* INOUT  = "X";
     /**
      * constructor
      */ 
@@ -90,13 +90,13 @@ public:
      * gets
      */
     #define GETS(Key_, Name_)               \
-    const Groups& Get##Name_##s() {         \
+    const Groups& Get##Name_##s() const {   \
+        static const Groups empty{};        \
         try {                               \
             return (*this)[Key_];           \
         } catch(...) {                      \
-            __opts.emplace(Key_, Groups{}); \
+            return empty;                   \
         }                                   \
-        return (*this)[Key_];               \
     }
     GETS(MODULE, Module  );
     GETS(FUNC,   Function);
@@ -107,13 +107,13 @@ public:
      * get
      */
     #define GET(Key_, Name_)                \
-    const Group& Get##Name_() {             \
+    const Group& Get##Name_() const {       \
+        static const Group empty{};         \
         try {                               \
             return (*this)[Key_][0];        \
         } catch(...) {                      \
-            __opts.emplace(Key_, Groups{}); \
+            return empty;                   \
         }                                   \
-        return (*this)[Key_][0];            \
     }
     GET(MODULE, Module  );
     GET(FUNC,   Function);

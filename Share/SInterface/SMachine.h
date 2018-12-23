@@ -26,14 +26,6 @@
 class SMachine {
 public:
     /**
-     * keys
-     */
-    static constexpr const char* MODULE = "M";
-    static constexpr const char* FUNC   = "F";
-    static constexpr const char* IN     = "I";
-    static constexpr const char* OUT    = "O";
-    static constexpr const char* INOUT  = "X";
-    /**
      * machine identification
      */
     using Command = SModule::Command;

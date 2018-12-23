@@ -108,7 +108,7 @@ protected:
      */
     template<class I>
     Command UpdateInputs(I& input, Command&& cmd) { 
-        for(auto& o : cmd["I"]) {     
+        for(auto& o : cmd.GetInputs()) {     
             using Key = typename I::Key;
             try {
                 auto& in = input.Find(o[URI]);
@@ -127,7 +127,7 @@ protected:
      */
     template<class O>
     Command UpdateOutputs(O& output, Command&& cmd) {
-        for(auto& o : cmd["O"]) {       
+        for(auto& o : cmd.GetOutputs()) {       
             using Key = typename O::Key;
             try {
                 auto& out = output.Find(o[URI]);
@@ -149,7 +149,8 @@ protected:
         /**
          * update function
          */
-        for(auto& o : cmd["F"]) {
+        auto o = cmd.GetFunction();
+        {
             try {
                 // set energy
                 //func->SetEnergy(o[ENERGY]);
@@ -211,7 +212,7 @@ protected:
                 try {
                     // wait    command
                     SResourceMonitor(chrono::milliseconds(dis(gen)), &__monitor).Wait();
-                    // process commad
+                    // process command
                     process();
                 } catch(MonitorExceptionTIMEOUT& ) {
                     continue;

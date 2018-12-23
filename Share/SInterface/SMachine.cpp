@@ -66,7 +66,7 @@ void SMachine::ProcessData(const Command& cmd) {
     /**
      * uri - resource identify
      */
-    for(auto& m : cmd[MODULE]) {
+    for(auto& m : cmd.GetModules()) {
         try {
             InsertModule(MakeURI(m[SModule::URI]), cmd);
         } catch(...){
