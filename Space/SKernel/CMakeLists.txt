@@ -5,9 +5,7 @@ add_subdirectory(SLinux)
 add_library(SpaceKernel 
 STATIC
 	SAddress.cpp
-	SBase64.cpp
 	SContainer.cpp
-	SHash.cpp
 	SLog.cpp
 )
 # includes

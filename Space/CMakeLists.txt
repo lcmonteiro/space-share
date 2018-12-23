@@ -7,6 +7,8 @@ add_subdirectory(SKernel)
 add_subdirectory(SMonitor)
 # folder for Resources
 add_subdirectory(SResource)
+# folder for Resources
+add_subdirectory(SHelper)
 # target
 add_library(Space INTERFACE)
 # dependencies

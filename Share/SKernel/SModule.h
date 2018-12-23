@@ -12,6 +12,7 @@
 /**
  */
 #include "SProcess.h"
+#include "SCommand.h"
 #include "SEnergy.h"
 #include "SRoad.h"
 /**
@@ -43,7 +44,21 @@ public:
  * module 
  * ---------------------------------------------------------------------------------------------------------------------
  **/
-class SModule : public SProcess<string, string>, public SEnergy<ModuleExceptionDEAD> {
+class SModuleCommand: public SCommand<string, string>{
+public:
+    using Command=SCommand<string, string>;
+    /**
+     * constructor
+     */ 
+    using Command::Command;
+
+};
+/**
+ * ---------------------------------------------------------------------------------------------------------------------*
+ * module 
+ * ---------------------------------------------------------------------------------------------------------------------
+ **/
+class SModule : public SProcess<SModuleCommand>, public SEnergy<ModuleExceptionDEAD> {
 public:   
     static constexpr const char* URI     = "uri";
     static constexpr const char* VERBOSE = "verbose";

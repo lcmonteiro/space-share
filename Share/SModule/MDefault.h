@@ -4,8 +4,8 @@
  *
  * Created on November 16, 2017, 5:59 PM
  */
-#ifndef MDEFAULT
-#define MDEFAULT
+#ifndef MDEFAULT_H
+#define MDEFAULT_H
 /**
  * Builders
  */
@@ -71,13 +71,13 @@ protected:
         // delay the process
         STask::Sleep(__delay);
         // init the process 
-        __init();
+        __Init();
         // run the precess
         INFO("RUN = {}");
         while(true) {
             TimePoint end = Clock::now() + __timeout;
             try {
-                __process(end);
+                __Process(end);
             }  catch (exception& ex) {
                 ERROR("END = { what: " << ex.what() << " }");
                 return -1;
@@ -89,8 +89,8 @@ protected:
         INFO("END = {}");
         return 0;
     }
-    virtual void __init() {}
-    virtual void __process(const TimePoint& end) {}
+    virtual void __Init() {}
+    virtual void __Process(const TimePoint& end) {}
     /**
      * ----------------------------------------------------------------------------------------------------------------
      * process command
@@ -245,5 +245,5 @@ protected:
 
 };
 }
-#endif /* MDEFAULT */
+#endif /* MDEFAULT_H */
 

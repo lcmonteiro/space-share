@@ -20,5 +20,5 @@ target_link_libraries(SpaceResourceLinux
 PRIVATE
 	SpaceMonitorLinux
 PUBLIC 
-	SpaceKernel
+	SpaceHelper
 )

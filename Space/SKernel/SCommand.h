@@ -92,10 +92,10 @@ public:
                 regex exp(Syntax); 
                 for (auto i = sregex_iterator(line.begin(), line.end(), exp), end = sregex_iterator(); i != end;) {
                         // insert group
-                        auto& group = __insert(__opts, __transform<Key>(i->str(1)));
+                        auto& group = __Insert(__opts, __Transform<Key>(i->str(1)));
                         // fill group
                         for (++i; (i != end) && i->str(2).size() && i->str(3).size(); ++i) {        
-                                __insert(group, __transform<Key>(i->str(2)), __transform<Val>(i->str(3)));
+                                __Insert(group, __Transform<Key>(i->str(2)), __Transform<Val>(i->str(3)));
                         }                                
                 }
         }
@@ -142,7 +142,7 @@ private:
          * insert
          * -------------------------------------------------------------------------------------------------------------
          */
-        static inline Group& __insert(Options& opts, const Key& key){
+        static inline Group& __Insert(Options& opts, const Key& key){
                 auto it = opts.find(key);
                 if (it != opts.end()) {
                         it->second.emplace_back(Group());
@@ -151,7 +151,7 @@ private:
                 }
                 return it->second.back();
         }
-        static inline void __insert(Group& group, const Key& key, const Val& val){
+        static inline void __Insert(Group& group, const Key& key, const Val& val){
                 group.emplace(key, val);
         }
         /**
@@ -160,7 +160,7 @@ private:
          * -------------------------------------------------------------------------------------------------------------
          */
         template <class T>
-        static inline T __transform(const string& s) {
+        static inline T __Transform(const string& s) {
                 T val;
                 istringstream(s) >> val;
                 return val;

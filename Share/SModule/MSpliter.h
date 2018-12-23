@@ -70,7 +70,7 @@ protected:
      * -----------------------------------------------------------------------------------------------------------------
      * init execution
      */
-    void __init() {
+    void __Init() {
         // create and insert input/outputs
         for(auto& o: __cmd["X"]) {
             __in.Insert(o[Properties::URI], IBuilder::Build(o));
@@ -89,7 +89,7 @@ protected:
     /**
      * process execution
      */
-    void __process(const TimePoint& end) override {
+    void __Process(const TimePoint& end) override {
         // procces commands
         auto ProcessCmd = [this]() {
             UpdateFunction(

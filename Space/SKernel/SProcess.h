@@ -11,10 +11,11 @@
 #include "SLog.h"
 #include "STask.h"
 #include "SAddress.h"
-#include "SCommand.h"
 /**
+ * template
+ * C=command type
  */
-template<class Key, class Val>
+template<class C>
 class SProcess : protected SLog {
     /**
      * -------------------------------------------------------------------------------------------------------------
@@ -23,7 +24,7 @@ class SProcess : protected SLog {
      */
     using Task    = STask;
 public:   
-    using Command = SCommand<Key, Val>;
+    using Command = C;
     /**
      * -------------------------------------------------------------------------------------------------------------
      * Constructors
