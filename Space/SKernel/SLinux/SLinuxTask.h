@@ -121,12 +121,19 @@ protected:
         return __event;
     }
     /**
+     * --------------------------------------------------------------------------------------------
      * manager tasks 
+     * --------------------------------------------------------------------------------------------
+     * insert task
      */
     static void __Insert(thread::id, SLinuxTask*);
-    //
+    /**
+     * find task
+     */ 
     static SLinuxTask* __Find(thread::id);
-    //
+    /**
+     * remove task
+     */
     static void __Remove(thread::id);
 };
 /**

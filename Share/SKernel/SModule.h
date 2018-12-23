@@ -134,7 +134,7 @@ public:
      * -----------------------------------------------------------------------------------------------------------------
      * state type
      */
-    typedef enum {OPEN = 0, OWAIT, IWAIT, PROCESS, UPDATE} State;
+    typedef enum {OPEN = 0, OWAIT, IWAIT, PROCESS, UPDATE, CLOSE} State;
     /**
      */
     using Key = string;
@@ -196,6 +196,19 @@ public:
     }
     inline bool IsState(State s) {
         return __state == s;
+    }
+    /**
+     * -----------------------------------------------------------------------------------------------------------------
+     * manager
+     * -----------------------------------------------------------------------------------------------------------------
+     */
+    inline bool Join() {
+        try {
+            __worker.join();
+        } catch(...) {
+            return false;
+        }
+        return true;
     }
 protected:
     /**

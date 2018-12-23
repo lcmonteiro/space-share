@@ -7,51 +7,42 @@
 #include <SCompare.h>
 /**
  */
-using namespace std;
 TEST(SMachine, FILE)
 {
     STask::Enable();
     /**
-     * create file
+     * create test data
      */
     auto data = SRandom::File("/tmp/data", 1000);
     /**
      * configure machine
      */
-    auto conf = SMachine::Config{{
-        {"M", {{
+
+    auto conf = SMachine::Config().Add(
+        SModuleCommand().AddModule({
             {"uri",  "encoder"}, {"type", "encode"}, {"verbose", "4"}
-        }}},
-        {"F", {{
+        }).AddFunction({
             {"type", "message"}, { "verbose", "4"}
-        }}},
-        {"I", {{
+        }).AddInput({
             { "uri", "/tmp/data"}, { "type", "message.file"}, { "verbose", "4"}
-        }}},
-        {"O",{
-            {
-                { "uri",  "/tmp/out.1"}, { "type", "message.file"}
-            },
-            {
-                { "uri",  "/tmp/out.2"}, { "type", "message.file"}
-            },
-            {
-                { "uri",  "/tmp/out.3"}, { "type", "message.file"}
-            }
-        }}
-    }};
+        }).AddOutput({
+            { "uri",  "/tmp/out.1"}, { "type", "message.file"}
+        }).AddOutput({
+            { "uri",  "/tmp/out.2"}, { "type", "message.file"}
+        }).AddOutput({
+            { "uri",  "/tmp/out.3"}, { "type", "message.file"}
+        })
+    );
     /***
      * encoder machine
      */
-    SMachine encoder("system.share", conf);
-    encoder.Process(chrono::seconds(1));
+    SMachine("system.share", conf).Join();
     /**
      * decoder machine
      */
-    SMachine decoder("system.share", conf);
-    decoder.Process(chrono::seconds(1));
+    SMachine("system.share", conf.Swap("I", "O")).Join();
     /**
-     * check
+     * check data
      */
-    EXPECT_TRUE(SCompare::Files(data,data));
+    EXPECT_TRUE(SCompare::Files(data, data));
 }

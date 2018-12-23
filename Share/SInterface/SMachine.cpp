@@ -19,7 +19,7 @@
  *----------------------------------------------------------------------------------------------------------------------
  * main constructor
  */
-SMachine::SMachine(const SAddress& uri, const vector<SModule::Command> conf) 
+SMachine::SMachine(const SAddress& uri, const Config& conf) 
 : __uri(uri), __monitor(uri) {    
     /**
      * create modules
@@ -50,6 +50,16 @@ bool SMachine::Process(chrono::milliseconds timeout) {
     } catch (MonitorExceptionTIMEOUT& ex) {
     }
     return true;
+}
+/**
+ * join
+ */
+bool SMachine::Join() {
+    bool out = true;
+    for(auto& m : __modules){
+        out &= m.second->Join();
+    }
+    return out;
 }
 /**
  *----------------------------------------------------------------------------------------------------------------------

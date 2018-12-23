@@ -26,18 +26,39 @@
 class SMachine {
 public:
     /**
-     * machine identification
+     * machine helper types
      */
     using Command = SModule::Command;
-    using Config  = vector<SModule::Command>;
     using Key     = SModule::Key;
+    /**
+     */
+    class Config : public vector<Command> {
+    public:
+        using vector<Command>::vector;
+        /**
+         * add
+         */
+        inline Config& Add(const Command& cmd) {
+            emplace_back(cmd);
+            return *this;
+        }
+        /**
+         * swap
+         */
+        inline Config& Swap(Command::Key k1, Command::Key k2){
+            for (auto& m : *this){
+                m.Swap(k1, k2);
+            }
+            return *this;
+        }
+    };
     /**
      * -----------------------------------------------------------------------------------------------------------------
      * Constructors / Destructor
      * -----------------------------------------------------------------------------------------------------------------
      * main constructor
      */
-    SMachine(const SAddress& uri, const Config conf = {});
+    SMachine(const SAddress& uri, const Config& conf = {});
     /**
      * move constructor
      */
@@ -53,6 +74,10 @@ public:
      * process
      */
     bool Process(chrono::milliseconds timeout);
+    /**
+     * wait for all modules join
+     */
+    bool Join();
     /**
      * -------------------------------------------------------------------------------------------------------------
      * Operators

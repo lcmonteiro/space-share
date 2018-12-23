@@ -67,6 +67,7 @@ protected:
      * -----------------------------------------------------------------------------------------------------------------
      */
     int Execute() override {
+        SetState(OPEN);
         INFO("INI = {}");
         // delay the process
         STask::Sleep(__delay);
@@ -86,6 +87,7 @@ protected:
                 return -1;
             }
         }
+        SetState(CLOSE);
         INFO("END = {}");
         return 0;
     }

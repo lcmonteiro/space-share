@@ -64,7 +64,7 @@ void SLinuxIRC::Join(string user, string channel, int timeout) {
      * validation
      *-------------------------------------------------------------------------------------------------------------*/
     if(user.empty()){
-        user = SRandom::RName(8);
+        user = SRandom::Name(8);
     }
     /*-------------------------------------------------------------------------------------------------------------*
      * functions
@@ -73,7 +73,7 @@ void SLinuxIRC::Join(string user, string channel, int timeout) {
         /**
          * set user and channel
          */
-        __name = user, __nick = SRandom::RName(8),  __channel = channel;
+        __name = user, __nick = SRandom::Name(8),  __channel = channel;
         /**
          * Register
          */

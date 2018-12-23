@@ -14,4 +14,5 @@ PUBLIC
 target_link_libraries(SpaceHelper 
 PUBLIC 
 	SpaceKernel
+	SpaceResource
 )
