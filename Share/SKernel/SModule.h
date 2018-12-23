@@ -44,14 +44,79 @@ public:
  * module 
  * ---------------------------------------------------------------------------------------------------------------------
  **/
-class SModuleCommand: public SCommand<string, string>{
+class SModuleCommand: public SCommand<string, string> {
 public:
     using Command=SCommand<string, string>;
+    /**
+     * keys
+     */
+    static constexpr const char* MODULE = "M";
+    static constexpr const char* FUNC   = "F";
+    static constexpr const char* IN     = "I";
+    static constexpr const char* OUT    = "O";
+    static constexpr const char* INOUT  = "X";
     /**
      * constructor
      */ 
     using Command::Command;
-
+    /**
+     * add
+     */
+    #define ADD(Key_, Name_)                        \
+    SModuleCommand& Add##Name_(const Group& conf) { \
+        try {                                       \
+            __opts.at(Key_).emplace_back(conf);     \
+        } catch(...){                               \
+            __opts.emplace(MODULE, Groups({conf})); \
+        }                                           \
+        return *this;                               \
+    }
+    ADD(MODULE, Module  );
+    ADD(FUNC,   Function);
+    ADD(IN,     Input   );
+    ADD(OUT,    Output  );
+    ADD(INOUT,  InOutput);
+    /**
+     * set
+     */
+    #define SET(Key_, Name_)                        \
+    SModuleCommand& Set##Name_(const Group& conf) { \
+        __opts.emplace(MODULE, Groups({conf}));     \
+        return *this;                               \
+    }
+    SET(MODULE, Module  );
+    SET(FUNC,   Function);
+    /**
+     * gets
+     */
+    #define GETS(Key_, Name_)               \
+    const Groups& Get##Name_##s() {         \
+        try {                               \
+            return (*this)[Key_];           \
+        } catch(...) {                      \
+            __opts.emplace(Key_, Groups{}); \
+        }                                   \
+        return (*this)[Key_];               \
+    }
+    GETS(MODULE, Module  );
+    GETS(FUNC,   Function);
+    GETS(IN,     Input   );
+    GETS(OUT,    Output  );
+    GETS(INOUT,  InOutput);
+    /**
+     * get
+     */
+    #define GET(Key_, Name_)                \
+    const Group& Get##Name_() {             \
+        try {                               \
+            return (*this)[Key_][0];        \
+        } catch(...) {                      \
+            __opts.emplace(Key_, Groups{}); \
+        }                                   \
+        return (*this)[Key_][0];            \
+    }
+    GET(MODULE, Module  );
+    GET(FUNC,   Function);
 };
 /**
  * ---------------------------------------------------------------------------------------------------------------------*
