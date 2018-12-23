@@ -17,6 +17,7 @@
  * space
  */
 #include "SContainer.h"
+#include "SFileResource.h"
 /**
  */
 using namespace std;
@@ -26,9 +27,11 @@ class SRandom {
 public:
     typedef mt19937 Generator;
     /**
-     * random string
-     */
-    static string RString(size_t n) {
+     * --------------------------------------------------------------------------------------------
+     * Random String
+     * --------------------------------------------------------------------------------------------
+     **/
+    static string String(size_t n) {
         const string alphabet("abcdefghijklmnopqrstuvwxyz0123456789");
         /**
          */
@@ -39,7 +42,7 @@ public:
         }
         return out;
     }
-    static string RName(size_t n) {
+    static string Name(size_t n) {
         const vector<string> alphabet{
             "bcdfghjklmnpqrstvwxyz", "aeiouy"    
         };
@@ -56,7 +59,7 @@ public:
         return out;
     }
     template<class GEN>
-    static string RName(GEN& gen, size_t n) {
+    static string Name(GEN& gen, size_t n) {
         const vector<string> alphabet{
             "bcdfghjklmnpqrstvwxyz", "aeiouy"    
         };
@@ -71,14 +74,34 @@ public:
         }
         return out;
     }
-	static Frame RFrame(size_t n) {
+    /**
+     * --------------------------------------------------------------------------------------------
+     * Random Frame
+     * --------------------------------------------------------------------------------------------
+     **/
+	static SFrame Frame(size_t n) {
+        SFrame out;
         /**
          */
-        Frame out;
         out.reserve(n);
         for (unsigned int i = 0; i < n; ++i) {
             out.push_back(Frame::value_type(rand()));
         }
+        return out;
+    }
+    /**
+     * --------------------------------------------------------------------------------------------
+     * Random File
+     * --------------------------------------------------------------------------------------------
+     **/
+    template<size_t CHUNK=0x1000>
+    static SOFileResource File(const string& path, size_t n) {
+        SOFileResource out;
+        auto d = div(int(n), int(CHUNK));
+        for(size_t i=0; i<d.quot; ++i) {
+                out.Drain(SRandom::Frame(CHUNK));
+        }
+        out.Drain(SRandom::Frame(d.rem)).Flush();
         return out;
     }
 };

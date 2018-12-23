@@ -1,8 +1,12 @@
 #include <gtest/gtest.h>
-
+/**
+ * space
+ */
 #include <SMachine.h>
-#include <SFileResource.h>
-
+#include <SRandom.h>
+#include <SCompare.h>
+/**
+ */
 using namespace std;
 TEST(SMachine, FILE)
 {
@@ -10,11 +14,11 @@ TEST(SMachine, FILE)
     /**
      * create file
      */
-    SRandomFileResource<> data("/tmp/data", 1000);
+    auto data = SRandom::File("/tmp/data", 1000);
     /**
      * configure machine
      */
-    SMachine m("system.share", {{
+    auto conf = SMachine::Config{{
         {"M", {{
             {"uri",  "encoder"}, {"type", "encode"}, {"verbose", "4"}
         }}},
@@ -35,16 +39,19 @@ TEST(SMachine, FILE)
                 { "uri",  "/tmp/out.3"}, { "type", "message.file"}
             }
         }}
-    }});
-    /**
-     * start machine
+    }};
+    /***
+     * encoder machine
      */
-    m.Process(chrono::seconds(1));
+    SMachine encoder("system.share", conf);
+    encoder.Process(chrono::seconds(1));
     /**
-     * stop machine
+     * decoder machine
      */
-    //m = SMachine();
-
-
-  
+    SMachine decoder("system.share", conf);
+    decoder.Process(chrono::seconds(1));
+    /**
+     * check
+     */
+    EXPECT_TRUE(SCompare::Files(data,data));
 }

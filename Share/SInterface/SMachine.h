@@ -29,6 +29,7 @@ public:
      * machine identification
      */
     using Command = SModule::Command;
+    using Config  = vector<SModule::Command>;
     using Key     = SModule::Key;
     /**
      * -----------------------------------------------------------------------------------------------------------------
@@ -36,7 +37,7 @@ public:
      * -----------------------------------------------------------------------------------------------------------------
      * main constructor
      */
-    SMachine(const SAddress& uri, const vector<SModule::Command> conf = {});
+    SMachine(const SAddress& uri, const Config conf = {});
     /**
      * move constructor
      */
