@@ -18,7 +18,7 @@
  */
 size_t SLinuxFile::Size() {
 	struct stat st;
-	if (fstat(__fd, &st) < 0) {
+	if (fstat(GetHandler(), &st) < 0) {
 		throw ResourceException(make_error_code(errc(errno)));
 	}
 	return st.st_size;
@@ -27,7 +27,7 @@ size_t SLinuxFile::Size() {
  * get position
  */
 size_t SLinuxFile::Position() {
-	auto cur = lseek(__fd, 0, SEEK_CUR);
+	auto cur = lseek(GetHandler(), 0, SEEK_CUR);
 	if (cur < 0) {
 		throw ResourceException(make_error_code(errc(errno)));
 	}
@@ -35,29 +35,32 @@ size_t SLinuxFile::Position() {
 }
 /**
  */
-SILinuxFile::SILinuxFile(const string& path) : SLinuxFile() {
-	auto fd = open(path.data(), O_RDONLY);
-	if (fd < 0) {
-		throw ResourceException(make_error_code(errc(errno)));
-	}
-	/**/
-	*this = SILinuxFile(fd);
+SILinuxFile::SILinuxFile(const string& path) : SLinuxFile(open(path.data(), O_RDONLY)) {
+	// auto fd = open(path.data(), O_RDONLY);
+	// if (fd < 0) {
+	// 	throw ResourceException(make_error_code(errc(errno)));
+	// }
+	// /**/
+	// *this = SILinuxFile(fd);
 }
 /**
  * status
  */
 bool SILinuxFile::Good(){
-	auto cur = lseek(__fd, 0, SEEK_CUR);
-	auto end = lseek(__fd, 0, SEEK_END);
-	return end != lseek(__fd, cur, SEEK_SET);
+	auto cur = lseek(GetHandler(), 0, SEEK_CUR);
+	auto end = lseek(GetHandler(), 0, SEEK_END);
+	return end != lseek(GetHandler(), cur, SEEK_SET);
 }
 /**
  */
-SOLinuxFile::SOLinuxFile(const string& path) : SLinuxFile() {
-	auto fd = open(path.data(), O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
-	if (fd < 0) {
-		throw ResourceException(make_error_code(errc(errno)));
-	}
-	/**/
-	*this = SOLinuxFile(fd);
+SOLinuxFile::SOLinuxFile(const string& path) 
+: SLinuxFile(
+	open(path.data(), O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+) {
+	// auto fd = 
+	// if (fd < 0) {
+	// 	throw ResourceException(make_error_code(errc(errno)));
+	// }
+	// /**/
+	*this = SOLinuxFile("a");
 }

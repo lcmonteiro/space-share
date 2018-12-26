@@ -62,7 +62,9 @@ public:
 	/**
 	 * get resource
 	 */
-	SLinuxResource getResource();
+	SILinuxFile getResource();
+protected:
+	using SLinuxDirectory::SLinuxDirectory;
 private:
 	/**
 	 * mark file to receive on inotify

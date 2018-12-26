@@ -25,11 +25,9 @@ public:
     /**
      * constructors
      */
-    SLinuxResource(int fd);
-    
-    SLinuxResource() : __fd(-1) {
-    }
-    SLinuxResource(SLinuxResource&& res) : SLinuxResource() {
+    SLinuxResource() : __fd(-1) {}
+
+    SLinuxResource(SLinuxResource&& res) {
         swap(__fd, res.__fd);
     }
     /**
@@ -39,10 +37,7 @@ public:
     /**
      * move operator(swap)
      */
-    inline SLinuxResource& operator=(SLinuxResource && res) {
-        swap(__fd, res.__fd);
-        return *this;
-    }
+    SLinuxResource& operator=(SLinuxResource && res) = default;
     /**
      * check resource
      */
@@ -73,13 +68,16 @@ public:
      */
     SLinuxResource& Flush();
 protected:
+    /**
+     * friends classes
+     */
     friend class SLinuxResourceMonitor;
     friend class SLinuxSocket;
     friend class SLinuxPoll;
     /**
-     * handler    
+     * constructor
      */
-    int __fd;
+    SLinuxResource(int fd);
     /**
      * get native handler
      */
@@ -87,6 +85,10 @@ protected:
         return __fd;
     }
 private:
+    /**
+     * handler    
+     */
+    int __fd;
     /**
      */
     size_t Write(Frame::const_pointer p, Frame::size_type s);

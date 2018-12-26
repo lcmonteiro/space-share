@@ -32,7 +32,7 @@ public:
                 using map<Key, Val>::at;
         public:
                 using map<Key, Val>::map;
-                // change
+                // get
                 inline const Val& operator[](const Key& k) const {
                         return at(k); 
                 }
@@ -58,6 +58,10 @@ public:
                         } catch (...) {
                                 return get<T>(k2, d);
                         }
+                }
+                // set
+                inline void set(const Key& k, const Val& v) {
+                        at(k) = v; 
                 }
         };
         class Groups: public vector<Group> {
@@ -116,6 +120,12 @@ public:
          */
         inline SCommand& Swap(const Key& k1, const Key& k2) {
                 swap(__opts.at(k1),__opts.at(k2));
+                return *this; 
+        }
+        inline SCommand& Update(const Key& k1, const Key& k2, const Val& val) {
+                for(auto& g : __opts.at(k1)) {
+                        g.set(k2, val);
+                }
                 return *this; 
         }
         /**

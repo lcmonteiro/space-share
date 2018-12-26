@@ -51,6 +51,15 @@ public:
             }
             return *this;
         }
+        /**
+         * update
+         */
+        inline Config& Update(Command::Key k1, Command::Key k2, Command::Val val){
+            for (auto& m : *this){
+                m.Update(k1, k2, val);
+            }
+            return *this;
+        }
     };
     /**
      * -----------------------------------------------------------------------------------------------------------------

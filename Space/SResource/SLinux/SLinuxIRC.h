@@ -54,15 +54,9 @@ public:
      */
     virtual ~SLinuxIRC();
     /**
-     * swap
+     * move
      */
-    inline SLinuxIRC& operator=(SLinuxIRC && res) {
-        swap(__fd, res.__fd);
-        swap(__name, res.__name);
-        swap(__nick, res.__nick);
-        swap(__channel, res.__channel);
-        return *this;
-    }
+    inline SLinuxIRC& operator=(SLinuxIRC && res) = default;
     /**
      * connect
      */

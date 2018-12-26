@@ -23,7 +23,15 @@ public:
  */
 class SIFileResource : public SILinuxFile {
 public:
-        using SILinuxFile::SILinuxFile;
+        /**
+	 * constructors
+	 */
+	SIFileResource() : SILinuxFile() {       
+        }
+	SIFileResource(const string& path) : SILinuxFile(path) {
+        }
+        SIFileResource(SILinuxFile&& file) : SILinuxFile(move(file)) {
+        }
 };
 /**
  */

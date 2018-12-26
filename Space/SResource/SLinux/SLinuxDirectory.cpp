@@ -35,7 +35,7 @@ SILinuxDirectory::SILinuxDirectory(const string& path) : SLinuxDirectory(path) {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * create resource
 	 *-------------------------------------------------------------------------------------------------------------*/
-	SLinuxResource::operator=(SLinuxResource(fd));
+	*this = SILinuxDirectory(fd);
 	/*-------------------------------------------------------------------------------------------------------------*
 	 * mark files
 	 *-------------------------------------------------------------------------------------------------------------*/
@@ -47,7 +47,7 @@ SILinuxDirectory::SILinuxDirectory(const string& path) : SLinuxDirectory(path) {
 }
 /**
  */
-SLinuxResource SILinuxDirectory::getResource() {
+SILinuxFile SILinuxDirectory::getResource() {
 	char buf[sizeof (struct inotify_event) + 0x400] __attribute__((aligned(__alignof__(struct inotify_event))));
 	/**
 	 * read raw data
@@ -67,12 +67,7 @@ SLinuxResource SILinuxDirectory::getResource() {
 	 * verify and open file
 	 */
 	if ((event->mask & (IN_CLOSE_WRITE | IN_MOVED_TO)) && event->len) {
-		string path(__path + "/" + event->name);
-		int fd = open(path.c_str(), (O_RDONLY));
-		if (fd <= 0) {
-			throw IResourceExceptionABORT(strerror(errno));
-		}
-		return SLinuxResource(fd);
+		return SILinuxFile(string(__path + "/" + event->name));
 	}
 	throw ResourceExceptionTIMEOUT();
 }
@@ -110,7 +105,7 @@ SOLinuxDirectory::SOLinuxDirectory(
 	/**------------------------------------------------------------------------------------------------------------*
 	 * create resource
 	 *-------------------------------------------------------------------------------------------------------------*/
-	SLinuxResource::operator=(SLinuxResource(open(path.c_str(), O_RDONLY)));
+	*this = SOLinuxDirectory(open(path.c_str(), O_RDONLY));
 }
 /**
  */

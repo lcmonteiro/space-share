@@ -22,11 +22,8 @@ public:
 	/**
 	 * constructors
 	 */
-	SLinuxFile() = default;
-	/**
-	 * destructor
-	 */
-	virtual ~SLinuxFile() = default;
+	using SLinuxResource::SLinuxResource;
+	using SLinuxResource::operator=;
 	/**
 	 * get file size
 	 */
@@ -36,6 +33,9 @@ public:
 	 */
 	size_t Position(); 
 	/**
+	 * --------------------------------------------------------------------------------------------
+	 * static functions
+	 * --------------------------------------------------------------------------------------------
 	 * get base name
 	 */
 	static string Basename(const string& pathname){
@@ -43,68 +43,30 @@ public:
 			[](char c) {return c == '/'; }
 		).base(), pathname.end()};
 	}
-protected:
-	using SLinuxResource::SLinuxResource;
 };
 
 class SILinuxFile : public SLinuxFile {
 public:
+	using SLinuxFile::SLinuxFile;
+	using SLinuxFile::operator=;
 	/**
 	 * constructors
 	 */
-	SILinuxFile() = default;
-
 	SILinuxFile(const string& path);
-
-	SILinuxFile(SILinuxFile&& res) : SILinuxFile() {
-		SLinuxResource::operator=(move(res));
-	}
-	/**
-	 * destructor
-	 */
-	virtual ~SILinuxFile() = default;
-	/**
-	 * swap
-	 */
-	inline SILinuxFile& operator=(SILinuxFile && res) {
-		swap(__fd, res.__fd);
-		return *this;
-	}
 	/**
 	 * status
 	 */
 	bool Good();
-	/**
-	 */
-protected:
-	using SLinuxFile::SLinuxFile;
 };
 
 class SOLinuxFile : public SLinuxFile {
 public:
+	using SLinuxFile::SLinuxFile;
+	using SLinuxFile::operator=;
 	/**
 	 * constructors
 	 */
-	SOLinuxFile() = default;
-
 	SOLinuxFile(const string& path);
-
-	SOLinuxFile(SOLinuxFile&& res) : SOLinuxFile() {
-		SLinuxResource::operator=(move(res));
-	}
-	/**
-	 * destructor
-	 */
-	virtual ~SOLinuxFile() = default;
-	/**
-	 * swap
-	 */
-	inline SOLinuxFile& operator=(SOLinuxFile && res) {
-		swap(__fd, res.__fd);
-		return *this;
-	}
-protected:
-	using SLinuxFile::SLinuxFile;
 };
 
 #endif /* SLINUXFILE_H */

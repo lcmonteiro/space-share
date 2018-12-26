@@ -36,7 +36,7 @@ public:
      * --------------------------------------------------------------------------------------------
      **/
     template<size_t CHUNK=0x1000>
-    static bool Files(const SOFileResource& f1, const SOFileResource& f2) {
+    static bool Files(const SIFileResource& f1, const SIFileResource& f2) {
         
         return true;
     }
