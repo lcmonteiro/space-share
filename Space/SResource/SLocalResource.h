@@ -41,7 +41,7 @@ namespace Message {
          * wait
          */
         inline SLocalResource& Wait(chrono::milliseconds timeout) {
-            if(!SLinuxResourceMonitor::Wait(*this, timeout).Valid()) {
+            if(!SLinuxResourceMonitor::Wait(*this, timeout).valid()) {
                 throw IResourceExceptionABORT();
             }
             return *this;

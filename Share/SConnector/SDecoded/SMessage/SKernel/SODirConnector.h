@@ -53,7 +53,7 @@ protected:
         __dir = SODirectoryResource(__uri, 1);
     }
     inline bool _good() override {
-        return __dir.Valid();
+        return __dir.valid();
     }
     inline void _close() override {
         __dir = SODirectoryResource();

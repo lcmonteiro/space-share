@@ -18,8 +18,8 @@
 /**
  * constructor
  */
-SLinuxResource::SLinuxResource(int fd) : __fd(fd) {
-    if (__fd < 0) {
+SLinuxResource::SLinuxResource(int fd) : __h(fd) {
+    if (__h < 0) {
         throw system_error(make_error_code(errc::no_such_file_or_directory));
     }
 }
@@ -27,52 +27,52 @@ SLinuxResource::SLinuxResource(int fd) : __fd(fd) {
  * destructor
  */
 SLinuxResource::~SLinuxResource() {
-    if (__fd > 0) {
-        close(__fd);
+    if (__h > 0) {
+       ::close(__h);
     }
 }
 /**
  * check resource
  */
-bool SLinuxResource::Valid() {
-    return fcntl(__fd, F_GETFL) != -1 || errno != EBADF;
+bool SLinuxResource::valid() {
+    return ::fcntl(__h, F_GETFL) != -1 || errno != EBADF;
 }
 /*---------------------------------------------------------------------------------------------------------------------*
  * IO functions
  *---------------------------------------------------------------------------------------------------------------------*/
-Frame SLinuxResource::Read(size_t size) {
+Frame SLinuxResource::read(size_t size) {
     IFrame f(size);
     /**
      * read 
      */
     while (!f.Full()) {
-        f.Insert(Read(f.data(), f.size()));
+        f.Insert(__read(f.data(), f.size()));
     }
     return f;
 }
-SLinuxResource& SLinuxResource::Drain(OFrame&& f) {
+SLinuxResource& SLinuxResource::drain(OFrame&& f) {
     while (!f.Empty()) {
-        f.Remove(Write(f.Data(), f.Size()));
+        f.Remove(__write(f.Data(), f.Size()));
     }
     return *this;
 }
-SLinuxResource& SLinuxResource::Drain(const Frame& f) {
+SLinuxResource& SLinuxResource::drain(const Frame& f) {
     for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, Write(it.base(), distance(it, end)));
+        it = next(it, __write(it.base(), distance(it, end)));
     }
     return *this;
 }
 /**
  */
-SLinuxResource& SLinuxResource::Flush(){
-    fsync(__fd);
+SLinuxResource& SLinuxResource::flush() {
+    ::fsync(__h);
     return *this;
 }
 /**
  * native IO functions
  */
-size_t SLinuxResource::Write(Frame::const_pointer p, Frame::size_type s){
-    auto n = write(__fd, p, s);
+size_t SLinuxResource::__write(Frame::const_pointer p, Frame::size_type s) {
+    auto n = ::write(__h, p, s);
     if (n <= 0) {
         if (n < 0) {
             *this = SLinuxResource();
@@ -85,8 +85,8 @@ size_t SLinuxResource::Write(Frame::const_pointer p, Frame::size_type s){
 }
 /**
  */
-size_t SLinuxResource::Read(Frame::pointer p, Frame::size_type s){
-    auto n = read(__fd, p, s);
+size_t SLinuxResource::__read(Frame::pointer p, Frame::size_type s) {
+    auto n = ::read(__h, p, s);
     if (n <= 0) {
         if (n < 0) {
             *this = SLinuxResource();
@@ -96,4 +96,13 @@ size_t SLinuxResource::Read(Frame::pointer p, Frame::size_type s){
         throw IResourceExceptionABORT();
     }
     return n;
+}
+/**
+ */
+void SLinuxResource::__move(int& from, int& to) {
+    if((from >= 0) && (to >= 0)) {
+        dup2(to, from);
+    } else {
+        swap(to, from);
+    }
 }

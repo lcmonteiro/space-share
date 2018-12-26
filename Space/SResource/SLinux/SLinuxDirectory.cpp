@@ -22,14 +22,14 @@ SILinuxDirectory::SILinuxDirectory(const string& path) : SLinuxDirectory(path) {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * open file watch
 	 *-------------------------------------------------------------------------------------------------------------*/
-	auto fd = inotify_init();
+	auto fd = ::inotify_init();
 	if (fd < 0) {
 		throw IResourceExceptionABORT(strerror(errno));
 	}
 	/**------------------------------------------------------------------------------------------------------------*
 	 * register directory
 	 *-------------------------------------------------------------------------------------------------------------*/
-	if (inotify_add_watch(fd, path.c_str(), IN_CLOSE_WRITE | IN_MOVED_TO) < 0) {
+	if (::inotify_add_watch(fd, path.c_str(), IN_CLOSE_WRITE | IN_MOVED_TO) < 0) {
 		throw IResourceExceptionABORT(strerror(errno));
 	}
 	/**------------------------------------------------------------------------------------------------------------*
@@ -54,7 +54,7 @@ SILinuxFile SILinuxDirectory::getResource() {
 	 */
 	int len = 0;
 	for (int s = sizeof (struct inotify_event); (len <= 0) && (s < 0x400); s += sizeof (struct inotify_event)) {
-		len = read(handler(), buf, sizeof (struct inotify_event) + s);
+		len = ::read(handler(), buf, sizeof (struct inotify_event) + s);
 	}
 	if (len <= 0) {
 		throw IResourceExceptionABORT(strerror(errno));
@@ -74,24 +74,24 @@ SILinuxFile SILinuxDirectory::getResource() {
 /**
  */	
 void SILinuxDirectory::__mark(string name){
-	auto fd = open(name.data(), O_RDWR);
+	auto fd = ::open(name.data(), O_RDWR);
 	if (fd < 0) {
 		close(fd);
 		throw IResourceExceptionABORT(strerror(errno));
 	}
 	char tmp[10];
-	auto r = read(fd, tmp, sizeof(tmp));
+	auto r = ::read(fd, tmp, sizeof(tmp));
 	if (r < 0) {
 		close(fd);
 		throw IResourceExceptionABORT(strerror(errno));
 	}
-	lseek(fd, 0, SEEK_SET);
-	auto w = write(fd, tmp, r);
+	::lseek(fd, 0, SEEK_SET);
+	auto w = ::write(fd, tmp, r);
 	if (w < 0) {
-		close(fd);
+		::close(fd);
 		throw IResourceExceptionABORT(strerror(errno));
 	}
-	close(fd);
+	::close(fd);
 }
 /**
  */
@@ -105,7 +105,7 @@ SOLinuxDirectory::SOLinuxDirectory(
 	/**------------------------------------------------------------------------------------------------------------*
 	 * create resource
 	 *-------------------------------------------------------------------------------------------------------------*/
-	*this = SOLinuxDirectory(open(path.c_str(), O_RDONLY));
+	*this = SOLinuxDirectory(::open(path.c_str(), O_RDONLY));
 }
 /**
  */

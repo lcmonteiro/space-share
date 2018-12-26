@@ -36,8 +36,8 @@ static map<SLinuxSocket::Type, int> MAP_TYPE {
 /**
  */
 SLinuxSocket::~SLinuxSocket() {
-    if (__fd > 0) {
-        shutdown(__fd, SHUT_RDWR);
+    if (__h > 0) {
+        shutdown(__h, SHUT_RDWR);
     }
 }
 /**
@@ -48,7 +48,7 @@ bool SLinuxSocket::Good() {
     /**
      * validation
      */
-    if (getsockopt(__fd, SOL_SOCKET, SO_ERROR, &error, &len) < 0) {
+    if (getsockopt(__h, SOL_SOCKET, SO_ERROR, &error, &len) < 0) {
         return false;
     }
     return error == 0;
@@ -60,7 +60,7 @@ void SLinuxSocket::SetTxTimeout(int timeout) {
         .tv_sec = timeout,
         .tv_usec = 0
     };
-    if (setsockopt(__fd, SOL_SOCKET, SO_SNDTIMEO, (void*) & t, sizeof (t)) < 0) {
+    if (setsockopt(__h, SOL_SOCKET, SO_SNDTIMEO, (void*) & t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
 }
@@ -69,7 +69,7 @@ void SLinuxSocket::SetRxTimeout(int timeout) {
         .tv_sec = timeout,
         .tv_usec = 0
     };
-    if (setsockopt(__fd, SOL_SOCKET, SO_RCVTIMEO, (void*) & t, sizeof (t)) < 0) {
+    if (setsockopt(__h, SOL_SOCKET, SO_RCVTIMEO, (void*) & t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
 }
@@ -78,7 +78,7 @@ void SLinuxSocket::SetRxTimeout(int timeout) {
  */
 void SLinuxSocket::SetNoDelay(bool flag) {
     int f = flag ? 1 : 0;
-    if (setsockopt(__fd, IPPROTO_TCP, TCP_NODELAY, (void*) & f, sizeof (f)) < 0) {
+    if (setsockopt(__h, IPPROTO_TCP, TCP_NODELAY, (void*) & f, sizeof (f)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
 }
@@ -360,7 +360,7 @@ SLinuxSocket& SLinuxSocket::operator>>(string& str) {
         /**
          * read
          */
-        auto n = recv(__fd, &c, 1, MSG_WAITALL);
+        auto n = recv(__h, &c, 1, MSG_WAITALL);
         if (n <= 0) {
             if (n < 0) {
                 if (errno == EAGAIN) {
@@ -380,11 +380,9 @@ SLinuxSocket& SLinuxSocket::operator>>(string& str) {
          * verify
          */
         if (iscntrl(c)) {
-            /**
-             * read end line
-             */
+            // read end line
             if (c == '\r') {
-                recv(__fd, &c, 1, MSG_WAITALL);
+                recv(__h, &c, 1, MSG_WAITALL);
                 str.erase(it, end);
                 break;
             }
@@ -409,7 +407,7 @@ SLinuxSocket& SLinuxSocket::operator<<(const string& str) {
     /**
      * write
      */
-    auto n = send(__fd, str.data(), str.size(), MSG_NOSIGNAL | MSG_DONTWAIT);
+    auto n = send(__h, str.data(), str.size(), MSG_NOSIGNAL | MSG_DONTWAIT);
     if (n != int(str.size())) {
         *this = SLinuxSocket();
         throw OResourceExceptionABORT(make_error_code(errc(errno)));
@@ -421,7 +419,7 @@ SLinuxSocket& SLinuxSocket::operator<<(const string& str) {
 /**
  */
 size_t SLinuxSocket::Send(Frame::const_pointer p, Frame::size_type s) {
-    auto n = send(__fd, p, s, MSG_NOSIGNAL);
+    auto n = send(__h, p, s, MSG_NOSIGNAL);
     if (n <= 0) {
         if (n < 0) {
             *this = SLinuxSocket();
@@ -435,7 +433,7 @@ size_t SLinuxSocket::Send(Frame::const_pointer p, Frame::size_type s) {
 /**
  */
 size_t SLinuxSocket::Receive(Frame::pointer p, Frame::size_type s) {
-    auto n = recv(__fd, p, s, MSG_DONTWAIT);
+    auto n = recv(__h, p, s, MSG_DONTWAIT);
     if (n <= 0) {
         if (n < 0) {
             if (errno == EAGAIN) {

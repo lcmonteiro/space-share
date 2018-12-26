@@ -25,23 +25,26 @@ public:
     /**
      * constructors
      */
-    SLinuxResource() : __fd(-1) {}
+    SLinuxResource() : __h(-1) {}
 
-    SLinuxResource(SLinuxResource&& res) {
-        swap(__fd, res.__fd);
+    SLinuxResource(SLinuxResource&& res): __h(-1) {
+        *this = move(res);
     }
     /**
      * destructor
      */
     virtual ~SLinuxResource();
     /**
-     * move operator(swap)
+     * move operator
      */
-    SLinuxResource& operator=(SLinuxResource && res) = default;
+    SLinuxResource& operator=(SLinuxResource && res) {
+        swap(__h, res.__h);
+        return *this;
+    }
     /**
      * check resource
      */
-    bool Valid();
+    bool valid();
     /**
      * -------------------------------------------------------------------------------------------------------------
      * IO functions
@@ -49,24 +52,24 @@ public:
      **
      * read frame
      */        
-    Frame Read(size_t size);
+    Frame read(size_t size);
     /**
      * fill frame
      */
     template<class F>
-    SLinuxResource& Fill(F& f) {
-        f.Insert(Read(f.Data(), f.Size()));
+    SLinuxResource& fill(F& f) {
+        f.Insert(read(f.Data(), f.Size()));
         return *this;
     }
     /**
      * drain Frame 
      */
-    SLinuxResource& Drain(OFrame&& f);
-    SLinuxResource& Drain(const Frame& f);
+    SLinuxResource& drain(OFrame&& f);
+    SLinuxResource& drain(const Frame& f);
     /**
      * flush Output
      */
-    SLinuxResource& Flush();
+    SLinuxResource& flush();
 protected:
     /**
      * friends classes
@@ -82,19 +85,25 @@ protected:
      * get native handler
      */
     inline int handler() {
-        return __fd;
+        return __h;
     }
 private:
     /**
      * handler    
      */
-    int __fd;
+    int __h;
     /**
+     * write resource
      */
-    size_t Write(Frame::const_pointer p, Frame::size_type s);
+    size_t __write(Frame::const_pointer p, Frame::size_type s);
     /**
+     * read resource
      */
-    size_t Read(Frame::pointer p, Frame::size_type s);        
+    size_t __read(Frame::pointer p, Frame::size_type s);
+    /**
+     * move resource
+     */                
+    void __move(int& from, int& to);
 };
 
 #endif /* SLINUXRESOURCE_H */

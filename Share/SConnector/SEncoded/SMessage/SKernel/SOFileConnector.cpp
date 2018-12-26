@@ -3,13 +3,7 @@
  * Author: Luis Monteiro
  * 
  * Created on December 10, 2016, 4:32 PM
- */ 
-/**
- * linux std
- */
-#include <unistd.h>
-#include <fcntl.h>
-/**
+ * 
  * c++ std
  */
 #include <sstream>
@@ -34,10 +28,10 @@ void SOFileConnector::_write(const Document& container) {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * write context
 	 *-------------------------------------------------------------------------------------------------------------*/
-	__res.Drain(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));
-	__res.Drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.GetNumFrames()));
-	__res.Drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.size()));
-	__res.Drain(Frame(sizeof (framesize_t)).Number<framesize_t>(container.GetFrameSize()));
+	__res.drain(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));
+	__res.drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.GetNumFrames()));
+	__res.drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.size()));
+	__res.drain(Frame(sizeof (framesize_t)).Number<framesize_t>(container.GetFrameSize()));
 	/**------------------------------------------------------------------------------------------------------------*
 	 * log
 	 *-------------------------------------------------------------------------------------------------------------*/
@@ -49,12 +43,12 @@ void SOFileConnector::_write(const Document& container) {
 	 * write nframes
 	 *-------------------------------------------------------------------------------------------------------------*/
 	for (auto& f : container) {
-		__res.Drain(f);
+		__res.drain(f);
 	}
 	/**------------------------------------------------------------------------------------------------------------*
 	 * flush resource
 	 *-------------------------------------------------------------------------------------------------------------*/
-	__res.Flush();
+	__res.flush();
 }
 /**
  * End namespace Message

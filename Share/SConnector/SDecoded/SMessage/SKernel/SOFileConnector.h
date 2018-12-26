@@ -52,7 +52,7 @@ protected:
         __res = SOFileResource(__uri);
     }
     inline bool _good() override{
-        return __res.Valid();
+        return __res.valid();
     }
     inline void _close() override {
         __res = SOFileResource();

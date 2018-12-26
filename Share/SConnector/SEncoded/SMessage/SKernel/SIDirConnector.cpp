@@ -45,10 +45,10 @@ Document SIDirConnector::_read() {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * read context
 	 *-------------------------------------------------------------------------------------------------------------*/
-	auto position = res.Read(sizeof(reference_t)).Number<reference_t>();
-	auto nframest = res.Read(sizeof(numframes_t)).Number<numframes_t>();
-	auto nframesp = res.Read(sizeof(numframes_t)).Number<numframes_t>();
-	auto framelen = res.Read(sizeof(framesize_t)).Number<framesize_t>();
+	auto position = res.read(sizeof(reference_t)).Number<reference_t>();
+	auto nframest = res.read(sizeof(numframes_t)).Number<numframes_t>();
+	auto nframesp = res.read(sizeof(numframes_t)).Number<numframes_t>();
+	auto framelen = res.read(sizeof(framesize_t)).Number<framesize_t>();
 	/**------------------------------------------------------------------------------------------------------------*
 	 * log
 	 *-------------------------------------------------------------------------------------------------------------*/
@@ -61,7 +61,7 @@ Document SIDirConnector::_read() {
 	Document container(Context(position, nframest, framelen));
 	container.reserve(nframesp);
 	while(!container.Full()){
-		container.push_back(res.Read(framelen));
+		container.push_back(res.read(framelen));
 	}
 	/**
 	 */
