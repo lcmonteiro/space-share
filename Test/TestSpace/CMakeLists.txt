@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.10)
 #
-# add
+# add kernel test 
 # 
 add_gtests(
 TARGET 
@@ -12,4 +12,15 @@ SOURCES
     TestKernel/TestAddress.cpp
 DEPENDS
     SpaceKernel
+)
+#
+# add kelnel test 
+# 
+add_gtests(
+TARGET 
+    TestSpaceResource 
+SOURCES 
+    TestResource/TestFileResource.cpp
+DEPENDS
+    SpaceResource
 )

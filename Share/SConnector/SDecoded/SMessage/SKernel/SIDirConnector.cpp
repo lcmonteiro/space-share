@@ -79,7 +79,7 @@ void SIDirConnector::_open(){
 //	 */
 //	int len = 0;
 //	for (int s = __file.size(); (len <= 0) && (s < 0x400); s += __file.size()) {
-//		len = read(__res.GetHandler(), buf, sizeof (struct inotify_event) + s);
+//		len = read(__res.handler(), buf, sizeof (struct inotify_event) + s);
 //	}
 //	if (len <= 0) {
 //		throw ConnectorExection(__uri, make_error_code(errc(errno)));

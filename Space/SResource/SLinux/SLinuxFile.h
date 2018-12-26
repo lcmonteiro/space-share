@@ -25,13 +25,17 @@ public:
 	using SLinuxResource::SLinuxResource;
 	using SLinuxResource::operator=;
 	/**
-	 * get file size
+	 * get path
 	 */
-	size_t Size(); 
+	string path();
+	/**
+	 * get size
+	 */
+	size_t size(); 
 	/**
 	 * get position
 	 */
-	size_t Position(); 
+	size_t position(); 
 	/**
 	 * --------------------------------------------------------------------------------------------
 	 * static functions

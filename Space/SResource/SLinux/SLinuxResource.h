@@ -81,7 +81,7 @@ protected:
     /**
      * get native handler
      */
-    inline int GetHandler() {
+    inline int handler() {
         return __fd;
     }
 private:

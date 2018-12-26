@@ -19,12 +19,12 @@ SLinuxEvent::SLinuxEvent(int init) : SLinuxResource(eventfd(init, 0)) {
 /**
  */
 bool SLinuxEvent::Send() {
-        return (eventfd_write (GetHandler(), 1) == 0);
+        return (eventfd_write (handler(), 1) == 0);
 }
 /**
  */
 int SLinuxEvent::Clear() {
        eventfd_t val;
-       eventfd_read(GetHandler(), &val);
+       eventfd_read(handler(), &val);
        return val;
 }

@@ -23,7 +23,7 @@ void SLinuxPoll::Insert(SLinuxResource* r) {
         memset(&ev, 0, sizeof(ev));
         ev.data.ptr = r;
         ev.events = EPOLLIN | EPOLLERR | EPOLLHUP;
-        if (epoll_ctl(__fd, EPOLL_CTL_ADD, r->GetHandler(), &ev) < 0) {
+        if (epoll_ctl(__fd, EPOLL_CTL_ADD, r->handler(), &ev) < 0) {
                 throw ResourceExceptionABORT(strerror(errno));
         }
 }
@@ -31,7 +31,7 @@ void SLinuxPoll::Insert(SLinuxResource* r) {
  * delete
  */
 void SLinuxPoll::Delete(SLinuxResource* r) {
-        if (epoll_ctl(__fd, EPOLL_CTL_DEL, r->GetHandler(), NULL) < 0) {
+        if (epoll_ctl(__fd, EPOLL_CTL_DEL, r->handler(), NULL) < 0) {
                 throw ResourceExceptionABORT(strerror(errno));
         }
 }

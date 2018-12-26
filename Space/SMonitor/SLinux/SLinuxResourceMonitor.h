@@ -84,7 +84,7 @@ public:
      * wait just one resource
      */
     static inline SLinuxResource& Wait(SLinuxResource& res, const chrono::milliseconds& timeout) {
-        Locations loc {SLinuxMonitor::CreateLocation(res.GetHandler())};
+        Locations loc {SLinuxMonitor::CreateLocation(res.handler())};
         Wait(loc, timeout);
         return res;
     }
@@ -97,7 +97,7 @@ protected:
      * create location
      */
     static inline Location CreateLocation(Resource& resource) {
-        return SLinuxMonitor::CreateLocation(static_cast<SLinuxResource&> (resource).GetHandler());
+        return SLinuxMonitor::CreateLocation(static_cast<SLinuxResource&> (resource).handler());
     }
     /**
      * check many resources
