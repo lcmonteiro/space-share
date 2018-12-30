@@ -47,18 +47,18 @@ protected:
 	/*-------------------------------------------------------------------------------------------------------------*
 	 * IO functions
 	 *-------------------------------------------------------------------------------------------------------------*/
-	void _write(const Document& container) override;
+	void _Write(const Document& container) override;
 	/*-------------------------------------------------------------------------------------------------------------*
 	 * control functions
 	 *-------------------------------------------------------------------------------------------------------------*/
-	void _open() override;
+	void _Open() override;
 	/**
 	 * inline
 	 */
-	inline bool _good() override{
+	inline bool _Good() override{
 		return __res.Good();
 	}
-	inline void _close() override {
+	inline void _Close() override {
 		__res = SIRCResource();
 	}
 private:

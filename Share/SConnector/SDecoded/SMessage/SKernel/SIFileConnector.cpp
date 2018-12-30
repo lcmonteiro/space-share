@@ -25,7 +25,7 @@ SIFileConnector::SIFileConnector(const string address, const size_t nframesize)
 }
 /**
  */
-Container SIFileConnector::_read() {
+Container SIFileConnector::_Read() {
 //	IFrame out(__sframes);
 //	/**
 //	 * states 

@@ -27,7 +27,7 @@ SIFileConnector::SIFileConnector(
 }
 /**
  */
-Container SIFileConnector::_read() {
+Container SIFileConnector::_Read() {
 	Container container;
 	IFrame buffer;
 	/**------------------------------------------------------------------------------------------------------------*

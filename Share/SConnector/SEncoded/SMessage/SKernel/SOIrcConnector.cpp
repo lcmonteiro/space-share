@@ -43,7 +43,7 @@ namespace Message {
 SOIrcConnector::SOIrcConnector(const string address): SOutputConnector(address){
 }
 
-void SOIrcConnector::_open() {
+void SOIrcConnector::_Open() {
         default_random_engine eng{random_device{}()};
         /**
          */
@@ -98,7 +98,7 @@ void SOIrcConnector::_open() {
         __res = SIRCResource();
 }
 
-void SOIrcConnector::_write(const Document& container) {
+void SOIrcConnector::_Write(const Document& container) {
 	IFrame in(sizeof (reference_t) + sizeof (numframes_t) + sizeof (framesize_t) + container.GetFrameSize());
 	/**------------------------------------------------------------------------------------------------------------*
 	 * write context

@@ -62,7 +62,7 @@ public:
 	/**
 	 * get resource
 	 */
-	SILinuxFile resource();
+	SILinuxFile GetResource();
 protected:
 	using SLinuxDirectory::SLinuxDirectory;
 private:
@@ -94,7 +94,7 @@ public:
 	/**
 	 * get resource
 	 */
-	SOLinuxFile resource();
+	SOLinuxFile GetResource();
 	SOLinuxFile resource(const string& name);
 protected:
 	using SLinuxDirectory::SLinuxDirectory;

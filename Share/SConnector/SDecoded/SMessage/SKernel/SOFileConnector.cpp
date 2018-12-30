@@ -31,7 +31,7 @@ SOFileConnector::SOFileConnector(const string address) : SOutputConnector(addres
 /**
  * 
  */
-void SOFileConnector::_write(const Container& frame) {
+void SOFileConnector::_Write(const Container& frame) {
 //	/*-------------------------------------------------------------------------------------------------------------*
 //	 * log
 //	 *-------------------------------------------------------------------------------------------------------------*/
@@ -120,7 +120,7 @@ void SOFileConnector::_write(const Container& frame) {
 //		[this]() {
 //			__res.Drain(__buffer.Read(__size  -__res.Position())).Flush();
 //			/**/
-//			_close();
+//			_Close();
 //			return 6;
 //		},
 //		/**----------------------------------------------------------------------------------------------------*

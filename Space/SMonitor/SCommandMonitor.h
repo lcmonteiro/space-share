@@ -37,7 +37,7 @@ public:
 	/**
          * get resource
          */
-        inline Resource& resource() {
+        inline Resource& GetResource() {
 		return __res;
 	}
         /**

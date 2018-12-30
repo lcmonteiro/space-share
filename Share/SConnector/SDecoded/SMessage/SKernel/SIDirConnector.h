@@ -41,25 +41,25 @@ public:
     /**
      * inline overrides
      */
-    inline Resource& resource() override {
+    inline Resource& GetResource() override {
         return __res;
     }
 protected:
     /*-----------------------------------------------------------------------------------------*
      * IO functions
      *-----------------------------------------------------------------------------------------*/
-    Container _read() override;
+    Container _Read() override;
     /*-----------------------------------------------------------------------------------------*
      * control functions
      *-----------------------------------------------------------------------------------------*/
-    void _open() override;
+    void _Open() override;
     /**
      * inline control overrides
      */
-    inline bool _good() override {
+    inline bool _Good() override {
         return __res.Valid();
     }
-    inline void _close() override {
+    inline void _Close() override {
         __res = SDirectoryResource();
     }
 private:

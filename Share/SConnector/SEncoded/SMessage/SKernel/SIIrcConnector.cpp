@@ -32,7 +32,7 @@ list<Document> SIIrcConnector::_Drain() {
 }
 /**
  */
-Document SIIrcConnector::_read() {
+Document SIIrcConnector::_Read() {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * receive
 	 *-------------------------------------------------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ Document SIIrcConnector::_read() {
 }
 /**
  */
-void SIIrcConnector::_open() {
+void SIIrcConnector::_Open() {
        mt19937_64 eng{random_device{}()};
        /**
         */

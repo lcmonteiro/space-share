@@ -42,24 +42,24 @@ public:
     /**
      * inline overrides
      */
-    inline Resource& resource() override {
+    inline Resource& GetResource() override {
         return __res;
     }
 protected:
     /*-----------------------------------------------------------------------------------------*
      * IO functions
      *------------------------------------------------------------------------------------------*/
-    Document _read() override;
+    Document _Read() override;
     /*-----------------------------------------------------------------------------------------*
      * control functions
      *-----------------------------------------------------------------------------------------*/
-    inline void _open() override {
+    inline void _Open() override {
         __res = SIFileResource(__uri);
     }
-    inline bool _good() override{
+    inline bool _Good() override{
         return __res.Good();
     }
-    inline void _close() override {
+    inline void _Close() override {
         __res = SIFileResource();
     }
 private:

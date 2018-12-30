@@ -24,7 +24,7 @@ SOFileConnector::SOFileConnector(const string address) : SOutputConnector(addres
 }
 /**
  */
-void SOFileConnector::_write(const Document& container) {
+void SOFileConnector::_Write(const Document& container) {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * write context
 	 *-------------------------------------------------------------------------------------------------------------*/

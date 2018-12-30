@@ -23,7 +23,7 @@ SIFileConnector::SIFileConnector(const string address) : SInputConnector(address
 }
 /**
  */
-Document SIFileConnector::_read() {
+Document SIFileConnector::_Read() {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * read context
 	 *-------------------------------------------------------------------------------------------------------------*/

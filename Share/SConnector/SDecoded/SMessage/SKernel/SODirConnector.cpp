@@ -39,7 +39,7 @@ SODirConnector::SODirConnector(const string address)
 	//__state = 0;
 }
 
-void SODirConnector::_write(const Container& container) {
+void SODirConnector::_Write(const Container& container) {
 //	/*-------------------------------------------------------------------------------------------------------------*
 //	 * log
 //	 *-------------------------------------------------------------------------------------------------------------*/

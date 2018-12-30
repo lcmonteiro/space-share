@@ -57,7 +57,7 @@ public:
      * -------------------------------------------------------------------------------------------------------------
      * get resource
      */
-    inline Resource& resource() {
+    inline Resource& GetResource() {
         return __poll;
     }
     /**
@@ -118,7 +118,7 @@ private:
         __map.Clear();
         // update resource map
         for (auto l = road.begin(), e = road.end(); l != e; ++l) {
-            __map.Insert(l, static_cast<SLinuxResource*> (&l->second->resource()));
+            __map.Insert(l, static_cast<SLinuxResource*> (&l->second->GetResource()));
         }
         // fill resource poll
         for(auto& e : __map) {

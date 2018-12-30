@@ -29,7 +29,7 @@ SOFileConnector::SOFileConnector(const string address) : SOutputConnector(addres
 }
 /**
  */
-void SOFileConnector::_write(const Container& container) {
+void SOFileConnector::_Write(const Container& container) {
 	/*-------------------------------------------------------------------------------------------------------------*
 	 * log
 	 *-------------------------------------------------------------------------------------------------------------*/

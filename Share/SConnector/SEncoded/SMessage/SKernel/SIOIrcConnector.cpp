@@ -32,7 +32,7 @@ list<Document> SIOIrcConnector::_Drain() {
 }
 /**
  */
-Document SIOIrcConnector::_read() {
+Document SIOIrcConnector::_Read() {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * receive
 	 *-------------------------------------------------------------------------------------------------------------*/
@@ -60,7 +60,7 @@ Document SIOIrcConnector::_read() {
 /**
  * 
  */
-void SIOIrcConnector::_write(const Document& container) {
+void SIOIrcConnector::_Write(const Document& container) {
 	IFrame in(sizeof (reference_t) + sizeof (numframes_t) + sizeof (framesize_t) + container.GetFrameSize());
 	/**------------------------------------------------------------------------------------------------------------*
 	 * write context
@@ -89,7 +89,7 @@ void SIOIrcConnector::_write(const Document& container) {
 }
 /**
  */
-void SIOIrcConnector::_open() {
+void SIOIrcConnector::_Open() {
         mt19937_64 eng{random_device{}()};
         /**
          */

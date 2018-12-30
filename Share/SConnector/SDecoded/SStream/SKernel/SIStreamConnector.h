@@ -44,7 +44,7 @@ public:
     /**
      * inline overrides
      */
-    inline Resource& resource() override {
+    inline Resource& GetResource() override {
         return __res.Base();
     }
 protected:
@@ -54,7 +54,7 @@ protected:
      * -------------------------------------------------------------------------------------------------------------
      * read
      */
-    Container _read() override {
+    Container _Read() override {
         IFrame buffer;
         /**-----------------------------------------------------------------------------------------------------
          * fill container
@@ -133,7 +133,7 @@ protected:
      * -------------------------------------------------------------------------------------------------------------
      * open
      */
-    inline void _open() override {
+    inline void _Open() override {
         mt19937_64 eng{random_device{}()};
         /** 
          */
@@ -160,7 +160,7 @@ protected:
     /**
      * good
      */
-    inline bool _good() override {
+    inline bool _Good() override {
         /**-----------------------------------------------------------------------------------------------------
          * verify resource status
          *----------------------------------------------------------------------------------------------------**/
@@ -169,7 +169,7 @@ protected:
     /**
      * close
      */
-    inline void _close() override {
+    inline void _Close() override {
         /**-----------------------------------------------------------------------------------------------------
          * reset resource
          *----------------------------------------------------------------------------------------------------**/

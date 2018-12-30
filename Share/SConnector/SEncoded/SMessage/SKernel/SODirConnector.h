@@ -44,17 +44,17 @@ protected:
 	/*-------------------------------------------------------------------------------------------------------------*
 	 * IO functions
 	 *-------------------------------------------------------------------------------------------------------------*/
-	void _write(const Document& container) override;
+	void _Write(const Document& container) override;
 	/*-------------------------------------------------------------------------------------------------------------*
 	 * control functions
 	 *-------------------------------------------------------------------------------------------------------------*/
-	inline void _open() override {
+	inline void _Open() override {
 		__res = SODirectoryResource(__uri, __n);
 	}
-	inline bool _good() override {
+	inline bool _Good() override {
 		return __res.Valid();
 	}
-	inline void _close() override {
+	inline void _Close() override {
 		__res = SODirectoryResource();
 	}
 private:

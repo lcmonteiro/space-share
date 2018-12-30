@@ -7,6 +7,7 @@
 #ifndef SCONNECTOR_H
 #define SCONNECTOR_H
 /**
+ * std
  */
 #include <random>
 #include <list>
@@ -16,7 +17,7 @@
 #include <iostream>
 #include <system_error>
 /**
- * space kernel
+ * space 
  */
 #include "SContainer.h"
 #include "SResource.h"
@@ -93,9 +94,9 @@ public:
     using ConnectorExceptionDEAD::ConnectorExceptionDEAD;
 } OConnectorExceptionDEAD;
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * stream base
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  **/
 class SConnector: public SLog, protected SEnergy<ConnectorExceptionDEAD> {
     /**
@@ -143,48 +144,45 @@ public:
         return !__waiter.joinable();
     }
     /**
-     * callback
+     * repair connector
      */
     inline void Repair() {
-        /**----------------------------------------------------------------------------------------------------*
-         * decay energy resource
-         *-----------------------------------------------------------------------------------------------------*/
+        // decay energy resource ------ 
         SEnergy::Decay();
-        /**----------------------------------------------------------------------------------------------------*
-         * enable build 
-         *-----------------------------------------------------------------------------------------------------*/
+        // enable build ---------------
         __waiter = STask([this]() {
             try {
-                _open();
+                _Open();
             } catch (exception& ){} catch (...) {
                 throw;
             }
         });
     }
+    /**
+     * break connector
+     **/
     inline void Break() {
-        /**----------------------------------------------------------------------------------------------------*
-         * decay energy resource
-         *-----------------------------------------------------------------------------------------------------*/
+        // cancel decay ---------------
         SEnergy::Cancel();
-        /**----------------------------------------------------------------------------------------------------*
-         * enable waiter 
-         *-----------------------------------------------------------------------------------------------------*/
+        // enable waiter --------------
         __waiter = STask([this]() {
             try {
-                _close();
+                _Close();
             } catch (exception& ){} catch (...) {
                 throw;
             }
         });
     }
+    /**
+     * check good
+     */
     inline bool Good() {
-        return !Empty() && _good();
+        return !Empty() && _Good();
     }
     /**
      * wait to be good
      */
     SConnector& Wait(chrono::milliseconds timeout);
-
 protected:
     /**
      * stream identifier
@@ -198,31 +196,58 @@ protected:
      * energy
      */
     size_t __energy;
-    /*-------------------------------------------------------------------------------------------------------------*
+    /**
+     * ----------------------------------------------------
      * interfaces
-     *-------------------------------------------------------------------------------------------------------------*/
-    virtual void _close() = 0;
-    virtual void _open() = 0;
-    virtual bool _good() = 0;
-    /*-------------------------------------------------------------------------------------------------------------*
+     * ----------------------------------------------------
+     * close
+     **/
+    virtual void _Close() = 0;
+    /**
+     * open
+     */
+    virtual void _Open() = 0;
+    /**
+     * good
+     */
+    virtual bool _Good() = 0;
+    /**
+     * ----------------------------------------------------
      * utilities
-     *-------------------------------------------------------------------------------------------------------------*/
+     * ----------------------------------------------------
+     * reshape 
+     */
     list<pair<size_t, size_t>> Shape(size_t len, size_t split);
-    /*-------------------------------------------------------------------------------------------------------------*
+    /**
+     * ----------------------------------------------------
      * logging
-     *-------------------------------------------------------------------------------------------------------------*/
+     * ----------------------------------------------------
+     * debug
+     */
     inline void __DEBUG(const string& msg) {
         SLog::__DEBUG(__uri, msg);
     }
+    /**
+     * information
+     */
     inline void __INFO(const string& msg) {
         SLog::__INFO(__uri, msg);
     }
+    /**
+     * warning
+     */
     inline void __WARNING(const string& msg) {
         SLog::__WARNING(__uri, msg);
     }
+    /**
+     * error
+     */
     inline void __ERROR(const string& msg) {
         SLog::__ERROR(__uri, msg);
     }
+    /**
+     * critical error
+     */
     inline void __CRITITAL(const string& msg) {
         SLog::__CRITITAL(__uri, msg);
     }
@@ -231,11 +256,16 @@ protected:
  * definitions
  */
 typedef shared_ptr<SConnector> Connector;
-/*---------------------------------------------------------------------------------------------------------------------*
+/**
+ * ------------------------------------------------------------------------------------------------
  * IO decoded stream  
- *---------------------------------------------------------------------------------------------------------------------*/
+ * ------------------------------------------------------------------------------------------------
+ **/
 namespace Decoded {
 /**
+ * ----------------------------------------------------------------------------
+ * InputConnector
+ * ----------------------------------------------------------------------------
  */
 class SInputConnector : public SConnector {
 public:
@@ -250,13 +280,13 @@ public:
     virtual ~SInputConnector() = default;
     /**
      */
-    virtual Resource& resource() = 0;
+    virtual Resource& GetResource() = 0;
     /**
      * read data
      */
     inline Container Read() {
         try {
-            return _read();
+            return _Read();
         } catch (ResourceExceptionABORT& ex) {
             throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -280,16 +310,24 @@ public:
     }
 
 protected:
-    /*-------------------------------------------------------------------------------------------------------------*
+    /**
+     * ----------------------------------------------------
      * IO interfaces
-     *-------------------------------------------------------------------------------------------------------------*/
-    virtual Container _read() = 0;
-    /**/
-    virtual list<Container> _Drain() { return {_read()}; }
+     * ----------------------------------------------------
+     * read
+     */
+    virtual Container _Read() = 0;
+    /**
+     * drain 
+     **/
+    virtual list<Container> _Drain() { return {_Read()}; }
 };
 /**
+ * ----------------------------------------------------------------------------
+ * OutputConnector
+ * ----------------------------------------------------------------------------
  */
-class SOutputConnector : public SConnector {
+class SOutputConnector: public SConnector {
 public:
     using SConnector::SConnector;
     /**
@@ -300,23 +338,29 @@ public:
      * destructor
      */
     virtual ~SOutputConnector() = default;
-        /**
+    /**
      * write data
      */
     inline void Write(const Container& data){
         try {
-            _write(data);
+            _Write(data);
         } catch (ResourceExceptionABORT& ex) {
             throw OConnectorExceptionDEAD(__uri);
         }
     }
 protected:
-    /*-------------------------------------------------------------------------------------------------------------*
+    /**
+     * ----------------------------------------------------
      * IO interfaces
-     *-------------------------------------------------------------------------------------------------------------*/
-    virtual void _write(const Container& container) = 0;
+     * ----------------------------------------------------
+     * write
+     **/
+    virtual void _Write(const Container& container) = 0;
 };
 /**
+ * ----------------------------------------------------------------------------
+ * InOutputConnector
+ * ----------------------------------------------------------------------------
  */
 class SInOutputConnector : public SConnector {
 public:
@@ -329,15 +373,16 @@ public:
      * destructor
      */
     virtual ~SInOutputConnector() = default;
-        /**
+    /**
+     * get resource
      */
-    virtual Resource& resource() = 0;
+    virtual Resource& GetResource() = 0;
     /**
      * read data
      */
     inline Container Read() {
         try {
-            return _read();
+            return _Read();
         } catch (ResourceExceptionABORT& ex) {
             throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -364,33 +409,45 @@ public:
      */
     inline void Write(const Container& data) {
         try {
-            _write(data);
+            _Write(data);
         } catch (ResourceExceptionABORT& ex) {
             throw OConnectorExceptionDEAD(__uri);
         }
     }
 protected:
-    /*-------------------------------------------------------------------------------------------------------------*
+    /**
+     * ----------------------------------------------------
      * IO interfaces
-     *-------------------------------------------------------------------------------------------------------------*/
-    virtual Container _read() = 0;
-    /**/
-    virtual list<Container> _Drain() { return {_read()}; }
-    /**/
-    virtual void _write(const Container& container) = 0;
+     * ----------------------------------------------------
+     * read
+     */
+    virtual Container _Read() = 0;
+    /**
+     * drain  
+     */
+    virtual list<Container> _Drain() { return {_Read()}; }
+    /**
+     * write 
+     */
+    virtual void _Write(const Container& container) = 0;
 };
 /**
  * definitions
  */
-typedef shared_ptr<SInputConnector> IConnector;
-typedef shared_ptr<SOutputConnector> OConnector;
+typedef shared_ptr<SInputConnector>    IConnector;
+typedef shared_ptr<SOutputConnector>   OConnector;
 typedef shared_ptr<SInOutputConnector> IOConnector;
 }
-/*---------------------------------------------------------------------------------------------------------------------*
+/**
+ * ------------------------------------------------------------------------------------------------
  * IO encoded stream  
- *---------------------------------------------------------------------------------------------------------------------*/
+ * ------------------------------------------------------------------------------------------------
+ **/
 namespace Encoded {
 /**
+ * ----------------------------------------------------------------------------
+ * InputConnector
+ * ----------------------------------------------------------------------------
  */
 class SInputConnector : public SConnector {
 public:
@@ -406,13 +463,13 @@ public:
     /**
      * get resource
      */
-    virtual Resource& resource() = 0;
+    virtual Resource& GetResource() = 0;
     /**
      * read coded data
      */
     inline Document Read() {
         try {
-            return _read();
+            return _Read();
         } catch (ResourceExceptionABORT& ex) {
             throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -439,14 +496,22 @@ protected:
      * machine state
      */
     size_t __state;
-    /*-------------------------------------------------------------------------------------------------------------*
+    /**
+     * ----------------------------------------------------
      * IO interfaces
-     *-------------------------------------------------------------------------------------------------------------*/
-    virtual Document _read() = 0;
-    /**/
-    virtual list<Document> _Drain() { return {_read()}; }
+     * ----------------------------------------------------
+     * read
+     */
+    virtual Document _Read() = 0;
+    /**
+     * drain
+     */
+    virtual list<Document> _Drain() { return {_Read()}; }
 };
 /**
+ * ----------------------------------------------------------------------------
+ * OutputConnector
+ * ----------------------------------------------------------------------------
  */
 class SOutputConnector : public SConnector {
 public:
@@ -464,20 +529,26 @@ public:
      */
     inline void Write(const Document& data){
         try {
-            _write(data);
+            _Write(data);
         } catch (ResourceExceptionABORT& ex) {
             throw OConnectorExceptionDEAD(__uri);
         }
     }
 protected:
-    /*-------------------------------------------------------------------------------------------------------------*
+    /**
+     * ----------------------------------------------------
      * IO interfaces
-     *-------------------------------------------------------------------------------------------------------------*/
-    virtual void _write(const Document& container) = 0;
+     * ----------------------------------------------------
+     * write
+     **/
+    virtual void _Write(const Document& container) = 0;
 };
 /**
+ * ----------------------------------------------------------------------------
+ * InOutputConnector
+ * ----------------------------------------------------------------------------
  */
-class SInOutputConnector : public SConnector {
+class SInOutputConnector: public SConnector {
 public:
     using SConnector::SConnector;
     /**
@@ -490,13 +561,13 @@ public:
     virtual ~SInOutputConnector() = default;    
     /**
      */
-    virtual Resource& resource() = 0;
+    virtual Resource& GetResource() = 0;
     /**
      * read coded data
      */
     inline Document Read(){
         try {
-            return _read();
+            return _Read();
         } catch (ResourceExceptionABORT& ex) {
             throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -523,7 +594,7 @@ public:
      */
     inline void Write(const Document& data){
         try {
-            _write(data);
+            _Write(data);
         } catch (ResourceExceptionABORT& ex) {
             throw OConnectorExceptionDEAD(__uri);
         }
@@ -533,20 +604,27 @@ protected:
      * machine state
      */
     size_t __state;
-    /*-------------------------------------------------------------------------------------------------------------*
+    /**
+     * ----------------------------------------------------
      * IO interfaces
-     *-------------------------------------------------------------------------------------------------------------*/
-    virtual Document _read() = 0;
-    /**/
-    virtual list<Document> _Drain() { return {_read()}; }
-    /**/
-    virtual void _write(const Document& container) = 0;
+     * ----------------------------------------------------
+     * read
+     */
+    virtual Document _Read() = 0;
+    /**
+     * drain 
+     */
+    virtual list<Document> _Drain() { return {_Read()}; }
+    /**
+     * write 
+     */
+    virtual void _Write(const Document& container) = 0;
 };
 /**
  * definitions
  */
-typedef shared_ptr<SInputConnector> IConnector;
-typedef shared_ptr<SOutputConnector> OConnector;
+typedef shared_ptr<SInputConnector>    IConnector;
+typedef shared_ptr<SOutputConnector>   OConnector;
 typedef shared_ptr<SInOutputConnector> IOConnector;
 }
 /**

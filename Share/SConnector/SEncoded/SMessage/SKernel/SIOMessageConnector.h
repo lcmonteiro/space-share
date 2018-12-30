@@ -40,7 +40,7 @@ public:
 	/**
 	 * inline overrides
 	 */
-	inline Resource& resource() override {
+	inline Resource& GetResource() override {
 		return __res.Base();
 	}
 protected:
@@ -50,7 +50,7 @@ protected:
 	 * -------------------------------------------------------------------------------------------------------------
          * read
          */
-	Document _read() override { 
+	Document _Read() override { 
                 /**-----------------------------------------------------------------------------------------------------
                  * Fill buffer
                  *----------------------------------------------------------------------------------------------------**/
@@ -92,7 +92,7 @@ protected:
 	/**
          * write
          */
-	void _write(const Document& container) override {
+	void _Write(const Document& container) override {
                 const size_t HEADER_SIZE = sizeof (reference_t) + sizeof (numframes_t) * 2  + sizeof (framesize_t);
                 /**-----------------------------------------------------------------------------------------------------
                  * log info
@@ -138,7 +138,7 @@ protected:
 	 * -------------------------------------------------------------------------------------------------------------
          * open
          */
-        inline void _open() override {
+        inline void _Open() override {
                 default_random_engine eng{random_device{}()};
                 /** 
                  */
@@ -165,7 +165,7 @@ protected:
 	/**
 	 * good
 	 */
-	inline bool _good() override{
+	inline bool _Good() override{
 		/**-----------------------------------------------------------------------------------------------------
                  * verify resource status
                  *----------------------------------------------------------------------------------------------------**/
@@ -174,7 +174,7 @@ protected:
         /**
          * close
          */
-	inline void _close() override {
+	inline void _Close() override {
 		/**-----------------------------------------------------------------------------------------------------
                  * reset resource
                  *----------------------------------------------------------------------------------------------------**/

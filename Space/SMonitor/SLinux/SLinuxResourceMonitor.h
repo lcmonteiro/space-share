@@ -116,7 +116,7 @@ protected:
         vector<size_t> res;
         try {
             // insert this task
-            loc.emplace_back(CreateLocation(SLinuxTask::Instance().resource()));
+            loc.emplace_back(CreateLocation(SLinuxTask::Instance().GetResource()));
             // check resources
             res = SLinuxMonitor::Check(loc, timeout);
             // remove this task
@@ -150,7 +150,7 @@ private:
     }
     template<typename T>
     void UpdateLocations(T loc) {
-           __loc.emplace_back(CreateLocation(loc->resource()));
+           __loc.emplace_back(CreateLocation(loc->GetResource()));
     }
     /**
      * handles
