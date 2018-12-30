@@ -102,7 +102,7 @@ void SOIrcConnector::_Write(const Document& container) {
 	IFrame in(sizeof (reference_t) + sizeof (numframes_t) + sizeof (framesize_t) + container.GetFrameSize());
 	/**------------------------------------------------------------------------------------------------------------*
 	 * write context
-	 *-------------------------------------------------------------------------------------------------------------*/
+	 *----------------------------------------------------------------------------------------*/
 	in.Write(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));
 	in.Write(Frame(sizeof (numframes_t)).Number<numframes_t>(container.GetNumFrames()));
 	in.Write(Frame(sizeof (framesize_t)).Number<framesize_t>(container.GetFrameSize()));
@@ -113,7 +113,7 @@ void SOIrcConnector::_Write(const Document& container) {
 	);
 	/**------------------------------------------------------------------------------------------------------------*
 	 * write nframes
-	 *-------------------------------------------------------------------------------------------------------------*/
+	 *----------------------------------------------------------------------------------------*/
 	for (auto& f : container) {
 		/**
 		 * write

@@ -1,11 +1,11 @@
 /* 
- * File:   SIOMessageConnector.h
+ * File:   SOMessageConnector.h
  * Author: Luis Monteiro
  *
  * Created on December 11, 2016, 1:25 AM
  */
-#ifndef SIOMESSAGECONNECTORCODED_H
-#define SIOMESSAGECONNECTORCODED_H
+#ifndef SOMESSAGECONNECTORCODED_H
+#define SOMESSAGECONNECTORCODED_H
 /**
  * Space
  */
@@ -22,24 +22,21 @@ namespace Encoded {
  */
 namespace Message {
 /**
- * ------------------------------------------------------------------------------------------------
- * SIOMessageConnector
- * ------------------------------------------------------------------------------------------------
  */
 template<class RESOURCE>
-class SIOMessageConnector : public SInOutputConnector {
+class SOMessageConnector : public SInOutputConnector {
 public:
     /**
      * constructor
      */
-    SIOMessageConnector(
+    SOMessageConnector(
         const string address,   // connection address
         const size_t maxsmsg    // max size message 
     ) : SInOutputConnector(address), __buffer(maxsmsg), __res() {}
     /**
      * destructor
      */
-    virtual ~SIOMessageConnector() = default;
+    virtual ~SOMessageConnector() = default;
     /**
      * inline overrides
      */
@@ -174,5 +171,5 @@ private:
  * End namespace Encoded
  */
 }
-#endif /* SIOMESSAGECONNECTORCODED_H */
+#endif /* SOMESSAGECONNECTORCODED_H */
 
