@@ -37,6 +37,22 @@ SLinuxResource::~SLinuxResource() {
 bool SLinuxResource::valid() {
     return ::fcntl(__h, F_GETFL) != -1 || errno != EBADF;
 }
+/**
+ * get file path
+ */
+string SLinuxResource::path() {
+	vector<char> out;
+	//read real path
+	int len = 0;
+	do {
+		out.resize(out.size() + 0x100);
+		if((len = readlink(_handler_path().data(), out.data(), out.size())) < 0) {
+			throw ResourceException(make_error_code(errc(errno)));	
+		}
+	} while(out.size()==len);
+	// return path as string
+	return string(out.data());
+}
 /*---------------------------------------------------------------------------------------------------------------------*
  * IO functions
  *---------------------------------------------------------------------------------------------------------------------*/
@@ -96,13 +112,4 @@ size_t SLinuxResource::__read(Frame::pointer p, Frame::size_type s) {
         throw IResourceExceptionABORT();
     }
     return n;
-}
-/**
- */
-void SLinuxResource::__move(int& from, int& to) {
-    if((from >= 0) && (to >= 0)) {
-        dup2(to, from);
-    } else {
-        swap(to, from);
-    }
 }

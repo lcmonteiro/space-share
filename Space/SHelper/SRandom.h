@@ -20,12 +20,9 @@
 #include "SFileResource.h"
 /**
  */
-using namespace std;
-/**
- */
-class SRandom {
+class SRandom { 
 public:
-    typedef mt19937 Generator;
+    typedef std::mt19937 Generator;
     /**
      * --------------------------------------------------------------------------------------------
      * Random String
@@ -95,7 +92,7 @@ public:
      * --------------------------------------------------------------------------------------------
      **/
     template<size_t CHUNK=0x1000>
-    static SIFileResource File(const string& path, size_t n) {
+    static SIFileResource file(const string& path, size_t n) {
         SIFileResource out;
         auto d = div(int(n), int(CHUNK));
         for(size_t i=0; i<d.quot; ++i) {
@@ -104,8 +101,8 @@ public:
         out.drain(SRandom::Frame(d.rem)).flush();
         return out;
     }
-    static string FileName() {
-        return "";
+    static string fileName() {
+        return SFileResource::TmpPath() + "/" + SRandom::String(16);
     }
 };
 
