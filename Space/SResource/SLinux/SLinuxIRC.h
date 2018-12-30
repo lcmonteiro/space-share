@@ -82,7 +82,7 @@ public:
      * keep
      */
     inline void Keep() {
-        while (SLinuxResourceMonitor::Wait(*this, chrono::hours{24}).valid()) {
+        while (SLinuxResourceMonitor::Wait(*this, chrono::hours{24}).Valid()) {
             string line(MAX_LINE_SZ, ' ');
             Process(line);
         }

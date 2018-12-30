@@ -74,7 +74,7 @@ SILinuxFile::SILinuxFile(const string& path)
 ) {}
 SILinuxFile::SILinuxFile(const string& path, const SLinuxFile& link) 
 : SILinuxFile(
-	Link(path, link.path())
+	Link(path, link.Path())
 ) {}
 /**
  * status
@@ -93,5 +93,5 @@ SOLinuxFile::SOLinuxFile(const string& path)
 ) {}
 SOLinuxFile::SOLinuxFile(const string& path, const SLinuxFile& link) 
 : SOLinuxFile(
-	Link(path, link.path())
+	Link(path, link.Path())
 ) {}

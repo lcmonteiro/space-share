@@ -320,7 +320,7 @@ void SLinuxSocket::bind(const string& local, Type type) {
 /*---------------------------------------------------------------------------------------------------------------------*
  * IO functions
  *---------------------------------------------------------------------------------------------------------------------*/
-Frame SLinuxSocket::read(size_t size) {
+Frame SLinuxSocket::Read(size_t size) {
     IFrame f(size);
     /**
      * receive

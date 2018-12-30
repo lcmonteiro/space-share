@@ -34,19 +34,19 @@ SLinuxResource::~SLinuxResource() {
 /**
  * check resource
  */
-bool SLinuxResource::valid() {
+bool SLinuxResource::Valid() const {
     return ::fcntl(__h, F_GETFL) != -1 || errno != EBADF;
 }
 /**
  * get file path
  */
-string SLinuxResource::path() const {
+string SLinuxResource::Path() const {
 	vector<char> out;
 	//read real path
 	int len = 0;
 	do {
 		out.resize(out.size() + 0x100);
-		if((len = readlink(_handler_path().data(), out.data(), out.size())) < 0) {
+		if((len = readlink(_handler_Path().data(), out.data(), out.size())) < 0) {
 			throw ResourceException(make_error_code(errc(errno)));	
 		}
 	} while(out.size()==len);
@@ -56,7 +56,7 @@ string SLinuxResource::path() const {
 /*---------------------------------------------------------------------------------------------------------------------*
  * IO functions
  *---------------------------------------------------------------------------------------------------------------------*/
-Frame SLinuxResource::read(size_t size) {
+Frame SLinuxResource::Read(size_t size) {
     IFrame f(size);
     /**
      * read 

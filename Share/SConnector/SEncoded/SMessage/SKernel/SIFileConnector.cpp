@@ -27,10 +27,10 @@ Document SIFileConnector::_read() {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * read context
 	 *-------------------------------------------------------------------------------------------------------------*/
-	auto position = __res.read(sizeof (reference_t)).Number<reference_t>();
-	auto nframest = __res.read(sizeof (numframes_t)).Number<numframes_t>();
-	auto nframesp = __res.read(sizeof (numframes_t)).Number<numframes_t>();
-	auto framelen = __res.read(sizeof (framesize_t)).Number<framesize_t>();
+	auto position = __res.Read(sizeof (reference_t)).Number<reference_t>();
+	auto nframest = __res.Read(sizeof (numframes_t)).Number<numframes_t>();
+	auto nframesp = __res.Read(sizeof (numframes_t)).Number<numframes_t>();
+	auto framelen = __res.Read(sizeof (framesize_t)).Number<framesize_t>();
 	/**------------------------------------------------------------------------------------------------------------*
 	 * log
 	 *-------------------------------------------------------------------------------------------------------------*/
@@ -43,7 +43,7 @@ Document SIFileConnector::_read() {
 	Document container(Context(position, nframest, framelen));
 	container.reserve(nframesp);
 	while(!container.Full()){
-		container.push_back(__res.read(framelen));
+		container.push_back(__res.Read(framelen));
 	}
 	/**
 	 */

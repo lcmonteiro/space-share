@@ -44,25 +44,25 @@ public:
     /**
      * check resource
      */
-    bool valid();
+    bool Valid() const;
     /**
 	 * get location
 	 */
-	string path() const;
+	string Path() const;
     /**
      * -------------------------------------------------------------------------------------------------------------
      * IO functions
      * -------------------------------------------------------------------------------------------------------------
      **
-     * read frame
+     * Read frame
      */        
-    Frame read(size_t size);
+    Frame Read(size_t size);
     /**
      * fill frame
      */
     template<class F>
     SLinuxResource& fill(F& f) {
-        f.Insert(read(f.Data(), f.Size()));
+        f.Insert(Read(f.Data(), f.Size()));
         return *this;
     }
     /**
@@ -91,7 +91,7 @@ protected:
     inline int _handler() const {
         return __h;
     }
-    inline string _handler_path() const {
+    inline string _handler_Path() const {
 	    ostringstream os;
 	    os << "/proc/self/fd/" << _handler();
         return os.str();

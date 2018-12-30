@@ -57,7 +57,7 @@ protected:
      * inline control overrides
      */
     inline bool _good() override {
-        return __res.valid();
+        return __res.Valid();
     }
     inline void _close() override {
         __res = SDirectoryResource();
