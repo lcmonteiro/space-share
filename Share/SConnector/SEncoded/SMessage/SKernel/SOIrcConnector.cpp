@@ -106,9 +106,7 @@ void SOIrcConnector::_Write(const Document& container) {
 	in.Write(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));
 	in.Write(Frame(sizeof (numframes_t)).Number<numframes_t>(container.GetNumFrames()));
 	in.Write(Frame(sizeof (framesize_t)).Number<framesize_t>(container.GetFrameSize()));
-	/**------------------------------------------------------------------------------------------------------------*
-	 * log
-	 *-------------------------------------------------------------------------------------------------------------*/
+	// log ------------------------------------------------
 	INFO("CODE::OUT::"
 		<< "pos=" << container.GetPosition() << " " << "n=" << container.GetNumFrames() << " "
 		<< "sz=" << container.GetFrameSize() << " " << "len=" << container.size()

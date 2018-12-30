@@ -7,16 +7,13 @@
 #ifndef SIFILECONNECTORCODED_H
 #define SIFILECONNECTORCODED_H
 /**
- * Space Resource
+ * Space 
  */
 #include "SFileResource.h"
-/**
- * Space Kernel
- */
 #include "SContainer.h"
 #include "SAddress.h"
 /**
- * Share Kernel
+ * Share 
  */
 #include "SConnector.h"
 /**
@@ -28,6 +25,9 @@ namespace Encoded {
  */
 namespace Message {
 /**
+ * ------------------------------------------------------------------------------------------------
+ * IFileConnector
+ * ------------------------------------------------------------------------------------------------
  */
 class SIFileConnector : public SInputConnector {
 public:
@@ -46,13 +46,19 @@ public:
         return __res;
     }
 protected:
-    /*-----------------------------------------------------------------------------------------*
-     * IO functions
-     *------------------------------------------------------------------------------------------*/
+    /**
+	 * -----------------------------------------------------
+	 * IO functions
+	 * -----------------------------------------------------
+	 * read
+	 */
     Document _Read() override;
-    /*-----------------------------------------------------------------------------------------*
-     * control functions
-     *-----------------------------------------------------------------------------------------*/
+    /**
+	 * ----------------------------------------------------
+	 * control functions
+	 * ----------------------------------------------------
+	 * open, good and close
+	 */
     inline void _Open() override {
         __res = SIFileResource(__uri);
     }
