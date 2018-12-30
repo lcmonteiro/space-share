@@ -25,7 +25,7 @@ SIDirConnector::SIDirConnector(const string address): SInputConnector(address){
 }
 /** 
  */
-list<Document> SIDirConnector::_drain() {
+list<Document> SIDirConnector::_Drain() {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * log
 	 *-------------------------------------------------------------------------------------------------------------*/

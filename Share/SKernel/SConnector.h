@@ -177,7 +177,7 @@ public:
             }
         });
     }
-    inline bool good() {
+    inline bool Good() {
         return !Empty() && _good();
     }
     /**
@@ -271,7 +271,7 @@ public:
      */
     inline list<Container> Drain() {
         try {
-            return _drain();
+            return _Drain();
         } catch (ResourceExceptionABORT& ex) {
             throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -285,7 +285,7 @@ protected:
      *-------------------------------------------------------------------------------------------------------------*/
     virtual Container _read() = 0;
     /**/
-    virtual list<Container> _drain() { return {_read()}; }
+    virtual list<Container> _Drain() { return {_read()}; }
 };
 /**
  */
@@ -352,7 +352,7 @@ public:
      */
     inline list<Container> Drain() {
         try {
-            return _drain();
+            return _Drain();
         } catch (ResourceExceptionABORT& ex) {
             throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -375,7 +375,7 @@ protected:
      *-------------------------------------------------------------------------------------------------------------*/
     virtual Container _read() = 0;
     /**/
-    virtual list<Container> _drain() { return {_read()}; }
+    virtual list<Container> _Drain() { return {_read()}; }
     /**/
     virtual void _write(const Container& container) = 0;
 };
@@ -427,7 +427,7 @@ public:
      */
     inline list<Document> Drain() {
         try {
-            return _drain();
+            return _Drain();
         } catch (ResourceExceptionABORT& ex) {
             throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -444,7 +444,7 @@ protected:
      *-------------------------------------------------------------------------------------------------------------*/
     virtual Document _read() = 0;
     /**/
-    virtual list<Document> _drain() { return {_read()}; }
+    virtual list<Document> _Drain() { return {_read()}; }
 };
 /**
  */
@@ -511,7 +511,7 @@ public:
      */
     inline list<Document> Drain() {
         try {
-            return _drain();
+            return _Drain();
         } catch (ResourceExceptionABORT& ex) {
             throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -538,7 +538,7 @@ protected:
      *-------------------------------------------------------------------------------------------------------------*/
     virtual Document _read() = 0;
     /**/
-    virtual list<Document> _drain() { return {_read()}; }
+    virtual list<Document> _Drain() { return {_read()}; }
     /**/
     virtual void _write(const Document& container) = 0;
 };

@@ -122,7 +122,7 @@ void SOIrcConnector::_write(const Document& container) {
 		 */
 		__res.Send(
 			in.Seek(sizeof (reference_t) + sizeof (numframes_t) + sizeof (framesize_t)).Write(f)
-		).flush();
+		).Flush();
 	}
 }
 /**

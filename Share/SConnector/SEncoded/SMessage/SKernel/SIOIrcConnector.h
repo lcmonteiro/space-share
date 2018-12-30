@@ -57,7 +57,7 @@ protected:
 	 *-------------------------------------------------------------------------------------------------------------*/
 	Document _read() override;
 	/**/
-	list<Document> _drain() override;
+	list<Document> _Drain() override;
 	/**/
 	void _write(const Document& container) override;
 	/*-------------------------------------------------------------------------------------------------------------*
@@ -68,7 +68,7 @@ protected:
 	 * inline
 	 */
 	inline bool _good() override{
-		return __res.good();
+		return __res.Good();
 	}
 	inline void _close() override {
 		__res = SIRCResource();

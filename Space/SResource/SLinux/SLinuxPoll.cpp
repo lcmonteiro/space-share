@@ -23,7 +23,7 @@ void SLinuxPoll::Insert(SLinuxResource* r) {
         memset(&ev, 0, sizeof(ev));
         ev.data.ptr = r;
         ev.events = EPOLLIN | EPOLLERR | EPOLLHUP;
-        if (epoll_ctl(_handler(), EPOLL_CTL_ADD, r->_handler(), &ev) < 0) {
+        if (epoll_ctl(_Handler(), EPOLL_CTL_ADD, r->_Handler(), &ev) < 0) {
                 throw ResourceExceptionABORT(strerror(errno));
         }
 }
@@ -31,7 +31,7 @@ void SLinuxPoll::Insert(SLinuxResource* r) {
  * delete
  */
 void SLinuxPoll::Delete(SLinuxResource* r) {
-        if (epoll_ctl(_handler(), EPOLL_CTL_DEL, r->_handler(), NULL) < 0) {
+        if (epoll_ctl(_Handler(), EPOLL_CTL_DEL, r->_Handler(), NULL) < 0) {
                 throw ResourceExceptionABORT(strerror(errno));
         }
 }
@@ -44,7 +44,7 @@ list<SLinuxResource*> SLinuxPoll::Poll(const chrono::milliseconds& timeout, size
          * poll events
          */
         vector<epoll_event> events(max);
-        auto n = epoll_wait(_handler(), events.data(), events.size(), timeout.count());
+        auto n = epoll_wait(_Handler(), events.data(), events.size(), timeout.count());
         if (n < 0) {
                 throw ResourceExceptionABORT(strerror(errno));
         }

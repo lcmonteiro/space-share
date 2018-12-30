@@ -45,7 +45,7 @@ protected:
 	 *-------------------------------------------------------------------------------------------------------------*/
 	Container _read() override;
 	/**/
-	list<Container> _drain() override;
+	list<Container> _Drain() override;
 	/*-------------------------------------------------------------------------------------------------------------*
 	 * control functions
 	 *-------------------------------------------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ protected:
 		__res = SIFileResource(__uri);
 	}
 	inline bool _good() override{
-		return __res.good();
+		return __res.Good();
 	}
 	inline void _close() override {
 		__res = SIFileResource();

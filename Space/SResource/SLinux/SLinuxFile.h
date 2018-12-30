@@ -65,7 +65,7 @@ public:
 	/**
 	 * status
 	 */
-	bool good();
+	bool Good();
 };
 
 class SOLinuxFile : public SLinuxFile {

@@ -42,7 +42,7 @@ SLinuxSocket::~SLinuxSocket() {
 }
 /**
  */
-bool SLinuxSocket::good() {
+bool SLinuxSocket::Good() {
     int error = 0;
     socklen_t len = sizeof (error);
     /**
@@ -122,10 +122,10 @@ void SLinuxSocket::wait(const string& host, uint16_t port, Type type) {
          * set options
          */
         int opt = 1;
-        if (::setsockopt(s._handler(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
+        if (::setsockopt(s._Handler(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
             continue;
         }
-        if (::bind(s._handler(), rp->ai_addr, rp->ai_addrlen) < 0) {
+        if (::bind(s._Handler(), rp->ai_addr, rp->ai_addrlen) < 0) {
             continue;
         }
 #ifdef __DEBUG__
@@ -144,7 +144,7 @@ void SLinuxSocket::wait(const string& host, uint16_t port, Type type) {
         /**
          * listen
          */
-        if (::listen(s._handler(), 1) < -1) {
+        if (::listen(s._Handler(), 1) < -1) {
             continue;
         }
         /**
@@ -154,7 +154,7 @@ void SLinuxSocket::wait(const string& host, uint16_t port, Type type) {
         /**
          * accept connection
          */
-        *this = SLinuxSocket(accept(s._handler(), (struct sockaddr *)&addr, &len));
+        *this = SLinuxSocket(accept(s._Handler(), (struct sockaddr *)&addr, &len));
         /**
          * settings
          */
@@ -209,7 +209,7 @@ void SLinuxSocket::connect(const string& host, uint16_t host_port, Type type, co
          * bind
          */
         if (!local.empty() && local_port) {
-            if (::bind(s._handler(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
+            if (::bind(s._Handler(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
                 continue;
             }
         }
@@ -221,7 +221,7 @@ void SLinuxSocket::connect(const string& host, uint16_t host_port, Type type, co
         /**
          * try to connect
          */
-        if (::connect(s._handler(), rp->ai_addr, rp->ai_addrlen) < 0) {
+        if (::connect(s._Handler(), rp->ai_addr, rp->ai_addrlen) < 0) {
             continue;
         }
 #ifdef __DEBUG__
@@ -276,7 +276,7 @@ void SLinuxSocket::connect(const string& host, Type type) {
     /**
      * connect
      */
-    if (::connect(s._handler(), (struct sockaddr*) &caddr, sizeof (caddr)) < 0) {
+    if (::connect(s._Handler(), (struct sockaddr*) &caddr, sizeof (caddr)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
@@ -304,7 +304,7 @@ void SLinuxSocket::bind(const string& local, Type type) {
     /**
      * bind
      */        
-    if (::bind(s._handler(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
+    if (::bind(s._Handler(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }    
     /**
@@ -330,7 +330,7 @@ Frame SLinuxSocket::Read(size_t size) {
     }
     return f;
 }
-SLinuxSocket& SLinuxSocket::drain(OFrame&& f) {
+SLinuxSocket& SLinuxSocket::Drain(OFrame&& f) {
     /**
      * send
      */
@@ -339,7 +339,7 @@ SLinuxSocket& SLinuxSocket::drain(OFrame&& f) {
     }
     return *this;
 }
-SLinuxSocket& SLinuxSocket::drain(const Frame& f) {
+SLinuxSocket& SLinuxSocket::Drain(const Frame& f) {
     /**
      * send
      */

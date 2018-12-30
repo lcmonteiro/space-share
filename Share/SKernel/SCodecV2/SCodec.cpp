@@ -346,7 +346,7 @@ namespace v2 {
 		/**
 		 */
 		if (m == 0) {
-			fill(b.begin(), b.end(), 0);
+			Fill(b.begin(), b.end(), 0);
 			return b;
 		}
 		if (m == 1) {
@@ -365,7 +365,7 @@ namespace v2 {
 		/**
 		 */
 		if (m == 0) {
-			fill(b.begin() + i, b.end(), 0);
+			Fill(b.begin() + i, b.end(), 0);
 			return b;
 		}
 		if (m == 1) {

@@ -126,7 +126,7 @@ protected:
                     try { 
                         if(Monitor(end, ProcessCmd, &__io, &__in)) {
                             SResourceMonitor m (&__io, &__in);
-                            while(m.good()) {
+                            while(m.Good()) {
                                 for(auto& i : Wait(m, end)) {
                                     switch(i) {
                                         case 1: {

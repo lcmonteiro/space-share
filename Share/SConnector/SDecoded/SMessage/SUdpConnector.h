@@ -39,9 +39,9 @@ class ResourceAdapterUdp : private SSocketResource {
 public:
     using SSocketResource::SSocketResource;
     using SSocketResource::operator=;
-    using SSocketResource::fill;
-    using SSocketResource::drain;
-    using SSocketResource::good;
+    using SSocketResource::Fill;
+    using SSocketResource::Drain;
+    using SSocketResource::Good;
     /**
      * interfaces
      */

@@ -56,7 +56,7 @@ public:
     /**
      * check monitor
      */
-    inline bool good() {
+    inline bool Good() {
         return !(__loc.empty() || __timeout < chrono::milliseconds::zero());
     }
     /**
@@ -84,7 +84,7 @@ public:
      * wait just one resource
      */
     static inline SLinuxResource& Wait(SLinuxResource& res, const chrono::milliseconds& timeout) {
-        Locations loc {SLinuxMonitor::CreateLocation(res._handler())};
+        Locations loc {SLinuxMonitor::CreateLocation(res._Handler())};
         Wait(loc, timeout);
         return res;
     }
@@ -97,7 +97,7 @@ protected:
      * create location
      */
     static inline Location CreateLocation(Resource& resource) {
-        return SLinuxMonitor::CreateLocation(static_cast<SLinuxResource&> (resource)._handler());
+        return SLinuxMonitor::CreateLocation(static_cast<SLinuxResource&> (resource)._Handler());
     }
     /**
      * check many resources

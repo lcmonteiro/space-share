@@ -52,8 +52,8 @@ public:
     inline void Drain(const Frame& buf) {
         SSocketResource::Drain(buf);
     }
-    inline bool good() {
-        SSocketResource::good();
+    inline bool Good() {
+        SSocketResource::Good();
     }
     inline void Reset() {
         *this = SSocketResource();

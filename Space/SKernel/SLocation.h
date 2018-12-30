@@ -123,7 +123,7 @@ public:
                         if (!__broken) {
                                 throw SLocationExceptionDETACHED<T>(string("hide"));
                         }
-                        if (__broken->good()) {
+                        if (__broken->Good()) {
                                 Jump();
                                 return *this;
                         }

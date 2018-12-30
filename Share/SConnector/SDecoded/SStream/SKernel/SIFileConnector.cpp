@@ -61,7 +61,7 @@ Container SIFileConnector::_read() {
 }
 /**
  */
-list<Container> SIFileConnector::_drain() {
+list<Container> SIFileConnector::_Drain() {
 	list<Container> out;
 	/*-------------------------------------------------------------------------------------------------------------*
 	 * check if container is full 

@@ -23,7 +23,7 @@
  */
 size_t SLinuxFile::size() {
 	struct stat st;
-	if (fstat(_handler(), &st) < 0) {
+	if (fstat(_Handler(), &st) < 0) {
 		throw ResourceException(make_error_code(errc(errno)));
 	}
 	return st.st_size;
@@ -32,7 +32,7 @@ size_t SLinuxFile::size() {
  * get position
  */
 size_t SLinuxFile::position() {
-	auto cur = lseek(_handler(), 0, SEEK_CUR);
+	auto cur = lseek(_Handler(), 0, SEEK_CUR);
 	if (cur < 0) {
 		throw ResourceException(make_error_code(errc(errno)));
 	}
@@ -79,10 +79,10 @@ SILinuxFile::SILinuxFile(const string& path, const SLinuxFile& link)
 /**
  * status
  */
-bool SILinuxFile::good() {
-	auto cur = lseek(_handler(), 0, SEEK_CUR);
-	auto end = lseek(_handler(), 0, SEEK_END);
-	return end != lseek(_handler(), cur, SEEK_SET);
+bool SILinuxFile::Good() {
+	auto cur = lseek(_Handler(), 0, SEEK_CUR);
+	auto end = lseek(_Handler(), 0, SEEK_END);
+	return end != lseek(_Handler(), cur, SEEK_SET);
 }
 /**
  * create OLinuxFile

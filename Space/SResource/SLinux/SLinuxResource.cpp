@@ -8,7 +8,7 @@
 #include <unistd.h>
 #include <string.h>
 /**
- * space monitor linux
+ * space
  */
 #include "SLinuxResourceMonitor.h"
 /**
@@ -46,48 +46,50 @@ string SLinuxResource::Path() const {
 	int len = 0;
 	do {
 		out.resize(out.size() + 0x100);
-		if((len = readlink(_handler_Path().data(), out.data(), out.size())) < 0) {
+		if((len = ::readlink(_HandlerPath().data(), out.data(), out.size())) < 0) {
 			throw ResourceException(make_error_code(errc(errno)));	
 		}
 	} while(out.size()==len);
 	// return path as string
 	return string(out.data());
 }
-/*---------------------------------------------------------------------------------------------------------------------*
+/**
+ * ------------------------------------------------------------------------------------------------
  * IO functions
- *---------------------------------------------------------------------------------------------------------------------*/
+ * ------------------------------------------------------------------------------------------------
+ **/
 Frame SLinuxResource::Read(size_t size) {
     IFrame f(size);
     /**
      * read 
      */
     while (!f.Full()) {
-        f.Insert(__read(f.data(), f.size()));
+        f.Insert(__Read(f.data(), f.size()));
     }
     return f;
 }
-SLinuxResource& SLinuxResource::drain(OFrame&& f) {
+SLinuxResource& SLinuxResource::Drain(OFrame&& f) {
     while (!f.Empty()) {
-        f.Remove(__write(f.Data(), f.Size()));
+        f.Remove(__Write(f.Data(), f.Size()));
     }
     return *this;
 }
-SLinuxResource& SLinuxResource::drain(const Frame& f) {
+SLinuxResource& SLinuxResource::Drain(const Frame& f) {
     for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, __write(it.base(), distance(it, end)));
+        it = next(it, __Write(it.base(), distance(it, end)));
     }
     return *this;
 }
 /**
  */
-SLinuxResource& SLinuxResource::flush() {
+SLinuxResource& SLinuxResource::Flush() {
     ::fsync(__h);
     return *this;
 }
 /**
  * native IO functions
  */
-size_t SLinuxResource::__write(Frame::const_pointer p, Frame::size_type s) {
+size_t SLinuxResource::__Write(Frame::const_pointer p, Frame::size_type s) {
     auto n = ::write(__h, p, s);
     if (n <= 0) {
         if (n < 0) {
@@ -101,7 +103,7 @@ size_t SLinuxResource::__write(Frame::const_pointer p, Frame::size_type s) {
 }
 /**
  */
-size_t SLinuxResource::__read(Frame::pointer p, Frame::size_type s) {
+size_t SLinuxResource::__Read(Frame::pointer p, Frame::size_type s) {
     auto n = ::read(__h, p, s);
     if (n <= 0) {
         if (n < 0) {

@@ -113,7 +113,7 @@ public:
      * good
      * @return - good rate
      */
-    inline float good() {
+    inline float Good() {
         return float(IsState(SModule::PROCESS)) / __modules.size();
     }
     /**
@@ -121,7 +121,7 @@ public:
      * @return - bad rate
      */
     inline float Bad() {
-        return 1.0 - good();
+        return 1.0 - Good();
     }
     /**
      * -----------------------------------------------------------------------------------------------------------------

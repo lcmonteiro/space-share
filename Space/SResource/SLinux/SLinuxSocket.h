@@ -43,7 +43,7 @@ public:
 	/**
 	 * status
 	 */
-	bool good();
+	bool Good();
 	/**
 	 * timeout
 	 */
@@ -86,15 +86,15 @@ public:
 	 * fill frame
 	 */
 	template<class F>
-	SLinuxSocket& fill(F& f) {
+	SLinuxSocket& Fill(F& f) {
 		f.Insert(__receive(f.Data(), f.Size()));
 		return *this;
 	}
         /**
          * drain frame
          */
-	SLinuxSocket& drain(OFrame&& f);
-	SLinuxSocket& drain(const Frame& f);
+	SLinuxSocket& Drain(OFrame&& f);
+	SLinuxSocket& Drain(const Frame& f);
 	/**
 	 * -------------------------------------------------------------------------------------------------------------
 	 * Text IO functions

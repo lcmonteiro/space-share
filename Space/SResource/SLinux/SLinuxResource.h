@@ -11,7 +11,7 @@
  */
 #include <chrono>
 /**
- * space kernel
+ * space
  */
 #include "SContainer.h"
 #include "SResource.h"
@@ -19,6 +19,9 @@
  */
 using namespace std;
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Linux Resource
+ * ------------------------------------------------------------------------------------------------
  */
 class SLinuxResource : public SResource {
 public:
@@ -50,10 +53,9 @@ public:
 	 */
 	string Path() const;
     /**
-     * -------------------------------------------------------------------------------------------------------------
+     * ----------------------------------------------------
      * IO functions
-     * -------------------------------------------------------------------------------------------------------------
-     **
+     * ----------------------------------------------------
      * Read frame
      */        
     Frame Read(size_t size);
@@ -61,19 +63,19 @@ public:
      * fill frame
      */
     template<class F>
-    SLinuxResource& fill(F& f) {
+    SLinuxResource& Fill(F& f) {
         f.Insert(Read(f.Data(), f.Size()));
         return *this;
     }
     /**
      * drain Frame 
      */
-    SLinuxResource& drain(OFrame&& f);
-    SLinuxResource& drain(const Frame& f);
+    SLinuxResource& Drain(OFrame&& f);
+    SLinuxResource& Drain(const Frame& f);
     /**
      * flush Output
      */
-    SLinuxResource& flush();
+    SLinuxResource& Flush();
 protected:
     /**
      * friends classes
@@ -88,12 +90,12 @@ protected:
     /**
      * get native handlers
      */
-    inline int _handler() const {
+    inline int _Handler() const {
         return __h;
     }
-    inline string _handler_Path() const {
+    inline string _HandlerPath() const {
 	    ostringstream os;
-	    os << "/proc/self/fd/" << _handler();
+	    os << "/proc/self/fd/" << _Handler();
         return os.str();
     }
 private:
@@ -104,11 +106,11 @@ private:
     /**
      * write resource
      */
-    size_t __write(Frame::const_pointer p, Frame::size_type s);
+    size_t __Write(Frame::const_pointer p, Frame::size_type s);
     /**
      * read resource
      */
-    size_t __read(Frame::pointer p, Frame::size_type s);
+    size_t __Read(Frame::pointer p, Frame::size_type s);
 };
 
 #endif /* SLINUXRESOURCE_H */

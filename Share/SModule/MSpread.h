@@ -131,7 +131,7 @@ protected:
                     try { 
                         if(Monitor(end, ProcessCmd, &__in)) {
                             SResourceMonitor m (&__in);
-                            while(m.good()) {
+                            while(m.Good()) {
                                 for(auto& i : Wait(m, end)) {
                                     __func->Process(__in, __out);
                                 }

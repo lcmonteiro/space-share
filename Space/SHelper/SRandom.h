@@ -96,9 +96,9 @@ public:
         SIFileResource out;
         auto d = div(int(n), int(CHUNK));
         for(size_t i=0; i<d.quot; ++i) {
-            out.drain(SRandom::Frame(CHUNK));
+            out.Drain(SRandom::Frame(CHUNK));
         }
-        out.drain(SRandom::Frame(d.rem)).flush();
+        out.Drain(SRandom::Frame(d.rem)).Flush();
         return out;
     }
     static string FileName() {

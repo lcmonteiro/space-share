@@ -54,7 +54,7 @@ SILinuxFile SILinuxDirectory::resource() {
 	 */
 	int len = 0;
 	for (int s = sizeof (struct inotify_event); (len <= 0) && (s < 0x400); s += sizeof (struct inotify_event)) {
-		len = ::read(_handler(), buf, sizeof (struct inotify_event) + s);
+		len = ::read(_Handler(), buf, sizeof (struct inotify_event) + s);
 	}
 	if (len <= 0) {
 		throw IResourceExceptionABORT(strerror(errno));

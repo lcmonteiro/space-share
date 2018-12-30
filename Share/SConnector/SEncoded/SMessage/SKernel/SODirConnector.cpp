@@ -44,10 +44,10 @@ void SODirConnector::_write(const Document& container) {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * write context
 	 *-------------------------------------------------------------------------------------------------------------*/
-	res.drain(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));
-	res.drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.GetNumFrames()));
-	res.drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.size()));
-	res.drain(Frame(sizeof (framesize_t)).Number<framesize_t>(container.GetFrameSize()));
+	res.Drain(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));
+	res.Drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.GetNumFrames()));
+	res.Drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.size()));
+	res.Drain(Frame(sizeof (framesize_t)).Number<framesize_t>(container.GetFrameSize()));
 	/**------------------------------------------------------------------------------------------------------------*
 	 * log
 	 *-------------------------------------------------------------------------------------------------------------*/
@@ -59,7 +59,7 @@ void SODirConnector::_write(const Document& container) {
 	 * write nframes
 	 *-------------------------------------------------------------------------------------------------------------*/
 	for (auto& f : container) {
-		res.drain(f);
+		res.Drain(f);
 	}
 }
 /**

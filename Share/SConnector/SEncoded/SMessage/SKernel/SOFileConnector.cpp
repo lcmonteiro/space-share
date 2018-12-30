@@ -28,10 +28,10 @@ void SOFileConnector::_write(const Document& container) {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * write context
 	 *-------------------------------------------------------------------------------------------------------------*/
-	__res.drain(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));
-	__res.drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.GetNumFrames()));
-	__res.drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.size()));
-	__res.drain(Frame(sizeof (framesize_t)).Number<framesize_t>(container.GetFrameSize()));
+	__res.Drain(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));
+	__res.Drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.GetNumFrames()));
+	__res.Drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.size()));
+	__res.Drain(Frame(sizeof (framesize_t)).Number<framesize_t>(container.GetFrameSize()));
 	/**------------------------------------------------------------------------------------------------------------*
 	 * log
 	 *-------------------------------------------------------------------------------------------------------------*/
@@ -43,12 +43,12 @@ void SOFileConnector::_write(const Document& container) {
 	 * write nframes
 	 *-------------------------------------------------------------------------------------------------------------*/
 	for (auto& f : container) {
-		__res.drain(f);
+		__res.Drain(f);
 	}
 	/**------------------------------------------------------------------------------------------------------------*
 	 * flush resource
 	 *-------------------------------------------------------------------------------------------------------------*/
-	__res.flush();
+	__res.Flush();
 }
 /**
  * End namespace Message
