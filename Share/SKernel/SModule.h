@@ -228,7 +228,7 @@ protected:
     // void SUpdate(vector<T>& out, vector<T>& err) {
     //     for (auto o = out.begin(), e = err.begin(); o != out.end() && e != err.end(); ++o, ++e) {
     //         for (auto it = e->begin(); it != e->end();) {
-    //             if (it->second->Good()) {
+    //             if (it->second->good()) {
     //                 o->insert(*it);
     //                 it = e->erase(it);
     //                 continue;

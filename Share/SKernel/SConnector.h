@@ -177,7 +177,7 @@ public:
             }
         });
     }
-    inline bool Good() {
+    inline bool good() {
         return !Empty() && _good();
     }
     /**

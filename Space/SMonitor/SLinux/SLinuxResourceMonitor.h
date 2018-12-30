@@ -56,7 +56,7 @@ public:
     /**
      * check monitor
      */
-    inline bool Good() {
+    inline bool good() {
         return !(__loc.empty() || __timeout < chrono::milliseconds::zero());
     }
     /**

@@ -209,7 +209,7 @@ public:
          */
         Area& repairing = __process[Repairing];
         for (auto it = repairing.begin(); it != repairing.end();) {
-            if (it->second->Good()) {
+            if (it->second->good()) {
                 it = jump(it, Repairing, Running);
                 continue;
             }

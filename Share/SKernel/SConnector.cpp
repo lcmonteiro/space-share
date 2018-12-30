@@ -12,7 +12,7 @@ SConnector& SConnector::Wait(chrono::milliseconds timeout){
 	auto start = std::chrono::steady_clock::now();
 	auto end = start + timeout;
 	do {
-		if(Good()){
+		if(good()){
 			return *this;
 		}
 		if(Inactive()){

@@ -110,7 +110,7 @@ int main(int argc, char** argv) {
 		true;
 		this_thread::sleep_for(chrono::seconds(10))
 	){
-		cout << nm.Good() << endl;
+		cout << nm.good() << endl;
 	}
 	/** 
 	 */

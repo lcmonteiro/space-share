@@ -56,7 +56,7 @@ protected:
         __res = SIFileResource(__uri);
     }
     inline bool _good() override{
-        return __res.Good();
+        return __res.good();
     }
     inline void _close() override {
         __res = SIFileResource();

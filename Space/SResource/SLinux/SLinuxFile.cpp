@@ -42,10 +42,8 @@ size_t SLinuxFile::position() {
  * link file
  */
 string SLinuxFile::Link(string from, string to) {
-	if (unlink(from.c_str()) < 0) {
-	 	throw ResourceException(make_error_code(errc(errno)));
-	}
-	if (symlink(from.c_str(), to.c_str()) < 0) {
+	unlink(from.c_str());
+	if (link(to.c_str(), from.c_str()) < 0) {
 	 	throw ResourceException(make_error_code(errc(errno)));
 	}
 	return from;
@@ -81,7 +79,7 @@ SILinuxFile::SILinuxFile(const string& path, const SLinuxFile& link)
 /**
  * status
  */
-bool SILinuxFile::Good(){
+bool SILinuxFile::good() {
 	auto cur = lseek(_handler(), 0, SEEK_CUR);
 	auto end = lseek(_handler(), 0, SEEK_END);
 	return end != lseek(_handler(), cur, SEEK_SET);

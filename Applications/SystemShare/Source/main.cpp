@@ -65,6 +65,9 @@ using namespace std;
     os << "AUTHOR:"<< endl;                                                                         \
     os << "\t" << "Luis Monteiro <monteiro.lcm@gmail.com>"<< endl;                                  \
 } while(0)
+
+
+#include <SVariable.h>
 /**--------------------------------------------------------------------------------------------------------------------*
  * main
  *---------------------------------------------------------------------------------------------------------------------*/
@@ -88,45 +91,78 @@ int main(int argc, char** argv) {
     /**
      * configure machine
      */
-    SMachine m("system.share", {
-        Module::Config {
-            Module::Base {
-                { "uri",  "encoder"},
-                { "type", "encode"},
-                { "verbose", "4"}
+    SMachine m("system.share", {{
+        {"M", {{
+            { "uri",  "encoder"},
+            { "type", "encode"},
+            { "verbose", "4"}
+        }}},
+        {"F", {{
+            {"type", "message"},
+            { "verbose", "4"}
+        }}},
+        {"I", {{
+            { "uri",  "127.0.0.1:1357"},
+            { "type", "message.udp"},
+            { "verbose", "4"}
+        }}},
+        {"O",{
+            { 
+                { "uri",  "/tmp/out.1"},
+                { "type", "message.file"}
             },
-            Module::Function {
-                {"type", "message"},
-                { "verbose", "4"}
+            {
+                { "uri",  "/tmp/out.2"},
+                { "type", "message.file"}
             },
-            Module::Inputs {
-                Module::Input {
-                    { "uri",  "127.0.0.1:1357"},
-                    { "type", "message.udp"},
-                    { "verbose", "4"}
-                }
-            },
-            Module::Outputs {
-                Module::Output { 
-                    { "uri",  "/tmp/out.1"},
-                    { "type", "message.file"}
-                },
-                Module::Output {
-                    { "uri",  "/tmp/out.2"},
-                    { "type", "message.file"}
-                },
-                Module::Output {
-                    { "uri",  "/tmp/out.3"},
-                    { "type", "message.file"}
-                }
+            {
+                { "uri",  "/tmp/out.3"},
+                { "type", "message.file"}
             }
-        }
-    });
+        }}
+    }});
+
+    
+    // SMachine m("system.share", { 
+        
+    //     Module::Config {
+    //         Module::Base {
+    //             { "uri",  "encoder"},
+    //             { "type", "encode"},
+    //             { "verbose", "4"}
+    //         },
+    //         Module::Function {
+    //             {"type", "message"},
+    //             { "verbose", "4"}
+    //         },
+    //         Module::Inputs {
+    //             Module::Input {
+    //                 { "uri",  "127.0.0.1:1357"},
+    //                 { "type", "message.udp"},
+    //                 { "verbose", "4"}
+    //             }
+    //         },
+    //         Module::Outputs {
+    //             Module::Output { 
+    //                 { "uri",  "/tmp/out.1"},
+    //                 { "type", "message.file"}
+    //             },
+    //             Module::Output {
+    //                 { "uri",  "/tmp/out.2"},
+    //                 { "type", "message.file"}
+    //             },
+    //             Module::Output {
+    //                 { "uri",  "/tmp/out.3"},
+    //                 { "type", "message.file"}
+    //             }
+    //         }
+    //     }
+    // });
     /**
      * run machine
      */
     while (m.Process(chrono::seconds(10))) {
-        cout << m.Good() << endl;
+        cout << m.good() << endl;
     }
     /**
      */

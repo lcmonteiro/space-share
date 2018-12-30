@@ -19,8 +19,6 @@ TEST(SFileResource, Move)
 {
     SOFileResource f1("/tmp/test1");
     SOFileResource f2("/tmp/test2");
-
-
     SOFileResource f(SRandom::FileName(), f1);
     
 
@@ -34,6 +32,7 @@ TEST(SFileResource, Move)
     //f2 = move(f1);
 
 
-    EXPECT_EQ(f1.path(), "/tmp/test2");
+    EXPECT_NE(f.path(), "/tmp/test1");
+    EXPECT_EQ(f1.path(), "/tmp/test1");
     EXPECT_EQ(f2.path(), "/tmp/test2");
 }

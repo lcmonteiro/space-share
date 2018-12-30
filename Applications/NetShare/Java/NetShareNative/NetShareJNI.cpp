@@ -67,7 +67,7 @@ extern "C" {
         JNIEXPORT jfloat JNICALL Java_com_share_cwrapper_netshare_NetShare_Good(
                 JNIEnv * env, jobject obj, jint id
         ) {
-                return __networks.at(id).Good();
+                return __networks.at(id).good();
         }
         /**
          */
