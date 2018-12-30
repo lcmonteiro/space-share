@@ -115,10 +115,10 @@ private:
               __poll.Delete(e.second);
         }
         // clear resource map
-        __map.clear();
+        __map.Clear();
         // update resource map
         for (auto l = road.begin(), e = road.end(); l != e; ++l) {
-            __map.insert(l, static_cast<SLinuxResource*> (&l->second->resource()));
+            __map.Insert(l, static_cast<SLinuxResource*> (&l->second->resource()));
         }
         // fill resource poll
         for(auto& e : __map) {
@@ -132,8 +132,8 @@ private:
     list<Location> wait() {
         list<Location> res;
         // wait and read
-        for(auto& r : __poll.Poll(__timeout, __map.size())) {
-            res.push_back(__map.rfind(r));
+        for(auto& r : __poll.Poll(__timeout, __map.Size())) {
+            res.push_back(__map.Find2(r));
         }
         // return a list of changed resources
         return res;

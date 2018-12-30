@@ -32,7 +32,7 @@ static string Get(string data, const string def) {
  */
 SAddress::SAddress(
 	const string& addr
-):string(addr) {
+): string(addr) {
 	smatch sm;
 	if (!regex_match(*this, sm, std::regex(__ADDRESS_FMT__))) {
 		throw logic_error("bad address format");
@@ -46,14 +46,14 @@ SAddress::SAddress(
 	__path = Get(sm[4].str(), "");
 }
 /**
- * 
+ * serialise 
  */
 SAddress::SAddress(
 	const string& user, 
 	const string& host, 
 	const uint16_t port, 
 	const string& path
-):string(), __name(user), __host(host), __port(port), __path(path) {
+): string(), __name(user), __host(host), __port(port), __path(path) {
 	ostringstream os;
 	// save name
 	if(!__name.empty()) { 

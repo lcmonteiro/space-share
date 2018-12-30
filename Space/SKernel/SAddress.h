@@ -1,10 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
+/**
  * File:   SAddress.h
  * Author: Luis Monteiro
  *
@@ -13,6 +7,7 @@
 #ifndef SADDRESS_H
 #define SADDRESS_H
 /**
+ * std
  */
 #include <string>
 /**
@@ -56,8 +51,6 @@ public:
 	SAddress& operator=(SAddress&& addr) = default;
 	/**
 	 * copy operator 
-         * copy operator 
-	 * copy operator 
 	 */
 	SAddress& operator=(const SAddress& addr) = default;
 	/**
@@ -96,10 +89,10 @@ private:
 	/**
 	 * attributes
 	 */
-	string __name;
-	string __host;
+	string   __name;
+	string   __host;
 	uint16_t __port;
-	string __path;
+	string   __path;
 	/**
 	 * utils
 	 */
