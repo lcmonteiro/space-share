@@ -126,8 +126,6 @@ private:
     IFrame __buffer;
     /**
      * resource 
-	 * resource 
-     * resource 
      */
     RESOURCE __res;
 };
