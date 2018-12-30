@@ -48,7 +48,7 @@ public:
     /**
 	 * get location
 	 */
-	string path();
+	string path() const;
     /**
      * -------------------------------------------------------------------------------------------------------------
      * IO functions
@@ -88,10 +88,10 @@ protected:
     /**
      * get native handlers
      */
-    inline int _handler() {
+    inline int _handler() const {
         return __h;
     }
-    inline string _handler_path() {
+    inline string _handler_path() const {
 	    ostringstream os;
 	    os << "/proc/self/fd/" << _handler();
         return os.str();

@@ -13,12 +13,12 @@ TEST(SMachine, FILE)
     /**
      * files
      */
-    auto input  = SRandom::fileName();
-    auto output = SRandom::fileName();
+    auto input  = SRandom::FileName();
+    auto output = SRandom::FileName();
     /**
      * create test data
      */
-    SRandom::file(input, 1000);
+    SRandom::File(input, 1000);
     /**
      * configure machine
      */
@@ -30,11 +30,11 @@ TEST(SMachine, FILE)
         }).AddInput({
             { "uri", input}, { "type", "message.file"}, { "verbose", "4"}
         }).AddOutput({
-            { "uri",  SRandom::fileName()}, { "type", "message.file"}
+            { "uri",  SRandom::FileName()}, { "type", "message.file"}
         }).AddOutput({
-            { "uri",  SRandom::fileName()}, { "type", "message.file"}
+            { "uri",  SRandom::FileName()}, { "type", "message.file"}
         }).AddOutput({
-            { "uri",  SRandom::fileName()}, { "type", "message.file"}
+            { "uri",  SRandom::FileName()}, { "type", "message.file"}
         })
     );
     /***

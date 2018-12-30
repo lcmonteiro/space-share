@@ -33,10 +33,6 @@ public:
 	 */
 	size_t position(); 
 	/**
-	 * swap data
-	 */
-	void swap(SLinuxFile& file);
-	/**
 	 * --------------------------------------------------------------------------------------------
 	 * static functions
 	 * --------------------------------------------------------------------------------------------
@@ -51,6 +47,10 @@ public:
  	 * get temporary dir
  	 */
 	static string TmpPath();
+	/**
+	 * link file
+	 */
+	string Link(string from, string to);
 };
 
 class SILinuxFile : public SLinuxFile {
@@ -61,6 +61,7 @@ public:
 	 * constructors
 	 */
 	SILinuxFile(const string& path);
+	SILinuxFile(const string& path, const SLinuxFile& link);
 	/**
 	 * status
 	 */
@@ -75,6 +76,7 @@ public:
 	 * constructors
 	 */
 	SOLinuxFile(const string& path);
+	SOLinuxFile(const string& path, const SLinuxFile& link);
 };
 
 #endif /* SLINUXFILE_H */

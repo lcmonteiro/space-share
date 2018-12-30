@@ -50,8 +50,8 @@ public:
         SOFileResource resource() {
                 return SOFileResource(SOLinuxDirectory::resource());
         }
-        SOFileResource getResource(const string& name) {
-                return SOFileResource(SOLinuxDirectory::getResource(name));
+        SOFileResource resource(const string& name) {
+                return SOFileResource(SOLinuxDirectory::resource(name));
         }
 };
 /**

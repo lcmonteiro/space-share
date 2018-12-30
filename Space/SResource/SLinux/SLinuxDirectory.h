@@ -95,7 +95,7 @@ public:
 	 * get resource
 	 */
 	SOLinuxFile resource();
-	SOLinuxFile getResource(const string& name);
+	SOLinuxFile resource(const string& name);
 protected:
 	using SLinuxDirectory::SLinuxDirectory;
 	/**

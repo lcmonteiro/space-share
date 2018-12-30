@@ -117,7 +117,7 @@ void SODirConnector::_write(const Container& container) {
 //		 *-----------------------------------------------------------------------------------------------------*/
 //		[this]() {
 //			try {
-//			       __res = __dir.getResource(string(__path.begin(),__path.end()));
+//			       __res = __dir.resource(string(__path.begin(),__path.end()));
 //			} catch (...) {
 //			       return 4;
 //			}

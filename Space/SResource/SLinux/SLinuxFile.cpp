@@ -15,6 +15,7 @@
  */
 #include <vector>
 /**
+ * space
  */
 #include "SLinuxFile.h"
 /**
@@ -38,62 +39,16 @@ size_t SLinuxFile::position() {
 	return size_t(cur);
 }
 /**
- * swap names
+ * link file
  */
-#include <iostream>
-void SLinuxFile::swap(SLinuxFile& file) {
-	auto p1 = path();
-	auto p2 = file.path();
-
-	if (unlink(p1.c_str()) < 0) {
+string SLinuxFile::Link(string from, string to) {
+	if (unlink(from.c_str()) < 0) {
 	 	throw ResourceException(make_error_code(errc(errno)));
 	}
-	cout << getpid() << " " << _handler_path() << p1 << endl;
-	// if (unlink(p2.c_str()) < 0) {
-	//  	throw ResourceException(make_error_code(errc(errno)));
-	// }
-	if (linkat(AT_FDCWD, _handler_path().c_str(), AT_FDCWD, p1.c_str(), AT_SYMLINK_FOLLOW) < 0) {
-		throw ResourceException(make_error_code(errc(errno)), _handler_path() + p1);
+	if (symlink(from.c_str(), to.c_str()) < 0) {
+	 	throw ResourceException(make_error_code(errc(errno)));
 	}
-
-
-	// auto p = path();
-	// if (unlink(p.c_str()) < 0) {
-	// 	throw ResourceException(make_error_code(errc(errno)));
-	// }
-	// ostringstream os;
-	// os << "/proc/self/fd/" << _handler();
-	// if (link(p.c_str(), "/tmp/test1232") < 0) {
-	// 	throw ResourceException(make_error_code(errc(errno)));
-	// }
-	// if(symlink ("/tmp/test1232", os.str().c_str()) < 0) {
-	// 	throw ResourceException(make_error_code(errc(errno)));
-	// }
-	// // template
-	// auto t = tmpdir() + "/swap-XXXXXX";
-	// // data
-	// vector<char> tmp(p1.begin(), p1.end());
-	// tmp.resize(PATH_MAX);
-	// // lock
-	// auto h = mkstemp(tmp.data());
-
-	// auto p1 = string("/tmp/test1232");
-
-	// auto p2 = this->path();
-	// auto p3 = file.path();
-	// for(auto& a : vector<pair<const string&, const string&>>{
-	// 	{p2, p1}, {p3, p2}, {p1, p3}
-	// }) {
-	// 	if (link(a.first.c_str(), a.second.c_str()) < 0) {
-	// 		throw ResourceException(make_error_code(errc(errno)));
-	// 	}
-	// 	if (unlink(a.first.c_str()) < 0) {
-	// 		throw ResourceException(make_error_code(errc(errno)));
-	// 	}
-	// }
-
-	// dup2(_handler(), file._handler());
-
+	return from;
 }
 /**
  * get temporary directory
@@ -119,6 +74,10 @@ SILinuxFile::SILinuxFile(const string& path)
 : SLinuxFile(
 	open(path.data(), O_RDONLY)
 ) {}
+SILinuxFile::SILinuxFile(const string& path, const SLinuxFile& link) 
+: SILinuxFile(
+	Link(path, link.path())
+) {}
 /**
  * status
  */
@@ -133,4 +92,8 @@ bool SILinuxFile::Good(){
 SOLinuxFile::SOLinuxFile(const string& path) 
 : SLinuxFile(
 	open(path.data(), O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
+) {}
+SOLinuxFile::SOLinuxFile(const string& path, const SLinuxFile& link) 
+: SOLinuxFile(
+	Link(path, link.path())
 ) {}

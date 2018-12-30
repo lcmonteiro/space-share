@@ -113,6 +113,6 @@ SOLinuxFile SOLinuxDirectory::resource() {
 	return SOLinuxFile(__path + "/" + to_string(__position++ % __capacity));
 }
 
-SOLinuxFile SOLinuxDirectory::getResource(const string& name) {
+SOLinuxFile SOLinuxDirectory::resource(const string& name) {
 	return SOLinuxFile(__path + "/" + name);
 }

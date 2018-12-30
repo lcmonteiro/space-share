@@ -23,13 +23,11 @@ public:
  */
 class SIFileResource : public SILinuxFile {
 public:
+        using SILinuxFile::SILinuxFile;
+        using SILinuxFile::operator=;
         /**
 	 * constructors
 	 */
-	SIFileResource() : SILinuxFile() {       
-        }
-	SIFileResource(const string& path) : SILinuxFile(path) {
-        }
         SIFileResource(SILinuxFile&& file) : SILinuxFile(move(file)) {
         }
 };
@@ -37,13 +35,11 @@ public:
  */
 class SOFileResource : public SOLinuxFile {
 public:
+        using SOLinuxFile::SOLinuxFile;
+        using SOLinuxFile::operator=;
         /**
 	 * constructors
 	 */
-	SOFileResource() : SOLinuxFile() {       
-        }
-	SOFileResource(const string& path) : SOLinuxFile(path) {
-        }
         SOFileResource(SOLinuxFile&& file) : SOLinuxFile(move(file)) {
         }
 };

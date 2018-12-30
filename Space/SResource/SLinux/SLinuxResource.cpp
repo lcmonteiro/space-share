@@ -40,7 +40,7 @@ bool SLinuxResource::valid() {
 /**
  * get file path
  */
-string SLinuxResource::path() {
+string SLinuxResource::path() const {
 	vector<char> out;
 	//read real path
 	int len = 0;
