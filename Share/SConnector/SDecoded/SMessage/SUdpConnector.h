@@ -39,6 +39,9 @@ class ResourceAdapterUdp : private SSocketResource {
 public:
     using SSocketResource::SSocketResource;
     using SSocketResource::operator=;
+    using SSocketResource::fill;
+    using SSocketResource::drain;
+    using SSocketResource::good;
     /**
      * interfaces
      */
@@ -46,16 +49,7 @@ public:
         return *this;
     }
     inline void Wait(const SAddress& uri) {
-        SSocketResource::Wait(uri.Host(), uri.Port(), DGRAM);
-    }
-    inline void Fill(Frame& buf) {
-        SSocketResource::Fill(buf);
-    }
-    inline void Drain(const Frame& buf) {
-        SSocketResource::Drain(buf);
-    }
-    inline bool Good() {
-        return SSocketResource::Good();
+        SSocketResource::wait(uri.Host(), uri.Port(), DGRAM);
     }
     inline void Reset() {
         *this = SSocketResource();

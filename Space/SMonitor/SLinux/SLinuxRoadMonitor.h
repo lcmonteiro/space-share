@@ -57,7 +57,7 @@ public:
      * -------------------------------------------------------------------------------------------------------------
      * get resource
      */
-    inline Resource& GetResource() {
+    inline Resource& resource() {
         return __poll;
     }
     /**
@@ -118,7 +118,7 @@ private:
         __map.clear();
         // update resource map
         for (auto l = road.begin(), e = road.end(); l != e; ++l) {
-            __map.insert(l, static_cast<SLinuxResource*> (&l->second->GetResource()));
+            __map.insert(l, static_cast<SLinuxResource*> (&l->second->resource()));
         }
         // fill resource poll
         for(auto& e : __map) {

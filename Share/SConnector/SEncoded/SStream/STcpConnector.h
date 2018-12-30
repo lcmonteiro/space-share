@@ -37,6 +37,9 @@ class ResourceAdapterTcp : private SSocketResource {
 public:
     using SSocketResource::SSocketResource;
     using SSocketResource::operator=;
+    using SSocketResource::fill;
+    using SSocketResource::drain;
+    using SSocketResource::good;
     /**
      * interfaces
      */
@@ -44,16 +47,7 @@ public:
         return *this;
     }
     inline void Connect(const SAddress& uri) {
-        SSocketResource::Connect(uri.Host(), uri.Port(), STREAM);
-    }
-    inline void Fill(IFrame& buf) {
-        SSocketResource::Fill(buf);
-    }
-    inline void Drain(const Frame& buf) {
-        SSocketResource::Drain(buf);
-    }
-    inline bool Good() {
-        return SSocketResource::Good();
+        SSocketResource::connect(uri.Host(), uri.Port(), STREAM);
     }
     inline void Reset() {
         *this = SSocketResource();

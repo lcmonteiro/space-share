@@ -56,7 +56,7 @@ protected:
 	 * inline
 	 */
 	inline bool _good() override{
-		return __res.Good();
+		return __res.good();
 	}
 	inline void _close() override {
 		__res = SIRCResource();

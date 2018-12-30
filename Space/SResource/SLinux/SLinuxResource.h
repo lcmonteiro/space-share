@@ -46,6 +46,10 @@ public:
      */
     bool valid();
     /**
+	 * get location
+	 */
+	string path();
+    /**
      * -------------------------------------------------------------------------------------------------------------
      * IO functions
      * -------------------------------------------------------------------------------------------------------------
@@ -82,10 +86,15 @@ protected:
      */
     SLinuxResource(int fd);
     /**
-     * get native handler
+     * get native handlers
      */
-    inline int handler() {
+    inline int _handler() {
         return __h;
+    }
+    inline string _handler_path() {
+	    ostringstream os;
+	    os << "/proc/self/fd/" << _handler();
+        return os.str();
     }
 private:
     /**
@@ -100,10 +109,6 @@ private:
      * read resource
      */
     size_t __read(Frame::pointer p, Frame::size_type s);
-    /**
-     * move resource
-     */                
-    void __move(int& from, int& to);
 };
 
 #endif /* SLINUXRESOURCE_H */

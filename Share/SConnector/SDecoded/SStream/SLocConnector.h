@@ -34,6 +34,9 @@ class ResourceAdapterLoc : private SSocketResource {
 public:
     using SSocketResource::SSocketResource;
     using SSocketResource::operator=;
+    using SSocketResource::fill;
+    using SSocketResource::drain;
+    using SSocketResource::good;
     /**
      * interfaces
      */
@@ -41,16 +44,7 @@ public:
         return *this;
     }
     inline void Wait(const SAddress& uri) {
-        SSocketResource::Bind(uri.Path(), STREAM);
-    }
-    inline void Fill(IFrame& buf) {
-        SSocketResource::Fill(buf);
-    }
-    inline void Drain(const Frame& buf) {
-        SSocketResource::Drain(buf);
-    }
-    inline bool Good() {
-        return SSocketResource::Good();
+        SSocketResource::bind(uri.Path(), STREAM);
     }
     inline void Reset() {
         *this = SSocketResource();

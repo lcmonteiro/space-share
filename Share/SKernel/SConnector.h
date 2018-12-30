@@ -250,7 +250,7 @@ public:
     virtual ~SInputConnector() = default;
     /**
      */
-    virtual Resource& GetResource() = 0;
+    virtual Resource& resource() = 0;
     /**
      * read data
      */
@@ -331,7 +331,7 @@ public:
     virtual ~SInOutputConnector() = default;
         /**
      */
-    virtual Resource& GetResource() = 0;
+    virtual Resource& resource() = 0;
     /**
      * read data
      */
@@ -404,12 +404,13 @@ public:
      */
     virtual ~SInputConnector() = default;
     /**
+     * get resource
      */
-    virtual Resource& GetResource() = 0;
+    virtual Resource& resource() = 0;
     /**
      * read coded data
      */
-    inline Document Read(){
+    inline Document Read() {
         try {
             return _read();
         } catch (ResourceExceptionABORT& ex) {
@@ -489,7 +490,7 @@ public:
     virtual ~SInOutputConnector() = default;    
     /**
      */
-    virtual Resource& GetResource() = 0;
+    virtual Resource& resource() = 0;
     /**
      * read coded data
      */

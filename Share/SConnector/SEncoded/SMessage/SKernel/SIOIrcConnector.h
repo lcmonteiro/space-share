@@ -48,7 +48,7 @@ public:
 	/**
 	 * inline overrides
 	 */
-	inline Resource& GetResource() override {
+	inline Resource& resource() override {
 		return __res;
 	}
 protected:
@@ -68,7 +68,7 @@ protected:
 	 * inline
 	 */
 	inline bool _good() override{
-		return __res.Good();
+		return __res.good();
 	}
 	inline void _close() override {
 		__res = SIRCResource();

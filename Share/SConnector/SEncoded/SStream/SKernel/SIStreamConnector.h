@@ -41,7 +41,7 @@ public:
     /**
      * inline overrides
      */
-    inline Resource& GetResource() override {
+    inline Resource& resource() override {
         return __res.Base();
     }
 protected:

@@ -29,13 +29,13 @@ namespace Message {
          * connect
          */
         inline void Connect(const string& host) {
-            SLinuxSocket::Connect(host, SLinuxSocket::DGRAM);
+            SLinuxSocket::connect(host, SLinuxSocket::DGRAM);
         }
         /**
          * bind
          */
         inline void Bind(const string& host) {
-            SLinuxSocket::Bind(host, SLinuxSocket::DGRAM);
+            SLinuxSocket::bind(host, SLinuxSocket::DGRAM);
         }
         /**
          * wait

@@ -43,62 +43,62 @@ public:
 	/**
 	 * status
 	 */
-	bool Good();
+	bool good();
 	/**
 	 * timeout
 	 */
-	void SetRxTimeout(int timeout);
-	void SetTxTimeout(int timeout);
+	void setRxTimeout(int timeout);
+	void setTxTimeout(int timeout);
 	/**
 	 * behavior
 	 */
-	void SetNoDelay(bool flag);
-        /**
-         * -------------------------------------------------------------------------------------------------------------
-         * link functions
-         * -------------------------------------------------------------------------------------------------------------
-         **
+	void setNoDelay(bool flag);
+	/**
+	 * -------------------------------------------------------------------------------------------------------------
+	 * link functions
+	 * -------------------------------------------------------------------------------------------------------------
+	 **
 	 * bind
 	 */
-	void Bind(const string& local, Type type);
-        /**
-         * wait connection
-         */
-        void Wait(const string& host, uint16_t port, Type type);
-        /**
+	void bind(const string& local, Type type);
+	/**
+	 * wait connection
+	 */
+	void wait(const string& host, uint16_t port, Type type);
+	/**
 	 * connect to local
 	 */
-	void Connect(const string& host, Type type);
+	void connect(const string& host, Type type);
 	/**
 	 * connect to host
 	 */
-	void Connect(
-                const string& host, uint16_t host_port, Type type, const string& local = "", uint16_t local_port = 0
-        );
+	void connect(
+		const string& host, uint16_t host_port, Type type, const string& local = "", uint16_t local_port = 0
+	);
 	/**
-         * -------------------------------------------------------------------------------------------------------------
+	 * -------------------------------------------------------------------------------------------------------------
 	 * IO functions
-         * -------------------------------------------------------------------------------------------------------------
-         * read frame
+	 * -------------------------------------------------------------------------------------------------------------
+	 * read frame
 	 */
-	Frame Read(size_t size);
+	Frame read(size_t size);
 	/**
-         * fill frame
+	 * fill frame
 	 */
 	template<class F>
-	SLinuxSocket& Fill(F& f) {
-		f.Insert(Receive(f.Data(), f.Size()));
+	SLinuxSocket& fill(F& f) {
+		f.Insert(__receive(f.Data(), f.Size()));
 		return *this;
 	}
         /**
          * drain frame
          */
-	SLinuxSocket& Drain(OFrame&& f);
-	SLinuxSocket& Drain(const Frame& f);
+	SLinuxSocket& drain(OFrame&& f);
+	SLinuxSocket& drain(const Frame& f);
 	/**
-         * -------------------------------------------------------------------------------------------------------------
+	 * -------------------------------------------------------------------------------------------------------------
 	 * Text IO functions
-         * -------------------------------------------------------------------------------------------------------------
+	 * -------------------------------------------------------------------------------------------------------------
 	 */
 	template <class V>
 	inline SLinuxSocket& operator<<(V v) {
@@ -124,10 +124,10 @@ private:
 	/**
 	 * linux interface
 	 */
-	size_t Send(Frame::const_pointer p, Frame::size_type s);
+	size_t __send(Frame::const_pointer p, Frame::size_type s);
 	/**
 	 */
-	size_t Receive(Frame::pointer p, Frame::size_type s);
+	size_t __receive(Frame::pointer p, Frame::size_type s);
 };
 
 #endif /* SLINUXSOCKET_H */

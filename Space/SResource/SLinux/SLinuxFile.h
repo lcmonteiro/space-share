@@ -25,10 +25,6 @@ public:
 	using SLinuxResource::SLinuxResource;
 	using SLinuxResource::operator=;
 	/**
-	 * get path
-	 */
-	string path();
-	/**
 	 * get size
 	 */
 	size_t size(); 
@@ -46,11 +42,15 @@ public:
 	 * --------------------------------------------------------------------------------------------
 	 * get base name
 	 */
-	static string Basename(const string& pathname){
+	static string BaseName(const string& pathname){
 		return {std::find_if(pathname.rbegin(), pathname.rend(),
 			[](char c) {return c == '/'; }
 		).base(), pathname.end()};
 	}
+	/**
+ 	 * get temporary dir
+ 	 */
+	static string TmpPath();
 };
 
 class SILinuxFile : public SLinuxFile {

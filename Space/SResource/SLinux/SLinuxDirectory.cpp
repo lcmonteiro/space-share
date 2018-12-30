@@ -47,7 +47,7 @@ SILinuxDirectory::SILinuxDirectory(const string& path) : SLinuxDirectory(path) {
 }
 /**
  */
-SILinuxFile SILinuxDirectory::getResource() {
+SILinuxFile SILinuxDirectory::resource() {
 	char buf[sizeof (struct inotify_event) + 0x400] __attribute__((aligned(__alignof__(struct inotify_event))));
 	/**
 	 * read raw data
@@ -109,7 +109,7 @@ SOLinuxDirectory::SOLinuxDirectory(
 }
 /**
  */
-SOLinuxFile SOLinuxDirectory::getResource() {
+SOLinuxFile SOLinuxDirectory::resource() {
 	return SOLinuxFile(__path + "/" + to_string(__position++ % __capacity));
 }
 

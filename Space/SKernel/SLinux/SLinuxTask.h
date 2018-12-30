@@ -90,7 +90,7 @@ public:
     /**
      * get resource
      */
-    inline Resource& GetResource() {
+    inline Resource& resource() {
         return __event;
     }
     /**

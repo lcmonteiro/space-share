@@ -47,8 +47,8 @@ public:
         /**
          * get resources
          */
-        SOFileResource getResource() {
-                return SOFileResource(SOLinuxDirectory::getResource());
+        SOFileResource resource() {
+                return SOFileResource(SOLinuxDirectory::resource());
         }
         SOFileResource getResource(const string& name) {
                 return SOFileResource(SOLinuxDirectory::getResource(name));

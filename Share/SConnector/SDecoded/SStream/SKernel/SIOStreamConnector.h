@@ -44,7 +44,7 @@ public:
     /**
      * inline overrides
      */
-    inline Resource& GetResource() override {
+    inline Resource& resource() override {
         return __res.Base();
     }
 protected:
@@ -64,7 +64,7 @@ protected:
              * Fill buffer
              *--------------------------------------------------------------------------------------------**/
             while (!__buffer.Full()) {
-                __res.Fill(__buffer);
+                __res.fill(__buffer);
             }
             /**---------------------------------------------------------------------------------------------
              * swap buffers
@@ -139,7 +139,7 @@ protected:
          * write nframes
          *----------------------------------------------------------------------------------------------------**/
         for (auto& f : container) {
-            __res.Drain(f);
+            __res.drain(f);
         }
     }
     /**
@@ -179,7 +179,7 @@ protected:
         /**-----------------------------------------------------------------------------------------------------
          * verify resource status
          *----------------------------------------------------------------------------------------------------**/
-        return __res.Good();
+        return __res.good();
     }
     /**
      * close

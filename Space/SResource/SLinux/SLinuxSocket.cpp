@@ -42,43 +42,43 @@ SLinuxSocket::~SLinuxSocket() {
 }
 /**
  */
-bool SLinuxSocket::Good() {
+bool SLinuxSocket::good() {
     int error = 0;
     socklen_t len = sizeof (error);
     /**
      * validation
      */
-    if (getsockopt(__h, SOL_SOCKET, SO_ERROR, &error, &len) < 0) {
+    if (::getsockopt(__h, SOL_SOCKET, SO_ERROR, &error, &len) < 0) {
         return false;
     }
     return error == 0;
 }
 /**
  */
-void SLinuxSocket::SetTxTimeout(int timeout) {
+void SLinuxSocket::setTxTimeout(int timeout) {
     struct timeval t = {
         .tv_sec = timeout,
         .tv_usec = 0
     };
-    if (setsockopt(__h, SOL_SOCKET, SO_SNDTIMEO, (void*) & t, sizeof (t)) < 0) {
+    if (::setsockopt(__h, SOL_SOCKET, SO_SNDTIMEO, (void*) & t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
 }
-void SLinuxSocket::SetRxTimeout(int timeout) {
+void SLinuxSocket::setRxTimeout(int timeout) {
     struct timeval t = {
         .tv_sec = timeout,
         .tv_usec = 0
     };
-    if (setsockopt(__h, SOL_SOCKET, SO_RCVTIMEO, (void*) & t, sizeof (t)) < 0) {
+    if (::setsockopt(__h, SOL_SOCKET, SO_RCVTIMEO, (void*) & t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
 }
 /**
  *
  */
-void SLinuxSocket::SetNoDelay(bool flag) {
+void SLinuxSocket::setNoDelay(bool flag) {
     int f = flag ? 1 : 0;
-    if (setsockopt(__h, IPPROTO_TCP, TCP_NODELAY, (void*) & f, sizeof (f)) < 0) {
+    if (::setsockopt(__h, IPPROTO_TCP, TCP_NODELAY, (void*) & f, sizeof (f)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
 }
@@ -87,7 +87,7 @@ void SLinuxSocket::SetNoDelay(bool flag) {
 #ifdef __DEBUG__
 #include <iostream>
 #endif
-void SLinuxSocket::Wait(const string& host, uint16_t port, Type type) {
+void SLinuxSocket::wait(const string& host, uint16_t port, Type type) {
     /**
      * bind parameters
      */
@@ -104,7 +104,7 @@ void SLinuxSocket::Wait(const string& host, uint16_t port, Type type) {
      * get info
      */
     struct addrinfo *result;
-    if (getaddrinfo(host.c_str(), to_string(port).c_str(), &hints, &result) != 0) {
+    if (::getaddrinfo(host.c_str(), to_string(port).c_str(), &hints, &result) != 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
@@ -117,22 +117,22 @@ void SLinuxSocket::Wait(const string& host, uint16_t port, Type type) {
         /**
          * create update resource
          */
-        SLinuxResource s(socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol));
+        SLinuxResource s(::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol));
         /**
          * set options
          */
         int opt = 1;
-        if (setsockopt(s._handler(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
+        if (::setsockopt(s._handler(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
             continue;
         }
-        if (bind(s._handler(), rp->ai_addr, rp->ai_addrlen) < 0) {
+        if (::bind(s._handler(), rp->ai_addr, rp->ai_addrlen) < 0) {
             continue;
         }
 #ifdef __DEBUG__
         /**
          */
         char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
-        if (getnameinfo(
+        if (::getnameinfo(
             rp->ai_addr, rp->ai_addrlen,
             hbuf, sizeof (hbuf),
             sbuf, sizeof (sbuf),
@@ -144,7 +144,7 @@ void SLinuxSocket::Wait(const string& host, uint16_t port, Type type) {
         /**
          * listen
          */
-        if (listen(s._handler(), 1) < -1) {
+        if (::listen(s._handler(), 1) < -1) {
             continue;
         }
         /**
@@ -158,23 +158,23 @@ void SLinuxSocket::Wait(const string& host, uint16_t port, Type type) {
         /**
          * settings
          */
-        SetRxTimeout(IO_TIMEOUT);
-        SetTxTimeout(IO_TIMEOUT);
+        setRxTimeout(IO_TIMEOUT);
+        setTxTimeout(IO_TIMEOUT);
         /**
          * free results
          **/
-        freeaddrinfo(result);
+        ::freeaddrinfo(result);
         return;
     }
     /**
      * fail
      **/
-    freeaddrinfo(result);
+    ::freeaddrinfo(result);
     throw ResourceException(make_error_code(errc::no_such_device_or_address));
 }
 /**
  */
-void SLinuxSocket::Connect(const string& host, uint16_t host_port, Type type, const string& local, uint16_t local_port) {
+void SLinuxSocket::connect(const string& host, uint16_t host_port, Type type, const string& local, uint16_t local_port) {
     /**
      * bind parameters
      */
@@ -182,7 +182,7 @@ void SLinuxSocket::Connect(const string& host, uint16_t host_port, Type type, co
     memset(&baddr, 0, sizeof (baddr));
     baddr.sin_family = AF_UNSPEC;
     baddr.sin_port = htons(local_port);
-    inet_pton(AF_INET, local.data(), &baddr.sin_addr);
+    ::inet_pton(AF_INET, local.data(), &baddr.sin_addr);
     /**
      * connect parameters
      */
@@ -196,7 +196,7 @@ void SLinuxSocket::Connect(const string& host, uint16_t host_port, Type type, co
      * get info
      */
     struct addrinfo *result;
-    if (getaddrinfo(host.c_str(), to_string(host_port).c_str(), &hints, &result) != 0) {
+    if (::getaddrinfo(host.c_str(), to_string(host_port).c_str(), &hints, &result) != 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
@@ -209,26 +209,26 @@ void SLinuxSocket::Connect(const string& host, uint16_t host_port, Type type, co
          * bind
          */
         if (!local.empty() && local_port) {
-            if (bind(s._handler(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
+            if (::bind(s._handler(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
                 continue;
             }
         }
         /**
          * settings
          */
-        s.SetRxTimeout(IO_TIMEOUT);
-        s.SetTxTimeout(IO_TIMEOUT);
+        s.setRxTimeout(IO_TIMEOUT);
+        s.setTxTimeout(IO_TIMEOUT);
         /**
          * try to connect
          */
-        if (connect(s._handler(), rp->ai_addr, rp->ai_addrlen) < 0) {
+        if (::connect(s._handler(), rp->ai_addr, rp->ai_addrlen) < 0) {
             continue;
         }
 #ifdef __DEBUG__
         /**
          */
         char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
-        if (getnameinfo(
+        if (::getnameinfo(
             rp->ai_addr, rp->ai_addrlen,
             hbuf, sizeof (hbuf),
             sbuf, sizeof (sbuf),
@@ -240,7 +240,7 @@ void SLinuxSocket::Connect(const string& host, uint16_t host_port, Type type, co
         /**
          * success
          **/
-        freeaddrinfo(result);
+        ::freeaddrinfo(result);
         /**
          * update
          **/
@@ -251,12 +251,12 @@ void SLinuxSocket::Connect(const string& host, uint16_t host_port, Type type, co
     /**
      * fail
      **/
-    freeaddrinfo(result);
+    ::freeaddrinfo(result);
     throw ResourceException(make_error_code(errc::no_such_device_or_address));
 }
 /**
  */
-void SLinuxSocket::Connect(const string& host, Type type) {
+void SLinuxSocket::connect(const string& host, Type type) {
     /**
      * connect parameters
      */
@@ -271,12 +271,12 @@ void SLinuxSocket::Connect(const string& host, Type type) {
     /**
      * settings
      */
-    s.SetRxTimeout(IO_TIMEOUT);
-    s.SetTxTimeout(IO_TIMEOUT);
+    s.setRxTimeout(IO_TIMEOUT);
+    s.setTxTimeout(IO_TIMEOUT);
     /**
      * connect
      */
-    if (connect(s._handler(), (struct sockaddr*) &caddr, sizeof (caddr)) < 0) {
+    if (::connect(s._handler(), (struct sockaddr*) &caddr, sizeof (caddr)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
@@ -285,7 +285,7 @@ void SLinuxSocket::Connect(const string& host, Type type) {
     *this = move(s);
 }
 
-void SLinuxSocket::Bind(const string& local, Type type) {
+void SLinuxSocket::bind(const string& local, Type type) {
     /**
      * bind parameters
      */
@@ -296,22 +296,22 @@ void SLinuxSocket::Bind(const string& local, Type type) {
     /**
      * create socket
      */
-    SLinuxSocket s(socket(PF_LOCAL, MAP_TYPE[type], 0));
+    SLinuxSocket s(::socket(PF_LOCAL, MAP_TYPE[type], 0));
     /**
      * options
      */
-    unlink(local.data());
+    ::unlink(local.data());
     /**
      * bind
      */        
-    if (bind(s._handler(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
+    if (::bind(s._handler(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }    
     /**
      * settings
      */
-    s.SetRxTimeout(IO_TIMEOUT);
-    s.SetTxTimeout(IO_TIMEOUT);
+    s.setRxTimeout(IO_TIMEOUT);
+    s.setTxTimeout(IO_TIMEOUT);
     /**
      * update
      **/
@@ -320,31 +320,31 @@ void SLinuxSocket::Bind(const string& local, Type type) {
 /*---------------------------------------------------------------------------------------------------------------------*
  * IO functions
  *---------------------------------------------------------------------------------------------------------------------*/
-Frame SLinuxSocket::Read(size_t size) {
+Frame SLinuxSocket::read(size_t size) {
     IFrame f(size);
     /**
      * receive
      */
     while (!f.Full()) {
-        f.Insert(Receive(f.Data(), f.Size()));
+        f.Insert(__receive(f.Data(), f.Size()));
     }
     return f;
 }
-SLinuxSocket& SLinuxSocket::Drain(OFrame&& f) {
+SLinuxSocket& SLinuxSocket::drain(OFrame&& f) {
     /**
      * send
      */
     while (!f.Empty()) {
-        f.Remove(Send(f.Data(), f.Size()));
+        f.Remove(__send(f.Data(), f.Size()));
     }
     return *this;
 }
-SLinuxSocket& SLinuxSocket::Drain(const Frame& f) {
+SLinuxSocket& SLinuxSocket::drain(const Frame& f) {
     /**
      * send
      */
     for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, Send(it.base(), distance(it, end)));
+        it = next(it, __send(it.base(), distance(it, end)));
     }
     return *this;
 }
@@ -356,11 +356,11 @@ SLinuxSocket& SLinuxSocket::operator>>(string& str) {
      * receive
      */
     for (auto it = str.begin(), end = str.end(); it != end; ++it) {
-        register string::value_type c;
+        string::value_type c;
         /**
          * read
          */
-        auto n = recv(__h, &c, 1, MSG_WAITALL);
+        auto n = ::recv(__h, &c, 1, MSG_WAITALL);
         if (n <= 0) {
             if (n < 0) {
                 if (errno == EAGAIN) {
@@ -379,10 +379,10 @@ SLinuxSocket& SLinuxSocket::operator>>(string& str) {
         /**
          * verify
          */
-        if (iscntrl(c)) {
+        if (::iscntrl(c)) {
             // read end line
             if (c == '\r') {
-                recv(__h, &c, 1, MSG_WAITALL);
+                ::recv(__h, &c, 1, MSG_WAITALL);
                 str.erase(it, end);
                 break;
             }
@@ -407,7 +407,7 @@ SLinuxSocket& SLinuxSocket::operator<<(const string& str) {
     /**
      * write
      */
-    auto n = send(__h, str.data(), str.size(), MSG_NOSIGNAL | MSG_DONTWAIT);
+    auto n = ::send(__h, str.data(), str.size(), MSG_NOSIGNAL | MSG_DONTWAIT);
     if (n != int(str.size())) {
         *this = SLinuxSocket();
         throw OResourceExceptionABORT(make_error_code(errc(errno)));
@@ -418,8 +418,8 @@ SLinuxSocket& SLinuxSocket::operator<<(const string& str) {
 }
 /**
  */
-size_t SLinuxSocket::Send(Frame::const_pointer p, Frame::size_type s) {
-    auto n = send(__h, p, s, MSG_NOSIGNAL);
+size_t SLinuxSocket::__send(Frame::const_pointer p, Frame::size_type s) {
+    auto n = ::send(__h, p, s, MSG_NOSIGNAL);
     if (n <= 0) {
         if (n < 0) {
             *this = SLinuxSocket();
@@ -432,7 +432,7 @@ size_t SLinuxSocket::Send(Frame::const_pointer p, Frame::size_type s) {
 }
 /**
  */
-size_t SLinuxSocket::Receive(Frame::pointer p, Frame::size_type s) {
+size_t SLinuxSocket::__receive(Frame::pointer p, Frame::size_type s) {
     auto n = recv(__h, p, s, MSG_DONTWAIT);
     if (n <= 0) {
         if (n < 0) {
