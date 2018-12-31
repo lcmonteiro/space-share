@@ -154,7 +154,7 @@ void SLinuxSocket::Wait(const string& host, uint16_t port, Type type) {
         /**
          * accept connection
          */
-        *this = SLinuxSocket(accept(s._Handler(), (struct sockaddr *)&addr, &len));
+        *this = SLinuxSocket(::accept(s._Handler(), (struct sockaddr *)&addr, &len));
         /**
          * settings
          */
@@ -174,7 +174,8 @@ void SLinuxSocket::Wait(const string& host, uint16_t port, Type type) {
 }
 /**
  */
-void SLinuxSocket::Connect(const string& host, uint16_t host_port, Type type, const string& local, uint16_t local_port) {
+void SLinuxSocket::Connect(
+    const string& host, uint16_t host_port, Type type, const string& local, uint16_t local_port) {
     /**
      * bind parameters
      */
@@ -326,7 +327,7 @@ Frame SLinuxSocket::Read(size_t size) {
      * receive
      */
     while (!f.Full()) {
-        f.Insert(__receive(f.Data(), f.Size()));
+        f.Insert(__Receive(f.Data(), f.Size()));
     }
     return f;
 }
@@ -335,7 +336,7 @@ SLinuxSocket& SLinuxSocket::Drain(OFrame&& f) {
      * send
      */
     while (!f.Empty()) {
-        f.Remove(__send(f.Data(), f.Size()));
+        f.Remove(__Send(f.Data(), f.Size()));
     }
     return *this;
 }
@@ -344,7 +345,7 @@ SLinuxSocket& SLinuxSocket::Drain(const Frame& f) {
      * send
      */
     for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, __send(it.base(), distance(it, end)));
+        it = next(it, __Send(it.base(), distance(it, end)));
     }
     return *this;
 }
@@ -418,7 +419,7 @@ SLinuxSocket& SLinuxSocket::operator<<(const string& str) {
 }
 /**
  */
-size_t SLinuxSocket::__send(Frame::const_pointer p, Frame::size_type s) {
+size_t SLinuxSocket::__Send(Frame::const_pointer p, Frame::size_type s) {
     auto n = ::send(__h, p, s, MSG_NOSIGNAL);
     if (n <= 0) {
         if (n < 0) {
@@ -432,7 +433,7 @@ size_t SLinuxSocket::__send(Frame::const_pointer p, Frame::size_type s) {
 }
 /**
  */
-size_t SLinuxSocket::__receive(Frame::pointer p, Frame::size_type s) {
+size_t SLinuxSocket::__Receive(Frame::pointer p, Frame::size_type s) {
     auto n = recv(__h, p, s, MSG_DONTWAIT);
     if (n <= 0) {
         if (n < 0) {

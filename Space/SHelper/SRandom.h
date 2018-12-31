@@ -22,7 +22,17 @@
  */
 class SRandom { 
 public:
-    typedef std::mt19937 Generator;
+    using Generator = std::mt19937;
+    /**
+     * --------------------------------------------------------------------------------------------
+     * Random Number
+     * --------------------------------------------------------------------------------------------
+     **/
+    template <typename T = int, typename G = Generator>
+    static T Number() {
+        auto gen = G(__device());
+        return T(gen());
+    }
     /**
      * --------------------------------------------------------------------------------------------
      * Random String
@@ -104,7 +114,14 @@ public:
     static string FileName() {
         return SFileResource::TmpPath() + "/" + SRandom::String(16);
     }
+private:
+    static random_device __device;
 };
-
+/**
+ * static random device
+ */
+random_device SRandom::__device;
+/**
+ */
 #endif /* SRANDOM_H */
 

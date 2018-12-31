@@ -30,7 +30,7 @@ TEST(DecodedMessageUDP, FILE)
     
     // create data
     Container idata {
-        SRandom::Frame(1000)
+        SRandom::Frame(10), SFrame(4).Number(10)
     }; 
     // write 
     oc->Write(idata);

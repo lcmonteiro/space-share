@@ -60,9 +60,14 @@ typedef uint16_t numframes_t;
 typedef uint32_t framesize_t;
 /**
  * ------------------------------------------------------------------------------------------------
- * Exception
+ * Exceptions
  * ------------------------------------------------------------------------------------------------
  **/
+typedef class SFrameException : public range_error {
+public:
+    using range_error::range_error;
+} FrameException;
+
 typedef class SContainerException : public range_error {
 public:
     using range_error::range_error;
@@ -80,7 +85,9 @@ public:
      **/
     using Super::Super;
     /**
+     * ----------------------------------------------------
      * constructors
+     * ----------------------------------------------------
      */
     SFrame() = default;
 
@@ -94,7 +101,9 @@ public:
         reserve(capacity); assign(size, val);
     }
     /**
+     * ----------------------------------------------------
      * sum values
+     * ----------------------------------------------------
      */
     uint32_t Sum(uint32_t max) {
         uint32_t s = 0;
@@ -104,13 +113,15 @@ public:
         return s;
     }
     /**
+     * ----------------------------------------------------
      * unserialize number
+     * ----------------------------------------------------
      */
     template <class T>
     T Number() const {
         // set iterator position
         auto rit = rbegin();
-        for (auto i = 1; (i < sizeof (T)) && (rit != rend()); ++i, ++rit);
+        for (auto i = 0; (i < sizeof (T)) && (rit != rend()); ++i, ++rit);
         // decode number
         T result = 0;
         for (auto it = rit.base(); it != end(); ++it) {
@@ -120,7 +131,9 @@ public:
         return result;
     }
     /**
+     * ----------------------------------------------------
      * serialize number
+     * ----------------------------------------------------
      */
     template <class T>
     SFrame& Number(T val) {
@@ -133,26 +146,49 @@ public:
         return *this;
     }
     /**
+     * ----------------------------------------------------
      * get data
+     * ----------------------------------------------------
      */
     inline pointer Data() {
         return data();
     }
     /**
+     * ----------------------------------------------------
      * get size
+     * ----------------------------------------------------
      */
-    inline size_t Size() {
+    inline size_t Size() const {
         return size();
     }
     /**
-     * insert size
+     * ----------------------------------------------------
+     * insert size -> resize
+     * ----------------------------------------------------
      */
     inline SFrame& Insert(size_t size) {
         resize(size);
         return *this;
     }
     /**
+     * ----------------------------------------------------
+     * Shrink to size -> resize 
+     *  - throw exception when size > Size()
+     * ----------------------------------------------------
+     */
+    inline SFrame& Shrink(size_t size) {
+        if (Size() < size) {
+            throw FrameException(
+                "Shrink=(" + __to_string(Size()) + "<" + __to_string(size) + ")"
+            );
+        }
+        resize(size);
+        return *this;
+    }
+    /**
+     * ----------------------------------------------------
      * expand to capacity
+     * ----------------------------------------------------
      */
     inline SFrame& Expand() {
         resize(capacity());
@@ -167,7 +203,9 @@ public:
 typedef class SIFrame : public Frame {
 public:
     /**
+     * ----------------------------------------------------
      * constructors
+     * ----------------------------------------------------
      */
     SIFrame(size_t sz = 0) : Frame(sz), __cur(begin()) {
     }
@@ -179,35 +217,50 @@ public:
      */
     SIFrame& operator=(SIFrame&& f) = default;
     /**
+     * ----------------------------------------------------
      * shrink frame
+     * ----------------------------------------------------
      */
     inline SIFrame& Shrink() {
         resize(distance(begin(), __cur));
         return *this;
     }
     /**
+     * ----------------------------------------------------
      * get data
+     * ----------------------------------------------------
      */
     inline pointer Data() {
         return __cur.base();
     }
     /**
+     * ----------------------------------------------------
      * get size
+     * ----------------------------------------------------
      */
     inline size_t Size() {
         return distance(__cur, end());
     }
     /**
+     * ----------------------------------------------------
      * reserve size
+     * ----------------------------------------------------
      */
-    inline SIFrame& Reserve(size_t size) {
-        if (size > Size()) {
-            Frame::resize(Frame::size() + size);
+    inline SIFrame& Reserve(size_t sz) {
+        auto sz_rem = Size();
+        if (sz > sz_rem) {
+            auto sz_cur = size();
+            // resize vector    
+            resize(sz_cur + sz - sz_rem);
+            // reset pointer
+            __cur = begin() + sz_cur;
         }
         return *this;
     }
     /**
+     * ----------------------------------------------------
      * insert size
+     * ----------------------------------------------------
      */
     inline SIFrame& Insert(size_t size) {
         __cur += size;
@@ -221,20 +274,27 @@ public:
         return *this;
     }
     /**
-     * Seek to position given by (pos)
+     * ----------------------------------------------------
+     * seek to position given by (pos)
+     * ----------------------------------------------------
      */
     inline SIFrame& Seek(size_t pos) {
         __cur = next(begin(), pos);
         return *this;
     }
     /**
-     * Shift to position given by (offset)
+     * ----------------------------------------------------
+     * shift to position given by (offset)
+     * ----------------------------------------------------
      */
     inline SIFrame& Shift(size_t offset){
         __cur = __rotate(begin(), next(begin(), offset), __cur);
         return *this;
     }
     /**
+     * ----------------------------------------------------
+     * check size
+     * ----------------------------------------------------
      */
     inline bool Empty() const {
         return (__cur <= begin());
