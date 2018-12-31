@@ -1,11 +1,11 @@
 /* 
- * Container:   SLocalResource.h
+ * Container:   SRemoteResource.h
  * Author:      Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
  */
-#ifndef SLOCALRESOURCE_H
-#define SLOCALRESOURCE_H
+#ifndef SREMOTERESOURCE_H
+#define SREMOTERESOURCE_H
 /**
  */
 #include "SResourceMonitor.h"
@@ -22,15 +22,14 @@
  * message
  */
 namespace Message {
-    
-    class SLocalResource : public SLinuxSocket {
+    class SRemoteResource : public SLinuxSocket {
     public:
         using SLinuxSocket::SLinuxSocket;
         /**
          * connect
          */
-        inline void Connect(const string& host) {
-            SLinuxSocket::Connect(host, SLinuxSocket::DGRAM);
+        inline void Connect(const string& host, uint16_t host_port) {
+            SLinuxSocket::Connect(host, host_port, SLinuxSocket::DGRAM);
         }
         /**
          * bind
@@ -41,7 +40,7 @@ namespace Message {
         /**
          * wait
          */
-        inline SLocalResource& Wait(chrono::milliseconds timeout) {
+        inline SRemoteResource& Wait(chrono::milliseconds timeout) {
             if(!SLinuxResourceMonitor::Wait(*this, timeout).Valid()) {
                 throw IResourceExceptionABORT();
             }

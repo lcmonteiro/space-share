@@ -55,7 +55,7 @@ bool SLinuxSocket::Good() {
 }
 /**
  */
-void SLinuxSocket::setTxTimeout(int timeout) {
+void SLinuxSocket::SetTxTimeout(int timeout) {
     struct timeval t = {
         .tv_sec = timeout,
         .tv_usec = 0
@@ -64,7 +64,7 @@ void SLinuxSocket::setTxTimeout(int timeout) {
         throw ResourceException(make_error_code(errc(errno)));
     }
 }
-void SLinuxSocket::setRxTimeout(int timeout) {
+void SLinuxSocket::SetRxTimeout(int timeout) {
     struct timeval t = {
         .tv_sec = timeout,
         .tv_usec = 0
@@ -76,7 +76,7 @@ void SLinuxSocket::setRxTimeout(int timeout) {
 /**
  *
  */
-void SLinuxSocket::setNoDelay(bool flag) {
+void SLinuxSocket::SetNoDelay(bool flag) {
     int f = flag ? 1 : 0;
     if (::setsockopt(__h, IPPROTO_TCP, TCP_NODELAY, (void*) & f, sizeof (f)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
@@ -87,7 +87,7 @@ void SLinuxSocket::setNoDelay(bool flag) {
 #ifdef __DEBUG__
 #include <iostream>
 #endif
-void SLinuxSocket::wait(const string& host, uint16_t port, Type type) {
+void SLinuxSocket::Wait(const string& host, uint16_t port, Type type) {
     /**
      * bind parameters
      */
@@ -158,8 +158,8 @@ void SLinuxSocket::wait(const string& host, uint16_t port, Type type) {
         /**
          * settings
          */
-        setRxTimeout(IO_TIMEOUT);
-        setTxTimeout(IO_TIMEOUT);
+        SetRxTimeout(IO_TIMEOUT);
+        SetTxTimeout(IO_TIMEOUT);
         /**
          * free results
          **/
@@ -174,7 +174,7 @@ void SLinuxSocket::wait(const string& host, uint16_t port, Type type) {
 }
 /**
  */
-void SLinuxSocket::connect(const string& host, uint16_t host_port, Type type, const string& local, uint16_t local_port) {
+void SLinuxSocket::Connect(const string& host, uint16_t host_port, Type type, const string& local, uint16_t local_port) {
     /**
      * bind parameters
      */
@@ -189,9 +189,9 @@ void SLinuxSocket::connect(const string& host, uint16_t host_port, Type type, co
     struct addrinfo hints;
     memset(&hints, 0, sizeof (struct addrinfo));
     hints.ai_family = AF_UNSPEC;            // Allow IPv4 or IPv6 
-    hints.ai_socktype = MAP_TYPE[type];         // socket type
-    hints.ai_flags = 0;                 //
-    hints.ai_protocol = 0;              // Any protocol
+    hints.ai_socktype = MAP_TYPE[type];     // socket type
+    hints.ai_flags = 0;                     //
+    hints.ai_protocol = 0;                  // Any protocol
     /**
      * get info
      */
@@ -216,8 +216,8 @@ void SLinuxSocket::connect(const string& host, uint16_t host_port, Type type, co
         /**
          * settings
          */
-        s.setRxTimeout(IO_TIMEOUT);
-        s.setTxTimeout(IO_TIMEOUT);
+        s.SetRxTimeout(IO_TIMEOUT);
+        s.SetTxTimeout(IO_TIMEOUT);
         /**
          * try to connect
          */
@@ -256,7 +256,7 @@ void SLinuxSocket::connect(const string& host, uint16_t host_port, Type type, co
 }
 /**
  */
-void SLinuxSocket::connect(const string& host, Type type) {
+void SLinuxSocket::Connect(const string& host, Type type) {
     /**
      * connect parameters
      */
@@ -267,12 +267,12 @@ void SLinuxSocket::connect(const string& host, Type type) {
     /**
      * create socket
      */
-    SLinuxSocket s(socket(PF_LOCAL, MAP_TYPE[type], 0));    
+    SLinuxSocket s(::socket(PF_LOCAL, MAP_TYPE[type], 0));    
     /**
      * settings
      */
-    s.setRxTimeout(IO_TIMEOUT);
-    s.setTxTimeout(IO_TIMEOUT);
+    s.SetRxTimeout(IO_TIMEOUT);
+    s.SetTxTimeout(IO_TIMEOUT);
     /**
      * connect
      */
@@ -285,7 +285,7 @@ void SLinuxSocket::connect(const string& host, Type type) {
     *this = move(s);
 }
 
-void SLinuxSocket::bind(const string& local, Type type) {
+void SLinuxSocket::Bind(const string& local, Type type) {
     /**
      * bind parameters
      */
@@ -310,8 +310,8 @@ void SLinuxSocket::bind(const string& local, Type type) {
     /**
      * settings
      */
-    s.setRxTimeout(IO_TIMEOUT);
-    s.setTxTimeout(IO_TIMEOUT);
+    s.SetRxTimeout(IO_TIMEOUT);
+    s.SetTxTimeout(IO_TIMEOUT);
     /**
      * update
      **/

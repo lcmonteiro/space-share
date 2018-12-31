@@ -49,7 +49,10 @@ public:
         return *this;
     }
     inline void Wait(const SAddress& uri) {
-        SSocketResource::wait(uri.Host(), uri.Port(), DGRAM);
+        SSocketResource::Connect(uri.Host(), uri.Port(), DGRAM);
+    }
+    inline void Connect(const SAddress& uri) {
+        SSocketResource::Connect(uri.Host(), uri.Port(), DGRAM);
     }
     inline void Reset() {
         *this = SSocketResource();

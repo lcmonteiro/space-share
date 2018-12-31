@@ -63,7 +63,7 @@ public:
     /**
      * get timeout
      */
-    inline chrono::milliseconds GetTimeout(){
+    inline chrono::milliseconds GetTimeout() {
         return __timeout;
     }
     /**

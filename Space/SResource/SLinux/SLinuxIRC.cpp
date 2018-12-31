@@ -46,13 +46,13 @@ void SLinuxIRC::Connect(const string& host, uint16_t port, int tx_timeout, int r
     /**
      * connect
      */
-    SLinuxSocket::connect(host, port, SLinuxSocket::STREAM);
+    SLinuxSocket::Connect(host, port, SLinuxSocket::STREAM);
     /**
      * configuration
      */
-    setTxTimeout(tx_timeout);
-    setRxTimeout(rx_timeout);
-    setNoDelay(true);
+    SetTxTimeout(tx_timeout);
+    SetRxTimeout(rx_timeout);
+    SetNoDelay(true);
 }
 
 /*------------------------------------------------------------------------------------------------*

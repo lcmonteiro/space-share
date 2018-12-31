@@ -47,7 +47,7 @@ public:
         return *this;
     }
     inline void Connect(const SAddress& uri) {
-        SSocketResource::connect(uri.Host(), uri.Port(), STREAM);
+        SSocketResource::Connect(uri.Host(), uri.Port(), STREAM);
     }
     inline void Reset() {
         *this = SSocketResource();

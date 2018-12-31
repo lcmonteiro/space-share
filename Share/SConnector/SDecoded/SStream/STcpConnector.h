@@ -44,7 +44,7 @@ public:
         return *this;
     }
     inline void Wait(const SAddress& uri) {
-        SSocketResource::wait(uri.Host(), uri.Port(), STREAM);
+        SSocketResource::Wait(uri.Host(), uri.Port(), STREAM);
     }
     inline void Reset() {
         *this = SSocketResource();

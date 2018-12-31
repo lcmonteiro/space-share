@@ -89,7 +89,7 @@ public:
     }    
 protected:
     using SLinuxSocket::SLinuxSocket;
-    using SLinuxSocket::connect;
+    using SLinuxSocket::Connect;
     /**
      */
     TYPE Process(string& line);
