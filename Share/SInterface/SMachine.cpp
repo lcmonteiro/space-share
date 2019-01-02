@@ -10,9 +10,10 @@
  */
 #include "SMachine.h"
 /**
- * Space Kernel
+ * Space 
  */
 #include "SCommand.h"
+#include "SResourceMonitor.h"
 /**
  *-------------------------------------------------------------------------------------------------
  * constructors 

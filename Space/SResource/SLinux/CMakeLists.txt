@@ -18,7 +18,18 @@ PUBLIC
 #dependencies
 target_link_libraries(SpaceResourceLinux
 PRIVATE
+PUBLIC
 	SpaceMonitorLinux
-PUBLIC 
 	SpaceHelper
+)
+
+# include directories
+set(includes 
+	${CMAKE_CURRENT_LIST_DIR}
+	PARENT_SCOPE
+)
+# source files
+set(sources  
+	${CMAKE_CURRENT_LIST_DIR}/SRemoteResource.cpp
+	PARENT_SCOPE
 )

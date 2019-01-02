@@ -10,13 +10,40 @@
  * std
  */
 #include <system_error>
+#include <memory>
 /**
  */
 using namespace std;
 /**
- * resource
+ * ----------------------------------------------------------------------------
+ * resource base
+ * ----------------------------------------------------------------------------
  */
 typedef class SResource {
+public:
+	/**
+	 * ----------------------------------------------------
+	 * handler for native system
+	 * ----------------------------------------------------
+	 */
+	class SHandler {
+	protected:
+		/**
+		 * constructor
+		 */
+		SHandler() = default;
+		/**
+		 * destructor
+		 */
+		virtual ~SHandler() = default;
+	};
+	/**
+	 * get handler
+	 */
+	template<class H = SHandler>
+	inline shared_ptr<H> Handler() {
+		return static_pointer_cast<H>(__h);
+	}
 protected:
 	/**
 	 * constructor
@@ -25,10 +52,17 @@ protected:
 	/**
 	 * destructor
 	 */
-	virtual ~SResource() = default;
+	virtual ~SResource() = default; 
+private:
+	/**
+	 * pointer to handler
+	 */
+	shared_ptr<SHandler> __h;
 } Resource;
 /**
- * Exception
+ * ----------------------------------------------------------------------------
+ * Exceptions
+ * ----------------------------------------------------------------------------
  */
 typedef class SResourceException : public system_error {
 public:

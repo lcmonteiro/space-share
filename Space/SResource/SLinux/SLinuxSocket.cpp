@@ -54,6 +54,9 @@ bool SLinuxSocket::Good() {
     return error == 0;
 }
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Set Timeout
+ * ------------------------------------------------------------------------------------------------
  */
 void SLinuxSocket::SetTxTimeout(int timeout) {
     struct timeval t = {
@@ -74,7 +77,9 @@ void SLinuxSocket::SetRxTimeout(int timeout) {
     }
 }
 /**
- *
+ * ------------------------------------------------------------------------------------------------
+ * SetNoDelay
+ * ------------------------------------------------------------------------------------------------
  */
 void SLinuxSocket::SetNoDelay(bool flag) {
     int f = flag ? 1 : 0;
@@ -83,6 +88,9 @@ void SLinuxSocket::SetNoDelay(bool flag) {
     }
 }
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Wait
+ * ------------------------------------------------------------------------------------------------
  */
 #ifdef __DEBUG__
 #include <iostream>
@@ -173,17 +181,12 @@ void SLinuxSocket::Wait(const string& host, uint16_t port, Type type) {
     throw ResourceException(make_error_code(errc::no_such_device_or_address));
 }
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Connect
+ * ------------------------------------------------------------------------------------------------
  */
 void SLinuxSocket::Connect(
     const string& host, uint16_t host_port, Type type, const string& local, uint16_t local_port) {
-    /**
-     * bind parameters
-     */
-    struct sockaddr_in baddr;
-    memset(&baddr, 0, sizeof (baddr));
-    baddr.sin_family = AF_UNSPEC;
-    baddr.sin_port = htons(local_port);
-    ::inet_pton(AF_INET, local.data(), &baddr.sin_addr);
     /**
      * connect parameters
      */
@@ -201,7 +204,7 @@ void SLinuxSocket::Connect(
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
-     * connect
+     * create connection
      */
     int i = 0;
     for (auto rp = result; rp != NULL; rp = rp->ai_next, ++i) {
@@ -210,8 +213,16 @@ void SLinuxSocket::Connect(
          * bind
          */
         if (!local.empty() && local_port) {
+            // bind parameters
+            struct sockaddr_in baddr;
+            memset(&baddr, 0, sizeof (baddr));
+            baddr.sin_family = rp->ai_family;
+            baddr.sin_port = htons(local_port);
+            ::inet_pton(rp->ai_family, local.data(), &baddr.sin_addr);
+            // bind
             if (::bind(s._Handler(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
-                continue;
+                perror("bind:");
+                throw ResourceException(make_error_code(errc(errno)));
             }
         }
         /**
@@ -256,6 +267,9 @@ void SLinuxSocket::Connect(
     throw ResourceException(make_error_code(errc::no_such_device_or_address));
 }
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Connect
+ * ------------------------------------------------------------------------------------------------
  */
 void SLinuxSocket::Connect(const string& host, Type type) {
     /**
@@ -285,7 +299,11 @@ void SLinuxSocket::Connect(const string& host, Type type) {
      **/
     *this = move(s);
 }
-
+/**
+ * ------------------------------------------------------------------------------------------------
+ * Bind
+ * ------------------------------------------------------------------------------------------------
+ */
 void SLinuxSocket::Bind(const string& local, Type type) {
     /**
      * bind parameters
@@ -318,9 +336,11 @@ void SLinuxSocket::Bind(const string& local, Type type) {
      **/
     *this = move(s);
 }
-/*------------------------------------------------------------------------------------------------*
+/**
+ * ------------------------------------------------------------------------------------------------
  * IO functions
- *------------------------------------------------------------------------------------------------*/
+ * ------------------------------------------------------------------------------------------------
+ **/
 Frame SLinuxSocket::Read(size_t size) {
     IFrame f(size);
     /**
@@ -349,9 +369,11 @@ SLinuxSocket& SLinuxSocket::Drain(const Frame& f) {
     }
     return *this;
 }
-/*------------------------------------------------------------------------------------------------*
+/**
+ * ------------------------------------------------------------------------------------------------
  * Text IO functions
- *------------------------------------------------------------------------------------------------*/
+ * ------------------------------------------------------------------------------------------------
+ */
 SLinuxSocket& SLinuxSocket::operator>>(string& str) {
     /**
      * receive

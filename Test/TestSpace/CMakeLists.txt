@@ -24,4 +24,5 @@ SOURCES
     TestResource/TestFileResource.cpp
 DEPENDS
     SpaceResource
+    SpaceKernel
 )

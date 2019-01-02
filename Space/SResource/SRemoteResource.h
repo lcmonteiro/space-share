@@ -7,57 +7,75 @@
 #ifndef SREMOTERESOURCE_H
 #define SREMOTERESOURCE_H
 /**
+ * space
  */
-#include "SResourceMonitor.h"
+#include "SResource.h"
 /**
  * ------------------------------------------------------------------------------------------------
- * linux platform 
+ * Base
  * ------------------------------------------------------------------------------------------------
  */
-#ifdef __linux__
+class SRemoteResource : public SResource {
+public:
+   /**
+     * ------------------------------------------------------------------------
+     * general interfaces
+     * ------------------------------------------------------------------------
+     * move operator
+     */
+    SRemoteResource& operator=(SRemoteResource && res) = default;
+    /**
+     * status
+     */
+    bool Good();
+    /**
+     * timeout
+     */
+    void SetRxTimeout(int timeout);
+    void SetTxTimeout(int timeout);
+    /**
+     * behavior
+     */
+    void SetNoDelay(bool flag);
+};
 /**
- */
-#include "SLinuxSocket.h"
-/**
+ * ------------------------------------------------------------------------------------------------
  * message
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Message {
-    class SRemoteResource : public SLinuxSocket {
+
+    class SRemoteResource : public ::SRemoteResource {
     public:
-        using SLinuxSocket::SLinuxSocket;
-        /**
-         * connect
-         */
-        inline void Connect(const string& host, uint16_t host_port) {
-            SLinuxSocket::Connect(host, host_port, SLinuxSocket::DGRAM);
-        }
-        /**
-         * bind
-         */
-        inline void Bind(const string& host) {
-            SLinuxSocket::Bind(host, SLinuxSocket::DGRAM);
-        }
         /**
          * wait
          */
-        inline SRemoteResource& Wait(chrono::milliseconds timeout) {
-            if(!SLinuxResourceMonitor::Wait(*this, timeout).Valid()) {
-                throw IResourceExceptionABORT();
-            }
-            return *this;
-        }
+        inline void Wait(const string& host, uint16_t host_port);
+        /**
+         * link
+         */
+        inline void Link(const string& host, uint16_t host_port); 
     };
 }
 /**
+ * ------------------------------------------------------------------------------------------------
  * stream
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Stream {
-
+    class SRemoteResource : public ::SRemoteResource {
+    public:
+        /**
+         * wait
+         */
+        inline void Wait(const string& host, uint16_t host_port);
+        /**
+         * link
+         */
+        inline void Link(const string& host, uint16_t host_port); 
+    };
 }
 /**
  */
-#endif
-/**
- */
-#endif /* SLOCALRESOURCE_H */
+#endif /* SREMOTERESOURCE_H */
 

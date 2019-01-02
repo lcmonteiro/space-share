@@ -6,9 +6,7 @@
  */
 #ifndef SLOCALRESOURCE_H
 #define SLOCALRESOURCE_H
-/**
- */
-#include "SResourceMonitor.h"
+
 /**
  * ------------------------------------------------------------------------------------------------
  * linux platform 
@@ -41,12 +39,12 @@ namespace Message {
         /**
          * wait
          */
-        inline SLocalResource& Wait(chrono::milliseconds timeout) {
-            if(!SLinuxResourceMonitor::Wait(*this, timeout).Valid()) {
-                throw IResourceExceptionABORT();
-            }
-            return *this;
-        }
+        // inline SLocalResource& Wait(chrono::milliseconds timeout) {
+        //     if(!SLinuxResourceMonitor::Wait(*this, timeout).Valid()) {
+        //         throw IResourceExceptionABORT();
+        //     }
+        //     return *this;
+        // }
     };
 }
 /**

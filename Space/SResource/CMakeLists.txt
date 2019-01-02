@@ -1,18 +1,24 @@
 cmake_minimum_required (VERSION 3.8)
-# folder for core objects
-add_subdirectory(SLinux)
+# platform dependencies ${includes} and ${sources}
+if(true)
+	# linux folder for core objects
+	add_subdirectory(SLinux)
+endif()
+
+message("--------------_>" ${sources})
 # SpaceShare target
-add_library(SpaceResource
-INTERFACE
-)
-# includes
+add_library(SpaceResource STATIC ${sources})
+# SpaceShare includes
 target_include_directories(SpaceResource 
-INTERFACE
-	.
+PUBLIC
+	${CMAKE_CURRENT_LIST_DIR}	
+PRIVATE
+	${includes}
 )
-# target dependencies
+# SpaceShare dependencies
 target_link_libraries(SpaceResource 
-INTERFACE 
+PRIVATE 
+	SpaceKernel
 	SpaceMonitor
 	SpaceResourceLinux
 )

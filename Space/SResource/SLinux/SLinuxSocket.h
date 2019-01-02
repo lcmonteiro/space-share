@@ -15,6 +15,9 @@
  */
 #include "SLinuxResource.h"
 /**
+ * ----------------------------------------------------------------------------
+ * Linux Socket
+ * ----------------------------------------------------------------------------
  */
 class SLinuxSocket : public SLinuxResource {
 public:
@@ -69,8 +72,11 @@ public:
      * connect to host
      */
     void Connect(
-        const string& host, uint16_t host_port, Type type, 
-        // extra
+        // remote
+        const string& host, uint16_t host_port,
+        // type
+        Type type, 
+        // local
 	    const string& local = "", uint16_t local_port = 0
     );
     /**

@@ -14,5 +14,6 @@ PUBLIC
 target_link_libraries(ShareInterface
 PUBLIC
 	ShareKernel
+	SpaceMonitor
 	SpaceResource
 )
