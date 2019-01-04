@@ -72,7 +72,7 @@ protected:
         int i = 0;
         do {
             try {
-                __res.Connect(__uri);
+                __res.Link(__uri);
                 break;
             } catch (system_error& ex) {
                 WARNING(ex.what());

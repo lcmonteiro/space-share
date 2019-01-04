@@ -35,7 +35,7 @@ TEST(DecodedMessageUDP, FILE)
     // write 
     oc->Write(idata);
     // wait
-    SResourceMonitor(chrono::milliseconds(100), ic).Wait();
+    //SResourceMonitor(chrono::milliseconds(100), ic).Wait();
     // receive
     auto odata = ic->Read();
     // test

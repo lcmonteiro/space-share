@@ -7,6 +7,10 @@
 #ifndef SREMOTERESOURCE_H
 #define SREMOTERESOURCE_H
 /**
+ * std
+ */
+#include <chrono>
+/**
  * space
  */
 #include "SResource.h"
@@ -44,17 +48,20 @@ public:
  * ------------------------------------------------------------------------------------------------
  */
 namespace Message {
-
     class SRemoteResource : public ::SRemoteResource {
     public:
         /**
          * wait
          */
-        inline void Wait(const string& host, uint16_t host_port);
+        inline void Wait(
+            const string& host, uint16_t port, chrono::seconds timeout=chrono::hours{24}
+        );
         /**
          * link
          */
-        inline void Link(const string& host, uint16_t host_port); 
+        inline void Link(
+            const string& host, uint16_t host_port
+        ); 
     };
 }
 /**

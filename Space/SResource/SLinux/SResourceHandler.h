@@ -1,11 +1,11 @@
 /* 
- * Container:   SLinuxHandler.h
+ * Container:   SResourceHandler.h
  * Author: Luis Monteiro
  *
  * Created on January  2, 2019, 22:00 PM
  */
-#ifndef SLINUXHANDLER_H
-#define SLINUXHANDLER_H
+#ifndef SRESOURCEHANDLER_H
+#define SRESOURCEHANDLER_H
 /**
  * linux
  */
@@ -27,39 +27,39 @@ using namespace std;
  * Linux Resource
  * ------------------------------------------------------------------------------------------------
  */
-class SLinuxHandler : public SResource::SHandler {
+class SResourceHandler : public SResource::SHandler {
 public:
     /**
-     * ---------------------------------------------
+     * ----------------------------------------------------
      * constructors / destructor
-     * ---------------------------------------------
+     * ----------------------------------------------------
      */
-    SLinuxHandler(int h) : __fd(h) {
+    SResourceHandler(int h) : __fd(h) {
         if (__fd < 0) {
             throw ResourceException(make_error_code(errc(errno)));
         }
     }
     /**
      */
-    virtual ~SLinuxHandler() {
+    virtual ~SResourceHandler() {
         if (__fd >= 0) {
             ::close(__fd);
         }   
     }
     /**
-     * ---------------------------------------------
+     * ----------------------------------------------------
      * interface
-     * ---------------------------------------------
-     * get file descriptor
+     * ----------------------------------------------------
+     * file descriptor
      */
     inline int FD() {
         return __fd;
     }
 private:
     /**
-     * native handler
+     * file descriptor
      */
     int __fd;
 };
 
-#endif /* SLINUXHANDLER_H */
+#endif /* SRESOURCEHANDLER_H */

@@ -18,7 +18,8 @@
 /**
  * linux
  */
-#include "SLinuxHandler.h"
+#include "SResourceHandler.h"
+#include "SLinuxMonitor.h"
 /**
  * space
  */
@@ -39,7 +40,9 @@ bool SRemoteResource::Good() {
     /**
      * validation
      */
-    if (::getsockopt(Handler<SLinuxHandler>()->FD(), SOL_SOCKET, SO_ERROR, &error, &len) < 0) {
+    if (::getsockopt(
+        GetHandler<SResourceHandler>()->FD(), SOL_SOCKET, SO_ERROR, &error, &len) < 0
+    ) {
         return false;
     }
     return error == 0;
@@ -53,7 +56,7 @@ void SRemoteResource::SetTxTimeout(int timeout) {
         .tv_usec = 0
     };
     if (::setsockopt(
-        Handler<SLinuxHandler>()->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) & t, sizeof (t)
+        GetHandler<SResourceHandler>()->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) & t, sizeof (t)
     ) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
@@ -64,7 +67,7 @@ void SRemoteResource::SetRxTimeout(int timeout) {
         .tv_usec = 0
     };
     if (::setsockopt(
-        Handler<SLinuxHandler>()->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) & t, sizeof (t)
+        GetHandler<SResourceHandler>()->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) & t, sizeof (t)
     ) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
@@ -75,7 +78,7 @@ void SRemoteResource::SetRxTimeout(int timeout) {
 void SRemoteResource::SetNoDelay(bool flag) {
     int f = flag ? 1 : 0;
     if (::setsockopt(
-        Handler<SLinuxHandler>()->FD(), IPPROTO_TCP, TCP_NODELAY, (void*) & f, sizeof (f)
+        GetHandler<SResourceHandler>()->FD(), IPPROTO_TCP, TCP_NODELAY, (void*) & f, sizeof (f)
     ) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
@@ -86,8 +89,91 @@ void SRemoteResource::SetNoDelay(bool flag) {
  * ------------------------------------------------------------------------------------------------
  * wait
  */
-void Message::SRemoteResource::Wait(const string& host, uint16_t port) {
-
+#ifdef __DEBUG__
+#include <iostream>
+#endif
+void Message::SRemoteResource::Wait(const string& host, uint16_t port, chrono::seconds timeout) {
+    /**
+     * bind parameters
+     */
+    struct addrinfo hints;
+    memset(&hints, 0, sizeof (struct addrinfo));
+    hints.ai_family = AF_UNSPEC;            // Allow IPv4 or IPv6
+    hints.ai_socktype = SOCK_DGRAM;         // Datagram socket
+    hints.ai_flags = AI_PASSIVE;            // For wildcard IP address
+    hints.ai_protocol = 0;                  // Any protocol
+    hints.ai_canonname = NULL;
+    hints.ai_addr = NULL;
+    hints.ai_next = NULL;
+    /**
+     * get info
+     */
+    struct addrinfo *result;
+    if (::getaddrinfo(host.c_str(), to_string(port).c_str(), &hints, &result) < 0) {
+        throw ResourceException(make_error_code(errc(errno)));
+    }
+    /**
+     * connect
+     */
+    int i = 0;
+    for (auto rp = result; rp != NULL; rp = rp->ai_next, ++i) {
+        struct sockaddr_storage addr;
+        socklen_t len = sizeof(addr);
+        /**
+         * create a linux handler
+         */
+        auto h = make_shared<SResourceHandler>(
+            ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol)
+        );
+        /**
+         * set options
+         */
+        int opt = 1;
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
+            continue;
+        }
+        if (::bind(h->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
+            continue;
+        }
+#ifdef __DEBUG__
+        char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
+        if (::getnameinfo(
+            rp->ai_addr, rp->ai_addrlen,
+            hbuf, sizeof (hbuf),
+            sbuf, sizeof (sbuf),
+            NI_NUMERICHOST | NI_NUMERICSERV
+        ) == 0) {
+            cout << "binded: " << "host=" << hbuf << ", serv=" << sbuf << endl;
+        }
+#endif
+        /**
+         * free results
+         **/
+        ::freeaddrinfo(result);
+        /**
+         * wait for data 
+         */
+        //SLinuxResourceMonitor(h, timeout);
+        /**
+         * get address and connect
+         */
+        if (::recvfrom(h->FD(), nullptr, 0, 0,(struct sockaddr *)&addr, &len)  < 0) {
+            throw ResourceException(make_error_code(errc(errno)));
+        }
+        if (::connect(h->FD(), (struct sockaddr *)&addr, len) < 0) {
+            throw ResourceException(make_error_code(errc(errno)));
+        }
+        /**
+         * save handler
+         */
+        SetHandler(h);
+        return;
+    }
+    /**
+     * fail
+     **/
+    ::freeaddrinfo(result);
+    throw ResourceException(make_error_code(errc::no_such_device_or_address));
 }
 /**
  * link

@@ -38,24 +38,49 @@ public:
 		virtual ~SHandler() = default;
 	};
 	/**
-	 * get handler
+	 * --------------------------------
+	 * definitions
+	 * --------------------------------
 	 */
 	template<class H = SHandler>
-	inline shared_ptr<H> Handler() {
+	using pHandler = shared_ptr<H>;
+	/**
+	 * --------------------------------
+	 * get handler
+	 * --------------------------------
+	 */
+	template<class H = SHandler>
+	inline pHandler<H> GetHandler() {
 		return static_pointer_cast<H>(__h);
 	}
 protected:
 	/**
-	 * constructor
+	 * ----------------------------------------------------
+	 * constructors and destructor
+	 * ----------------------------------------------------
+	 * default constructor
 	 */
 	SResource() = default;
+	SResource(SResource&& ) = default;
 	/**
-	 * destructor
+	 * default destructor
 	 */
 	virtual ~SResource() = default; 
+	/***
+	 * ----------------------------------------------------
+	 * methods
+	 * ----------------------------------------------------
+	 * set phandler
+	 */
+	template<class H = SHandler>
+	void SetHandler(pHandler<H> h) {
+		__h = static_pointer_cast<SHandler>(h);	
+	}
 private:
 	/**
+	 * --------------------------------
 	 * pointer to handler
+	 * --------------------------------
 	 */
 	shared_ptr<SHandler> __h;
 } Resource;
