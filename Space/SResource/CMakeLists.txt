@@ -9,7 +9,10 @@ endif()
 # ---------------------------------------------------------
 # SpaceShare target
 # ---------------------------------------------------------
-add_library(SpaceResource STATIC ${sources})
+add_library(SpaceResource 
+STATIC 
+	${sources}
+)
 # includes
 target_include_directories(SpaceResource 
 PUBLIC
@@ -19,9 +22,11 @@ PRIVATE
 )
 # dependencies
 target_link_libraries(SpaceResource 
-PRIVATE
-	${links}
+#PUBLIC
+	#${links}
+
+PUBLIC
 	SpaceKernel
+PRIVATE
 	SpaceMonitor
-	SpaceResourceLinux
 )

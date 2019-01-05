@@ -53,13 +53,13 @@ namespace Message {
         /**
          * wait
          */
-        inline void Wait(
+        void Wait(
             const string& host, uint16_t port, chrono::seconds timeout=chrono::hours{24}
         );
         /**
          * link
          */
-        inline void Link(
+        void Link(
             const string& host, uint16_t host_port
         ); 
     };

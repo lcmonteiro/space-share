@@ -178,10 +178,9 @@ void Message::SRemoteResource::Wait(const string& host, uint16_t port, chrono::s
 /**
  * link
  */
+void Message::SRemoteResource::Link(const string& host, uint16_t host_port) {
 
-
-
-
+}
 
 
 

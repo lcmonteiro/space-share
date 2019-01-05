@@ -22,6 +22,7 @@ TARGET
     TestSpaceResource 
 SOURCES 
     TestResource/TestFileResource.cpp
+    TestResource/TestRemoteResource.cpp
 DEPENDS
     SpaceResource
     SpaceKernel

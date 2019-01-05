@@ -30,7 +30,7 @@ public:
      **/
     template <typename T = int, typename G = Generator>
     static T Number() {
-        auto gen = G(__device());
+        auto gen = G(__Device());
         return T(gen());
     }
     /**
@@ -115,12 +115,11 @@ public:
         return SFileResource::TmpPath() + "/" + SRandom::String(16);
     }
 private:
-    static random_device __device;
+    static random_device::result_type __Device(){
+        static random_device device;
+        return device();
+    }
 };
-/**
- * static random device
- */
-random_device SRandom::__device;
 /**
  */
 #endif /* SRANDOM_H */
