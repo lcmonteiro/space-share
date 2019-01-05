@@ -13,5 +13,6 @@ INTERFACE
 # dependencies
 target_link_libraries(SpaceMonitor 
 INTERFACE 
+	SpaceKernel
 	SpaceMonitorLinux
 )

@@ -19,7 +19,7 @@
  * linux
  */
 #include "SResourceHandler.h"
-#include "SLinuxMonitor.h"
+#include "SMonitorHandler.h"
 /**
  * space
  */
@@ -153,7 +153,7 @@ void Message::SRemoteResource::Wait(const string& host, uint16_t port, chrono::s
         /**
          * wait for data 
          */
-        //SLinuxResourceMonitor(h, timeout);
+        SMonitorHandler({h}).Wait(timeout);
         /**
          * get address and connect
          */

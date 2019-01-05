@@ -3,7 +3,7 @@
  * space
  */
 #include "SDecoded/SMessage/SUdpConnector.h"
-#include "SResourceMonitor.h"
+//#include "SResourceMonitor.h"
 #include "SCompare.h"
 #include "SRandom.h"
 /**

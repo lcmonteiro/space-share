@@ -33,3 +33,8 @@ set(sources
 	${CMAKE_CURRENT_LIST_DIR}/SRemoteResource.cpp
 	PARENT_SCOPE
 )
+# link libraries
+set(links  
+	SpaceMonitorLinux
+	PARENT_SCOPE
+)
