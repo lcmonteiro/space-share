@@ -14,6 +14,7 @@
  * space
  */
 #include "SResource.h"
+#include "SContainer.h"
 /**
  * ------------------------------------------------------------------------------------------------
  * Base
@@ -41,6 +42,21 @@ public:
      * behavior
      */
     void SetNoDelay(bool flag);
+    /**
+     * ------------------------------------------------------------------------
+     * IO functions
+     * ------------------------------------------------------------------------
+     * fill frame
+     */
+    SRemoteResource& Fill(Frame& f);
+    /**
+     * drain frame
+     */
+    SRemoteResource& Drain(const Frame& f);
+    /**
+     * utils
+     */
+
 };
 /**
  * ------------------------------------------------------------------------------------------------
@@ -53,13 +69,13 @@ namespace Message {
         /**
          * wait
          */
-        void Wait(
+        SRemoteResource& Wait(
             const string& host, uint16_t port, chrono::seconds timeout=chrono::hours{24}
         );
         /**
          * link
          */
-        void Link(
+        SRemoteResource& Link(
             const string& host, uint16_t host_port
         ); 
     };

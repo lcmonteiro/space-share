@@ -130,9 +130,9 @@ public:
 	/**
 	 * constructor
 	 */
-	SResourceExceptionTIMEOUT(const string& msg):SResourceException(make_error_code(errc::no_message), msg){
+	SResourceExceptionTIMEOUT(const string& msg):SResourceException(make_error_code(errc::timed_out), msg){
 	}
-	SResourceExceptionTIMEOUT():SResourceException(make_error_code(errc::no_message)){
+	SResourceExceptionTIMEOUT():SResourceException(make_error_code(errc::timed_out)){
 	}
 
 } ResourceExceptionTIMEOUT;
