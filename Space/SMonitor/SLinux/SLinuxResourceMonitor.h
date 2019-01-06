@@ -116,7 +116,7 @@ protected:
         vector<size_t> res;
         try {
             // insert this task
-            loc.emplace_back(CreateLocation(SLinuxTask::Instance().GetResource()));
+            loc.emplace_back(CreateLocation(STask::Instance().GetResource()));
             // check resources
             res = SLinuxMonitor::Check(loc, timeout);
             // remove this task

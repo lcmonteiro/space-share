@@ -21,6 +21,7 @@ using namespace std;
  */
 typedef class SResource {
 public:
+	SResource& operator=(SResource&& t) = default;
 	/**
 	 * ----------------------------------------------------
 	 * handler for native system
@@ -60,7 +61,7 @@ protected:
 	 * ----------------------------------------------------
 	 * default constructor
 	 */
-	SResource() = default;
+	SResource()             = default;
 	SResource(SResource&& ) = default;
 	/**
 	 * default destructor

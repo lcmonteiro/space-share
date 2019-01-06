@@ -7,7 +7,7 @@ if(true)
 	add_subdirectory(SLinux)
 endif()
 # ---------------------------------------------------------
-# SpaceShare target
+# SpaceResource target
 # ---------------------------------------------------------
 add_library(SpaceResource 
 STATIC 
