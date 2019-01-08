@@ -8,7 +8,7 @@
 /**
  * wait to be good
  */
-SConnector& SConnector::Wait(chrono::milliseconds timeout){
+SConnector& SConnector::Wait(chrono::milliseconds timeout) {
 	auto start = std::chrono::steady_clock::now();
 	auto end = start + timeout;
 	do {

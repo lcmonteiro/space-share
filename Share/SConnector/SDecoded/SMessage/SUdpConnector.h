@@ -7,11 +7,11 @@
 #ifndef SUDPMESSAGECONNECTOR_H
 #define SUDPMESSAGECONNECTOR_H
 /**
- * space kernel
+ * space
  */
 #include "SContainer.h"
 #include "SConnector.h"
-#include "SSocketResource.h"
+#include "SRemoteResource.h"
 /**
  * kernel
  */
@@ -35,31 +35,31 @@ namespace Message {
  * Resource adapter
  * ------------------------------------------------------------------------------------------------
  */
-class ResourceAdapterUdp : private SSocketResource {
+class ResourceAdapterUdp : private ::Message::SRemoteResource {
 public:
-    using SSocketResource::SSocketResource;
-    using SSocketResource::operator=;
-    using SSocketResource::Fill;
-    using SSocketResource::Drain;
-    using SSocketResource::Good;
+    using Super = ::Message::SRemoteResource;
+    /**
+     * default
+     */
+    using Super::SRemoteResource;
+    using Super::operator=;
+    using Super::Fill;
+    using Super::Drain;
+    using Super::Good;
     /**
      * interfaces
      */
-    inline SSocketResource& Base() {
+    inline Super& Base() {
         return *this;
     }
     inline void Wait(const SAddress& uri) {
-        SSocketResource::Connect(
-            uri.Host(), uri.Port(), DGRAM, uri.Host(), uri.Port()
-        );
+        Super::Wait(uri.Host(), uri.Port());
     }
     inline void Link(const SAddress& uri) {
-        SSocketResource::Connect(
-            uri.Host(), uri.Port(), DGRAM
-        );
+        Super::Link(uri.Host(), uri.Port());
     }
     inline void Reset() {
-        *this = SSocketResource();
+        *this = Super();
     }
 };    
 /**

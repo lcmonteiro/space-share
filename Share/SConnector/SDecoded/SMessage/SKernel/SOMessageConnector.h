@@ -66,9 +66,9 @@ protected:
      */
     inline void _Open() override {
         default_random_engine eng{random_device{}()};
-        // sleep distribution
+        // sleep distribution -----------------------------
         uniform_int_distribution<> dist{1000, 5000};
-        // main loop
+        // main loop --------------------------------------
         int i = 0;
         do {
             try {

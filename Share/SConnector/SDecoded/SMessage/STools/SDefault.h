@@ -36,13 +36,13 @@ public:
     static inline Container& Split(Frame& buf, Container& chunks) {
         // process chunk size -----------------------------
         auto res = div(
-            (int)(buf.Size() + sizeof (framesize_t)), (int)chunks.size()
+            (int)(buf.Size() + sizeof (framesize_t)), (int)chunks.capacity()
         );
         // normalize chunks size --------------------------
         size_t size = res.rem > 0 ? res.quot + 1 : res.quot;
         
         // resize frame and add buffer size ----------------------
-        buf.Insert(size * chunks.size()).Number<framesize_t>(buf.Size());
+        buf.Insert(size * chunks.capacity()).Number<framesize_t>(buf.Size());
 
         // container fill up ------------------------------
         OFrame out(move(buf));

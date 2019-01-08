@@ -1,11 +1,11 @@
 /* 
- * Container:   SResourceStream.h
+ * Container:   SResource.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
  */
-#ifndef SRESOURCESTREAM_H
-#define SRESOURCESTREAM_H
+#ifndef SRESOURCE_H
+#define SRESOURCE_H
 /**
  * std
  */
@@ -14,77 +14,6 @@
 /**
  */
 using namespace std;
-/**
- * ----------------------------------------------------------------------------
- * resource base
- * ----------------------------------------------------------------------------
- */
-typedef class SResource {
-public:
-	SResource& operator=(SResource&& t) = default;
-	/**
-	 * ----------------------------------------------------
-	 * handler for native system
-	 * ----------------------------------------------------
-	 */
-	class SHandler {
-	protected:
-		/**
-		 * constructor
-		 */
-		SHandler() = default;
-		/**
-		 * destructor
-		 */
-		virtual ~SHandler() = default;
-	};
-	/**
-	 * --------------------------------
-	 * definitions
-	 * --------------------------------
-	 */
-	template<class H = SHandler>
-	using pHandler = shared_ptr<H>;
-	/**
-	 * --------------------------------
-	 * get handler
-	 * --------------------------------
-	 */
-	template<class H = SHandler>
-	inline pHandler<H> GetHandler() {
-		return static_pointer_cast<H>(__h);
-	}
-protected:
-	/**
-	 * ----------------------------------------------------
-	 * constructors and destructor
-	 * ----------------------------------------------------
-	 * default constructor
-	 */
-	SResource()             = default;
-	SResource(SResource&& ) = default;
-	/**
-	 * default destructor
-	 */
-	virtual ~SResource() = default; 
-	/***
-	 * ----------------------------------------------------
-	 * methods
-	 * ----------------------------------------------------
-	 * set phandler
-	 */
-	template<class H = SHandler>
-	void SetHandler(pHandler<H> h) {
-		__h = static_pointer_cast<SHandler>(h);	
-	}
-private:
-	/**
-	 * --------------------------------
-	 * pointer to handler
-	 * --------------------------------
-	 */
-	shared_ptr<SHandler> __h;
-} Resource;
 /**
  * ----------------------------------------------------------------------------
  * Exceptions
@@ -138,6 +67,80 @@ public:
 
 } ResourceExceptionTIMEOUT;
 /**
+ * ----------------------------------------------------------------------------
+ * resource base
+ * ----------------------------------------------------------------------------
  */
-#endif /* SRESOURCESTREAM_H */
+typedef class SResource {
+public:
+	SResource& operator=(SResource&& t) = default;
+	/**
+	 * ----------------------------------------------------
+	 * handler for native system
+	 * ----------------------------------------------------
+	 */
+	class SHandler {
+	protected:
+		/**
+		 * constructor
+		 */
+		SHandler() = default;
+		/**
+		 * destructor
+		 */
+		virtual ~SHandler() = default;
+	};
+	/**
+	 * --------------------------------
+	 * definitions
+	 * --------------------------------
+	 */
+	template<class H = SHandler>
+	using pHandler = shared_ptr<H>;
+	/**
+	 * --------------------------------
+	 * get handler
+	 * --------------------------------
+	 */
+	template<class H = SHandler>
+	inline pHandler<H> GetHandler() {
+		if(__h) {
+			return static_pointer_cast<H>(__h);
+		}
+		throw ResourceException();
+	}
+protected:
+	/**
+	 * ----------------------------------------------------
+	 * constructors and destructor
+	 * ----------------------------------------------------
+	 * default constructor
+	 */
+	SResource()             = default;
+	SResource(SResource&& ) = default;
+	/**
+	 * default destructor
+	 */
+	virtual ~SResource() = default; 
+	/***
+	 * ----------------------------------------------------
+	 * methods
+	 * ----------------------------------------------------
+	 * set phandler
+	 */
+	template<class H = SHandler>
+	void SetHandler(pHandler<H> h) {
+		__h = static_pointer_cast<SHandler>(h);	
+	}
+private:
+	/**
+	 * --------------------------------
+	 * pointer to handler
+	 * --------------------------------
+	 */
+	shared_ptr<SHandler> __h;
+} Resource;
+/**
+ */
+#endif /* SRESOURCE_H */
 

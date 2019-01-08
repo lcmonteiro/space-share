@@ -6,7 +6,7 @@
  */
 //#define __DEBUG__
 /*
- * linux
+ * base linux
  */
 #include <netinet/tcp.h>
 #include <sys/socket.h>
@@ -16,7 +16,7 @@
 #include <string.h>
 #include <sys/un.h>
 /**
- * linux
+ * space linux
  */
 #include "SResourceHandler.h"
 #include "SMonitorHandler.h"
@@ -47,9 +47,13 @@ bool SRemoteResource::Good() {
     /**
      * validation
      */
-    if (::getsockopt(
-        GetHandler<SResourceHandler>()->FD(), SOL_SOCKET, SO_ERROR, &error, &len) < 0
-    ) {
+    try {
+        if (::getsockopt(
+            GetHandler<SResourceHandler>()->FD(), SOL_SOCKET, SO_ERROR, &error, &len
+        ) < 0) {
+            return false;
+        }
+    } catch(...) {
         return false;
     }
     return error == 0;
@@ -196,7 +200,6 @@ SRemoteResource& SRemoteResource::Drain(const Frame& f) {
 #ifdef __DEBUG__
 #include <iostream>
 #endif
-#include <iostream>
 Message::SRemoteResource& Message::SRemoteResource::Wait(
     const string& host, uint16_t port, chrono::seconds timeout
 ) {
@@ -267,6 +270,7 @@ Message::SRemoteResource& Message::SRemoteResource::Wait(
         if (::recvfrom(h->FD(), nullptr, 0, MSG_PEEK,(struct sockaddr *)&addr, &len) < 0) {
             throw ResourceException(make_error_code(errc(errno)));
         }
+#ifdef __DEBUG__
         char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
         if (::getnameinfo(
             (struct sockaddr *)&addr, len,
@@ -276,6 +280,7 @@ Message::SRemoteResource& Message::SRemoteResource::Wait(
             ) {
             std::cout << "connected: " << "host=" << hbuf << ", serv=" << sbuf << endl;
         }
+#endif
         if (::connect(h->FD(), (struct sockaddr *)&addr, len) < 0) {
             throw ResourceException(make_error_code(errc(errno)));
         }
