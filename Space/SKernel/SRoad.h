@@ -142,13 +142,15 @@ public:
      * main interfaces
      * --------------------------------------------------------------------------------------------
      * insert an object
+     * ------------------------------------------------------------------------
      */
     inline void Insert(K key, T obj) {
-        // remove the existing one
+        // remove the existing one ------------------------
         for(auto s : {Backup, Repairing, Running, Dead}) {
             __process[s].erase(key);
         }
-        // insert a new one
+
+        // insert a new one -------------------------------
         if (__process[Repairing].size() < __nominal) {
             // start connector
             __process[Repairing][key] = obj;
@@ -158,7 +160,9 @@ public:
         }
     }
     /**
+     * ------------------------------------------------------------------------
      * find an object
+     * ------------------------------------------------------------------------
      */
     inline T& Find(K key) {
         for(auto s : {Backup, Repairing, Running, Dead}) {
@@ -169,7 +173,9 @@ public:
         throw range_error(__func__);
     }
     /**
+     * ------------------------------------------------------------------------
      * iterator
+     * ------------------------------------------------------------------------
      */
     inline Location begin() {
         return __process[Running].begin();
@@ -178,7 +184,9 @@ public:
         return __process[Running].end();
     }
     /**
+     * -----------------------------------------------------------------------
      * get road size
+     * -----------------------------------------------------------------------
      */
     inline size_t Length() {
         size_t out = 0;
@@ -188,25 +196,24 @@ public:
         return out;
     }
     /**
+     * -----------------------------------------------------------------------
      * try to repair
+     * -----------------------------------------------------------------------
      */
     inline void Repair(Location& it) {
-        /**
-         * repair connector
-         */
+        //  repair connector ----------
         it->second->Repair();
-        /**
-         * jump to repairing queue
-         */
+        
+        // jump to repairing queue ----
         it = jump(it, Running, Repairing);
     }
     /**
+     * ------------------------------------------------------------------------
      * update 
+     * ------------------------------------------------------------------------
      */
     inline Road& Update() {
-        /**
-         * update areas
-         */
+        // update areas -----------------------------------
         Area& repairing = __process[Repairing];
         for (auto it = repairing.begin(); it != repairing.end();) {
             if (it->second->Good()) {
@@ -219,29 +226,25 @@ public:
             }
             ++it;
         }
-        /**
-         * waiting  
-         */
+
+        // waiting ---------------------------------------- 
         if (__process[Running].size() < __minimum) {
             throw SRoadExceptionDETACHED<T>(Status());
         }
-        /**
-         * is dead 
-         */
+
+        // is dead ----------------------------------------
         if (__process[Repairing].size() + __process[Running].size() < __nominal) {
             throw SRoadExceptionDEAD<T>(Status());
         }
-        /** 
-         */
         return *this;
     }
     /**
-     * block all streams
+     * ------------------------------------------------------------------------
+     * block all connectors
+     * ------------------------------------------------------------------------
      */
     inline void Close() {
-        /**
-         * repairing
-         */
+        // repairing --------------------------------------
         Area& repairing = __process[Repairing];
         for (auto it = repairing.begin() , e = repairing.end(); it != e;) {
             try {
@@ -250,9 +253,7 @@ public:
                 it = jump(it, Repairing, Dead);
             }
         }
-        /**
-         * running
-         */
+        // running ----------------------------------------
         Area& running = __process[Running];
         for (auto it = running.begin(), e = running.end(); it != e;) {
             try {
@@ -263,12 +264,12 @@ public:
         }
     }
     /**
-     * enable all streams
+     * ------------------------------------------------------------------------
+     * enable all 
+     * ------------------------------------------------------------------------
      */
     inline void Open() {
-        /**
-         * repairing
-         */
+        // repairing --------------------------------------
         Area& repairing = __process[Repairing];
         for (auto it = repairing.begin() , e = repairing.end(); it != e;) {
             try {
@@ -277,9 +278,8 @@ public:
                 it = jump(it, Repairing, Dead);
             }
         }
-        /**
-         * running
-         */
+
+        // running ----------------------------------------
         Area& running = __process[Running];
         for (auto it = running.begin(), e = running.end(); it != e; ) {
             try {
@@ -291,29 +291,23 @@ public:
         }
     }
     /**
-     * reset all streams
+     * ------------------------------------------------------------------------
+     * reset all 
+     * ------------------------------------------------------------------------
      */
     inline void Reset(){
-        /**
-         * close resources
-         */
+        // close resources --------------------------------
         Close();
-        /**
-         * change context
-         */
+        // change context ---------------------------------
         STask::Sleep(std::chrono::milliseconds(10));
-        /**
-         * open resources
-         */
+        // open resources ---------------------------------
         Open();
-        /**
-         * change context
-         */
+        // change context ---------------------------------
         STask::Sleep(std::chrono::milliseconds(10));
     }
-    /**--------------------------------------------------------------------------------------------
+    /**------------------------------------------------------------------------
      * diagnostic
-     *---------------------------------------------------------------------------------------------
+     *-------------------------------------------------------------------------
      *  
      */
     inline map<State, size_t> Sizes() {
@@ -348,7 +342,9 @@ protected:
         return __revison;
     }
     /**
+     * ------------------------------------------------------------------------
      * jumps
+     * ------------------------------------------------------------------------
      */
     inline Location jump(const Location& pos, const State& from, const State& to) {
         /**
