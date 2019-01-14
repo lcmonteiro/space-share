@@ -13,6 +13,7 @@
  */
 #include "SProcess.h"
 #include "SCommand.h"
+#include "SVariable.h"
 #include "SEnergy.h"
 #include "SRoad.h"
 /**
@@ -50,11 +51,11 @@ public:
     /**
      * keys
      */
-    const char* MODULE = "M";
-    const char* FUNC   = "F";
-    const char* IN     = "I";
-    const char* OUT    = "O";
-    const char* INOUT  = "X";
+    static constexpr const char* MODULE = "M";
+    static constexpr const char* FUNC   = "F";
+    static constexpr const char* IN     = "I";
+    static constexpr const char* OUT    = "O";
+    static constexpr const char* INOUT  = "X";
     /**
      * constructor
      */ 
@@ -119,11 +120,11 @@ public:
     GET(FUNC,   Function);
 };
 /**
- * ------------------------------------------------------------------------------------------------*
+ * ------------------------------------------------------------------------------------------------
  * module 
  * ------------------------------------------------------------------------------------------------
  **/
-class SModule : public SProcess<SModuleCommand>, public SEnergy<ModuleExceptionDEAD> {
+class SModule : public SProcess<SVariable<string>>, public SEnergy<ModuleExceptionDEAD> {
 public:   
     static constexpr const char* URI     = "uri";
     static constexpr const char* VERBOSE = "verbose";
@@ -141,9 +142,10 @@ public:
     using Val = string;
     /**
      */
-    using Group  = Command::Group;
-    using Groups = Command::Groups;
-    using Link   = shared_ptr<SModule>;
+    using Command = SModuleCommand;
+    using Group   = Command::Group;
+    using Groups  = Command::Groups;
+    using Link    = shared_ptr<SModule>;
     /**
      * --------------------------------------------------------------------------------------------
      * Fabric
@@ -163,30 +165,6 @@ public:
         }
     }
     /**
-     * ----------------------------------------------------------------------------------------
-     * Constructors
-     * ----------------------------------------------------------------------------------------
-     * main constructor
-     */
-    SModule(const Command& cmd):
-        // derivate 
-        SProcess(cmd[""][0][URI], cmd[""][0].get(VERBOSE, 0), cmd),
-        SEnergy(cmd[""][0].get(ENERGY, 1)),
-        // variable
-        __state(OPEN) 
-    {}
-    /**
-     * default constructors
-     */
-    SModule()           = default;
-    SModule(SModule&&)  = default;
-    /**
-     * ----------------------------------------------------------------------------------------
-     * Destructor 
-     * ----------------------------------------------------------------------------------------
-     */
-    virtual ~SModule()  = default;
-    /**
      * --------------------------------------------------------------------------------------------
      * Check state
      * --------------------------------------------------------------------------------------------
@@ -198,9 +176,9 @@ public:
         return __state == s;
     }
     /**
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * manager
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      */
     inline bool Join() {
         try {
@@ -212,9 +190,22 @@ public:
     }
 protected:
     /**
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
+     * Constructors
+     * ------------------------------------------------------------------------
+     * main constructor
+     */
+    SModule(
+        const Settings& set, const SAddress uri, size_t energy, uint8_t verbose
+    ): SProcess(set, uri, verbose), SEnergy(energy), __state(OPEN) {}
+    /**
+     * default constructor
+     */
+    SModule() = default;
+    /**
+     * ------------------------------------------------------------------------
      * Attributes
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      */
     State __state;
     /**
@@ -223,29 +214,6 @@ protected:
     inline void SetState(State s) {
         __state = s;
     }
-    
-    // template<class T>
-    // void SUpdate(vector<T>& out, vector<T>& err) {
-    //     for (auto o = out.begin(), e = err.begin(); o != out.end() && e != err.end(); ++o, ++e) {
-    //         for (auto it = e->begin(); it != e->end();) {
-    //             if (it->second->Good()) {
-    //                 o->insert(*it);
-    //                 it = e->erase(it);
-    //                 continue;
-    //             }
-    //             ++it;
-    //         }
-    //     }
-    // }
-    // template<class T>
-    // size_t Size(vector<T>& vec) {
-    //     auto n = 0;
-    //     for (auto& e : vec) {
-    //         n += e.size();
-    //     }
-    //     return n;
-    // }
-    
 };
 
 #endif /* SMODULE */

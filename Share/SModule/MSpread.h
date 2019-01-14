@@ -9,7 +9,7 @@
 /**
  * Module
  */
-#include "MDefault.h" 
+#include "SModule.h" 
 /**
  *-------------------------------------------------------------------------------------------------
  * Module name space
@@ -19,7 +19,7 @@ namespace Module {
 /**
  */
 template<class I, class D, class O>
-class MSpread : public MDefault {
+class MSpread : public SModule {
     /**
      * exception types
      */

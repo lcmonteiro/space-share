@@ -36,17 +36,11 @@ public:
      * ----------------------------------------------------------------------------------------
      * main constructor
      */
-    MDefault(const Command& cmd): SModule(cmd), 
-    // delay start
-    __delay(
-        cmd[""][0].get(Properties::DELAY, 10)
-    ),
-    // module max period
-    __timeout(
-        cmd[""][0].get(Properties::TIMEOUT, 1000)
-    ),
-    // monitor
-    __monitor(__uri){}
+    MDefault(
+        const Settings& data, chrono::milliseconds delay, chrono::milliseconds timeout
+    ) : SModule (
+        cmd
+    ), __delay(delay), __timeout(timeout){  }
 protected:
     using Clock     = chrono::steady_clock;
     using TimePoint = Clock::time_point;
@@ -67,15 +61,16 @@ protected:
      * --------------------------------------------------------------------------------------------
      */
     int Execute() override {
+        // set in open state ------------------------------
         SetState(OPEN);
-        INFO("INI = {}");
-        // delay the process
+
+        // delay the process ------------------------------
         STask::Sleep(__delay);
-        // init the process 
-        __Init();
+        
         // run the precess
         INFO("RUN = {}");
-        while(true) {
+
+        while(STask::) {
             TimePoint end = Clock::now() + __timeout;
             try {
                 __Process(end);
@@ -87,6 +82,7 @@ protected:
                 return -1;
             }
         }
+        // set in close state
         SetState(CLOSE);
         INFO("END = {}");
         return 0;
@@ -198,27 +194,12 @@ protected:
      * update resources 
      */
     template<class P, class... R>
-    void Update(const TimePoint& end, P process, R... resource) {
-        using Engine = default_random_engine;
-        using Distribuition = uniform_int_distribution<>;
-        /**
-         * waiting loop 
-         */
-        auto gen = Engine{random_device{}()}; 
-        auto dis = Distribuition{100, 500}; 
+    void Update(const TimePoint& end, R... resource) {
         do {
             try {
                 auto x = {(resource->Update(),0)...};
             } catch(RoadDetached& e) {
-                // check if a command arrive in random time 
-                try {
-                    // wait    command
-                    SResourceMonitor(chrono::milliseconds(dis(gen)), &__monitor).Wait();
-                    // process command
-                    process();
-                } catch(MonitorExceptionTIMEOUT& ) {
-                    continue;
-                }
+
             }
         } while(Clock::now() < end);
     }
