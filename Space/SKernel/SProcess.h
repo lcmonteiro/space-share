@@ -1,4 +1,4 @@
-/** 
+/**
  * File:   SProcess.h
  * Author: Luis Monteiro
  *
@@ -7,17 +7,20 @@
 #ifndef SPROCESS_H
 #define SPROCESS_H
 /**
+ * space
  */
 #include "SLog.h"
 #include "STask.h"
 #include "SAddress.h"
+#include "SQueue.h"
 /**
  * ------------------------------------------------------------------------------------------------
  * Process template
- * S=settings type
+ * CMD  = command
+ * DATA = data container
  * ------------------------------------------------------------------------------------------------
  */
-template<class S>
+template<class CMD, class DATA>
 class SProcess : protected SLog {
     /**
      * ------------------------------------------------------------------------
@@ -25,16 +28,25 @@ class SProcess : protected SLog {
      * ------------------------------------------------------------------------
      */
     using Task     = STask;
-public:   
-    using Settings = S;
+public:
+    using Settings = DATA;
+    using Command  = CMD;
+    using Commands = SQueue<CMD>;
     /**
      * ------------------------------------------------------------------------
      * Constructors
      * ------------------------------------------------------------------------
      * main constructor
      */
-    SProcess(const Settings& set, const SAddress uri={}, uint8_t verbose = 0)
-    : SLog(verbose), __set(set), __uri(uri), __worker() {  
+    SProcess(const SAddress uri={}, uint8_t verbose = 0)
+    : SLog(verbose), __uri(uri), __cmds(), __data(), __worker() {
+    }
+    /**
+     * initial command constructor
+     */
+    SProcess(const Command& cmd, const SAddress uri={}, uint8_t verbose = 0)
+    : SProcess(uri, verbose) {
+	__cmds.Insert(cmd);
     }
     /**
      * default constructors
@@ -43,13 +55,13 @@ public:
     SProcess(SProcess&&) = default;
     /**
      * ------------------------------------------------------------------------
-     * Destructor 
+     * Destructor
      * ------------------------------------------------------------------------
      */
     virtual ~SProcess()  = default;
     /**
      * ------------------------------------------------------------------------
-     * Run 
+     * Run
      * ------------------------------------------------------------------------
      */
     inline int Run() {
@@ -75,7 +87,7 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * Attach 
+     * Attach
      * ------------------------------------------------------------------------
      */
     void Attach() {
@@ -86,13 +98,17 @@ protected:
      * ------------------------------------------------------------------------
      * Variables
      * ------------------------------------------------------------------------
-     * settings 
-     */
-    Settings __set;
-    /**
      * uri
      */
     SAddress __uri;
+    /**
+     * commands
+     */
+    Commands __cmds;
+    /**
+     * data
+     */
+    Settings __data;
     /**
      * worker task
      */

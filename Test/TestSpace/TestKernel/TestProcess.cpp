@@ -1,21 +1,29 @@
 #include <gtest/gtest.h>
 /**
+ * space
  */
-#include <SProcess.h>
-#include <SCommand.h>
-
+#include "SProcess.h"
+#include "SCommand.h"
+#include "SVariable.h"
+/**
+ * ------------------------------------------------------------------------------------------------
+ * testes
+ * ------------------------------------------------------------------------------------------------
+ */
 using namespace std;
 TEST(SProcess, Create)
 {
-    class SProcess1 : public SProcess<SCommand<string, string>> {
+    class SProcess1 : public SProcess<SCommand<string, string>, SVariable<string>> {
     public:
-        using SProcess<SCommand<string, string>>::SProcess;
+        using SProcess<SCommand<string, string>, SVariable<string>>::SProcess;
     protected:
         int Execute() override {
-            return stoi(__cmd["I"][0]["A"]);
+            for(auto& cmd : __cmds.Remove()) {
+                return stoi(cmd["I"][0]["A"]);
+            }
         }
     };
-    SProcess1 p("uri", 0, {
+    SProcess1 p({
         {"I", {{
             {"A", "3"}
         }}}
