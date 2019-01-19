@@ -17,7 +17,7 @@
 using namespace std;
 /**
  */
-template<class K, class V> 
+template<class K, class V>
 class SCommand {
         const char* Syntax = "-(\\w+)|--(\\w+)=(\\w+)";
 public:
@@ -34,34 +34,34 @@ public:
                 using map<Key, Val>::map;
                 // get
                 inline const Val& operator[](const Key& k) const {
-                        return at(k); 
+                        return at(k);
                 }
                 // extra
                 template <class T=Val>
-                inline const T get(const Key& k) const {
+                inline const T Get(const Key& k) const {
                         T val;
                         istringstream(at(k)) >> val;
-                        return val; 
+                        return val;
                 }
                 template <class T>
-                inline const T get(const Key& k, const T& d) const {
+                inline const T Get(const Key& k, const T& d) const {
                         try {
-                                return get<T>(k);
+                                return Get<T>(k);
                         } catch (...) {
                                 return d;
                         }
                 }
                 template <class T>
-                inline const T get(const Key& k1, const Key& k2, const T& d) const {
+                inline const T Get(const Key& k1, const Key& k2, const T& d) const {
                         try {
-                                return get<T>(k1);
+                                return Get<T>(k1);
                         } catch (...) {
-                                return get<T>(k2, d);
+                                return Get<T>(k2, d);
                         }
                 }
                 // set
-                inline void set(const Key& k, const Val& v) {
-                        at(k) = v; 
+                inline void Set(const Key& k, const Val& v) {
+                        at(k) = v;
                 }
         };
         class Groups: public vector<Group> {
@@ -70,7 +70,11 @@ public:
                 using vector<Group>::vector;
                 // change
                 inline const Group& operator[](size_t i) const {
-                        return at(i); 
+                        return at(i);
+                }
+                // head
+                inline Group Head() const {
+                        return at(0);
                 }
         };
         using Options = map<Key, Groups>;
@@ -83,7 +87,7 @@ public:
         SCommand() = default;
 
         SCommand(SCommand&&) = default;
-        
+
         SCommand(const SCommand&) = default;
         /***
          * main
@@ -95,14 +99,14 @@ public:
         SCommand(const string& line) : __opts() {
                 using Wrapper = std::reference_wrapper<Group>;
                 // parse loop
-                regex exp(Syntax); 
+                regex exp(Syntax);
                 for (auto i = sregex_iterator(line.begin(), line.end(), exp), end = sregex_iterator(); i != end;) {
                         // insert group
                         auto& group = __Insert(__opts, __Transform<Key>(i->str(1)));
                         // fill group
-                        for (++i; (i != end) && i->str(2).size() && i->str(3).size(); ++i) {        
+                        for (++i; (i != end) && i->str(2).size() && i->str(3).size(); ++i) {
                                 __Insert(group, __Transform<Key>(i->str(2)), __Transform<Val>(i->str(3)));
-                        }                                
+                        }
                 }
         }
         /**
@@ -111,7 +115,7 @@ public:
          * ----------------------------------------------------------------------------------------
          */
         inline const Groups& operator[](const Key& k) const {
-                return __opts.at(k); 
+                return __opts.at(k);
         }
         /**
          * ----------------------------------------------------------------------------------------
@@ -120,13 +124,13 @@ public:
          */
         inline SCommand& Swap(const Key& k1, const Key& k2) {
                 swap(__opts.at(k1),__opts.at(k2));
-                return *this; 
+                return *this;
         }
         inline SCommand& Update(const Key& k1, const Key& k2, const Val& val) {
                 for(auto& g : __opts.at(k1)) {
                         g.set(k2, val);
                 }
-                return *this; 
+                return *this;
         }
         /**
          * ----------------------------------------------------------------------------------------
@@ -141,7 +145,7 @@ public:
                                         out << "--" << p.first << "=" << p.second << " ";
                                 }
                         }
-                } 
+                }
                 return out;
         }
 
@@ -163,7 +167,7 @@ private:
                 if (it != opts.end()) {
                         it->second.emplace_back(Group());
                 } else {
-                        it = opts.insert(it, typename Options::value_type(key, Groups(1))); 
+                        it = opts.insert(it, typename Options::value_type(key, Groups(1)));
                 }
                 return it->second.back();
         }

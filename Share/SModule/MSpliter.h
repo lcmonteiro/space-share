@@ -9,7 +9,7 @@
 /**
  * Module
  */
-#include "MDefault.h"
+#include "MBase.h"
 /**
  *-------------------------------------------------------------------------------------------------
  * Module name space
@@ -19,7 +19,7 @@ namespace Module {
 /**
  */
 template<class IO, class I, class O>
-class MSpliter : public MDefault {
+class MSpliter : public MBase {
     /**
      * ------------------------------------------------------------------------
      * exception types
@@ -52,9 +52,17 @@ class MSpliter : public MDefault {
      */
     using Function = typename FBuilder::Pointer;
 public:   
-    MSpliter(const Command& cmd): MBase() {
-        InsertCommand(cmd);
-    }
+    /**
+     * ------------------------------------------------------------------------
+     * constructor
+     * ------------------------------------------------------------------------
+     */
+    MSpliter(const Command& cmd): MBase(cmd[MODULE].Head(), {
+        {FUNCTION, cmd[FUNCTION]},
+        {INOUT,    cmd[INOUT]   },
+        {INPUT,    cmd[INPUT]   },
+        {OUTPUT,   cmd[OUTPUT]  },
+    }) {    }
 protected:
     /**
      * ------------------------------------------------------------------------
@@ -68,7 +76,7 @@ protected:
      */
     IRoad __in;
     /**
-     * input
+     * output
      */
     ORoad __out;
     /**
@@ -84,7 +92,7 @@ protected:
     void __ProcessCommand(const Command& cmd) {
         // create and insert input/outputs
         for(auto& o: cmd[Command::INOUT]) {
-            __io.Insert(o[Properties::URI], IBuilder::Build(o));
+            __io.Insert(o[Properties::URI], IOBuilder::Build(o));
         }
         // create and insert inputs
         for(auto& o: cmd[Command::IN]) {
@@ -96,7 +104,7 @@ protected:
         }
         // create and insert outputs
         for(auto o: cmd[Command::FUNC]) {
-            __func = FBuilder::Build(__cmd["F"][0]);
+            __func = FBuilder::Build(o);
         }
     }
     /**
@@ -104,17 +112,13 @@ protected:
      * process execution
      * --------------------------------------------------------------------------------------------
      */
-    void __Process(const TimePoint& end) override {
+    void __ProcessMachine(const Clock::Pointer& end) override {
         // log info -----------------------------------------------------------
         INFO("Process={ "
             << "energy:" << SEnergy::Get() << ", "
             << "inputs:" << Status(__in)   << " "
             << "}"
         );
-        // procces commands ---------------------------------------------------
-        for(auto& c : FindCommand()) {
-            ProcessCommand()
-        }
         /**
          * --------------------------------------------------------------------
          * state machine process
@@ -142,7 +146,7 @@ protected:
                 }
                 //  in wait ---------------------------------------------------
                 case IWAIT: {
-                    Update(end, ProcessCmd, &__in);
+                    Update(end, &__in);
                     SetState(PROCESS);
                     break;
                 }

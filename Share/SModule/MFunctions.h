@@ -83,17 +83,17 @@ namespace Spread {
                      * create function
                      */
                     return make_shared<Message::SEncode>(Helpers::CreateStamp(
-                            o.get(Properties::TYPE,   Properties::MESSAGE),
-                            o.get(Properties::SECRET, string(""))
+                            o.Get(Properties::TYPE,   Properties::MESSAGE),
+                            o.Get(Properties::SECRET, string(""))
                         ), 
-                        o.get(Properties::CACHE,  10),
-                        o.get(Properties::ENERGY, 10),
-                        o.get(Properties::VERBOSE, 1)
+                        o.Get(Properties::CACHE,  10),
+                        o.Get(Properties::ENERGY, 10),
+                        o.Get(Properties::VERBOSE, 1)
                     );
                 }}
             };
             return GENERATOR[
-                o.get(Properties::TYPE, Properties::MESSAGE)
+                o.Get(Properties::TYPE, Properties::MESSAGE)
             ](o);
             
         }
@@ -112,17 +112,17 @@ namespace Spread {
                      * create function
                      */
                     return make_shared<Message::SDecode>(Helpers::CreateStamp(
-                            o.get(Properties::TYPE,   Properties::MESSAGE),
-                            o.get(Properties::SECRET, SConnector::Key())
+                            o.Get(Properties::TYPE,   Properties::MESSAGE),
+                            o.Get(Properties::SECRET, SConnector::Key())
                         ), 
-                        o.get(Properties::CACHE,  10),
-                        o.get(Properties::ENERGY, 10),
-                        o.get(Properties::VERBOSE, 1)
+                        o.Get(Properties::CACHE,  10),
+                        o.Get(Properties::ENERGY, 10),
+                        o.Get(Properties::VERBOSE, 1)
                     );
                 }}
             };
             return GENERATOR[
-                o.get(Properties::TYPE, Properties::MESSAGE)
+                o.Get(Properties::TYPE, Properties::MESSAGE)
             ](o);
         }
     };
@@ -148,8 +148,8 @@ namespace Spliter {
         using Pointer = typename BaseBuilder<IO, I, O>::Pointer;
         static inline Pointer Build(const SModule::Command::Group& o){
             return make_shared<SFunctionSpliter<SConnector::Key, IO, I, O>>(
-                o.get(Properties::ENERGY,  10), 
-                o.get(Properties::VERBOSE, 1)
+                o.Get(Properties::ENERGY,  10), 
+                o.Get(Properties::VERBOSE, 1)
             );
         }
     };

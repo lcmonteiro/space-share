@@ -124,11 +124,9 @@ public:
  * module 
  * ------------------------------------------------------------------------------------------------
  **/
-class SModule : public SProcess<SVariable<string>>, public SEnergy<ModuleExceptionDEAD> {
+class SModule 
+: public SProcess<SModuleCommand, SVariable<string>>, public SEnergy<ModuleExceptionDEAD> {
 public:   
-    static constexpr const char* URI     = "uri";
-    static constexpr const char* VERBOSE = "verbose";
-    static constexpr const char* ENERGY  = "energy";
     /**
      * --------------------------------------------------------------------------------------------
      * Definitions
@@ -175,19 +173,6 @@ public:
     inline bool IsState(State s) {
         return __state == s;
     }
-    /**
-     * ------------------------------------------------------------------------
-     * manager
-     * ------------------------------------------------------------------------
-     */
-    inline bool Join() {
-        try {
-            __worker.join();
-        } catch(...) {
-            return false;
-        }
-        return true;
-    }
 protected:
     /**
      * ------------------------------------------------------------------------
@@ -195,9 +180,9 @@ protected:
      * ------------------------------------------------------------------------
      * main constructor
      */
-    SModule(
-        const Settings& set, const SAddress uri, size_t energy, uint8_t verbose
-    ): SProcess(set, uri, verbose), SEnergy(energy), __state(OPEN) {}
+    SModule(const SAddress uri, size_t energy, uint8_t verbose)
+    : SProcess(uri, verbose), SEnergy(energy), __state(OPEN) {
+    }
     /**
      * default constructor
      */
@@ -215,5 +200,9 @@ protected:
         __state = s;
     }
 };
-
+/**
+ * ------------------------------------------------------------------------------------------------
+ * end 
+ * ------------------------------------------------------------------------------------------------
+ **/
 #endif /* SMODULE */

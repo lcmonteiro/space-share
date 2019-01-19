@@ -58,28 +58,28 @@ namespace Input {
             static map<SConnector::Key, function <Decoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(Properties::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::ILocConnector::Make(
-                        o.get(Properties::URI),
-                        o.get(Properties::NFRAMES, 50),
-                        o.get(Properties::SFRAMES, 1550)
+                        o.Get(Properties::URI),
+                        o.Get(Properties::NFRAMES, 50),
+                        o.Get(Properties::SFRAMES, 1550)
                     );
-                    in->SetVerbose(o.get(Properties::VERBOSE, 0));
-                    in->SetEnergy(o.get(Properties::ENERGY,   0));
+                    in->SetVerbose(o.Get(Properties::VERBOSE, 0));
+                    in->SetEnergy(o.Get(Properties::ENERGY,   0));
                     return in;
                 }},
                 {SConnector::Key(Properties::MESSAGE_UDP), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::IUdpConnector::Make(
-                        o.get(Properties::URI),
-                        o.get(Properties::NFRAMES, 50),
-                        o.get(Properties::SFRAMES, 1550)
+                        o.Get(Properties::URI),
+                        o.Get(Properties::NFRAMES, 50),
+                        o.Get(Properties::SFRAMES, 1550)
                     );
-                    in->SetVerbose(o.get(Properties::VERBOSE, 0));
-                    in->SetEnergy(o.get( Properties::ENERGY,  0));
+                    in->SetVerbose(o.Get(Properties::VERBOSE, 0));
+                    in->SetEnergy(o.Get( Properties::ENERGY,  0));
                     return in;
                 }}
             };
             try {
                 return GENERATOR[
-                    o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_LOCAL))
+                    o.Get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_LOCAL))
                 ](o);
             } catch(...) {
                 throw runtime_error("invalid input");
@@ -95,16 +95,16 @@ namespace Input {
             static map<SConnector::Key, function <Encoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(Properties::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto in = Encoded::Message::IFileConnector::Make(
-                        o.get(Properties::URI, string("/tmp/coded"))
+                        o.Get(Properties::URI, string("/tmp/coded"))
                     );
-                    in->SetVerbose(o.get(Properties::VERBOSE, 0));
-                    in->SetEnergy(o.get(Properties::ENERGY,   1));
+                    in->SetVerbose(o.Get(Properties::VERBOSE, 0));
+                    in->SetEnergy(o.Get(Properties::ENERGY,   1));
                     return in;
                 }}
             };
             try {
                 return GENERATOR[
-                    o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
+                    o.Get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
                 ](o);
             } catch(...) {
                 throw runtime_error("invalid input");
@@ -136,16 +136,16 @@ namespace Output {
             static map<SConnector::Key, function <Decoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(Properties::MESSAGE_UDP), [](const SModule::Command::Group& o) {
                     auto out = Decoded::Message::OUdpConnector::Make(
-                        o.get(Properties::URI,  string("127.0.0.1:9751"))
+                        o.Get(Properties::URI,  string("127.0.0.1:9751"))
                     );
-                    out->SetVerbose(o.get(Properties::VERBOSE, 0));
-                    out->SetEnergy(o.get(Properties::ENERGY,   1));
+                    out->SetVerbose(o.Get(Properties::VERBOSE, 0));
+                    out->SetEnergy(o.Get(Properties::ENERGY,   1));
                     return out;
                 }}
             };
             try{
                 return GENERATOR[
-                    o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_UDP))
+                    o.Get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_UDP))
                 ](o);
             } catch(...) {
                 throw runtime_error("invalid output");
@@ -161,16 +161,16 @@ namespace Output {
             static map<SConnector::Key, function <Encoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(Properties::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto out = Encoded::Message::OFileConnector::Make(
-                        o.get(Properties::URI, string("/tmp/code"))
+                        o.Get(Properties::URI, string("/tmp/code"))
                     );
-                    out->SetVerbose(o.get(Properties::VERBOSE, 0));
-                    out->SetEnergy(o.get(Properties::ENERGY,   1));
+                    out->SetVerbose(o.Get(Properties::VERBOSE, 0));
+                    out->SetEnergy(o.Get(Properties::ENERGY,   1));
                     return out;
                 }}
             };
             try {
                 return GENERATOR[
-                    o.get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
+                    o.Get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
                 ](o);
             } catch(...) {
                 throw runtime_error("invalid output");
@@ -202,18 +202,18 @@ namespace IOput {
             static map<SConnector::Key, function <Decoded::IOConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(Properties::STREAM_LOCAL), [](const SModule::Command::Group& o) {
                     auto io = Decoded::Stream::IOLocConnector::Make(
-                        o.get(Properties::URI,     string("/tmp/data.y")),
-                        o.get(Properties::NFRAMES, 50),
-                        o.get(Properties::SFRAMES, 4096)
+                        o.Get(Properties::URI,     string("/tmp/data.y")),
+                        o.Get(Properties::NFRAMES, 50),
+                        o.Get(Properties::SFRAMES, 4096)
                     );
-                    io->SetVerbose(o.get(Properties::VERBOSE, 0));
-                    io->SetEnergy(o.get(Properties::ENERGY,   1));
+                    io->SetVerbose(o.Get(Properties::VERBOSE, 0));
+                    io->SetEnergy(o.Get(Properties::ENERGY,   1));
                     return io;
                 }}
             };
             try {
                 return GENERATOR[
-                    o.get(Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
+                    o.Get(Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
                 ](o);
             } catch(...) {
                 throw runtime_error("invalid input/output");
@@ -231,7 +231,7 @@ namespace IOput {
             };
             try {
                 return GENERATOR[
-                    o.get(Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
+                    o.Get(Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
                 ](o);
             } catch(...) {
                 throw runtime_error("invalid input/output");

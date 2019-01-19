@@ -46,7 +46,7 @@ public:
      */
     SProcess(const Command& cmd, const SAddress uri={}, uint8_t verbose = 0)
     : SProcess(uri, verbose) {
-	__cmds.Insert(cmd);
+	    __cmds.Insert(cmd);
     }
     /**
      * default constructors
@@ -59,6 +59,14 @@ public:
      * ------------------------------------------------------------------------
      */
     virtual ~SProcess()  = default;
+    /**
+     * ------------------------------------------------------------------------
+     * properties
+     * ------------------------------------------------------------------------
+     */
+    inline  SProcess& Insert(const Command& cmd) {
+        __cmds.Insert(cmd);
+    }
     /**
      * ------------------------------------------------------------------------
      * Run
@@ -90,29 +98,31 @@ public:
      * Attach
      * ------------------------------------------------------------------------
      */
-    void Attach() {
+    inline void Attach() {
         __worker = Task();
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * Join
+     * ------------------------------------------------------------------------
+     */
+    inline bool Join() {
+        try {
+            __worker.join();
+        } catch(...) {
+            return false;
+        }
+        return true;
     }
 protected:
     /**
      * ------------------------------------------------------------------------
-     * Variables
+     * properties
      * ------------------------------------------------------------------------
-     * uri
      */
-    SAddress __uri;
-    /**
-     * commands
-     */
-    Commands __cmds;
-    /**
-     * data
-     */
-    Settings __data;
-    /**
-     * worker task
-     */
-    Task __worker;
+    inline typename Commands::List __Commands() {
+        return __cmds.Remove();
+    }
     /**
      * ------------------------------------------------------------------------
      * Execute
@@ -139,6 +149,26 @@ protected:
     inline void __CRITITAL(const string& msg) {
         SLog::__CRITITAL(__uri, msg);
     }
+private:
+    /**
+     * ------------------------------------------------------------------------
+     * Variables
+     * ------------------------------------------------------------------------
+     * uri
+     */
+    SAddress __uri;
+    /**
+     * commands
+     */
+    Commands __cmds;
+    /**
+     * data
+     */
+    Settings __data;
+    /**
+     * worker task
+     */
+    Task __worker;
 };
 
 #endif /* SPROCESS_H */
