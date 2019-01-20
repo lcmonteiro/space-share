@@ -57,11 +57,11 @@ public:
      * constructor
      * ------------------------------------------------------------------------
      */
-    MSpliter(const Command& cmd): MBase(cmd[MODULE].Head(), {
-        {FUNCTION, cmd[FUNCTION]},
-        {INOUT,    cmd[INOUT]   },
-        {INPUT,    cmd[INPUT]   },
-        {OUTPUT,   cmd[OUTPUT]  },
+    MSpliter(const Command& cmd): MBase(cmd[Command::MODULE].Head(), {
+        {Command::FUNCTION, cmd[Command::FUNCTION]},
+        {Command::INOUT,    cmd[Command::INOUT]   },
+        {Command::INPUT,    cmd[Command::INPUT]   },
+        {Command::OUTPUT,   cmd[Command::OUTPUT]  },
     }) {    }
 protected:
     /**
@@ -95,15 +95,15 @@ protected:
             __io.Insert(o[Properties::URI], IOBuilder::Build(o));
         }
         // create and insert inputs
-        for(auto& o: cmd[Command::IN]) {
+        for(auto& o: cmd[Command::INOUT]) {
             __in.Insert(o[Properties::URI], IBuilder::Build(o));
         }
         // create and insert outputs
-        for(auto o: cmd[Command::OUT]) {
+        for(auto o: cmd[Command::OUTPUT]) {
             __out.Insert(o[Properties::URI], OBuilder::Build(o));
         }
         // create and insert outputs
-        for(auto o: cmd[Command::FUNC]) {
+        for(auto o: cmd[Command::FUNCTION]) {
             __func = FBuilder::Build(o);
         }
     }

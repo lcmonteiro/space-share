@@ -32,14 +32,7 @@ public:
      * --------------------------------------------------------------------------------------------
      * Identifires
      * --------------------------------------------------------------------------------------------
-     * groups
-     */
-    const char* MODULE    = "M";
-    const char* FUNCTION  = "F";
-    const char* INOUT     = "X";
-    const char* INPUT     = "I";
-    const char* OUTPUT    = "O";
-    /**
+     **
      * properties
      */
     const char* URI     = "uri";

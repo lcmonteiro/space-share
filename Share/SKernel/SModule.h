@@ -51,11 +51,11 @@ public:
     /**
      * keys
      */
-    static constexpr const char* MODULE = "M";
-    static constexpr const char* FUNC   = "F";
-    static constexpr const char* IN     = "I";
-    static constexpr const char* OUT    = "O";
-    static constexpr const char* INOUT  = "X";
+    static constexpr const char* MODULE   = "M";
+    static constexpr const char* FUNCTION = "F";
+    static constexpr const char* INPUT    = "I";
+    static constexpr const char* OUTPUT   = "O";
+    static constexpr const char* INOUT    = "X";
     /**
      * constructor
      */ 
@@ -72,11 +72,11 @@ public:
         }                                           \
         return *this;                               \
     }
-    ADD(MODULE, Module  );
-    ADD(FUNC,   Function);
-    ADD(IN,     Input   );
-    ADD(OUT,    Output  );
-    ADD(INOUT,  InOutput);
+    ADD(MODULE,   Module  );
+    ADD(FUNCTION, Function);
+    ADD(INPUT,    Input   );
+    ADD(OUTPUT,   Output  );
+    ADD(INOUT,    InOutput);
     /**
      * set
      */
@@ -85,8 +85,8 @@ public:
         __opts.emplace(MODULE, Groups({conf}));     \
         return *this;                               \
     }
-    SET(MODULE, Module  );
-    SET(FUNC,   Function);
+    SET(MODULE,   Module  );
+    SET(FUNCTION, Function);
     /**
      * gets
      */
@@ -99,11 +99,11 @@ public:
             return empty;                   \
         }                                   \
     }
-    GETS(MODULE, Module  );
-    GETS(FUNC,   Function);
-    GETS(IN,     Input   );
-    GETS(OUT,    Output  );
-    GETS(INOUT,  InOutput);
+    GETS(MODULE,   Module  );
+    GETS(FUNCTION, Function);
+    GETS(INOUT,    Input   );
+    GETS(OUTPUT,   Output  );
+    GETS(INOUT,    InOutput);
     /**
      * get
      */
@@ -116,9 +116,14 @@ public:
             return empty;                   \
         }                                   \
     }
-    GET(MODULE, Module  );
-    GET(FUNC,   Function);
+    GET(MODULE,   Module  );
+    GET(FUNCTION, Function);
 };
+constexpr const char* SModuleCommand::MODULE;
+constexpr const char* SModuleCommand::FUNCTION;
+constexpr const char* SModuleCommand::INPUT;
+constexpr const char* SModuleCommand::OUTPUT;
+constexpr const char* SModuleCommand::INOUT;
 /**
  * ------------------------------------------------------------------------------------------------
  * module 

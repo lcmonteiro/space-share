@@ -16,50 +16,38 @@ TEST(SRemoteResource, Link)
 {
     Message::SRemoteResource rem_c;
     Message::SRemoteResource rem_s;
-    /**
-     * settings
-     */
+    // settings ---------------------------------------------------------------
     auto size   = 100;
     auto addr   = "localhost";
     auto port   = 9999;
-    /**
-     * prepare
-     */
-    
+
+    // prepare ----------------------------------------------------------------
     auto in     = SRandom::Frame(size);
     auto out    = Frame(size);
-    /**
-     * wait
-     */
+    
+    // wait -------------------------------------------------------------------
     auto future = async(std::launch::async, [&]{
         rem_s.Wait(addr, port, chrono::seconds(1));
         return true;
     });
     STask::Sleep(chrono::milliseconds(10));
-    /**
-     * link & send
-     */ 
+
+    // link & send ------------------------------------------------------------ 
     rem_c.Link(addr, port).Drain(in);
-    /**
-     * test connection 
-     */
+
+    // test connection --------------------------------------------------------
     EXPECT_EQ(future.get(), true);
-    /**
-     * test read
-     */
+    
+    // test read --------------------------------------------------------------
     EXPECT_EQ(rem_s.Fill(out).Good(), true);
-    /**
-     * test data
-     */
+
+    // test data --------------------------------------------------------------
     EXPECT_EQ(in, out);
-    /**
-     * test reverse send
-     * reset frame
-     */
+
+    // test reverse send & reset frame ----------------------------------------
     out = Frame(size);  
-    /**
-     * test 
-     */
+    
+    // test -------------------------------------------------------------------
     EXPECT_EQ(rem_s.Drain(in).Good(), true);
     EXPECT_EQ(rem_c.Fill(out).Good(), true);
     EXPECT_EQ(in, out);
