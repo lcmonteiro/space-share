@@ -115,7 +115,9 @@ public:
      */
     typedef enum {Backup, Repairing, Running, Dead} State;
     /**
-     * process 
+     * ---------------------------------------------------------------------------------------------
+     * helpers
+     * ---------------------------------------------------------------------------------------------
      */
     using Key      = K;
     using Object   = T;
@@ -123,20 +125,24 @@ public:
     using Road     = SRoad<K, T>;
     using Location = typename Area::iterator;
     /**
-     * constructor
+     * ---------------------------------------------------------------------------------------------
+     * defaults
+     * ---------------------------------------------------------------------------------------------
      */
-    SRoad() = default;
+    SRoad()                   = default;
+    SRoad(SRoad&& )           = default;
+    SRoad& operator=(SRoad&&) = default;
     /**
+     * ---------------------------------------------------------------------------------------------
+     * constructors
+     * ---------------------------------------------------------------------------------------------
+     **
      * main constructor
      * @param nominal
      * @param min
      */
     SRoad(size_t nominal, size_t minimum = 0): __nominal(nominal), __minimum(minimum), __revison(0) {
     }
-    /**
-     * operators
-     */
-    SRoad& operator=(SRoad &&) = default;
     /**
      * --------------------------------------------------------------------------------------------
      * main interfaces

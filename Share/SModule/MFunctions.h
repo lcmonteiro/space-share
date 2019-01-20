@@ -78,22 +78,22 @@ namespace Spread {
         using Pointer = typename BaseBuilder<Decoded::IConnector, Container, Encoded::OConnector>::Pointer;
         static inline Pointer Build(const SModule::Command::Group& o){
             static map<SConnector::Key, function <Pointer(const SModule::Command::Group&)>> GENERATOR {
-                {Properties::MESSAGE, [](const SModule::Command::Group& o) {
+                {Function::Type::MESSAGE, [](const SModule::Command::Group& o) {
                     /** 
                      * create function
                      */
                     return make_shared<Message::SEncode>(Helpers::CreateStamp(
-                            o.Get(Properties::TYPE,   Properties::MESSAGE),
-                            o.Get(Properties::SECRET, string(""))
+                            o.Get(Function::TYPE,   Function::Type::MESSAGE),
+                            o.Get(Function::SECRET, string())
                         ), 
-                        o.Get(Properties::CACHE,  10),
-                        o.Get(Properties::ENERGY, 10),
-                        o.Get(Properties::VERBOSE, 1)
+                        o.Get(Function::CACHE,  10),
+                        o.Get(Function::ENERGY, 10),
+                        o.Get(Function::VERBOSE, 1)
                     );
                 }}
             };
             return GENERATOR[
-                o.Get(Properties::TYPE, Properties::MESSAGE)
+                o.Get(Properties::TYPE, Function::Type::MESSAGE)
             ](o);
             
         }
@@ -107,22 +107,22 @@ namespace Spread {
         using Pointer = typename BaseBuilder<Encoded::IConnector, Document, Decoded::OConnector>::Pointer;
         static inline Pointer Build(const SModule::Command::Group& o){
             static map<SConnector::Key, function <Pointer(const SModule::Command::Group&)>> GENERATOR {
-                {Properties::MESSAGE, [](const SModule::Command::Group& o) {
+                {Function::Type::MESSAGE, [](const SModule::Command::Group& o) {
                     /** 
                      * create function
                      */
                     return make_shared<Message::SDecode>(Helpers::CreateStamp(
-                            o.Get(Properties::TYPE,   Properties::MESSAGE),
-                            o.Get(Properties::SECRET, SConnector::Key())
+                            o.Get(Function::TYPE,   Function::Type::MESSAGE),
+                            o.Get(Function::SECRET, SConnector::Key())
                         ), 
-                        o.Get(Properties::CACHE,  10),
-                        o.Get(Properties::ENERGY, 10),
-                        o.Get(Properties::VERBOSE, 1)
+                        o.Get(Function::CACHE,  10),
+                        o.Get(Function::ENERGY, 10),
+                        o.Get(Function::VERBOSE, 1)
                     );
                 }}
             };
             return GENERATOR[
-                o.Get(Properties::TYPE, Properties::MESSAGE)
+                o.Get(Function::TYPE, Function::Type::MESSAGE)
             ](o);
         }
     };

@@ -8,10 +8,11 @@
  * space
  */
 #include "SRandom.h"
+#include "SText.h"
 /**
  * share
  */
-#include <MSpliter.h>
+#include "MSpliter.h"
 //#include <MSpread.h>
 /**
  * -------------------------------------------------------------------------------------------------
@@ -24,23 +25,27 @@ TEST(SModule, EchoSpliter)
     // settings ---------------------------------------------------------------
     auto size   = 100;
     auto addr   = "localhost";
-    auto port   = 9999;
+    auto port1  = 9999;
+    auto port2  = 8888;
 
     // build a spliter -------------------------------------------------------- 
     Spliter s ({
-        {SModuleCommand::MODULE,   {{
+        {Spliter::Command::MODULE,   {{
         }}},
-        {SModuleCommand::FUNCTION, {{
-            {Module::Properties::TYPE, "message"}
+        {Spliter::Command::FUNCTION, {{
+            {Module::Function::TYPE, Module::Function::Type::MESSAGE}
         }}},
-        {SModuleCommand::INOUT,    {{
-            {Module::Properties::URI, "127.0.0.1:9999"}
+        {Spliter::Command::INOUT,    {{
+            {Module::IO::TYPE, Module::IO::Type::MESSAGE_REMOTE},
+            {Module::IO::URI, SText(addr, ":", port1)}
         }}},
-        {SModuleCommand::INPUT,    {{
-            {Module::Properties::URI, "127.0.0.1:8888"}
+        {Spliter::Command::INPUT,    {{
+            {Module::IO::TYPE, Module::IO::Type::MESSAGE_REMOTE},
+            {Module::IO::URI, SText(addr, ":", port2)}
         }}},
-        {SModuleCommand::OUTPUT,   {{
-            {Module::Properties::URI, "127.0.0.1:8888"}
+        {Spliter::Command::OUTPUT,   {{
+            {Module::IO::TYPE, Module::IO::Type::MESSAGE_REMOTE},
+            {Module::IO::URI, SText(addr, ":", port2)}
         }}}
     });
     s.Detach();
@@ -49,7 +54,7 @@ TEST(SModule, EchoSpliter)
     auto out = Frame(size);
     // interface resource -----------------------------------------------------
     Message::SRemoteResource interface;
-    interface.Link("127.0.0.1", 8888);
+    interface.Link(addr, port1);
 
     // send ------------------------------------------------------------------- 
     EXPECT_EQ(interface.Drain(in).Good(), true);

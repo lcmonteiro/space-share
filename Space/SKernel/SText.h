@@ -10,6 +10,7 @@
  * std
  */
 #include <string>
+#include <sstream>
 /**
  * ------------------------------------------------------------------------------------------------
  * Text
@@ -17,19 +18,32 @@
  */
 class SText : public std::string {
 public:
+    using Super = std::string;
 	/**
 	 * --------------------------------------------------------------------
 	 * constructor
 	 * --------------------------------------------------------------------
 	 * empty
      */
-    using std::string:string;
+    using Super::Super;
     /**
 	 * native types
 	 */
     SText(int    v): std::string(__Set(v)) {}
     SText(float  v): std::string(__Set(v)) {}
     SText(double v): std::string(__Set(v)) {}
+    /**
+     * mix types
+     */
+    template<typename T, typename... Ts>
+    SText(T arg, Ts... args) {
+        std::ostringstream result;
+        result << arg;
+        int steps[] = { 
+            (result << args, 0)... 
+        };
+        assign(result.str());
+    }
     /**
      * --------------------------------------------------------------------
      * interfaces
@@ -49,15 +63,15 @@ protected:
     template <class T>
     static inline T __Get(std::string& s) {
         T val;
-        istringstream(s) >> val;
+        std::istringstream(s) >> val;
         return val;
     }
     /**
      * set
      */
     template <class T>
-    static inline std::string  __Set(T v) {
-        ostringstream o;
+    static inline std::string  __Set(T val) {
+        std::ostringstream o;
         o << val;
         return o.str();
     }
