@@ -15,7 +15,7 @@ DEPENDS
     SpaceKernel
 )
 # ---------------------------------------------------------
-# add kelnel test 
+# add resource test 
 # ---------------------------------------------------------
 add_gtests(
 TARGET 
@@ -27,3 +27,19 @@ DEPENDS
     SpaceResource
     SpaceKernel
 )
+# ---------------------------------------------------------
+# add monitor test 
+# ---------------------------------------------------------
+add_gtests(
+TARGET 
+    TestSpaceMonitor 
+SOURCES 
+    TestMonitor/TestRoadMonitor.cpp
+DEPENDS
+    SpaceResource
+    SpaceMonitor
+    SpaceKernel
+)
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

@@ -263,7 +263,7 @@ Message::SRemoteResource& Message::SRemoteResource::Wait(
         /**
          * wait for data 
          */
-        SMonitorHandler({h}).Wait(timeout);
+        SStaticMonitorHandler({h}).Wait(timeout);
         /**
          * get address and connect
          */

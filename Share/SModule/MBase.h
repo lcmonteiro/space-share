@@ -41,7 +41,8 @@ public:
     const char* DELAY   = "delay";
     const char* TIMEOUT = "timeout";
 protected:
-    using Clock     = SClock<>;
+    using Clock            = SClock<>;
+    using ResourceMonitor  = SResourceMonitor<>;
     /**
      * ------------------------------------------------------------------------
      * defaults
@@ -124,12 +125,11 @@ protected:
     /**
      * wait resources
      */
-    inline vector<size_t> Wait(SResourceMonitor& monitor, const Clock::Pointer& end) {
+    inline vector<size_t> Wait(ResourceMonitor& monitor, const Clock::Pointer& end) {
         auto timeout = Clock::Remaining(end);
         if(timeout > Clock::Distance::zero()) {
             return monitor.Wait(timeout);
         }
-        monitor = SResourceMonitor();
         return {};
     }
     /**

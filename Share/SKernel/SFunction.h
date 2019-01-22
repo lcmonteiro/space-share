@@ -195,7 +195,7 @@ public:
      * process
      *-------------------------------------------------------------------------------**/
     inline void Process(IORoad& io, IRoad& in, ORoad& out) {
-        for (auto& i : SResourceMonitor(
+        for (auto& i : SResourceMonitor<>(
             std::min(io.GetTimeout(), in.GetTimeout()), &io, &in
         ).Wait()) {
             if (i == 0) {

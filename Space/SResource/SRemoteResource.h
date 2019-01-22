@@ -26,10 +26,7 @@ public:
      * ------------------------------------------------------------------------
      * general interfaces
      * ------------------------------------------------------------------------
-     * move operator
-     */
-    SRemoteResource& operator=(SRemoteResource && res) = default;
-    /**
+     **
      * status
      */
     bool Good();
@@ -56,7 +53,15 @@ public:
     /**
      * utils
      */
-
+protected:
+    /**
+     * ------------------------------------------------------------------------
+     * defaults
+     * ------------------------------------------------------------------------
+     */
+    SRemoteResource()                             = default;
+    SRemoteResource(SRemoteResource&&)            = default;
+    SRemoteResource& operator=(SRemoteResource&&) = default;
 };
 /**
  * ------------------------------------------------------------------------------------------------
@@ -66,6 +71,12 @@ public:
 namespace Message {
     class SRemoteResource : public ::SRemoteResource {
     public:
+        /**
+         * defaults
+         */
+        SRemoteResource()                             = default;
+        SRemoteResource(SRemoteResource&&)            = default;
+        SRemoteResource& operator=(SRemoteResource&&) = default;
         /**
          * wait
          */
@@ -99,6 +110,9 @@ namespace Stream {
     };
 }
 /**
+ * ------------------------------------------------------------------------------------------------
+ * end
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* SREMOTERESOURCE_H */
 

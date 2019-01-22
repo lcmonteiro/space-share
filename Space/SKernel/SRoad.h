@@ -141,7 +141,7 @@ public:
      * @param nominal
      * @param min
      */
-    SRoad(size_t nominal, size_t minimum = 0): __nominal(nominal), __minimum(minimum), __revison(0) {
+    SRoad(size_t nominal, size_t minimum = 0): __nominal(nominal), __minimum(minimum), __revision(0) {
     }
     /**
      * --------------------------------------------------------------------------------------------
@@ -164,6 +164,9 @@ public:
             // backup connector
             __process[Backup][key] = obj;  
         }
+        
+        // update revision --------------------------------
+        __UpdateResvision();
     }
     /**
      * ------------------------------------------------------------------------
@@ -207,10 +210,13 @@ public:
      * -----------------------------------------------------------------------
      */
     inline void Repair(Location& it) {
-        //  repair connector ----------
+        // update revision --------------------------------
+        __UpdateResvision();
+
+        //  repair connector ------------------------------
         it->second->Repair();
         
-        // jump to repairing queue ----
+        // jump to repairing queue ------------------------
         it = jump(it, Running, Repairing);
     }
     /**
@@ -223,7 +229,10 @@ public:
         Area& repairing = __process[Repairing];
         for (auto it = repairing.begin(); it != repairing.end();) {
             if (it->second->Good()) {
-                it = jump(it, Repairing, Running);
+                // update run resources revision
+                __UpdateResvision();
+                // jump to running state
+                it = jump(it, Repairing, Running); 
                 continue;
             }
             if (it->second->Inactive()) {
@@ -268,6 +277,7 @@ public:
                 it = jump(it, Running, Dead);
             }
         }
+        __UpdateResvision();
     }
     /**
      * ------------------------------------------------------------------------
@@ -293,15 +303,16 @@ public:
                 it = jump(it, Running, Repairing);
             } catch(...) {
                 it = jump(it, Running, Dead);
-            }
+            }  
         }
+        __UpdateResvision();
     }
     /**
      * ------------------------------------------------------------------------
      * reset all 
      * ------------------------------------------------------------------------
      */
-    inline void Reset(){
+    inline void Reset() {
         // close resources --------------------------------
         Close();
         // change context ---------------------------------
@@ -342,10 +353,13 @@ public:
     
 protected:
     /**
-     * get revision
+     * revision
      */
-    inline size_t Resvision() {
-        return __revison;
+    inline size_t __FindResvision() {
+        return __revision;
+    }
+    inline void __UpdateResvision() {
+        ++__revision;
     }
     /**
      * ------------------------------------------------------------------------
@@ -366,7 +380,6 @@ protected:
         Location it = __process[from].begin();
         Location p = pos;
         if (it != __process[from].end()) {
-            using Value = typename Area::value_type;
             /**
              * move to queue
              */
@@ -380,6 +393,10 @@ protected:
     }
 private:
     /**
+     * ------------------------------------------------------------------------
+     * variables
+     * ------------------------------------------------------------------------
+     **
      * process container
      */
     map<State, Area> __process;
@@ -391,8 +408,12 @@ private:
     /**
      * process revision
      */
-    size_t __revison;
+    size_t __revision;
 };
-
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */
 #endif /* SROAD_H */
 

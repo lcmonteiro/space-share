@@ -2,20 +2,17 @@ cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
 # SpaceMonitorLinux target 
 # ---------------------------------------------------------
-add_library(SpaceMonitorLinux 
-STATIC
-	SMonitorHandler.cpp
+add_library(SpaceMonitorLinux INTERFACE
 )
 # includes
 target_include_directories(SpaceMonitorLinux 
-PUBLIC
+INTERFACE
 	.
 )
 #dependencies
 target_link_libraries(SpaceMonitorLinux
-PUBLIC 
+INTERFACE 
 	SpaceKernel
-PRIVATE
 	SpaceMonitor
 	SpaceKernelLinux
 	SpaceResourceLinux

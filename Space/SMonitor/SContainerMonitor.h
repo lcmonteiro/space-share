@@ -1,11 +1,11 @@
 /* 
- * Container:   SRoadMonitor.h
+ * Container:   SContainerMonitor.h
  * Author: Luis Monteiro
  *
- * Created on November 26, 2015, 12:37 PM
+ * Created on January 21, 2019, 12:37 PM
  */
-#ifndef SROADMONITOR_H
-#define SROADMONITOR_H
+#ifndef SCONTAINERMONITOR_H
+#define SCONTAINERMONITOR_H
 /**
  * C++
  */
@@ -15,10 +15,10 @@
  */
 #include "SRoad.h"
 /*------------------------------------------------------------------------------------------------*
- * RoadMonitor template
+ * ContainerMonitor 
  *------------------------------------------------------------------------------------------------*/
-template<class K, class T, template<typename ...> class M>
-class SRoadMonitorT : public SRoad<K, T>, public M<SRoad<K, T>> {
+template<class CONTAINER>
+class SContainerMonitor : public SRoad<K, T>, public M<SRoad<K, T>> {
     /**
      * helpers
      */
@@ -34,24 +34,24 @@ public:
     /**
      * default constructor
      */
-    SRoadMonitorT() = default;
+    SContainerMonitorT() = default;
     /**
      * main constructor
      * @param timeout
      * @param nominal
      * @param min
      */
-    SRoadMonitorT(time_t timeout, size_t nominal = 0, size_t min = 0)
+    SContainerMonitorT(time_t timeout, size_t nominal = 0, size_t min = 0)
     : Road(nominal, min), Monitor(timeout), __rev(0) {
     }
     /**
      * destructor
      */
-    virtual ~SRoadMonitorT() = default;
+    virtual ~SContainerMonitorT() = default;
     /**
      * operators
      */
-    SRoadMonitorT& operator=(SRoadMonitorT &&) = default;
+    SContainerMonitorT& operator=(SContainerMonitorT &&) = default;
     /**
      * update and wait
      */
@@ -60,8 +60,8 @@ public:
     }
 protected:
     inline bool changed() {
-        if(Road::__FindResvision() != __rev) {
-            __rev = Road::__FindResvision();
+        if(Road::Resvision() != __rev) {
+            __rev = Road::Resvision();
             return true;
         }
         return false;
@@ -76,17 +76,17 @@ private:
 #ifdef __linux__
 /**
  */
-#include "SLinuxRoadMonitor.h"
+#include "SLinuxContainerMonitor.h"
 /**
  */
 template<class K, class T>
-class SRoadMonitor : public SRoadMonitorT<K, T, SLinuxRoadMonitor> {
-    using SRoadMonitorT<K, T, SLinuxRoadMonitor>::SRoadMonitorT;
+class SContainerMonitor : public SContainerMonitorT<K, T, SLinuxContainerMonitor> {
+    using SContainerMonitorT<K, T, SLinuxContainerMonitor>::SContainerMonitorT;
 };
 /**
  */
 #endif
 /**
  */
-#endif /* SROADMONITOR_H */
+#endif /* SCONTAINERMONITOR_H */
 

@@ -160,7 +160,7 @@ protected:
                 // process ----------------------------------------------------
                 case PROCESS: {
                     try { 
-                        SResourceMonitor m (&__io, &__in);
+                        ResourceMonitor m (&__io, &__in);
                         while(m.Good()) {
                             for(auto& i : Wait(m, end)) {
                                 switch(i) {
