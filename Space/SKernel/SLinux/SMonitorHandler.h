@@ -40,6 +40,15 @@ public:
      * main
      */
     SMonitorHandler() = default;
+    /**
+     * ------------------------------------------------------------------------
+     * interfaces
+     * ------------------------------------------------------------------------
+     * size 
+     */
+    inline size_t Size() {
+        return __handlers.size();
+    }
 protected:
     /**
      * public handlers
@@ -72,7 +81,7 @@ public:
      * ------------------------------------------------------------------------
      * insert 
      */
-    SStaticMonitorHandler& Insert(Handler h);
+    size_t Insert(Handler h);
     /**
      * wait
      */
@@ -126,7 +135,7 @@ public:
      * ------------------------------------------------------------------------
      * insert 
      */
-    SDynamicMonitorHandler& Insert(Handler h);
+    size_t Insert(Handler h);
     /**
      * wait
      */

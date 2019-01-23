@@ -12,16 +12,19 @@
 #include <system_error>
 #include <memory>
 /**
- */
-using namespace std;
-/**
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * Exceptions
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
-typedef class SResourceException : public system_error {
+typedef class SResourceException : public std::system_error {
 public:
-	using system_error::system_error;
+	using std::system_error::system_error;
+	/**
+	 * constructor
+	 */
+	SResourceException()
+	: SResourceException(std::make_error_code(std::errc::resource_unavailable_try_again)){
+	}
 
 } ResourceException;
 /**
@@ -33,9 +36,11 @@ public:
 	/**
 	 * constructor
 	 */
-	SResourceExceptionABORT(const string& msg):SResourceException(make_error_code(errc::connection_aborted), msg){
+	SResourceExceptionABORT(const std::string& msg)
+	: SResourceException(std::make_error_code(std::errc::connection_aborted), msg){
 	}
-	SResourceExceptionABORT():SResourceException(make_error_code(errc::connection_aborted)){
+	SResourceExceptionABORT()
+	: SResourceException(std::make_error_code(std::errc::connection_aborted)){
 	}
 
 } ResourceExceptionABORT;
@@ -60,24 +65,26 @@ public:
 	/**
 	 * constructor
 	 */
-	SResourceExceptionTIMEOUT(const string& msg):SResourceException(make_error_code(errc::timed_out), msg){
+	SResourceExceptionTIMEOUT(const std::string& msg)
+	: SResourceException(std::make_error_code(std::errc::timed_out), msg){
 	}
-	SResourceExceptionTIMEOUT():SResourceException(make_error_code(errc::timed_out)){
+	SResourceExceptionTIMEOUT()
+	: SResourceException(std::make_error_code(std::errc::timed_out)){
 	}
 
 } ResourceExceptionTIMEOUT;
 /**
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * resource base
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 typedef class SResource {
 public:
 	SResource& operator=(SResource&& t) = default;
 	/**
-	 * ----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * handler for native system
-	 * ----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 */
 	class SHandler {
 	protected:
@@ -96,7 +103,7 @@ public:
 	 * --------------------------------
 	 */
 	template<class H = SHandler>
-	using pHandler = shared_ptr<H>;
+	using pHandler = std::shared_ptr<H>;
 	/**
 	 * --------------------------------
 	 * get handler
@@ -105,15 +112,15 @@ public:
 	template<class H = SHandler>
 	inline pHandler<H> GetHandler() {
 		if(__h) {
-			return static_pointer_cast<H>(__h);
+			return std::static_pointer_cast<H>(__h);
 		}
 		throw ResourceException();
 	}
 protected:
 	/**
-	 * ----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * constructors and destructor
-	 * ----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * default constructor
 	 */
 	SResource()             = default;
@@ -123,14 +130,14 @@ protected:
 	 */
 	virtual ~SResource() = default; 
 	/***
-	 * ----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * methods
-	 * ----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * set phandler
 	 */
 	template<class H = SHandler>
 	void SetHandler(pHandler<H> h) {
-		__h = static_pointer_cast<SHandler>(h);	
+		__h = std::static_pointer_cast<SHandler>(h);	
 	}
 private:
 	/**
@@ -138,9 +145,12 @@ private:
 	 * pointer to handler
 	 * --------------------------------
 	 */
-	shared_ptr<SHandler> __h;
+	pHandler<SHandler> __h;
 } Resource;
 /**
+ * ------------------------------------------------------------------------------------------------
+ * end
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* SRESOURCE_H */
 

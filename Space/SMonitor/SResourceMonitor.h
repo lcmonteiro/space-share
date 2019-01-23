@@ -33,33 +33,54 @@ public:
     template<typename T, typename... Args>
     SResourceMonitor(Time timeout, T arg, Args... args) 
     : SResourceMonitor(timeout) {
-        __Insert(arg, args...);
+        Insert(arg, args...);
     }
     template<typename T, typename... Args>
     SResourceMonitor(T arg, Args... args)
-    : SResourceMonitor(Time(0), arg, forward<Args>(args)...) {
+    : SResourceMonitor(Time(0), arg, std::forward<Args>(args)...) {
     }
     /**
      * ------------------------------------------------------------------------
      * interface
      * ------------------------------------------------------------------------
      **
-     * check
+     * insert
      */
-    bool Good();
-    /**
-     * wait
-     */
-    vector<size_t> Wait(chrono::milliseconds timeout);
-    inline vector<size_t> Wait() {
-        return Wait(__timeout);
+    template<typename T>
+    size_t Insert(T obj) {
+        return BASE::Insert(ADAPT::GetHandler(obj));
     }
     /**
      * check
      */
-    vector<size_t> Check(chrono::milliseconds timeout);
-    inline vector<size_t> Check() {
-        return Check(__timeout);
+    inline bool Good() {
+        (__timeout != Time::zero()) && (BASE::Size() != 0);
+    }
+    /**
+     * wait
+     */
+    inline std::list<size_t> Wait(const Time& timeout) {
+        return BASE::Wait(timeout);
+    }
+    inline std::list<size_t> Wait() {
+        return BASE::Wait(__timeout);
+    }
+    /**
+     * check
+     */
+    inline std::list<size_t> Check(const Time& timeout) {
+        try {
+            return BASE::Wait(timeout);
+        } catch(MonitorExceptionTIMEOUT& ) {
+            return {};
+        }
+    }
+    inline std::list<size_t> Check() {
+        try {
+            return BASE::Wait(__timeout);
+        } catch(MonitorExceptionTIMEOUT& ) {
+            return {};
+        }
     } 
 protected:
     using Handler  = SResource::pHandler<>;
@@ -75,16 +96,13 @@ protected:
      * ------------------------------------------------------------------------
      * update
      * ------------------------------------------------------------------------
-     * templates
+     * parse template
      */
     template<typename T, typename... Args>
-    void __Insert(T first, Args... args) {
-        __Insert(first); __Insert(args...);
+    void Insert(T first, Args... args) {
+        Insert(first); Insert(args...);
     }
-    template<typename T>
-    void __Insert(T obj) {
-        __Insert(ADAPT::GetHandler(obj));
-    }
+    
 private:
     /**
      * ------------------------------------------------------------------------

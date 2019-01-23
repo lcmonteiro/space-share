@@ -10,7 +10,10 @@
  * std
  */
 #include <system_error>
+#include <chrono>
 #include <memory>
+#include <vector>
+#include <list>
 /**
  * space
  */
@@ -64,58 +67,72 @@ public:
  */
 class SMonitor {
 public:
+	using Handler  = SResource::pHandler<>;
+    using Handlers = std::vector<Handler>;
+	using Time     = std::chrono::milliseconds; 
 	/**
-	 * ----------------------------------------------------
-	 * handler for native system
-	 * ----------------------------------------------------
-	 */
-	class SHandler {
-	protected:
-		/**
-		 * constructor
-		 */
-		SHandler() = default;
-		/**
-		 * destructor
-		 */
-		virtual ~SHandler() = default;
-	};
-	/**
-	 * get handler
-	 */
-	template<class H = SHandler>
-	inline std::shared_ptr<H> GetHandler() {
-		return static_pointer_cast<H>(__h);
-	}
-	/**
-	 * ----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * adpters 
-	 * ----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 */
 	struct SDirect {
 		template<typename T>
-		static SResource::pHandler<> GetHandler(T obj) {
+		static Handler GetHandler(T obj) {
 			return obj->GetHandler();
 		}
 	};
 	struct SIndirect {
 		template<typename T>
-		static SResource::pHandler<> GetHandler(T obj) {
+		static Handler GetHandler(T obj) {
 			return obj->GetResource().GetHandler();
 		}
 	};
+	/**
+	 * ------------------------------------------------------------------------
+	 * handler for native system
+	 * ------------------------------------------------------------------------
+	 * handler
+	 */
+	class SHandler {
+	protected:
+		SHandler() 			= default;
+		virtual ~SHandler() = default;
+	};
+	/**
+	 * handler type 
+	 */
+	template<class H = SHandler>
+	using pHandler = std::shared_ptr<H>;
+	/**
+	 * handler pointer
+	 */
+	template<class H = SHandler>
+	inline pHandler<H> GetHandler() {
+		return std::static_pointer_cast<H>(__h);
+	}
+	/**
+     * ------------------------------------------------------------------------
+     * interfaces
+     * ------------------------------------------------------------------------
+     * size 
+     */
+    size_t Size();
 protected:
 	/**
-	 * ----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * constructor
-	 * ----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 */
 	SMonitor() = default;
 private:
 	/**
+	 * ------------------------------------------------------------------------
+	 * variables
+	 * ------------------------------------------------------------------------
+	 **
 	 * pointer to handler
 	 */
-	std::shared_ptr<SHandler> __h;
+	pHandler<SHandler> __h;
 };
 /**
  * ------------------------------------------------------------------------------------------------
@@ -125,13 +142,29 @@ private:
 class SStaticMonitor: public SMonitor {
 protected:
 	/**
-	 * constructor
-	 */
-	SStaticMonitor() = default;
+     * ------------------------------------------------------------------------
+     * defaults
+     * ------------------------------------------------------------------------ 
+     */
+    SStaticMonitor(SStaticMonitor &&)            = default;
+    SStaticMonitor& operator=(SStaticMonitor &&) = default;
 	/**
-	 * destructor
+	 * ------------------------------------------------------------------------
+	 * constructor
+	 * ------------------------------------------------------------------------
 	 */
-	virtual ~SStaticMonitor() = default; 
+	SStaticMonitor();
+	/**
+     * ------------------------------------------------------------------------
+     * interfaces
+     * ------------------------------------------------------------------------
+     * insert 
+     */
+    size_t Insert(Handler h);
+    /**
+     * wait
+     */
+    std::list<size_t> Wait(const Time& timeout);
 };
 /**
  * ------------------------------------------------------------------------------------------------
@@ -141,13 +174,29 @@ protected:
 class SDynamicMonitor: public SMonitor, public SResource {
 protected:
 	/**
-	 * constructor
-	 */
-	SDynamicMonitor() = default;
+     * ------------------------------------------------------------------------
+     * defaults
+     * ------------------------------------------------------------------------ 
+     */
+    SDynamicMonitor(SDynamicMonitor &&)            = default;
+    SDynamicMonitor& operator=(SDynamicMonitor &&) = default;
 	/**
-	 * destructor
+	 * ------------------------------------------------------------------------
+	 * constructor
+	 * ------------------------------------------------------------------------
 	 */
-	virtual ~SDynamicMonitor() = default; 
+	SDynamicMonitor();
+	/**
+     * ------------------------------------------------------------------------
+     * interfaces
+     * ------------------------------------------------------------------------
+     * insert 
+     */
+    size_t Insert(Handler h);
+    /**
+     * wait
+     */
+    std::list<size_t> Wait(const Time& timeout);
 };
 /**
  * ------------------------------------------------------------------------------------------------

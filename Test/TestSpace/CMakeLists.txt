@@ -34,6 +34,7 @@ add_gtests(
 TARGET 
     TestSpaceMonitor 
 SOURCES 
+    TestMonitor/TestResourceMonitor.cpp
     TestMonitor/TestRoadMonitor.cpp
 DEPENDS
     SpaceResource

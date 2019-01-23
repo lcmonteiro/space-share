@@ -26,6 +26,7 @@ set(includes
 )
 # source files
 set(sources  
+	${CMAKE_CURRENT_LIST_DIR}/SMonitor.cpp
 	${CMAKE_CURRENT_LIST_DIR}/STask.cpp
 	PARENT_SCOPE
 )

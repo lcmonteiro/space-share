@@ -159,10 +159,10 @@ public:
         // insert a new one -------------------------------
         if (__process[Repairing].size() < __nominal) {
             // start connector
-            __process[Repairing][key] = obj;
+            __process[Repairing][key] = std::move(obj);
         } else {
             // backup connector
-            __process[Backup][key] = obj;  
+            __process[Backup][key] = std::move(obj); 
         }
         
         // update revision --------------------------------
@@ -350,17 +350,13 @@ public:
         out << "}";
         return out.str();
     }
-    
-protected:
     /**
      * revision
      */
-    inline size_t __FindResvision() {
+    inline size_t Resvision() {
         return __revision;
     }
-    inline void __UpdateResvision() {
-        ++__revision;
-    }
+protected:
     /**
      * ------------------------------------------------------------------------
      * jumps
@@ -390,6 +386,16 @@ protected:
             __process[from].erase(it);
         }
         return p;
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * others 
+     * ------------------------------------------------------------------------
+     **
+     * update revision
+     */
+    inline void __UpdateResvision() {
+        ++__revision;
     }
 private:
     /**

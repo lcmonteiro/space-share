@@ -7,86 +7,104 @@
 #ifndef SCONTAINERMONITOR_H
 #define SCONTAINERMONITOR_H
 /**
- * C++
+ * std
  */
 #include <chrono>
+#include <map>
 /**
- * kernel
+ * space
  */
+#include "SResourceMonitor.h"
 #include "SRoad.h"
-/*------------------------------------------------------------------------------------------------*
- * ContainerMonitor 
- *------------------------------------------------------------------------------------------------*/
-template<class CONTAINER>
-class SContainerMonitor : public SRoad<K, T>, public M<SRoad<K, T>> {
-    /**
-     * helpers
-     */
-    using Road    	= SRoad<K, T>;
-    using Monitor   = M<SRoad<K, T>>;
-    using Location  = typename SRoad<K, T>::Location;
+/**
+ * -------------------------------------------------------------------------------------------------
+ * Road monitor
+ * -------------------------------------------------------------------------------------------------
+ */
+template<
+    typename KEY, 
+    typename OBJ, 
+    typename MOTITOR=SResourceMonitor<SMonitor::SIndirect, SDynamicMonitor>
+>
+class SRoadMonitor : public SRoad<KEY, OBJ>, public MOTITOR {
+    using Road    	= SRoad<KEY, OBJ>;
+    using Monitor   = MOTITOR;
 public:
+    using Object    = OBJ;
+    using Time      = std::chrono::milliseconds; 
     /**
-     * share types
+     * ------------------------------------------------------------------------
+     * defaults
+     * ------------------------------------------------------------------------ 
      */
-    using Key       = K;
-    using Object    = T;
+    SRoadMonitor()                           = default;
+    SRoadMonitor(SRoadMonitor &&)            = default;
+    SRoadMonitor& operator=(SRoadMonitor &&) = default;
     /**
-     * default constructor
+     * ------------------------------------------------------------------------
+     * constructors
+     * ------------------------------------------------------------------------
+     * template 
      */
-    SContainerMonitorT() = default;
+    template<typename... Args>
+    SRoadMonitor(Time timeout, Args... args)
+    : Road(forward<Args>(args)...), Monitor(timeout), __rev(0) {}
     /**
-     * main constructor
-     * @param timeout
-     * @param nominal
-     * @param min
+     * ------------------------------------------------------------------------
+     * interfaces
+     * ------------------------------------------------------------------------
+     * wait 
      */
-    SContainerMonitorT(time_t timeout, size_t nominal = 0, size_t min = 0)
-    : Road(nominal, min), Monitor(timeout), __rev(0) {
-    }
-    /**
-     * destructor
-     */
-    virtual ~SContainerMonitorT() = default;
-    /**
-     * operators
-     */
-    SContainerMonitorT& operator=(SContainerMonitorT &&) = default;
-    /**
-     * update and wait
-     */
-    list<Location> Wait() {
-        return changed() ? Monitor::Wait(*this) : Monitor::Wait();
+    inline list<Object> Wait() {
+
+        // reload if changed ------------------------------
+        if(__Changed()) {
+            *this = Monitor();
+            for(auto& l : *this) {
+                __map[Monitor::Insert(l->second)] = l->second;
+            }
+        }
+
+        // wait and map -----------------------------------
+        list<Object> res;
+        for(auto& r : Monitor::Wait()) {
+            res.emplace_back(__map.Find2(r));
+        }
+        return res;
     }
 protected:
-    inline bool changed() {
+    /**
+     * ------------------------------------------------------------------------
+     * helpers
+     * ------------------------------------------------------------------------
+     * changed 
+     */
+    inline bool __Changed() {
         if(Road::Resvision() != __rev) {
             __rev = Road::Resvision();
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 private:
+    using Map  = map<size_t, Object>;
+    /**
+     * ------------------------------------------------------------------------
+     * Variables
+     * ------------------------------------------------------------------------
+     * revision 
+     */
     size_t __rev;
-};
-
-/*------------------------------------------------------------------------------------------------*
- * linux platform 
- *------------------------------------------------------------------------------------------------*/
-#ifdef __linux__
-/**
- */
-#include "SLinuxContainerMonitor.h"
-/**
- */
-template<class K, class T>
-class SContainerMonitor : public SContainerMonitorT<K, T, SLinuxContainerMonitor> {
-    using SContainerMonitorT<K, T, SLinuxContainerMonitor>::SContainerMonitorT;
+    /**
+     * mapping
+     */
+    Map    __map;
 };
 /**
- */
-#endif
-/**
+ * ------------------------------------------------------------------------------------------------
+ * end
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* SCONTAINERMONITOR_H */
 

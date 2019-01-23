@@ -6,8 +6,8 @@
 /**
  * space
  */
+#include "SContainerMonitor.h"
 #include "SRemoteResource.h"
-#include "SRoadMonitor.h"
 #include "SRandom.h"
 #include "SText.h"
 /**
@@ -15,13 +15,12 @@
  */
 TEST(SRoadMonitor, Create)
 {
-    typedef SRoadMonitor<SText, std::shared_ptr<Message::SRemoteResource>> RoadMonitor;
+    typedef SRoadMonitor<SText, Message::SRemoteResource> RoadMonitor;
     /**
+     * create
      */
-    RoadMonitor monitor;
-
-    monitor.Insert("1", std::make_shared<Message::SRemoteResource>(
-    ));
+    // auto monitor = RoadMonitor()
+    //     .Insert("1", move(Message::SRemoteResource()));
 
     
 }

@@ -32,7 +32,7 @@ SStaticMonitorHandler::SStaticMonitorHandler(std::initializer_list<Handler> hand
  *  Insert handler
  * ----------------------------------------------------------------------------
  */
-SStaticMonitorHandler& SStaticMonitorHandler::Insert(Handler h) {
+size_t SStaticMonitorHandler::Insert(Handler h) {
 
     // insert on resource navive container ----------------
     __locations.emplace_back(Location{
@@ -43,6 +43,9 @@ SStaticMonitorHandler& SStaticMonitorHandler::Insert(Handler h) {
    
     // insert on handler container ------------------------
     __handlers.emplace_back(h);
+
+    // return position ------------------------------------
+    return __handlers.size() - 1;
 }
 /**
  * ----------------------------------------------------------------------------
@@ -120,7 +123,7 @@ SDynamicMonitorHandler::SDynamicMonitorHandler(std::initializer_list<Handler> ha
  *  Insert handler
  * ----------------------------------------------------------------------------
  */
-SDynamicMonitorHandler& SDynamicMonitorHandler::Insert(Handler h) {
+size_t SDynamicMonitorHandler::Insert(Handler h) {
 
     // insert on resource container -----------------------
     epoll_event ev;
@@ -137,6 +140,9 @@ SDynamicMonitorHandler& SDynamicMonitorHandler::Insert(Handler h) {
 
     // insert on handler container ------------------------
     __handlers.emplace_back(h);
+
+    // return position ------------------------------------
+    return __handlers.size() - 1;
 }
 /**
  * ----------------------------------------------------------------------------
