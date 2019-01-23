@@ -116,7 +116,15 @@ public:
      * ------------------------------------------------------------------------
      * size 
      */
-    size_t Size();
+    virtual size_t Size() = 0;
+	/**
+	 * insert 
+     */
+    virtual size_t Insert(Handler h) = 0;
+    /**
+     * wait
+     */
+    virtual std::list<size_t> Wait(const Time& timeout) = 0;
 protected:
 	/**
 	 * ------------------------------------------------------------------------
@@ -124,6 +132,16 @@ protected:
 	 * ------------------------------------------------------------------------
 	 */
 	SMonitor() = default;
+	/***
+	 * ------------------------------------------------------------------------
+	 * methods
+	 * ------------------------------------------------------------------------
+	 * set phandler
+	 */
+	template<class H = SHandler>
+	void SetHandler(pHandler<H> h) {
+		__h = std::static_pointer_cast<SHandler>(h);	
+	}
 private:
 	/**
 	 * ------------------------------------------------------------------------
@@ -158,13 +176,17 @@ protected:
      * ------------------------------------------------------------------------
      * interfaces
      * ------------------------------------------------------------------------
-     * insert 
+     * size 
      */
-    size_t Insert(Handler h);
+    size_t Size() override;
+	/**
+	 * insert 
+     */
+    size_t Insert(Handler h) override;
     /**
      * wait
      */
-    std::list<size_t> Wait(const Time& timeout);
+    std::list<size_t> Wait(const Time& timeout) override;
 };
 /**
  * ------------------------------------------------------------------------------------------------
@@ -190,13 +212,17 @@ protected:
      * ------------------------------------------------------------------------
      * interfaces
      * ------------------------------------------------------------------------
-     * insert 
+     * size 
      */
-    size_t Insert(Handler h);
+    size_t Size() override;
+	/**
+	 * insert 
+     */
+    size_t Insert(Handler h) override;
     /**
      * wait
      */
-    std::list<size_t> Wait(const Time& timeout);
+    std::list<size_t> Wait(const Time& timeout) override;
 };
 /**
  * ------------------------------------------------------------------------------------------------

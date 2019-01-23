@@ -71,7 +71,7 @@ public:
     SStaticMonitorHandler(initializer_list<Handler> handlers);
     /**
      */
-    SStaticMonitorHandler() = default;
+    SStaticMonitorHandler() : SStaticMonitorHandler({}) {}
     /**
      */
     virtual ~SStaticMonitorHandler() = default;
@@ -125,7 +125,7 @@ public:
     SDynamicMonitorHandler(initializer_list<Handler> handlers);
     /**
      */
-    SDynamicMonitorHandler() = default;
+    SDynamicMonitorHandler() : SDynamicMonitorHandler({}) {}
     /**
      */
     virtual ~SDynamicMonitorHandler() = default;

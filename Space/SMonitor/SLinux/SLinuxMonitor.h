@@ -24,7 +24,7 @@
 #include "SMonitor.h"
 /**
  */
-class SLinuxMonitor: public SMonitor {
+class SLinuxMonitor {
 public:
     /**
      * constructor

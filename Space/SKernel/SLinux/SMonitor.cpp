@@ -18,20 +18,21 @@
 #include "SResourceHandler.h"
 /**
  * ------------------------------------------------------------------------------------------------
- * base monitor
- * ------------------------------------------------------------------------------------------------
- * constructor
- * ----------------------------------------------------------------------------
- */
-/**
- * ------------------------------------------------------------------------------------------------
  * static monitor
  * ------------------------------------------------------------------------------------------------
  * constructor
  * ----------------------------------------------------------------------------
  */
-SStaticMonitor::SStaticMonitor() {
-
+SStaticMonitor::SStaticMonitor(): SMonitor() {
+    SMonitor::SetHandler(make_shared<SStaticMonitorHandler>());
+}
+/**
+ * ----------------------------------------------------------------------------
+ * size
+ * ----------------------------------------------------------------------------
+ */
+size_t SStaticMonitor::Size() {
+    return SMonitor::GetHandler<SStaticMonitorHandler>()->Size();
 }
 /**
  * ----------------------------------------------------------------------------
@@ -39,16 +40,17 @@ SStaticMonitor::SStaticMonitor() {
  * ----------------------------------------------------------------------------
  */
 size_t SStaticMonitor::Insert(Handler h) {
-
-
+    return SMonitor::GetHandler<SStaticMonitorHandler>()->Insert(
+        std::static_pointer_cast<SResourceHandler>(h)
+    );
 }
 /**
  * ----------------------------------------------------------------------------
  *  wait for active handlers
  * ----------------------------------------------------------------------------
  */
-std::list<size_t> SStaticMonitor::Wait(const chrono::milliseconds& timeout) {
-    
+std::list<size_t> SStaticMonitor::Wait(const Time& timeout) {
+    return SMonitor::GetHandler<SStaticMonitorHandler>()->Wait(timeout);
 }
 /**
  * ------------------------------------------------------------------------------------------------
@@ -57,8 +59,18 @@ std::list<size_t> SStaticMonitor::Wait(const chrono::milliseconds& timeout) {
  * constructor
  * ----------------------------------------------------------------------------
  */
-SDynamicMonitor::SDynamicMonitor() {
-
+SDynamicMonitor::SDynamicMonitor() : SMonitor(), SResource() {
+    auto p = make_shared<SDynamicMonitorHandler>();
+    SResource::SetHandler(p);
+    SMonitor::SetHandler(p);
+}
+/**
+ * ----------------------------------------------------------------------------
+ * size
+ * ----------------------------------------------------------------------------
+ */
+size_t SDynamicMonitor::Size() {
+    return SMonitor::GetHandler<SDynamicMonitorHandler>()->Size();
 }
 /**
  * ----------------------------------------------------------------------------
@@ -66,7 +78,9 @@ SDynamicMonitor::SDynamicMonitor() {
  * ----------------------------------------------------------------------------
  */
 size_t SDynamicMonitor::Insert(Handler h) {
-
+    return SMonitor::GetHandler<SDynamicMonitorHandler>()->Insert(
+        std::static_pointer_cast<SResourceHandler>(h)
+    );
 }
 /**
  * ----------------------------------------------------------------------------
@@ -74,7 +88,7 @@ size_t SDynamicMonitor::Insert(Handler h) {
  * ----------------------------------------------------------------------------
  */
 std::list<size_t> SDynamicMonitor::Wait(const chrono::milliseconds& timeout) {
-    
+    return SMonitor::GetHandler<SDynamicMonitorHandler>()->Wait(timeout);
 }
 /**
  * ------------------------------------------------------------------------------------------------
