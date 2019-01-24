@@ -22,25 +22,23 @@
  * -------------------------------------------------------------------------------------------------
  */
 template<
-    typename KEY, 
-    typename OBJ, 
-    typename MOTITOR=SResourceMonitor<SMonitor::SIndirect, SDynamicMonitor>
+    typename CONTAINER, 
+    typename MOTITOR=SResourceMonitor<Monitor::SIndirect, Monitor::SDynamic>
 >
-class SRoadMonitor : public SRoad<KEY, OBJ>, public MOTITOR {
-    using Road    	= SRoad<KEY, OBJ>;
+class SContainerMonitor : public CONTAINER, public MOTITOR {
+    using Container = CONTAINER;
     using Monitor   = MOTITOR;
 public:
-    using Object    = OBJ;
-    using Reference = std::reference_wrapper<Object>;
+    using Object    = typename Container::Object;
     using Time      = std::chrono::milliseconds; 
     /**
      * ------------------------------------------------------------------------
      * defaults
      * ------------------------------------------------------------------------ 
      */
-    SRoadMonitor()                           = default;
-    SRoadMonitor(SRoadMonitor &&)            = default;
-    SRoadMonitor& operator=(SRoadMonitor &&) = default;
+    SContainerMonitor()                                = default;
+    SContainerMonitor(SContainerMonitor &&)            = default;
+    SContainerMonitor& operator=(SContainerMonitor &&) = default;
     /**
      * ------------------------------------------------------------------------
      * constructors
@@ -48,45 +46,26 @@ public:
      * template 
      */
     template<typename... Args>
-    SRoadMonitor(Time timeout, Args... args)
-    : Road(forward<Args>(args)...), Monitor(timeout), __rev(0) {}
-    /**
-     * ------------------------------------------------------------------------
-     * builder
-     * ------------------------------------------------------------------------
-     * insert 
-     */
-    inline SRoadMonitor& Insert(KEY key, OBJ obj) {
-        Road::Insert(
-            std::forward<KEY>(key), 
-            std::forward<OBJ>(obj)
-        );
-        return *this;
-    }
-    /**
-     * build
-     */
-    inline SRoadMonitor Build() {
-        return move(*this);
-    }
+    SContainerMonitor(Time timeout, Args... args)
+    : Container(forward<Args>(args)...), Monitor(timeout), __rev(0) {}
     /**
      * ------------------------------------------------------------------------
      * interfaces
      * ------------------------------------------------------------------------
      * wait 
      */
-    inline std::list<Reference> Wait() {
+    inline std::list<Object> Wait() {
         // reload if changed ------------------------------
         if(__Changed()) {
             static_cast<Monitor&>(*this) = Monitor();
             for(auto& l : *this) {
                 __map.emplace(
-                    Monitor::Insert(&l.second), std::ref(l.second)
+                    Monitor::Insert(l.second), l.second
                 );
             }
         }
-        // // wait and map -----------------------------------
-        std::list<Reference> res;
+        // wait and map -----------------------------------
+        std::list<Object> res;
         for(auto& r : Monitor::Wait()) {
             res.emplace_back(__map.at(r));
         }
@@ -100,15 +79,15 @@ protected:
      * changed 
      */
     inline bool __Changed() {
-        if(Road::Resvision() != __rev) {
-            __rev = Road::Resvision();
+        if(Container::Resvision() != __rev) {
+            __rev = Container::Resvision();
             return true;
         } else {
             return false;
         }
     }
 private:
-    using Map = map<size_t, Reference>;
+    using Map = map<size_t, Object>;
     /**
      * ------------------------------------------------------------------------
      * Variables

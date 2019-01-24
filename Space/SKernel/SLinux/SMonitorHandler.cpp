@@ -124,20 +124,15 @@ SDynamicMonitorHandler::SDynamicMonitorHandler(std::initializer_list<Handler> ha
  * ----------------------------------------------------------------------------
  */
 size_t SDynamicMonitorHandler::Insert(Handler h) {
-
     // insert on resource container -----------------------
-    epoll_event ev;
-    ev.data.ptr = 0;
-    ev.data.fd  = h->FD();
+    ::epoll_event ev;
     ev.data.u64 = __handlers.size();
-    ev.data.u32 = 0;
     ev.events   = EPOLLIN | EPOLLERR | EPOLLHUP;
     if (epoll_ctl(
-        FD(), EPOLL_CTL_ADD, ev.data.fd, &ev
+        FD(), EPOLL_CTL_ADD, h->FD(), &ev
     ) < 0) {
         throw ResourceExceptionABORT(strerror(errno));
     }
-
     // insert on handler container ------------------------
     __handlers.emplace_back(h);
 

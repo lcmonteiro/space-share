@@ -72,23 +72,6 @@ public:
 	using Time     = std::chrono::milliseconds; 
 	/**
 	 * ------------------------------------------------------------------------
-	 * adpters 
-	 * ------------------------------------------------------------------------
-	 */
-	struct SDirect {
-		template<typename T>
-		static Handler GetHandler(T obj) {
-			return obj->GetHandler();
-		}
-	};
-	struct SIndirect {
-		template<typename T>
-		static Handler GetHandler(T obj) {
-			return obj->GetResource().GetHandler();
-		}
-	};
-	/**
-	 * ------------------------------------------------------------------------
 	 * handler for native system
 	 * ------------------------------------------------------------------------
 	 * handler
@@ -152,26 +135,45 @@ private:
 	 */
 	pHandler<SHandler> __h;
 };
+
+namespace Monitor {
+/**
+ * -------------------------------------------------------------------------------------------------
+ * adpters 
+ * -------------------------------------------------------------------------------------------------
+ */
+struct SDirect {
+	template<typename T>
+	static SMonitor::Handler GetHandler(T obj) {
+		return obj->GetHandler();
+	}
+};
+struct SIndirect {
+	template<typename T>
+	static SMonitor::Handler GetHandler(T obj) {
+		return obj->GetResource().GetHandler();
+	}
+};
 /**
  * ------------------------------------------------------------------------------------------------
- * static monitor
+ * base - static monitor
  * ------------------------------------------------------------------------------------------------
  */
-class SStaticMonitor: public SMonitor {
+class SStatic: public SMonitor {
 protected:
 	/**
      * ------------------------------------------------------------------------
      * defaults
      * ------------------------------------------------------------------------ 
      */
-    SStaticMonitor(SStaticMonitor &&)            = default;
-    SStaticMonitor& operator=(SStaticMonitor &&) = default;
+    SStatic(SStatic &&)            = default;
+    SStatic& operator=(SStatic &&) = default;
 	/**
 	 * ------------------------------------------------------------------------
 	 * constructor
 	 * ------------------------------------------------------------------------
 	 */
-	SStaticMonitor();
+	SStatic();
 	/**
      * ------------------------------------------------------------------------
      * interfaces
@@ -190,24 +192,24 @@ protected:
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * dynamic monitor
+ * base - dynamic monitor
  * ------------------------------------------------------------------------------------------------
  */
-class SDynamicMonitor: public SMonitor, public SResource {
+class SDynamic: public SMonitor, public SResource {
 protected:
 	/**
      * ------------------------------------------------------------------------
      * defaults
      * ------------------------------------------------------------------------ 
      */
-    SDynamicMonitor(SDynamicMonitor &&)            = default;
-    SDynamicMonitor& operator=(SDynamicMonitor &&) = default;
+    SDynamic(SDynamic &&)            = default;
+    SDynamic& operator=(SDynamic &&) = default;
 	/**
 	 * ------------------------------------------------------------------------
 	 * constructor
 	 * ------------------------------------------------------------------------
 	 */
-	SDynamicMonitor();
+	SDynamic();
 	/**
      * ------------------------------------------------------------------------
      * interfaces
@@ -229,5 +231,6 @@ protected:
  * end
  * ------------------------------------------------------------------------------------------------
  */
+}
 #endif /* MONITOR_H */
 

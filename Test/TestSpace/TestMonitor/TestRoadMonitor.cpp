@@ -6,8 +6,8 @@
 /**
  * space
  */
-#include "SContainerMonitor.h"
-#include "SRemoteResource.h"
+#include "SRoadMonitor.h"
+#include "SEventResource.h"
 #include "SRandom.h"
 #include "SText.h"
 /**
@@ -15,35 +15,55 @@
  * test - SRoadMonitor & Event resource
  * ------------------------------------------------------------------------------------------------
  */
+class SEventConnector: public SEventResource {
+public:
+    // build
+    using Connector = std::shared_ptr<SEventConnector>;
+    static Connector Make(int n) {
+        return std::make_shared<SEventConnector>(n);
+    }
+    // interfaces
+    using SEventResource::SEventResource;
+    bool Good() {
+        return true;
+    }
+    bool Inactive() {
+        return false;
+    }
+};
 TEST(SRoadMonitor, Create)
 {
+    // create monitor type --------------------------------
     typedef SRoadMonitor<
         SText, 
-        SEventResource,
-        SResourceMonitor<SMonitor::SDirect, SDynamicMonitor>
+        SEventConnector::Connector,
+        Monitor::SDirect
     > RoadMonitor;
 
     // create monitor ------------------------------------- 
-    auto monitor = RoadMonitor()
-        .Insert("1", SEventResource(0))
-        .Insert("2", SEventResource(0))
-    .Build();
+    auto monitor = RoadMonitor(
+        RoadMonitor::Time(10), 
+        RoadMonitor::Road(2)
+            .Insert("1", SEventConnector::Make(0))
+            .Insert("2", SEventConnector::Make(0))
+        .Build()
+    );
 
     // set event 1 ---------------------------------------
-    monitor.Find("1").Send();
+    monitor.Update().Find("1")->Send();
 
     // monitor test --------------------------------------
     auto res1 = monitor.Wait();
-    EXPECT_EQ(res1.size(),                1);
-    EXPECT_EQ(res1.front().get().Clear(), 1);
+    EXPECT_EQ(res1.size(),           1);
+    EXPECT_EQ(res1.front()->Clear(), 1);
 
     // set event 1 ---------------------------------------
-    monitor.Find("2").Send();
+    monitor.Update().Find("2")->Send();
 
     // monitor test --------------------------------------
     auto res2 = monitor.Wait();
-    EXPECT_EQ(res2.size(),                1);
-    EXPECT_EQ(res2.front().get().Clear(), 1);
+    EXPECT_EQ(res2.size(),           1);
+    EXPECT_EQ(res2.front()->Clear(), 1);
 }
 /**
  * ------------------------------------------------------------------------------------------------

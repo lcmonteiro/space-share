@@ -39,9 +39,11 @@ public:
     /**
      * constructor
      */
-    SConnectorExection(string uri, error_code ec) : system_error(ec), __uri(uri) {
+    SConnectorExection(string uri, error_code ec) 
+    : system_error(ec), __uri(uri) {
     }
-    SConnectorExection(string uri, error_code ec, const string& what) : system_error(ec, what), __uri(uri) {
+    SConnectorExection(string uri, error_code ec, const string& what) 
+    : system_error(ec, what), __uri(uri) {
     }
     /**
      * destructor
@@ -63,7 +65,8 @@ public:
     /**
      * constructor
      */
-    SConnectorExceptionTIMEOUT(string s) : SConnectorExection(s, make_error_code(errc::no_message)) {
+    SConnectorExceptionTIMEOUT(string s) 
+    : SConnectorExection(s, make_error_code(errc::no_message)) {
     }
 } ConnectorExceptionTIMEOUT;
 typedef class SIConnectorExceptionTIMEOUT : public ConnectorExceptionTIMEOUT {
@@ -82,7 +85,8 @@ public:
     /**
      * constructor
      */
-    SConnectorExceptionDead(string s) : SConnectorExection(s, make_error_code(errc::no_message)) {
+    SConnectorExceptionDead(string s) 
+    : SConnectorExection(s, make_error_code(errc::no_message)) {
     }
 } ConnectorExceptionDEAD;
 typedef class SIConnectorExceptionDead : public ConnectorExceptionDEAD {

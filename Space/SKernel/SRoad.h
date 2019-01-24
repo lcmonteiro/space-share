@@ -14,25 +14,23 @@
 #include <chrono>
 #include <list>
 /**
- * local 
+ * space 
  */
+#include "SResourceMonitor.h"
 #include "STask.h"
-/**
- */
-using namespace std;
 /**
  * ------------------------------------------------------------------------------------------------
  * Exceptions
  * ------------------------------------------------------------------------------------------------
  */
-typedef class SRoadException : public system_error {
+typedef class SRoadException : public std::system_error {
 public:
     /**
      * constructor
      */
-    SRoadException(error_code ec) : system_error(ec) {
+    SRoadException(std::error_code ec) : std::system_error(ec) {
     }
-    SRoadException(error_code ec, const string& what) : system_error(ec, what) {
+    SRoadException(std::error_code ec, const string& what) : system_error(ec, what) {
     }
     /**
      * destructor
@@ -47,9 +45,11 @@ public:
     /**
      * constructor
      */
-    SRoadExceptionTimeout() : SRoadException(make_error_code(errc::no_message)) {
+    SRoadExceptionTimeout() 
+    : SRoadException(std::make_error_code(std::errc::no_message)) {
     }
-    SRoadExceptionTimeout(const string& what) : SRoadException(make_error_code(errc::no_message), what) {
+    SRoadExceptionTimeout(const std::string& what) 
+    : SRoadException(std::make_error_code(std::errc::no_message), what) {
     }
 } RoadTimeout;
 /**
@@ -60,9 +60,11 @@ public:
     /**
      * constructor
      */
-    SRoadExceptionDetached() : SRoadException(make_error_code(errc::no_message)) {
+    SRoadExceptionDetached() 
+    : SRoadException(std::make_error_code(std::errc::no_message)) {
     }
-    SRoadExceptionDetached(const string& what) : SRoadException(make_error_code(errc::no_message), what) {
+    SRoadExceptionDetached(const std::string& what) 
+    : SRoadException(std::make_error_code(std::errc::no_message), what) {
     }
 } RoadDetached;
 /**
@@ -73,15 +75,17 @@ public:
     /**
      * constructor
      */
-    SRoadExceptionDead() : SRoadException(make_error_code(errc::no_message)) {
+    SRoadExceptionDead() 
+    : SRoadException(std::make_error_code(std::errc::no_message)) {
     }
-    SRoadExceptionDead(const string& what) : SRoadException(make_error_code(errc::no_message), what) {
+    SRoadExceptionDead(const std::string& what) 
+    : SRoadException(std::make_error_code(std::errc::no_message), what) {
     }
 } RoadDead;
 /**
  * ------------------------------------------------------------------------------------------------
  * Exceptions Templates 
- * -----------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 template<class T>
 class SRoadExceptionTIMEOUT : public SRoadExceptionTimeout {
@@ -110,44 +114,52 @@ public:
 template<class KEY, class OBJ>
 class SRoad {
 public:
+
     /**
      * process states
      */
     typedef enum {Backup, Repairing, Running, Dead} State;
     /**
-     * ---------------------------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      * helpers
-     * ---------------------------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      */
     using Key      = KEY;
     using Object   = OBJ;
-    using Area     = map<KEY, OBJ>;
-    using Road     = SRoad<KEY, OBJ>;
+    using Road     = SRoad<Key, Object>;
+    using Area     = std::map<Key, Object>;
     using Location = typename Area::iterator;
     /**
-     * ---------------------------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      * defaults
-     * ---------------------------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      */
-    SRoad()                   = default;
     SRoad(SRoad&& )           = default;
     SRoad& operator=(SRoad&&) = default;
     /**
-     * ---------------------------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      * constructors
-     * ---------------------------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      **
      * main constructor
      * @param nominal
      * @param min
      */
-    SRoad(size_t nominal, size_t minimum = 0)
+    SRoad(size_t nominal = 1, size_t minimum = 0)
     : __nominal(nominal), __minimum(minimum), __revision(0) {
     }
     /**
      * --------------------------------------------------------------------------------------------
      * main interfaces
      * --------------------------------------------------------------------------------------------
+     * build
+     * ------------------------------------------------------------------------
+     */
+    inline SRoad Build() {
+        return move(*this);
+    }
+    /**
+     * ------------------------------------------------------------------------
      * insert an object
      * ------------------------------------------------------------------------
      */
@@ -159,10 +171,14 @@ public:
         // insert a new one -------------------------------
         if (__process[Repairing].size() < __nominal) {
             // main connector
-            __process[Repairing][key] = std::move(obj);
+            __process[Repairing].emplace(
+                key, std::move(obj)
+            );
         } else {
             // backup connector
-            __process[Backup][key] = std::move(obj); 
+            __process[Backup].emplace(
+                key, std::move(obj)
+            ); 
         }
         // update revision --------------------------------
         __UpdateResvision();
@@ -176,10 +192,11 @@ public:
      * ------------------------------------------------------------------------
      */
     inline Object& Find(Key k) {
-        for(auto s : {Backup, Repairing, Running, Dead}) {
-            try { 
-                return __process[s].at(k); 
-            } catch (range_error& ){}
+        for(auto& p : __process) {
+            auto it = p.second.find(k);
+            if(it != p.second.end()) {
+                return it->second;
+            }
         }
         throw range_error(__func__);
     }
@@ -247,12 +264,12 @@ public:
             }
             ++it;
         }
-        // waiting ---------------------------------------- 
-        if (__Length(Running) < __minimum) {
+        //waiting ---------------------------------------- 
+        if (__Length({Running}) < __minimum) {
             throw SRoadExceptionDETACHED<Object>(Status());
         }
         // is dead ----------------------------------------
-        if (__Length(Repairing, Running) < __nominal) {
+        if (__Length({Repairing, Running}) < __nominal) {
             throw SRoadExceptionDEAD<Object>(Status());
         }
         return *this;
@@ -263,7 +280,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline void Close() {
-        // repairing ----------------------------------------------------------
+        // repairing --------------------------------------
         Area& rep = __process[Repairing];
         for (auto it = rep.begin() , e = rep.end(); it != e;) {
             try {
@@ -272,7 +289,7 @@ public:
                 it = __Jump(it, Repairing, Dead);
             }
         }
-        // running ------------------------------------------------------------
+        // running ----------------------------------------
         Area& run = __process[Running];
         for (auto it = run.begin(), e = run.end(); it != e;) {
             try {
@@ -281,7 +298,7 @@ public:
                 it = __Jump(it, Running, Dead);
             }
         }
-        // update revision ----------------------------------------------------
+        // update revision --------------------------------
         __UpdateResvision();
     }
     /**
@@ -430,7 +447,7 @@ private:
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * End
+ * end
  * ------------------------------------------------------------------------------------------------
  */
 #endif /* SROAD_H */

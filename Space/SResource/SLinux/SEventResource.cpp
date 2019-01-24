@@ -23,7 +23,7 @@
  * ----------------------------------------------------------------------------
  */
 SEventResource::SEventResource(int init) : SResource() {
-    SetHandler(make_shared<SResourceHandler>(
+    SetHandler(std::make_shared<SResourceHandler>(
         ::eventfd(init, 0)
     ));
 }

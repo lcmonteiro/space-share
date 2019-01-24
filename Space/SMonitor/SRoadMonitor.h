@@ -2,91 +2,37 @@
  * Container:   SRoadMonitor.h
  * Author: Luis Monteiro
  *
- * Created on November 26, 2015, 12:37 PM
+ * Created on January 21, 2019, 12:37 PM
  */
 #ifndef SROADMONITOR_H
 #define SROADMONITOR_H
 /**
- * C++
+ * space
  */
-#include <chrono>
-/**
- * kernel
- */
+#include "SContainerMonitor.h"
 #include "SRoad.h"
-/*------------------------------------------------------------------------------------------------*
- * RoadMonitor template
- *------------------------------------------------------------------------------------------------*/
-template<class K, class T, template<typename ...> class M>
-class SRoadMonitorT : public SRoad<K, T>, public M<SRoad<K, T>> {
-    /**
-     * helpers
-     */
-    using Road    	= SRoad<K, T>;
-    using Monitor   = M<SRoad<K, T>>;
-    using Location  = typename SRoad<K, T>::Location;
+/**
+ * -------------------------------------------------------------------------------------------------
+ * Road monitor
+ * -------------------------------------------------------------------------------------------------
+ */
+template<
+    typename KEY, 
+    typename OBJ, 
+    typename ADAPT=Monitor::SIndirect,
+    typename BASE =Monitor::SDynamic
+>
+class SRoadMonitor 
+: public SContainerMonitor<SRoad<KEY, OBJ>, SResourceMonitor<ADAPT, BASE>> {
+    using Super = SContainerMonitor<SRoad<KEY, OBJ>, SResourceMonitor<ADAPT, BASE>>;
 public:
-    /**
-     * share types
-     */
-    using Key       = K;
-    using Object    = T;
-    /**
-     * default constructor
-     */
-    SRoadMonitorT() = default;
-    /**
-     * main constructor
-     * @param timeout
-     * @param nominal
-     * @param min
-     */
-    SRoadMonitorT(time_t timeout, size_t nominal = 0, size_t min = 0)
-    : Road(nominal, min), Monitor(timeout), __rev(0) {
-    }
-    /**
-     * destructor
-     */
-    virtual ~SRoadMonitorT() = default;
-    /**
-     * operators
-     */
-    SRoadMonitorT& operator=(SRoadMonitorT &&) = default;
-    /**
-     * update and wait
-     */
-    list<Location> Wait() {
-        return changed() ? Monitor::Wait(*this) : Monitor::Wait();
-    }
-protected:
-    inline bool changed() {
-        if(Road::__FindResvision() != __rev) {
-            __rev = Road::__FindResvision();
-            return true;
-        }
-        return false;
-    }
-private:
-    size_t __rev;
-};
-
-/*------------------------------------------------------------------------------------------------*
- * linux platform 
- *------------------------------------------------------------------------------------------------*/
-#ifdef __linux__
-/**
- */
-#include "SLinuxRoadMonitor.h"
-/**
- */
-template<class K, class T>
-class SRoadMonitor : public SRoadMonitorT<K, T, SLinuxRoadMonitor> {
-    using SRoadMonitorT<K, T, SLinuxRoadMonitor>::SRoadMonitorT;
+    using Super::Super;
+    using Road = SRoad<KEY, OBJ>;
 };
 /**
- */
-#endif
-/**
+ * ------------------------------------------------------------------------------------------------
+ * end
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* SROADMONITOR_H */
 

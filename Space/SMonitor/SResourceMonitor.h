@@ -20,7 +20,7 @@
  * resource monitor
  * -------------------------------------------------------------------------------------------------
  */
-template<typename ADAPT = SMonitor::SDirect, typename BASE = SStaticMonitor>
+template<typename ADAPT = Monitor::SDirect, typename BASE = Monitor::SStatic>
 class SResourceMonitor : public BASE {
 public:
     using Time = std::chrono::milliseconds; 
