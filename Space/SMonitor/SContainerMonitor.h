@@ -31,6 +31,7 @@ class SRoadMonitor : public SRoad<KEY, OBJ>, public MOTITOR {
     using Monitor   = MOTITOR;
 public:
     using Object    = OBJ;
+    using Reference = std::reference_wrapper<Object>;
     using Time      = std::chrono::milliseconds; 
     /**
      * ------------------------------------------------------------------------
@@ -51,24 +52,43 @@ public:
     : Road(forward<Args>(args)...), Monitor(timeout), __rev(0) {}
     /**
      * ------------------------------------------------------------------------
+     * builder
+     * ------------------------------------------------------------------------
+     * insert 
+     */
+    inline SRoadMonitor& Insert(KEY key, OBJ obj) {
+        Road::Insert(
+            std::forward<KEY>(key), 
+            std::forward<OBJ>(obj)
+        );
+        return *this;
+    }
+    /**
+     * build
+     */
+    inline SRoadMonitor Build() {
+        return move(*this);
+    }
+    /**
+     * ------------------------------------------------------------------------
      * interfaces
      * ------------------------------------------------------------------------
      * wait 
      */
-    inline list<Object> Wait() {
-
+    inline std::list<Reference> Wait() {
         // reload if changed ------------------------------
         if(__Changed()) {
-            *this = Monitor();
+            static_cast<Monitor&>(*this) = Monitor();
             for(auto& l : *this) {
-                __map[Monitor::Insert(l->second)] = l->second;
+                __map.emplace(
+                    Monitor::Insert(&l.second), std::ref(l.second)
+                );
             }
         }
-
-        // wait and map -----------------------------------
-        list<Object> res;
+        // // wait and map -----------------------------------
+        std::list<Reference> res;
         for(auto& r : Monitor::Wait()) {
-            res.emplace_back(__map.Find2(r));
+            res.emplace_back(__map.at(r));
         }
         return res;
     }
@@ -88,7 +108,7 @@ protected:
         }
     }
 private:
-    using Map  = map<size_t, Object>;
+    using Map = map<size_t, Reference>;
     /**
      * ------------------------------------------------------------------------
      * Variables

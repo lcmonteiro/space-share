@@ -26,6 +26,13 @@ public:
     using Time = std::chrono::milliseconds; 
     /**
      * ------------------------------------------------------------------------
+     * defaults
+     * ------------------------------------------------------------------------ 
+     */
+    SResourceMonitor(SResourceMonitor &&)            = default;
+    SResourceMonitor& operator=(SResourceMonitor &&) = default;
+    /**
+     * ------------------------------------------------------------------------
      * constructors
      * ------------------------------------------------------------------------
      * template 
@@ -38,6 +45,12 @@ public:
     template<typename T, typename... Args>
     SResourceMonitor(T arg, Args... args)
     : SResourceMonitor(Time(0), arg, std::forward<Args>(args)...) {
+    }
+    /**
+     * dafault
+     */
+    SResourceMonitor(const Time& timeout=Time::zero()) 
+    : BASE(), __timeout(timeout) {
     }
     /**
      * ------------------------------------------------------------------------
@@ -86,14 +99,6 @@ protected:
     using Handler  = SResource::pHandler<>;
     /**
      * ------------------------------------------------------------------------
-     * constructor
-     * ------------------------------------------------------------------------
-     * build
-     */
-    SResourceMonitor(Time timeout) :BASE(), __timeout(timeout) {
-    }
-    /**
-     * ------------------------------------------------------------------------
      * update
      * ------------------------------------------------------------------------
      * parse template
@@ -102,7 +107,6 @@ protected:
     void Insert(T first, Args... args) {
         Insert(first); Insert(args...);
     }
-    
 private:
     /**
      * ------------------------------------------------------------------------

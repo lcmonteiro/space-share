@@ -40,7 +40,7 @@ bool SEventResource::Send() {
  * clear
  */
 int SEventResource::Clear() {
-     eventfd_t val;
+     eventfd_t val = 0;
      eventfd_read(GetHandler<SResourceHandler>()->FD(), &val);
      return val;
 }

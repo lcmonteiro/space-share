@@ -107,7 +107,7 @@ public:
  * Road
  * ------------------------------------------------------------------------------------------------
  */
-template<class K, class T>
+template<class KEY, class OBJ>
 class SRoad {
 public:
     /**
@@ -119,10 +119,10 @@ public:
      * helpers
      * ---------------------------------------------------------------------------------------------
      */
-    using Key      = K;
-    using Object   = T;
-    using Area     = map<K, T>;
-    using Road     = SRoad<K, T>;
+    using Key      = KEY;
+    using Object   = OBJ;
+    using Area     = map<KEY, OBJ>;
+    using Road     = SRoad<KEY, OBJ>;
     using Location = typename Area::iterator;
     /**
      * ---------------------------------------------------------------------------------------------
@@ -141,7 +141,8 @@ public:
      * @param nominal
      * @param min
      */
-    SRoad(size_t nominal, size_t minimum = 0): __nominal(nominal), __minimum(minimum), __revision(0) {
+    SRoad(size_t nominal, size_t minimum = 0)
+    : __nominal(nominal), __minimum(minimum), __revision(0) {
     }
     /**
      * --------------------------------------------------------------------------------------------
@@ -150,33 +151,34 @@ public:
      * insert an object
      * ------------------------------------------------------------------------
      */
-    inline void Insert(K key, T obj) {
+    inline SRoad& Insert(Key key, Object obj) {
         // remove the existing one ------------------------
         for(auto s : {Backup, Repairing, Running, Dead}) {
             __process[s].erase(key);
         }
-
         // insert a new one -------------------------------
         if (__process[Repairing].size() < __nominal) {
-            // start connector
+            // main connector
             __process[Repairing][key] = std::move(obj);
         } else {
             // backup connector
             __process[Backup][key] = std::move(obj); 
         }
-        
         // update revision --------------------------------
         __UpdateResvision();
+        
+        // return self ------------------------------------
+        return *this;
     }
     /**
      * ------------------------------------------------------------------------
      * find an object
      * ------------------------------------------------------------------------
      */
-    inline T& Find(K key) {
+    inline Object& Find(Key k) {
         for(auto s : {Backup, Repairing, Running, Dead}) {
             try { 
-                return __process[s].at(key); 
+                return __process[s].at(k); 
             } catch (range_error& ){}
         }
         throw range_error(__func__);
@@ -216,8 +218,8 @@ public:
         //  repair connector ------------------------------
         it->second->Repair();
         
-        // jump to repairing queue ------------------------
-        it = jump(it, Running, Repairing);
+        // __Jump to repairing queue ------------------------
+        it = __Jump(it, Running, Repairing);
     }
     /**
      * ------------------------------------------------------------------------
@@ -226,30 +228,32 @@ public:
      */
     inline Road& Update() {
         // update areas -----------------------------------
-        Area& repairing = __process[Repairing];
-        for (auto it = repairing.begin(); it != repairing.end();) {
+        Area& rep = __process[Repairing];
+        for (auto it = rep.begin(); it != rep.end();) {
             if (it->second->Good()) {
-                // update run resources revision
+                // update revision
                 __UpdateResvision();
-                // jump to running state
-                it = jump(it, Repairing, Running); 
+                // __Jump to running 
+                it = __Jump(it, Repairing, Running); 
                 continue;
             }
             if (it->second->Inactive()) {
-                it = jump(Backup, Repairing, jump(it, Repairing, Dead));
+                it = __Jump(
+                    Backup, Repairing, __Jump(
+                        it, Repairing, Dead
+                    )
+                );
                 continue;
             }
             ++it;
         }
-
         // waiting ---------------------------------------- 
-        if (__process[Running].size() < __minimum) {
-            throw SRoadExceptionDETACHED<T>(Status());
+        if (__Length(Running) < __minimum) {
+            throw SRoadExceptionDETACHED<Object>(Status());
         }
-
         // is dead ----------------------------------------
-        if (__process[Repairing].size() + __process[Running].size() < __nominal) {
-            throw SRoadExceptionDEAD<T>(Status());
+        if (__Length(Repairing, Running) < __nominal) {
+            throw SRoadExceptionDEAD<Object>(Status());
         }
         return *this;
     }
@@ -259,24 +263,25 @@ public:
      * ------------------------------------------------------------------------
      */
     inline void Close() {
-        // repairing --------------------------------------
-        Area& repairing = __process[Repairing];
-        for (auto it = repairing.begin() , e = repairing.end(); it != e;) {
+        // repairing ----------------------------------------------------------
+        Area& rep = __process[Repairing];
+        for (auto it = rep.begin() , e = rep.end(); it != e;) {
             try {
                 it->second->Break(); ++it;
             } catch(...) {
-                it = jump(it, Repairing, Dead);
+                it = __Jump(it, Repairing, Dead);
             }
         }
-        // running ----------------------------------------
-        Area& running = __process[Running];
-        for (auto it = running.begin(), e = running.end(); it != e;) {
+        // running ------------------------------------------------------------
+        Area& run = __process[Running];
+        for (auto it = run.begin(), e = run.end(); it != e;) {
             try {
                 it->second->Break(); ++it;
             } catch(...) {
-                it = jump(it, Running, Dead);
+                it = __Jump(it, Running, Dead);
             }
         }
+        // update revision ----------------------------------------------------
         __UpdateResvision();
     }
     /**
@@ -286,25 +291,25 @@ public:
      */
     inline void Open() {
         // repairing --------------------------------------
-        Area& repairing = __process[Repairing];
-        for (auto it = repairing.begin() , e = repairing.end(); it != e;) {
+        Area& rep = __process[Repairing];
+        for (auto it = rep.begin(), e = rep.end(); it != e;) {
             try {
                 it->second->Repair(); ++it;
             } catch(...) {
-                it = jump(it, Repairing, Dead);
+                it = __Jump(it, Repairing, Dead);
             }
         }
-
         // running ----------------------------------------
-        Area& running = __process[Running];
-        for (auto it = running.begin(), e = running.end(); it != e; ) {
+        Area& run = __process[Running];
+        for (auto it = run.begin(), e = run.end(); it != e;) {
             try {
                 it->second->Repair();
-                it = jump(it, Running, Repairing);
+                it = __Jump(it, Running, Repairing);
             } catch(...) {
-                it = jump(it, Running, Dead);
+                it = __Jump(it, Running, Dead);
             }  
         }
+        // update revision --------------------------------
         __UpdateResvision();
     }
     /**
@@ -315,10 +320,13 @@ public:
     inline void Reset() {
         // close resources --------------------------------
         Close();
+
         // change context ---------------------------------
         STask::Sleep(std::chrono::milliseconds(10));
+
         // open resources ---------------------------------
         Open();
+
         // change context ---------------------------------
         STask::Sleep(std::chrono::milliseconds(10));
     }
@@ -327,7 +335,7 @@ public:
      *-------------------------------------------------------------------------
      *  
      */
-    inline map<State, size_t> Sizes() {
+    inline std::map<State, size_t> Lengths() {
         map<State, size_t> out;
         for(auto& a : __process) {
             out[a.first] = a.second.size();
@@ -337,8 +345,8 @@ public:
     /**
      * status -> {'state':['uri1', 'uri2']}
      */
-    inline string Status() {
-        ostringstream out;
+    inline std::string Status() {
+        std::ostringstream out;
         out << '{';
         for(auto& p :__process) {
                 out << "'" << p.first << "':[";
@@ -359,30 +367,26 @@ public:
 protected:
     /**
      * ------------------------------------------------------------------------
-     * jumps
+     * __Jumps
      * ------------------------------------------------------------------------
      */
-    inline Location jump(const Location& pos, const State& from, const State& to) {
-        /**
-         * move to queue
-         */
-        __process[to][pos->first] = move(pos->second);
-        /**
-         * remove and update iterator
-         */
+    inline Location __Jump(const Location& pos, const State& from, const State& to) {
+        // move to queue ----------------------------------
+        __process[to][pos->first] = std::move(pos->second);
+
+        // remove and update iterator ---------------------
         return __process[from].erase(pos);
     }
-    inline Location jump(const State& from, const State& to, const Location& pos) {
+    inline Location __Jump(const State& from, const State& to, const Location& pos) {
         Location it = __process[from].begin();
         Location p = pos;
         if (it != __process[from].end()) {
-            /**
-             * move to queue
-             */
-            p = __process[to].insert(p, pair<K, T>(it->first, it->second));   
-            /**
-             * remove
-             */
+            
+            // move to queue ------------------------------
+            p = __process[to].insert(
+                p, std::pair<Key, Object>(it->first, it->second)
+            );   
+            // remove -------------------------------------
             __process[from].erase(it);
         }
         return p;
@@ -397,6 +401,14 @@ protected:
     inline void __UpdateResvision() {
         ++__revision;
     }
+    /**
+     * size
+     */
+    inline size_t __Length(std::initializer_list<State> states) {
+        size_t n=0;
+        for(auto s : states) n+= __process[s].size();
+        return n;
+    }
 private:
     /**
      * ------------------------------------------------------------------------
@@ -405,7 +417,7 @@ private:
      **
      * process container
      */
-    map<State, Area> __process;
+    std::map<State, Area> __process;
     /**
      * process levels
      */
