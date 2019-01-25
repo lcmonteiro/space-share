@@ -15,9 +15,7 @@
  * space
  */
 #include "SClock.h"
-#include "SRoadMonitor.h"
-#include "SCommandMonitor.h"
-#include "SLocalResource.h"  
+#include "SRoadMonitor.h" 
 /**
  *-------------------------------------------------------------------------------------------------
  * Module name space
@@ -125,7 +123,7 @@ protected:
     /**
      * wait resources
      */
-    inline vector<size_t> Wait(ResourceMonitor& monitor, const Clock::Pointer& end) {
+    inline std::list<size_t> Wait(ResourceMonitor& monitor, const Clock::Pointer& end) {
         auto timeout = Clock::Remaining(end);
         if(timeout > Clock::Distance::zero()) {
             return monitor.Wait(timeout);
@@ -136,8 +134,8 @@ protected:
      * status
      */
     template<class T>
-    string Status(T& r) {
-        ostringstream out;
+    std::string Status(T& r) {
+        std::ostringstream out;
         for (auto i = r.begin(), e = r.end(); i != e; ++i) {
             out << i->second->Uri() << ' ';
         }

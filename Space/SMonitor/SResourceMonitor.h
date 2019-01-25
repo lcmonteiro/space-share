@@ -17,10 +17,30 @@
 #include "SMonitor.h"
 /**
  * -------------------------------------------------------------------------------------------------
+ * default adapters 
+ * -------------------------------------------------------------------------------------------------
+ */
+namespace Monitor {
+namespace Resource {
+struct SDirect {
+	template<typename T>
+	static inline SMonitor::Handler GetHandler(T obj) {
+		return obj->SResource::GetHandler();
+	}
+};
+struct SIndirect {
+	template<typename T>
+	static inline SMonitor::Handler GetHandler(T obj) {
+		return obj->GetResource().GetHandler();
+	}
+};
+}}
+/**
+ * -------------------------------------------------------------------------------------------------
  * resource monitor
  * -------------------------------------------------------------------------------------------------
  */
-template<typename ADAPT = Monitor::SDirect, typename BASE = Monitor::SStatic>
+template<typename ADAPT = Monitor::Resource::SDirect, typename BASE = Monitor::SStatic>
 class SResourceMonitor : public BASE {
 public:
     using Time = std::chrono::milliseconds; 

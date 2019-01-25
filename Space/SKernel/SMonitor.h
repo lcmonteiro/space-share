@@ -138,23 +138,6 @@ private:
 
 namespace Monitor {
 /**
- * -------------------------------------------------------------------------------------------------
- * adpters 
- * -------------------------------------------------------------------------------------------------
- */
-struct SDirect {
-	template<typename T>
-	static SMonitor::Handler GetHandler(T obj) {
-		return obj->GetHandler();
-	}
-};
-struct SIndirect {
-	template<typename T>
-	static SMonitor::Handler GetHandler(T obj) {
-		return obj->GetResource().GetHandler();
-	}
-};
-/**
  * ------------------------------------------------------------------------------------------------
  * base - static monitor
  * ------------------------------------------------------------------------------------------------

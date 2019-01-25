@@ -18,19 +18,49 @@
 #include "SRoad.h"
 /**
  * -------------------------------------------------------------------------------------------------
- * Road monitor
+ * default adapters 
+ * -------------------------------------------------------------------------------------------------
+ */
+namespace Monitor {
+namespace Container {
+struct SOne {
+	template<typename T>
+	static inline auto GetResource(T it) {
+		return *it;
+	}
+    template<typename T>
+	static inline auto GetLocation(T it) {
+		return it;
+	}
+};
+struct SPair {
+	template<typename T>
+	static inline auto GetResource(T it) {
+		return it->second;
+	}
+    template<typename T>
+	static inline auto GetLocation(T it) {
+		return it;
+	}
+};
+}
+}
+/**
+ * -------------------------------------------------------------------------------------------------
+ * ContainerMonitor
  * -------------------------------------------------------------------------------------------------
  */
 template<
     typename CONTAINER, 
-    typename MOTITOR=SResourceMonitor<Monitor::SIndirect, Monitor::SDynamic>
+    typename ADAPTER=Monitor::Container::SOne,
+    typename MOTITOR=SResourceMonitor<Monitor::Resource::SIndirect, Monitor::SDynamic>
 >
 class SContainerMonitor : public CONTAINER, public MOTITOR {
     using Container = CONTAINER;
     using Monitor   = MOTITOR;
 public:
-    using Object    = typename Container::Object;
-    using Time      = std::chrono::milliseconds; 
+    using Location  = typename Container::Location;
+    using Time      = typename Monitor::Time; 
     /**
      * ------------------------------------------------------------------------
      * defaults
@@ -54,18 +84,18 @@ public:
      * ------------------------------------------------------------------------
      * wait 
      */
-    inline std::list<Object> Wait() {
+    inline std::list<Location> Wait() {
         // reload if changed ------------------------------
         if(__Changed()) {
             static_cast<Monitor&>(*this) = Monitor();
-            for(auto& l : *this) {
+            for(auto it = Container::begin(); Container::end() != it; ++it) {
                 __map.emplace(
-                    Monitor::Insert(l.second), l.second
+                    Monitor::Insert(ADAPTER::GetResource(it)), ADAPTER::GetLocation(it)
                 );
             }
         }
         // wait and map -----------------------------------
-        std::list<Object> res;
+        std::list<Location> res;
         for(auto& r : Monitor::Wait()) {
             res.emplace_back(__map.at(r));
         }
@@ -87,7 +117,7 @@ protected:
         }
     }
 private:
-    using Map = map<size_t, Object>;
+    using Map = map<size_t, Location>;
     /**
      * ------------------------------------------------------------------------
      * Variables
@@ -98,7 +128,7 @@ private:
     /**
      * mapping
      */
-    Map    __map;
+    Map __map;
 };
 /**
  * ------------------------------------------------------------------------------------------------

@@ -19,15 +19,43 @@
 template<
     typename KEY, 
     typename OBJ, 
-    typename ADAPT=Monitor::SIndirect,
+    typename ADAPT=Monitor::Resource::SIndirect,
     typename BASE =Monitor::SDynamic
 >
 class SRoadMonitor 
-: public SContainerMonitor<SRoad<KEY, OBJ>, SResourceMonitor<ADAPT, BASE>> {
-    using Super = SContainerMonitor<SRoad<KEY, OBJ>, SResourceMonitor<ADAPT, BASE>>;
+: public SContainerMonitor<
+    SRoad<KEY, OBJ>, Monitor::Container::SPair, SResourceMonitor<ADAPT, BASE>
+> {
 public:
+    /**
+     * ------------------------------------------------------------------------
+     * helpers
+     * ------------------------------------------------------------------------
+     */
+    using Super = SContainerMonitor<
+        SRoad<KEY, OBJ>, Monitor::Container::SPair, SResourceMonitor<ADAPT, BASE>
+    >;
+    using Road = SRoad<
+        KEY, OBJ
+    >;
+    /**
+     * ------------------------------------------------------------------------
+     * constructor
+     * ------------------------------------------------------------------------
+     */
     using Super::Super;
-    using Road = SRoad<KEY, OBJ>;
+    /**
+     * ------------------------------------------------------------------------
+     * interfaces
+     * ------------------------------------------------------------------------
+     */
+    inline SRoadMonitor& Insert(KEY k, OBJ o) {
+        Road::Insert(std::forward<KEY>(k), std::forward<OBJ>(o));
+        return *this;
+    }
+    inline SRoadMonitor Build() {
+        return move(*this);
+    }
 };
 /**
  * ------------------------------------------------------------------------------------------------

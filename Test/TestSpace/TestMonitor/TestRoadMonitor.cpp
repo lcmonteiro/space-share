@@ -37,7 +37,7 @@ TEST(SRoadMonitor, Create)
     typedef SRoadMonitor<
         SText, 
         SEventConnector::Connector,
-        Monitor::SDirect
+        Monitor::Resource::SDirect
     > RoadMonitor;
 
     // create monitor ------------------------------------- 
@@ -55,7 +55,7 @@ TEST(SRoadMonitor, Create)
     // monitor test --------------------------------------
     auto res1 = monitor.Wait();
     EXPECT_EQ(res1.size(),           1);
-    EXPECT_EQ(res1.front()->Clear(), 1);
+    EXPECT_EQ(res1.front()->second->Clear(), 1);
 
     // set event 1 ---------------------------------------
     monitor.Update().Find("2")->Send();
@@ -63,7 +63,7 @@ TEST(SRoadMonitor, Create)
     // monitor test --------------------------------------
     auto res2 = monitor.Wait();
     EXPECT_EQ(res2.size(),           1);
-    EXPECT_EQ(res2.front()->Clear(), 1);
+    EXPECT_EQ(res2.front()->second->Clear(), 1);
 }
 /**
  * ------------------------------------------------------------------------------------------------
