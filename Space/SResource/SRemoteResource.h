@@ -106,13 +106,29 @@ namespace Stream {
     class SRemoteResource : public ::SRemoteResource {
     public:
         /**
+         * defaults
+         */
+        SRemoteResource()                             = default;
+        SRemoteResource(SRemoteResource&&)            = default;
+        SRemoteResource& operator=(SRemoteResource&&) = default;
+        /**
          * wait
          */
-        inline void Wait(const string& host, uint16_t host_port);
+        SRemoteResource& Wait(
+            const string& host, uint16_t port, chrono::seconds timeout=chrono::hours{24}
+        );
         /**
          * link
          */
-        inline void Link(const string& host, uint16_t host_port); 
+        SRemoteResource& Link(
+            const string& host, uint16_t host_port
+        );
+        /**
+         * detach
+         */
+        inline SRemoteResource Detach() {
+            return move(*this);
+        }
     };
 }
 /**

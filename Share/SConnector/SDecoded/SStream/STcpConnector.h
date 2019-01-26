@@ -7,12 +7,13 @@
 #ifndef STCPSTREAMCONNECTOR_H
 #define STCPSTREAMCONNECTOR_H
 /**
- * Space Kernel
+ * space
  */
 #include "SContainer.h"
 #include "SConnector.h"
+#include "SRemoteResource.h"
 /**
- * Share
+ * kernel
  */
 #include "SIStreamConnector.h"
 #include "SOStreamConnector.h"
@@ -30,24 +31,31 @@ namespace Stream {
  * Resource adapter
  * ------------------------------------------------------------------------------------------------
  */
-class ResourceAdapterTcp : private SSocketResource {
+class ResourceAdapterTcp : private ::Stream::SRemoteResource {
 public:
-    using SSocketResource::SSocketResource;
-    using SSocketResource::operator=;
-    using SSocketResource::Fill;
-    using SSocketResource::Drain;
-    using SSocketResource::Good;
+    using Super = ::Stream::SRemoteResource;
+    /**
+     * default
+     */
+    using Super::Super;
+    using Super::operator=;
+    using Super::Fill;
+    using Super::Drain;
+    using Super::Good;
     /**
      * interfaces
      */
-    inline SSocketResource& Base() {
+    inline Super& Base() {
         return *this;
     }
     inline void Wait(const SAddress& uri) {
-        SSocketResource::Wait(uri.Host(), uri.Port(), STREAM);
+        Super::Wait(uri.Host(), uri.Port());
+    }
+    inline void Link(const SAddress& uri) {
+        Super::Link(uri.Host(), uri.Port());
     }
     inline void Reset() {
-        *this = SSocketResource();
+        *this = Super();
     }
 };    
 /**

@@ -364,184 +364,151 @@ Message::SRemoteResource& Message::SRemoteResource::Link(const string& host, uin
  * ------------------------------------------------------------------------------------------------
  * wait
  */
-
-
-
-
-// #ifdef __DEBUG__
-// #include <iostream>
-// #endif
-// void Stream::SRemoteResource::Wait(const string& host, uint16_t port) {
-//     /**
-//      * bind parameters
-//      */
-//     struct addrinfo hints;
-//     memset(&hints, 0, sizeof (struct addrinfo));
-//     hints.ai_family = AF_UNSPEC;            // Allow IPv4 or IPv6
-//     hints.ai_socktype = MAP_TYPE[type];     // Datagram socket
-//     hints.ai_flags = AI_PASSIVE;            // For wildcard IP address
-//     hints.ai_protocol = 0;                  // Any protocol
-//     hints.ai_canonname = NULL;
-//     hints.ai_addr = NULL;
-//     hints.ai_next = NULL;
-//     /**
-//      * get info
-//      */
-//     struct addrinfo *result;
-//     if (::getaddrinfo(host.c_str(), to_string(port).c_str(), &hints, &result) != 0) {
-//         throw ResourceException(make_error_code(errc(errno)));
-//     }
-//     /**
-//      * connect
-//      */
-//     int i = 0;
-//     for (auto rp = result; rp != NULL; rp = rp->ai_next, ++i) {
-//         struct sockaddr_storage addr;
-//         socklen_t len = sizeof(addr);
-//         /**
-//          * create update resource
-//          */
-//         SLinuxResource s(::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol));
-//         /**
-//          * set options
-//          */
-//         int opt = 1;
-//         if (::setsockopt(s._Handler(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
-//             continue;
-//         }
-//         if (::bind(s._Handler(), rp->ai_addr, rp->ai_addrlen) < 0) {
-//             continue;
-//         }
-// #ifdef __DEBUG__
-//         /**
-//          */
-//         char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
-//         if (::getnameinfo(
-//             rp->ai_addr, rp->ai_addrlen,
-//             hbuf, sizeof (hbuf),
-//             sbuf, sizeof (sbuf),
-//             NI_NUMERICHOST | NI_NUMERICSERV) == 0
-//             ) {
-//             cout << "binded: " << "host=" << hbuf << ", serv=" << sbuf << endl;
-//         }
-// #endif
-//         /**
-//          * listen
-//          */
-//         if (::listen(s._Handler(), 1) < -1) {
-//             continue;
-//         }
-//         /**
-//          * wait connection
-//          */
-//         SLinuxResourceMonitor::Wait(s, chrono::hours{24});
-//         /**
-//          * accept connection
-//          */
-//         *this = SLinuxSocket(::accept(s._Handler(), (struct sockaddr *)&addr, &len));
-//         /**
-//          * settings
-//          */
-//         SetRxTimeout(IO_TIMEOUT);
-//         SetTxTimeout(IO_TIMEOUT);
-//         /**
-//          * free results
-//          **/
-//         ::freeaddrinfo(result);
-//         return;
-//     }
-//     /**
-//      * fail
-//      **/
-//     ::freeaddrinfo(result);
-//     throw ResourceException(make_error_code(errc::no_such_device_or_address));
-// }
-// /**
-//  * ------------------------------------------------------------------------------------------------
-//  * Connect
-//  * ------------------------------------------------------------------------------------------------
-//  */
-// void SLinuxSocket::Connect(
-//     const string& host, uint16_t host_port, Type type, const string& local, uint16_t local_port) {
-//     /**
-//      * connect parameters
-//      */
-//     struct addrinfo hints;
-//     memset(&hints, 0, sizeof (struct addrinfo));
-//     hints.ai_family = AF_UNSPEC;            // Allow IPv4 or IPv6 
-//     hints.ai_socktype = MAP_TYPE[type];     // socket type
-//     hints.ai_flags = 0;                     //
-//     hints.ai_protocol = 0;                  // Any protocol
-//     /**
-//      * get info
-//      */
-//     struct addrinfo *result;
-//     if (::getaddrinfo(host.c_str(), to_string(host_port).c_str(), &hints, &result) != 0) {
-//         throw ResourceException(make_error_code(errc(errno)));
-//     }
-//     /**
-//      * create connection
-//      */
-//     int i = 0;
-//     for (auto rp = result; rp != NULL; rp = rp->ai_next, ++i) {
-//         SLinuxSocket s(socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol));
-//         /**
-//          * bind
-//          */
-//         if (!local.empty() && local_port) {
-//             // bind parameters
-//             struct sockaddr_in baddr;
-//             memset(&baddr, 0, sizeof (baddr));
-//             baddr.sin_family = rp->ai_family;
-//             baddr.sin_port = htons(local_port);
-//             ::inet_pton(rp->ai_family, local.data(), &baddr.sin_addr);
-//             // bind
-//             if (::bind(s._Handler(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
-//                 perror("bind:");
-//                 throw ResourceException(make_error_code(errc(errno)));
-//             }
-//         }
-//         /**
-//          * settings
-//          */
-//         s.SetRxTimeout(IO_TIMEOUT);
-//         s.SetTxTimeout(IO_TIMEOUT);
-//         /**
-//          * try to connect
-//          */
-//         if (::connect(s._Handler(), rp->ai_addr, rp->ai_addrlen) < 0) {
-//             continue;
-//         }
-// #ifdef __DEBUG__
-//         /**
-//          */
-//         char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
-//         if (::getnameinfo(
-//             rp->ai_addr, rp->ai_addrlen,
-//             hbuf, sizeof (hbuf),
-//             sbuf, sizeof (sbuf),
-//             NI_NUMERICHOST | NI_NUMERICSERV) == 0
-//             ) {
-//             cout << "connected: " << "host=" << hbuf << ", serv=" << sbuf << endl;
-//         }
-// #endif
-//         /**
-//          * success
-//          **/
-//         ::freeaddrinfo(result);
-//         /**
-//          * update
-//          **/
-//         *this = move(s);
-//         /**/
-//         return;
-//     }
-//     /**
-//      * fail
-//      **/
-//     ::freeaddrinfo(result);
-//     throw ResourceException(make_error_code(errc::no_such_device_or_address));
-// }
+Stream::SRemoteResource& Stream::SRemoteResource::Wait(
+    const string& host, uint16_t port, chrono::seconds timeout
+) {
+    /**
+     * bind parameters
+     */
+    struct addrinfo hints;
+    memset(&hints, 0, sizeof (struct addrinfo));
+    hints.ai_family = AF_UNSPEC;            // Allow IPv4 or IPv6
+    hints.ai_socktype = SOCK_STREAM;        // stream socket
+    hints.ai_flags = AI_PASSIVE;            // For wildcard IP address
+    hints.ai_protocol = 0;                  // Any protocol
+    hints.ai_canonname = NULL;
+    hints.ai_addr = NULL;
+    hints.ai_next = NULL;
+    /**
+     * get info
+     */
+    struct addrinfo *result;
+    if (::getaddrinfo(host.c_str(), to_string(port).c_str(), &hints, &result) != 0) {
+        throw ResourceException(make_error_code(errc(errno)));
+    }
+    /**
+     * connect
+     */
+    int i = 0;
+    for (auto rp = result; rp != NULL; rp = rp->ai_next, ++i) {
+        struct sockaddr_storage addr;
+        socklen_t len = sizeof(addr);
+        /**
+         * create a linux handler
+         */
+        auto h = make_shared<SResourceHandler>(
+            ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol)
+        );
+        /**
+         * set options
+         */
+        int opt = 1;
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
+            continue;
+        }
+        if (::bind(h->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
+            continue;
+        }
+        if (::listen(h->FD(), 1) < -1) {
+            continue;
+        }
+#ifdef __DEBUG__
+        char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
+        if (::getnameinfo(
+            rp->ai_addr, rp->ai_addrlen,
+            hbuf, sizeof (hbuf),
+            sbuf, sizeof (sbuf),
+            NI_NUMERICHOST | NI_NUMERICSERV) == 0
+            ) {
+            cout << "binded: " << "host=" << hbuf << ", serv=" << sbuf << endl;
+        }
+#endif
+        /**
+         * free results
+         **/
+        ::freeaddrinfo(result);
+        /**
+         * wait connection
+         */
+        SStaticMonitorHandler({h}).Wait(timeout);        
+        /**
+         * accept & save handler
+         */
+        SetHandler(make_shared<SResourceHandler>(
+            ::accept(h->FD(), (struct sockaddr *)&addr, &len)
+        ));
+        return *this;
+    }
+    /**
+     * fail
+     **/
+    ::freeaddrinfo(result);
+    throw ResourceException(make_error_code(errc::no_such_device_or_address));
+}
+/**
+ * ------------------------------------------------------------------------------------------------
+ * Connect
+ * ------------------------------------------------------------------------------------------------
+ */
+Stream::SRemoteResource& Stream::SRemoteResource::Link(const string& host, uint16_t host_port) {
+    /**
+     * connect parameters
+     */
+    struct addrinfo hints;
+    memset(&hints, 0, sizeof (struct addrinfo));
+    hints.ai_family = AF_UNSPEC;            // Allow IPv4 or IPv6 
+    hints.ai_socktype = SOCK_STREAM;        // stream socket
+    /**
+     * get info
+     */
+    struct addrinfo *result;
+    if (::getaddrinfo(host.c_str(), to_string(host_port).c_str(), &hints, &result) != 0) {
+        throw ResourceException(make_error_code(errc(errno)));
+    }
+    /**
+     * create connection
+     */
+    int i = 0;
+    for (auto rp = result; rp != NULL; rp = rp->ai_next, ++i) {
+        /**
+         * create a linux handler
+         */
+        auto h = make_shared<SResourceHandler>(
+            ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol)
+        );
+        /**
+         * try to connect
+         */
+        if (::connect(h->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
+            continue;
+        }
+#ifdef __DEBUG__
+        char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
+        if (::getnameinfo(
+            rp->ai_addr, rp->ai_addrlen,
+            hbuf, sizeof (hbuf),
+            sbuf, sizeof (sbuf),
+            NI_NUMERICHOST | NI_NUMERICSERV) == 0
+            ) {
+            cout << "connected: " << "host=" << hbuf << ", serv=" << sbuf << endl;
+        }
+#endif
+        /**
+         * success
+         **/
+        ::freeaddrinfo(result);
+        /**
+         * save handler
+         */
+        SetHandler(h);
+        return *this;
+    }
+    /**
+     * fail
+     **/
+    ::freeaddrinfo(result);
+    throw ResourceException(make_error_code(errc::no_such_device_or_address));
+}
 // /**
 //  * ------------------------------------------------------------------------------------------------
 //  * Connect
