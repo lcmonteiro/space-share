@@ -53,7 +53,7 @@ public:
         Road::Insert(std::forward<KEY>(k), std::forward<OBJ>(o));
         return *this;
     }
-    inline SRoadMonitor Build() {
+    inline SRoadMonitor Detach() {
         return move(*this);
     }
 };

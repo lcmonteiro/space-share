@@ -152,10 +152,10 @@ public:
      * --------------------------------------------------------------------------------------------
      * main interfaces
      * --------------------------------------------------------------------------------------------
-     * build
+     * detach
      * ------------------------------------------------------------------------
      */
-    inline SRoad Build() {
+    inline SRoad Detach() {
         return move(*this);
     }
     /**
@@ -364,13 +364,13 @@ public:
      */
     inline std::string Status() {
         std::ostringstream out;
-        out << '{';
+        out << "{ ";
         for(auto& p :__process) {
-                out << "'" << p.first << "':[";
+                out << "'" << p.first << "':[ ";
                 for(auto&a :p.second){
-                        out << "'" << a.first << "'";
+                        out << "'" << a.first << "' ";
                 }
-                out << "]";
+                out << "] ";
         }
         out << "}";
         return out.str();

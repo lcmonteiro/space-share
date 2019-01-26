@@ -18,26 +18,27 @@
 #include "SRoadMonitor.h" 
 /**
  *-------------------------------------------------------------------------------------------------
- * Module name space
+ * module namespace
  *-------------------------------------------------------------------------------------------------
  */
 namespace Module {
+using Property = const SText;
 /**
+ * ------------------------------------------------------------------------------------------------
+ * properties
+ * ------------------------------------------------------------------------------------------------
+ */
+Property URI     = "uri";
+Property ENERGY  = "energy";
+Property VERBOSE = "verbose";
+Property DELAY   = "delay";
+Property TIMEOUT = "timeout";
+/**
+ * ------------------------------------------------------------------------------------------------
+ *  module base
+ * ------------------------------------------------------------------------------------------------
  */
 class MBase : public SModule {  
-public: 
-    /**
-     * --------------------------------------------------------------------------------------------
-     * Identifires
-     * --------------------------------------------------------------------------------------------
-     **
-     * properties
-     */
-    const char* URI     = "uri";
-    const char* ENERGY  = "energy";
-    const char* VERBOSE = "verbose";
-    const char* DELAY   = "delay";
-    const char* TIMEOUT = "timeout";
 protected:
     using Clock            = SClock<>;
     using ResourceMonitor  = SResourceMonitor<>;
@@ -54,9 +55,9 @@ protected:
      * --------------------------------------------------------------------------------------------
      * main constructor
      */
-    MBase(
-        SModule::Command::Group conf, SModule::Command cmd
-    ) : SModule (
+    MBase(const Command::Group& conf, const Command& cmd) 
+    // configure --------------------------------------------------------------
+    : SModule (
         conf.Get(URI, Val{}),   // default uri       -> {}
         conf.Get(ENERGY,  1),   // default energy    -> 1
         conf.Get(VERBOSE, 0)    // default verbosity -> 0
@@ -65,7 +66,8 @@ protected:
     ), __timeout(
         conf.Get(TIMEOUT, 1000) // default delay     -> 1s
     ) {  
-        Insert(move(cmd));      // default command
+        // added first cmd ----------------------------------------------------
+        Insert(cmd);            
     }
     /**
      * --------------------------------------------------------------------------------------------
@@ -81,29 +83,30 @@ protected:
         
         // run the precess ----------------------------------------------------
         INFO("RUN = {}");
-        for(Clock::Alarm alarm(__timeout); STask::Sleep(); alarm.Snooze()){
+        for(Clock::Alarm alarm(__timeout); STask::Sleep(); alarm.Snooze()) {
+
             // procces commands -----------------------------------------------
             for(auto& c : __Commands()) {
                 __ProcessCommand(c);
             }
-            // procces machine -------------------------------------------------
+            // procces machine ------------------------------------------------
             try {
                 __ProcessMachine(alarm.Tigger());
             }  catch (exception& ex) {
                 ERROR("END = { what: " << ex.what() << " }");
                 return -1;
             } catch (...) {
-                ERROR("END = {}");
+                ERROR("END = { }");
                 return -1;
             }
         }
-        // set in close state
+        // set in close state -------------------------------------------------
         SetState(CLOSE);
-        INFO("END = {}");
+        INFO("END = { }");
         return 0;
     }
     virtual void __ProcessMachine(const Clock::Pointer&) {}
-    virtual void __ProcessCommand(const Command&        ) {}
+    virtual void __ProcessCommand(const Command&       ) {}
     /**
      * --------------------------------------------------------------------------------------------
      * Helpers
@@ -113,9 +116,10 @@ protected:
      */
     template<class... R>
     void Update(const Clock::Pointer& end, R... resource) {
-        for(Clock::Alarm a(end); !a.Active(); ){
+        for(Clock::Alarm a(end); !a.Active(); STask::Sleep()) {
             try {
                 auto x = {(resource->Update(),0)...};
+                return;
             } catch(RoadDetached& e) {
             }
         } 

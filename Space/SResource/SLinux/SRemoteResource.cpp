@@ -765,7 +765,7 @@ size_t __Send(int fd, Frame::const_pointer p, Frame::size_type s) {
 /**
  */
 size_t __Recv(int fd, Frame::pointer p, Frame::size_type s) {
-    auto n = recv(fd, p, s, MSG_DONTWAIT);
+    auto n = ::recv(fd, p, s, MSG_DONTWAIT);
     if (n <= 0) {
         if (n < 0) {
             if (errno == EAGAIN) {

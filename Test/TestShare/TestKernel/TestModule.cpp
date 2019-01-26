@@ -21,7 +21,12 @@
  */
 TEST(SModule, EchoSpliter)
 {
-    typedef Module::MSpliter<Decoded::IOConnector, Decoded::IConnector, Decoded::OConnector> Spliter;
+    // define types -----------------------------------------------------------
+    using Spliter  = Module::MSpliter<
+        Decoded::IOConnector, Decoded::IConnector, Decoded::OConnector
+    >;
+    using Monitor = SResourceMonitor<
+    >;
     // settings ---------------------------------------------------------------
     auto size   = 100;
     auto addr   = "localhost";
@@ -31,6 +36,7 @@ TEST(SModule, EchoSpliter)
     // build a spliter -------------------------------------------------------- 
     Spliter s ({
         {Spliter::Command::MODULE,   {{
+            {Module::VERBOSE, "4"}
         }}},
         {Spliter::Command::FUNCTION, {{
             {Module::Function::TYPE, Module::Function::Type::MESSAGE}
@@ -52,18 +58,28 @@ TEST(SModule, EchoSpliter)
     // build a test frames ---------------------------------------------------- 
     auto in  = SRandom::Frame(size);
     auto out = Frame(size);
+
     // interface resource -----------------------------------------------------
-    Message::SRemoteResource interface;
-    interface.Link(addr, port1);
+    auto interface = Message::SRemoteResource()
+        .Link(addr, port1)
+    .Detach();
+
+    STask::Sleep(chrono::milliseconds(100));
 
     // send ------------------------------------------------------------------- 
     EXPECT_EQ(interface.Drain(in).Good(), true);
+
+    // wait ------------------------------------------------------------------- 
+    Monitor(Monitor::Time(2000), &interface).Wait();
 
     // receive ----------------------------------------------------------------
     EXPECT_EQ(interface.Fill(out).Good(), true);
 
     // test data --------------------------------------------------------------
     EXPECT_EQ(in, out);
+
+    // end module -------------------------------------------------------------
+    s.Join();
 }
 
 // TEST(SModule, CreateSpread)

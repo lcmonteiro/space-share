@@ -46,7 +46,7 @@ TEST(SRoadMonitor, Create)
         RoadMonitor::Road(2)
             .Insert("1", SEventConnector::Make(0))
             .Insert("2", SEventConnector::Make(0))
-        .Build()
+        .Detach()
     );
 
     // set event 1 ---------------------------------------

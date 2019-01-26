@@ -39,10 +39,10 @@ namespace Helpers {
      */
     inline Stamp CreateStamp(SModule::Key type, string pass) {
         return CodecStamp::Generate(map<SModule::Key, CodecStamp::Type> {
-            {Properties::SPARSE,  CodecStamp::SPARSE},
-            {Properties::STREAM,  CodecStamp::STREAM},
-            {Properties::MESSAGE, CodecStamp::MESSAGE},
-            {Properties::FULL,    CodecStamp::FULL},
+            {Function::SPARSE,  CodecStamp::SPARSE},
+            {Function::STREAM,  CodecStamp::STREAM},
+            {Function::MESSAGE, CodecStamp::MESSAGE},
+            {Function::FULL,    CodecStamp::FULL},
         }.at(type), SHash::Digest(pass));
     }
 }
@@ -93,7 +93,7 @@ namespace Spread {
                 }}
             };
             return GENERATOR[
-                o.Get(Properties::TYPE, Function::Type::MESSAGE)
+                o.Get(Function::TYPE, Function::Type::MESSAGE)
             ](o);
             
         }
@@ -148,8 +148,8 @@ namespace Spliter {
         using Pointer = typename BaseBuilder<IO, I, O>::Pointer;
         static inline Pointer Build(const SModule::Command::Group& o){
             return make_shared<SFunctionSpliter<SConnector::Key, IO, I, O>>(
-                o.Get(Properties::ENERGY,  10), 
-                o.Get(Properties::VERBOSE, 1)
+                o.Get(Function::ENERGY,  10), 
+                o.Get(Function::VERBOSE, 1)
             );
         }
     };

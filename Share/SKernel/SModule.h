@@ -68,7 +68,7 @@ public:
         try {                                       \
             __opts.at(Key_).emplace_back(conf);     \
         } catch(...){                               \
-            __opts.emplace(MODULE, Groups({conf})); \
+            __opts.emplace(Key_, Groups({conf}));   \
         }                                           \
         return *this;                               \
     }
@@ -82,7 +82,7 @@ public:
      */
     #define SET(Key_, Name_)                        \
     SModuleCommand& Set##Name_(const Group& conf) { \
-        __opts.emplace(MODULE, Groups({conf}));     \
+        __opts.emplace(Key_, Groups({conf}));       \
         return *this;                               \
     }
     SET(MODULE,   Module  );

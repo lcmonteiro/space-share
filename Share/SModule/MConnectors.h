@@ -56,33 +56,33 @@ namespace Input {
     struct Builder<Decoded::IConnector> {
         static inline Decoded::IConnector Build(const SModule::Command::Group& o) {
             static map<SConnector::Key, function <Decoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
-                {SConnector::Key(Properties::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
+                {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::ILocConnector::Make(
-                        o.Get(Properties::URI),
-                        o.Get(Properties::NFRAMES, 50),
-                        o.Get(Properties::SFRAMES, 1550)
+                        o.Get(IO::URI),
+                        o.Get(IO::NFRAMES, 50),
+                        o.Get(IO::SFRAMES, 1550)
                     );
-                    in->SetVerbose(o.Get(Properties::VERBOSE, 0));
-                    in->SetEnergy(o.Get(Properties::ENERGY,   0));
+                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    in->SetEnergy(o.Get(IO::ENERGY,   1));
                     return in;
                 }},
-                {SConnector::Key(Properties::MESSAGE_UDP), [](const SModule::Command::Group& o) {
+                {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::IUdpConnector::Make(
-                        o.Get(Properties::URI),
-                        o.Get(Properties::NFRAMES, 50),
-                        o.Get(Properties::SFRAMES, 1550)
+                        o.Get(IO::URI),
+                        o.Get(IO::NFRAMES, 50),
+                        o.Get(IO::SFRAMES, 1550)
                     );
-                    in->SetVerbose(o.Get(Properties::VERBOSE, 0));
-                    in->SetEnergy(o.Get( Properties::ENERGY,  0));
+                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    in->SetEnergy(o.Get( IO::ENERGY,  1));
                     return in;
                 }}
             };
             try {
                 return GENERATOR[
-                    o.Get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_LOCAL))
+                    o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_LOCAL))
                 ](o);
             } catch(...) {
-                throw runtime_error("invalid input");
+                throw runtime_error("invalid input connetor");
             }
         }
     };
@@ -93,21 +93,21 @@ namespace Input {
     struct Builder<Encoded::IConnector> {
         static inline Encoded::IConnector Build(const SModule::Command::Group& o){
             static map<SConnector::Key, function <Encoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
-                {SConnector::Key(Properties::MESSAGE_FILE), [](const SModule::Command::Group& o) {
+                {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto in = Encoded::Message::IFileConnector::Make(
-                        o.Get(Properties::URI, string("/tmp/coded"))
+                        o.Get(IO::URI, string("/tmp/coded"))
                     );
-                    in->SetVerbose(o.Get(Properties::VERBOSE, 0));
-                    in->SetEnergy(o.Get(Properties::ENERGY,   1));
+                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    in->SetEnergy(o.Get(IO::ENERGY,   1));
                     return in;
                 }}
             };
             try {
                 return GENERATOR[
-                    o.Get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
+                    o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
                 ](o);
             } catch(...) {
-                throw runtime_error("invalid input");
+                throw runtime_error("invalid input connector");
             }
         }
     };
@@ -134,18 +134,18 @@ namespace Output {
     struct Builder<Decoded::OConnector> {
         static inline Decoded::OConnector Build(const SModule::Command::Group& o) {
             static map<SConnector::Key, function <Decoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
-                {SConnector::Key(Properties::MESSAGE_UDP), [](const SModule::Command::Group& o) {
+                {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
                     auto out = Decoded::Message::OUdpConnector::Make(
-                        o.Get(Properties::URI,  string("127.0.0.1:9751"))
+                        o.Get(IO::URI,  string("127.0.0.1:9751"))
                     );
-                    out->SetVerbose(o.Get(Properties::VERBOSE, 0));
-                    out->SetEnergy(o.Get(Properties::ENERGY,   1));
+                    out->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    out->SetEnergy(o.Get(IO::ENERGY,   1));
                     return out;
                 }}
             };
             try{
                 return GENERATOR[
-                    o.Get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_UDP))
+                    o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_REMOTE))
                 ](o);
             } catch(...) {
                 throw runtime_error("invalid output");
@@ -159,18 +159,18 @@ namespace Output {
     struct Builder<Encoded::OConnector> {
         static inline Encoded::OConnector Build(const SModule::Command::Group& o){
             static map<SConnector::Key, function <Encoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
-                {SConnector::Key(Properties::MESSAGE_FILE), [](const SModule::Command::Group& o) {
+                {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto out = Encoded::Message::OFileConnector::Make(
-                        o.Get(Properties::URI, string("/tmp/code"))
+                        o.Get(IO::URI, string("/tmp/code"))
                     );
-                    out->SetVerbose(o.Get(Properties::VERBOSE, 0));
-                    out->SetEnergy(o.Get(Properties::ENERGY,   1));
+                    out->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    out->SetEnergy(o.Get(IO::ENERGY,   1));
                     return out;
                 }}
             };
             try {
                 return GENERATOR[
-                    o.Get(Properties::TYPE, SConnector::Key(Properties::MESSAGE_FILE))
+                    o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
                 ](o);
             } catch(...) {
                 throw runtime_error("invalid output");
@@ -200,20 +200,30 @@ namespace IOput {
     struct Builder<Decoded::IOConnector> {
         static inline Decoded::IOConnector Build(const SModule::Command::Group& o) {
             static map<SConnector::Key, function <Decoded::IOConnector(const SModule::Command::Group&)>> GENERATOR {
-                {SConnector::Key(Properties::STREAM_LOCAL), [](const SModule::Command::Group& o) {
+                {SConnector::Key(IO::Type::STREAM_LOCAL), [](const SModule::Command::Group& o) {
                     auto io = Decoded::Stream::IOLocConnector::Make(
-                        o.Get(Properties::URI,     string("/tmp/data.y")),
-                        o.Get(Properties::NFRAMES, 50),
-                        o.Get(Properties::SFRAMES, 4096)
+                        o.Get(IO::URI,     string("/tmp/data.y")),
+                        o.Get(IO::NFRAMES, 50),
+                        o.Get(IO::SFRAMES, 4096)
                     );
-                    io->SetVerbose(o.Get(Properties::VERBOSE, 0));
-                    io->SetEnergy(o.Get(Properties::ENERGY,   1));
+                    io->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    io->SetEnergy(o.Get(IO::ENERGY,   1));
                     return io;
+                }},
+                {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
+                    auto in = Decoded::Message::IOUdpConnector::Make(
+                        o.Get(IO::URI),
+                        o.Get(IO::NFRAMES, 50),
+                        o.Get(IO::SFRAMES, 1550)
+                    );
+                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    in->SetEnergy(o.Get( IO::ENERGY,  1));
+                    return in;
                 }}
             };
             try {
                 return GENERATOR[
-                    o.Get(Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
+                    o.Get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
                 ](o);
             } catch(...) {
                 throw runtime_error("invalid input/output");
@@ -231,10 +241,10 @@ namespace IOput {
             };
             try {
                 return GENERATOR[
-                    o.Get(Properties::TYPE, SConnector::Key(Properties::STREAM_TCP))
+                    o.Get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
                 ](o);
             } catch(...) {
-                throw runtime_error("invalid input/output");
+                throw runtime_error("invalid input/output connector");
             }
         }
     };

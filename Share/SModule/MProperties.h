@@ -17,7 +17,7 @@
  * -------------------------------------------------------------------------------------------------
  */
 namespace Module {
-    using TXT = const SText;
+    using Properties = const SText;
     /**
      * ------------------------------------------------------------------------
      * Funtion properties
@@ -27,17 +27,24 @@ namespace Module {
         /**
          * type
          */
-        TXT TYPE = "type";
+        Properties TYPE = "type";
         namespace Type {
-            TXT MESSAGE = "message";
+            Properties MESSAGE = "message";
         }
+        /**
+         * stamps types
+         */
+        Properties MESSAGE = "message";
+        Properties STREAM  = "stream" ;
+        Properties SPARSE = "sparse"  ;
+        Properties FULL   = "full"    ;
         /**
          * others
          */
-        TXT SECRET = "secret" ;
-        TXT CACHE  = "cache"  ;
-        TXT ENERGY = "energy" ;
-        TXT VERBOSE= "verbose";
+        Properties SECRET = "secret" ;
+        Properties CACHE  = "cache"  ;
+        Properties ENERGY = "energy" ;
+        Properties VERBOSE= "verbose";
     }
     /**
      * ------------------------------------------------------------------------
@@ -48,73 +55,83 @@ namespace Module {
         /**
          * type
          */
-        TXT TYPE = "type";
+        Properties TYPE = "type";
         namespace Type {
-            TXT MESSAGE_REMOTE = "message.remote";
-            TXT MESSAGE_LOCAL  = "message.local" ;
-            TXT MESSAGE_FILE   = "message.file"  ;
-            TXT STREAM_REMOTE  = "stream.remote" ;
-            TXT STREAM_LOCAL   = "stream.local"  ;
+            Properties MESSAGE_REMOTE = "message.remote";
+            Properties MESSAGE_LOCAL  = "message.local" ;
+            Properties MESSAGE_FILE   = "message.file"  ;
+            Properties STREAM_REMOTE  = "stream.remote" ;
+            Properties STREAM_LOCAL   = "stream.local"  ;
         }
         /**
          * others
          */
-        TXT URI = "uri";
+        Properties URI     = "uri"     ;
+        Properties VERBOSE = "verbose" ;
+        Properties ENERGY  = "energy"  ;
+        Properties NFRAMES = "nframes" ;
+        Properties SFRAMES = "sframes" ;
+        Properties SECRET  = "secret"  ;
+        Properties TIMEOUT = "timeout" ;
+        Properties DELAY   = "delay"   ;
+        Properties CACHE   = "cache"   ;
+        Properties NOMINAL = "nominal" ;
+        Properties MINIMUM = "minimum" ;
     }
 
-    /**
-     */
-    namespace Properties {
-        /**
-         * -----------------------------------------------------------------------------------------------------
-         * modules types
-         * -----------------------------------------------------------------------------------------------------
-         */
-        TXT DECODE_Y = "decodeY";
-        TXT ENCODE   = "encode";
-        TXT ENCODE_Y = "encodeY";
-        TXT DECODE   = "decode";
-        /**
-         * -----------------------------------------------------------------------------------------------------
-         * connector types
-         * -----------------------------------------------------------------------------------------------------
-         */
-        TXT MESSAGE_UDP   = "message.udp";
-        TXT MESSAGE_LOCAL = "message.local";
-        TXT MESSAGE_FILE  = "message.file";
-        TXT STREAM_TCP    = "stream.tcp";
-        TXT STREAM_LOCAL  = "stream.local";
-        /**
-         * -----------------------------------------------------------------------------------------------------
-         * encoder/decoder/stamps types
-         * -----------------------------------------------------------------------------------------------------
-         */
-        TXT MESSAGE = "message";
-        TXT STREAM  = "stream";
-        /**
-         * other stamps types
-         */
-        TXT SPARSE = "sparse";
-        TXT FULL   = "full";
-        /**
-         * -----------------------------------------------------------------------------------------------------
-         * common attributes
-         * -----------------------------------------------------------------------------------------------------
-         */
-        TXT URI     = "uri";
-        TXT TYPE    = "type";
-        TXT VERBOSE = "verbose";
-        TXT BIND    = "bind";
-        TXT ENERGY  = "energy";
-        TXT NFRAMES = "nframes";
-        TXT SFRAMES = "sframes";
-        TXT SECRET  = "secret";
-        TXT TIMEOUT = "timeout";
-        TXT DELAY   = "delay";
-        TXT CACHE   = "cache";
-        TXT NOMINAL = "nominal";
-        TXT MINIMUM = "minimum";
-    }
+    // /**
+    //  */
+    // namespace Properties {
+    //     /**
+    //      * -----------------------------------------------------------------------------------------------------
+    //      * modules types
+    //      * -----------------------------------------------------------------------------------------------------
+    //      */
+    //     Properties DECODE_Y = "decodeY";
+    //     Properties ENCODE   = "encode";
+    //     Properties ENCODE_Y = "encodeY";
+    //     Properties DECODE   = "decode";
+    //     /**
+    //      * -----------------------------------------------------------------------------------------------------
+    //      * connector types
+    //      * -----------------------------------------------------------------------------------------------------
+    //      */
+    //     Properties MESSAGE_UDP   = "message.udp";
+    //     Properties MESSAGE_LOCAL = "message.local";
+    //     Properties MESSAGE_FILE  = "message.file";
+    //     Properties STREAM_TCP    = "stream.tcp";
+    //     Properties STREAM_LOCAL  = "stream.local";
+    //     /**
+    //      * -----------------------------------------------------------------------------------------------------
+    //      * encoder/decoder/stamps types
+    //      * -----------------------------------------------------------------------------------------------------
+    //      */
+    //     Properties MESSAGE = "message";
+    //     Properties STREAM  = "stream";
+    //     /**
+    //      * other stamps types
+    //      */
+    //     Properties SPARSE = "sparse";
+    //     Properties FULL   = "full";
+    //     /**
+    //      * -----------------------------------------------------------------------------------------------------
+    //      * common attributes
+    //      * -----------------------------------------------------------------------------------------------------
+    //      */
+    //     Properties URI     = "uri";
+    //     Properties TYPE    = "type";
+    //     Properties VERBOSE = "verbose";
+    //     Properties BIND    = "bind";
+    //     Properties ENERGY  = "energy";
+    //     Properties NFRAMES = "nframes";
+    //     Properties SFRAMES = "sframes";
+    //     Properties SECRET  = "secret";
+    //     Properties TIMEOUT = "timeout";
+    //     Properties DELAY   = "delay";
+    //     Properties CACHE   = "cache";
+    //     Properties NOMINAL = "nominal";
+    //     Properties MINIMUM = "minimum";
+    // }
 }
 #endif /* SMODULE_PROCESS_H */
 

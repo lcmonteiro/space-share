@@ -88,7 +88,13 @@ namespace Message {
          */
         SRemoteResource& Link(
             const string& host, uint16_t host_port
-        ); 
+        );
+        /**
+         * detach
+         */
+        inline SRemoteResource Detach() {
+            return move(*this);
+        }
     };
 }
 /**

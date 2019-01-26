@@ -18,33 +18,33 @@
 namespace Module {
 /**
  */
-template<class IO, class I, class O>
+template<class IO_CON, class I_CON, class O_CON>
 class MSpliter : public MBase {
     /**
      * ------------------------------------------------------------------------
      * exception types
      * ------------------------------------------------------------------------
      */
-    using IORoadExceptionDETACHED = SRoadExceptionDETACHED<IO>;
-    using IRoadExceptionDETACHED  = SRoadExceptionDETACHED<I>;
-    using ORoadExceptionDETACHED  = SRoadExceptionDETACHED<O>;
+    using IORoadExceptionDETACHED = SRoadExceptionDETACHED<IO_CON>;
+    using IRoadExceptionDETACHED  = SRoadExceptionDETACHED<I_CON>;
+    using ORoadExceptionDETACHED  = SRoadExceptionDETACHED<O_CON>;
     /**
      * ------------------------------------------------------------------------
      * builders 
      * ------------------------------------------------------------------------
      */
-    using IOBuilder = IOput::Builder<IO>;
-    using IBuilder  = Input::Builder<I>;
-    using OBuilder  = Output::Builder<O>;
-    using FBuilder  = Spliter::Builder<IO, I, O>; 
+    using IOBuilder = IOput::Builder<IO_CON>;
+    using IBuilder  = Input::Builder<I_CON>;
+    using OBuilder  = Output::Builder<O_CON>;
+    using FBuilder  = Spliter::Builder<IO_CON, I_CON, O_CON>; 
     /** 
      * ------------------------------------------------------------------------
      * connector types
      * ------------------------------------------------------------------------
      */
-    using IORoad = SRoadMonitor<SConnector::Key, IO>;
-    using IRoad  = SRoadMonitor<SConnector::Key, I>;
-    using ORoad  = SRoad<SConnector::Key, O>; 
+    using IORoad = SRoadMonitor<SConnector::Key, IO_CON>;
+    using IRoad  = SRoadMonitor<SConnector::Key, I_CON>;
+    using ORoad  = SRoad<SConnector::Key, O_CON>; 
     /**
      * ------------------------------------------------------------------------
      * function type
@@ -99,15 +99,15 @@ protected:
     void __ProcessCommand(const Command& cmd) {
         // create and insert input/outputs
         for(auto& o: cmd[Command::INOUT]) {
-            __io.Insert(o[Properties::URI], IOBuilder::Build(o));
+            __io.Insert(o[IO::URI], IOBuilder::Build(o));
         }
         // create and insert inputs
-        for(auto& o: cmd[Command::INOUT]) {
-            __in.Insert(o[Properties::URI], IBuilder::Build(o));
+        for(auto& o: cmd[Command::INPUT]) {
+            __in.Insert(o[IO::URI], IBuilder::Build(o));
         }
         // create and insert outputs
         for(auto o: cmd[Command::OUTPUT]) {
-            __out.Insert(o[Properties::URI], OBuilder::Build(o));
+            __out.Insert(o[IO::URI], OBuilder::Build(o));
         }
         // create and insert outputs
         for(auto o: cmd[Command::FUNCTION]) {
@@ -122,8 +122,10 @@ protected:
     void __ProcessMachine(const Clock::Pointer& end) override {
         // log info -----------------------------------------------------------
         INFO("Process={ "
-            << "energy:" << SEnergy::Get() << ", "
-            << "inputs:" << Status(__in)   << " "
+            << "energy:"     << SEnergy::Get() << ", "
+            << "inputs:"     << Status(__in)   << ", "
+            << "outputs:"    << Status(__out)  << ", "
+            << "in|outputs:" << Status(__io)   << "  "
             << "}"
         );
         /**
@@ -141,19 +143,23 @@ protected:
                 // open -------------------------------------------------------
                 case OPEN: {
                     __out.Open();
+                    DEBUG("OPEN");
                     SetState(OWAIT);
                     break;
                 }
                 // out wait --------------------------------------------------
                 case OWAIT: {
                     Update(end, &__out);
+                    DEBUG("OWAIT");
+                    __io.Open();
                     __in.Open();
                     SetState(IWAIT);
                     break;
                 }
                 //  in wait ---------------------------------------------------
                 case IWAIT: {
-                    Update(end, &__in);
+                    Update(end, &__io, &__in);
+                    DEBUG("IWAIT");
                     SetState(PROCESS);
                     break;
                 }
