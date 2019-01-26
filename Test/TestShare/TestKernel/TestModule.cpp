@@ -46,11 +46,11 @@ TEST(SModule, EchoSpliter)
             {Module::IO::URI, SText(addr, ":", port1)}
         }}},
         {Spliter::Command::INPUT,    {{
-            {Module::IO::TYPE, Module::IO::Type::MESSAGE_REMOTE},
+            {Module::IO::TYPE, Module::IO::Type::STREAM_REMOTE},
             {Module::IO::URI, SText(addr, ":", port2)}
         }}},
         {Spliter::Command::OUTPUT,   {{
-            {Module::IO::TYPE, Module::IO::Type::MESSAGE_REMOTE},
+            {Module::IO::TYPE, Module::IO::Type::STREAM_REMOTE},
             {Module::IO::URI, SText(addr, ":", port2)}
         }}}
     });
@@ -64,7 +64,8 @@ TEST(SModule, EchoSpliter)
         .Link(addr, port1)
     .Detach();
 
-    STask::Sleep(chrono::milliseconds(100));
+    // wait -------------------------------------------------------------------
+    EXPECT_EQ(s.WaitState(Spliter::Time(100), Spliter::IWAIT), true);
 
     // send ------------------------------------------------------------------- 
     EXPECT_EQ(interface.Drain(in).Good(), true);

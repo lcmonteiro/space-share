@@ -14,6 +14,7 @@
 /**
  * space 
  */
+#include "STask.h"
 #include "SMonitorHandler.h"
 #include "SResourceHandler.h"
 /**
@@ -29,23 +30,33 @@ SStaticMonitorHandler::SStaticMonitorHandler(std::initializer_list<Handler> hand
 }
 /**
  * ----------------------------------------------------------------------------
+ *  helpers
+ * ----------------------------------------------------------------------------
+ */
+SStaticMonitorHandler::Location SStaticMonitorHandler::__Create(Handler h) {
+    return {
+        .fd = h->FD(), 
+        .events = POLLIN | POLLERR | POLLHUP, 
+        .revents = 0
+    };
+}
+/**
+ * ----------------------------------------------------------------------------
  *  Insert handler
  * ----------------------------------------------------------------------------
  */
 size_t SStaticMonitorHandler::Insert(Handler h) {
+    // get current position  ------------------------------
+    auto position = __handlers.size();
 
     // insert on resource navive container ----------------
-    __locations.emplace_back(Location{
-        .fd = h->FD(), 
-        .events = POLLIN | POLLERR | POLLHUP, 
-        .revents = 0
-    });
-   
+    __locations.emplace_back(__Create(h));
+
     // insert on handler container ------------------------
     __handlers.emplace_back(h);
 
     // return position ------------------------------------
-    return __handlers.size() - 1;
+    return position;
 }
 /**
  * ----------------------------------------------------------------------------
@@ -53,33 +64,29 @@ size_t SStaticMonitorHandler::Insert(Handler h) {
  * ----------------------------------------------------------------------------
  */
 std::list<size_t> SStaticMonitorHandler::Wait(const chrono::milliseconds& timeout) {
+    auto handler = STask::Instance().GetResource().GetHandler<SResourceHandler>();
     std::list<size_t> res;
     try {
         // insert this task -------------------------------
-        //__localions.emplace_back(
-        //    CreateLocation(SLinuxTask::Instance().GetResource())
-        //);
+        __locations.emplace_back(__Create(handler));
 
         // check resources --------------------------------
         res = __Check(timeout);
 
         // remove this task -------------------------------
-        //__locations.pop_back();
+        __locations.pop_back();
     } catch(...) {
-        //__locations.pop_back();
+        __locations.pop_back();
         throw;
     }
-
     // check timeout --------------------------------------
     if (res.empty()) {
         throw MonitorExceptionTIMEOUT();
     }
-
     // check this task ------------------------------------
     if (res.back() == __locations.size()) {
         throw MonitorExceptionCANCEL();
     }
-
     // return active positions ----------------------------
     return res;
 }
@@ -95,7 +102,6 @@ std::list<size_t> SStaticMonitorHandler::__Check(const chrono::milliseconds& tim
     if ((r = poll(__locations.data(), __locations.size(), timeout.count())) < 0) {
         throw MonitorException(make_error_code(errc(errno)));
     }
-
     // check ----------------------------------------------
     std::list<size_t> res;
     for (size_t i = 0, n = r; (i < __locations.size()) && (res.size() < n); ++i) {
@@ -120,24 +126,49 @@ SDynamicMonitorHandler::SDynamicMonitorHandler(std::initializer_list<Handler> ha
 }
 /**
  * ----------------------------------------------------------------------------
- *  Insert handler
+ *  helpers
  * ----------------------------------------------------------------------------
  */
-size_t SDynamicMonitorHandler::Insert(Handler h) {
+size_t SDynamicMonitorHandler::__Insert(Handler h) {
+    // get current position  ------------------------------
+    auto position = __handlers.size();
+    
     // insert on resource container -----------------------
     ::epoll_event ev;
-    ev.data.u64 = __handlers.size();
+    ev.data.u64 = position;
     ev.events   = EPOLLIN | EPOLLERR | EPOLLHUP;
     if (epoll_ctl(
         FD(), EPOLL_CTL_ADD, h->FD(), &ev
     ) < 0) {
         throw ResourceExceptionABORT(strerror(errno));
     }
+    // return position ------------------------------------
+    return position;
+}
+void SDynamicMonitorHandler::__Remove(Handler h) {
+    // insert on resource container -----------------------
+    ::epoll_event ev;
+    if (epoll_ctl(
+        FD(), EPOLL_CTL_DEL, h->FD(), &ev
+    ) < 0) {
+        throw ResourceExceptionABORT(strerror(errno));
+    }
+}
+/**
+ * ----------------------------------------------------------------------------
+ *  Insert handler
+ * ----------------------------------------------------------------------------
+ */
+size_t SDynamicMonitorHandler::Insert(Handler h) {
+
+    // insert on resource container -----------------------
+    auto position = __Insert(h);
+
     // insert on handler container ------------------------
     __handlers.emplace_back(h);
 
     // return position ------------------------------------
-    return __handlers.size() - 1;
+    return position;
 }
 /**
  * ----------------------------------------------------------------------------
@@ -145,28 +176,26 @@ size_t SDynamicMonitorHandler::Insert(Handler h) {
  * ----------------------------------------------------------------------------
  */
 std::list<size_t> SDynamicMonitorHandler::Wait(const chrono::milliseconds& timeout) {
+    auto handler = STask::Instance().GetResource().GetHandler<SResourceHandler>();
     std::list<size_t> res;
     try {
         // insert this task -------------------------------
-        //__localions.emplace_back(
-        //    CreateLocation(SLinuxTask::Instance().GetResource())
-        //);
+        __Insert(handler);
 
         // check resources --------------------------------
         res = __Check(timeout);
 
         // remove this task -------------------------------
-        //__locations.pop_back();
+        __Remove(handler);
     } catch(...) {
-        //__locations.pop_back();
+        // remove this task -------------------------------
+        __Remove(handler);
         throw;
     }
-
     // check timeout --------------------------------------
     if (res.empty()) {
         throw MonitorExceptionTIMEOUT();
     }
-
     // return active positions ----------------------------
     return res;
 }
@@ -185,7 +214,6 @@ list<size_t> SDynamicMonitorHandler::__Check(const chrono::milliseconds& timeout
     if (n < 0) {
         throw MonitorException(make_error_code(errc(errno)));
     }
-
     // fill output ----------------------------------------
     list<size_t> res;
     for (auto i = 0; i < n; ++i) {
@@ -194,7 +222,7 @@ list<size_t> SDynamicMonitorHandler::__Check(const chrono::milliseconds& timeout
     return res;
 }
 /**
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * end
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */

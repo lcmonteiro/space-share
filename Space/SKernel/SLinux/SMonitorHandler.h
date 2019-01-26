@@ -99,7 +99,10 @@ protected:
      * check a group of locations
      */
     std::list<size_t> __Check(const chrono::milliseconds& timeout);
-private:
+    /**
+     * helpers
+     */
+    inline Location __Create(Handler h);
     /**
      * ------------------------------------------------------------------------
      * variables
@@ -150,6 +153,12 @@ protected:
      * check a group of locations
      */
     std::list<size_t> __Check(const chrono::milliseconds& timeout);
+    /**
+     * helpers
+     */
+    inline size_t __Insert(Handler h);
+
+    inline void   __Remove(Handler h);
 };
 /**
  * -------------------------------------------------------------------------------------------------

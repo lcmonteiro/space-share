@@ -41,6 +41,7 @@ Property TIMEOUT = "timeout";
 class MBase : public SModule {  
 protected:
     using Clock            = SClock<>;
+    using Timer            = Clock::Alarm;
     using ResourceMonitor  = SResourceMonitor<>;
     /**
      * ------------------------------------------------------------------------
@@ -75,38 +76,43 @@ protected:
      * --------------------------------------------------------------------------------------------
      */
     int Execute() override {
+        Timer t(__delay, __timeout);
+
         // set in open state --------------------------------------------------
         SetState(OPEN);
-
-        // delay the process --------------------------------------------------
-        STask::Sleep(__delay);
         
         // run the precess ----------------------------------------------------
-        INFO("RUN = {}");
-        for(Clock::Alarm alarm(__timeout); STask::Sleep(); alarm.Snooze()) {
-
+        INFO("OPEN = {}");
+        for(t.Wait(); t.Yield(); t.Snooze()) {
+        
             // procces commands -----------------------------------------------
             for(auto& c : __Commands()) {
                 __ProcessCommand(c);
             }
             // procces machine ------------------------------------------------
             try {
-                __ProcessMachine(alarm.Tigger());
+                SetState(__ProcessMachine(GetState(), t.Tigger()));
             }  catch (exception& ex) {
-                ERROR("END = { what: " << ex.what() << " }");
+        
+                // set in close state -----------------------------------------
+                SetState(CLOSE);
+                ERROR("CLOSE = { what: " << ex.what() << " }");
                 return -1;
             } catch (...) {
-                ERROR("END = { }");
+        
+                // set in close state -----------------------------------------
+                SetState(CLOSE);
+                ERROR("CLOSE = { }");
                 return -1;
             }
         }
         // set in close state -------------------------------------------------
         SetState(CLOSE);
-        INFO("END = { }");
+        INFO("CLOSE = { }");
         return 0;
     }
-    virtual void __ProcessMachine(const Clock::Pointer&) {}
-    virtual void __ProcessCommand(const Command&       ) {}
+    virtual State __ProcessMachine(const State&, const Clock::Pointer&) {}
+    virtual void  __ProcessCommand(const Command&                     ) {}
     /**
      * --------------------------------------------------------------------------------------------
      * Helpers

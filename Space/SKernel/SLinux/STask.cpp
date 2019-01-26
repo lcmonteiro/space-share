@@ -3,21 +3,21 @@
  * Author: Monteiro
  *
  * Created on November 26, 2016, 12:37 PM
+ **
+ * std
  */
 #include <mutex>
 #include <map>
 #include <iostream>
 /**
+ * space
  */
 #include "STask.h"
+#include "SMonitorHandler.h"
 /**
- * Space Monitor
- */
-#include "SLinuxResourceMonitor.h"
-/**
- * ------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * tasks data base - declaration
- * ------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * static variables 
  */
 static map<thread::id, STask*> __tasks;
@@ -62,7 +62,7 @@ void STask::__End(thread::id  id) {
 }
 /*
  * ------------------------------------------------------------------------------------------------
- * Public - Global
+ * public - global
  * ------------------------------------------------------------------------------------------------ 
  * enable main task
  */
@@ -80,7 +80,7 @@ STask& STask::Instance() {
  * sleep current task
  */
 bool STask::Sleep(chrono::milliseconds timeout) {
-    SLinuxMonitor::Wait(timeout);
+    SStaticMonitorHandler().Wait(timeout);
     return true;
 }
 /**
@@ -116,3 +116,8 @@ void __remove(thread::id id) {
     // disable
     __tasks[id] = &__main;
 }
+/**
+ * ------------------------------------------------------------------------------------------------
+ * end
+ * ------------------------------------------------------------------------------------------------
+ */

@@ -15,7 +15,7 @@
  * SClock 
  * ------------------------------------------------------------------------------------------------
  */
-template <class CLOCK = std::chrono::steady_clock, class DURATION=std::chrono::milliseconds>
+template <class DURATION=std::chrono::milliseconds, class CLOCK = std::chrono::steady_clock>
 class SClock {
 public:
     using Pointer  = typename CLOCK::time_point;
@@ -37,10 +37,34 @@ public:
         : Alarm(period,period) {
         }
         /**
+         * --------------------------------------------------------------------
+         * interfaces 
+         * --------------------------------------------------------------------
          * snooze
          */
         inline Alarm& Snooze() {
             __end = CLOCK::now() + __period;
+            return *this;
+        }
+        /**
+         * sleep
+         */
+        inline Alarm& Sleep() {
+            STask::Sleep(std::min(__period, Remaining(__end)));
+            return *this;
+        }
+        /**
+         * sleep
+         */
+        inline Alarm& Wait() {
+            STask::Sleep(Remaining(__end));
+            return *this;
+        }
+        /**
+         * yield
+         */
+        inline bool Yield() {
+            return STask::Sleep();
         }
         /**
          * end point

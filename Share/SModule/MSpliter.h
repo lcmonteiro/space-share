@@ -116,10 +116,11 @@ protected:
     }
     /**
      * --------------------------------------------------------------------------------------------
-     * process execution
+     * process machine
      * --------------------------------------------------------------------------------------------
      */
-    void __ProcessMachine(const Clock::Pointer& end) override {
+    State __ProcessMachine(const State& state, const Clock::Pointer& end) override {
+        using Timer = Clock::Alarm;
         // log info -----------------------------------------------------------
         INFO("Process={ "
             << "energy:"     << SEnergy::Get() << ", "
@@ -134,65 +135,34 @@ protected:
          * --------------------------------------------------------------------
          */
         try {
-            switch(GetState()) {
+            switch(state) {
                 // default ----------------------------------------------------
                 default: {
-                    SetState(OPEN);
-                    break;
+                    return OPEN;
                 }
                 // open -------------------------------------------------------
                 case OPEN: {
                     __out.Open();
-                    DEBUG("OPEN");
-                    SetState(OWAIT);
-                    break;
+                    return OWAIT;
                 }
                 // out wait --------------------------------------------------
                 case OWAIT: {
-                    Update(end, &__out);
-                    DEBUG("OWAIT");
-                    __io.Open();
-                    __in.Open();
-                    SetState(IWAIT);
-                    break;
+                    return __ProcessOWAIT(end);
                 }
                 //  in wait ---------------------------------------------------
                 case IWAIT: {
-                    Update(end, &__io, &__in);
-                    DEBUG("IWAIT");
-                    SetState(PROCESS);
-                    break;
+                    return __ProcessIWAIT(end);
                 }
                 // process ----------------------------------------------------
-                case PROCESS: {
-                    try { 
-                        ResourceMonitor m (&__io, &__in);
-                        while(m.Good()) {
-                            for(auto& i : Wait(m, end)) {
-                                switch(i) {
-                                    case 1: {
-                                        __func->Process(__io, __out);
-                                        break;
-                                    }
-                                    case 2: {
-                                        __func->Process(__in, __io);
-                                        break;
-                                    }
-                                }
-                            }
-                        }                  
-                    } catch (MonitorExceptionTIMEOUT & ex) {
-                        __func->Drain(__io, __in, __out);
-                        __func->Decay();
-                    }
-                    SetState(UPDATE);
-                    break;
+                case PLAY: {
+                    return __ProcessPLAY(end);
                 }
                 // update -----------------------------------------------------
                 case UPDATE : {
-                    Update(end, &__in, &__out);
-                    SetState(PROCESS);
-                    break;
+                    __out.Update();
+                    __io.Update();
+                    __in.Update();
+                    return PLAY;
                 }
             }
         }
@@ -204,29 +174,109 @@ protected:
          */
         catch (ORoadExceptionDETACHED & ex) {
             WARNING("OUT = { " << Status(__out) << " }");
-            if(IsState(PROCESS)) {
+            if(PLAY == state) {
                 SEnergy::Decay();
             }
             __func->Recover();
             __in.Close();
-            SetState(OWAIT);
+            return OWAIT;
         } 
         // in road detach --------------------------------------------------------
         catch (IRoadExceptionDETACHED & ex) {
             WARNING("IN = {" << Status(__in) << " }");
-            if(IsState(PROCESS)) {
+            if(PLAY == state) {
                 SEnergy::Decay();
             }
             __func->Recover();
-            SetState(IWAIT);
+            return IWAIT;
         }
         // fuction dead ------------------------------------------------------- 
         catch (FunctionExceptionDEAD& ex) {
             SEnergy::Decay();
             __func->Recover();
         }
+        return state;
+    }
+    /**
+     * --------------------------------------------------------------------------------------------
+     * process states
+     * --------------------------------------------------------------------------------------------
+     * OWAIT
+     * ------------------------------------------------------------------------
+     */
+    inline State __ProcessOWAIT(const Clock::Pointer& end) {
+         for(Timer t(end); !t.Active(); t.Sleep()) {
+            try {
+                __out.Update();
+                __io.Open();
+                __in.Open();
+                return IWAIT;
+            } catch(RoadDetached& e) { }
+        } 
+        __out.Update();
+        __io.Open();
+        __in.Open();
+        return IWAIT;
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * IWAIT
+     * ------------------------------------------------------------------------
+     */
+    inline State __ProcessIWAIT(const Clock::Pointer& end) {
+        for(Timer t(end); !t.Active(); t.Sleep()) {
+            try {
+                __io.Update();
+                __in.Update();
+                return PLAY;
+            } catch(RoadDetached& e) { }
+        } 
+        __io.Update();
+        __in.Update();
+        return PLAY; 
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * PLAY
+     * ------------------------------------------------------------------------
+     */
+    inline State __ProcessPLAY(const Clock::Pointer& end) {
+        ResourceMonitor m (&__io, &__in);
+
+        // first ------------------------------------------
+        try { 
+            for(auto& i : m.Wait(Clock::Remaining(end))) {
+                switch(i) {
+                    case 1: __func->Process(__io, __out); break;
+                    case 2: __func->Process(__in, __io);  break;
+                }
+            }
+        } catch (MonitorExceptionTIMEOUT & ex) {
+            __func->Drain(__io, __in, __out);
+            __func->Decay();
+            return UPDATE;
+        }
+        // reamaining -------------------------------------
+        try { 
+            for(Timer t(end); !t.Active(); t.Sleep()) {
+                for(auto& i : m.Wait(Clock::Remaining(end))) {
+                    switch(i) {
+                        case 1: __func->Process(__io, __out); break;
+                        case 2: __func->Process(__in, __io);  break;
+                    }
+                }                
+            }
+        } catch (MonitorExceptionTIMEOUT & ex) { }
+
+        // return state -----------------------------------
+        return UPDATE;
     }
 };
 }
+/**
+ *-------------------------------------------------------------------------------------------------
+ * end
+ *-------------------------------------------------------------------------------------------------
+ */
 #endif /* MSPLITER_H */
 

@@ -99,7 +99,7 @@ public:
 } OConnectorExceptionDEAD;
 /**
  * ------------------------------------------------------------------------------------------------
- * stream base
+ * connenctor base
  * ------------------------------------------------------------------------------------------------
  **/
 class SConnector: public SLog, protected SEnergy<ConnectorExceptionDEAD> {
@@ -113,17 +113,24 @@ public:
      */
     typedef string  Key;
     /**
-     * constructor
+     * ------------------------------------------------------------------------
+     * defaults
+     * ------------------------------------------------------------------------
      */
-    SConnector() = default;
-
-    SConnector(string uri, size_t energy = 1) : SLog(), SEnergy(energy), __uri(uri) {
-    }
-    /**
-     * destructor
-     */
+    SConnector()          = default;
     virtual ~SConnector() = default;
     /**
+     * ------------------------------------------------------------------------
+     * constructor
+     * ------------------------------------------------------------------------
+     */
+    SConnector(string uri, size_t energy = 1) 
+    : SLog(), SEnergy(energy), __uri(uri) {
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * consinterfacestructor
+     * ------------------------------------------------------------------------
      * get uri 
      */
     inline string Uri() {

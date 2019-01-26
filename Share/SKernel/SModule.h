@@ -7,27 +7,31 @@
 #ifndef SMODULE_H
 #define SMODULE_H
 /**
+ * std
  */
 #include <random>
+#include <atomic>
 /**
+ * space
  */
 #include "SProcess.h"
 #include "SCommand.h"
 #include "SVariable.h"
 #include "SEnergy.h"
+#include "SClock.h"
 #include "SRoad.h"
 /**
  * ------------------------------------------------------------------------------------------------*
  * exceptions 
  * ------------------------------------------------------------------------------------------------
  **/
-typedef class SModuleException : public logic_error {
+typedef class SModuleException : public std::logic_error {
 public:
-    using logic_error::logic_error;
+    using std::logic_error::logic_error;
     /**
      * constructor
      */
-    SModuleException(const string& msg):logic_error(msg){
+    SModuleException(const std::string& msg): std::logic_error(msg){
     }
 } ModuleException;
 
@@ -37,7 +41,7 @@ public:
     /**
      * constructor
      */
-    SModuleExceptionDead(string s) : SModuleException(s) {
+    SModuleExceptionDead(std::string s) : SModuleException(s) {
     }
 } ModuleExceptionDEAD;
 /**
@@ -45,9 +49,9 @@ public:
  * module 
  * ------------------------------------------------------------------------------------------------
  **/
-class SModuleCommand: public SCommand<string, string> {
+class SModuleCommand: public SCommand<std::string, std::string> {
 public:
-    using Command=SCommand<string, string>;
+    using Command = SCommand<std::string, std::string>;
     /**
      * keys
      */
@@ -130,15 +134,16 @@ constexpr const char* SModuleCommand::INOUT;
  * ------------------------------------------------------------------------------------------------
  **/
 class SModule 
-: public SProcess<SModuleCommand, SVariable<string>>, public SEnergy<ModuleExceptionDEAD> {
+: public SProcess<SModuleCommand, SVariable<std::string>>, public SEnergy<ModuleExceptionDEAD> {
 public:   
+    using Time = std::chrono::milliseconds;
     /**
      * --------------------------------------------------------------------------------------------
      * Definitions
      * --------------------------------------------------------------------------------------------
      * state type
      */
-    typedef enum {OPEN = 0, OWAIT, IWAIT, PROCESS, UPDATE, CLOSE} State;
+    typedef enum {OPEN = 0, OWAIT, IWAIT, PLAY, UPDATE, CLOSE} State;
     /**
      */
     using Key = string;
@@ -178,6 +183,17 @@ public:
     inline bool IsState(State s) {
         return __state == s;
     }
+    inline bool WaitState(const Time& timeout, State s) {
+        SClock<Time>::Alarm timer(timeout, Time(10));
+        // verify -----------------------------------------
+	    do {
+		    if(IsState(s)) {
+			    return true;
+		    }
+	    } while (!timer.Sleep().Active());
+        // time expired -----------------------------------
+        return false;
+    }
 protected:
     /**
      * ------------------------------------------------------------------------
@@ -194,16 +210,19 @@ protected:
     SModule() = default;
     /**
      * ------------------------------------------------------------------------
-     * Attributes
+     * internal interfaces
      * ------------------------------------------------------------------------
-     */
-    State __state;
-    /**
-     * setter
      */
     inline void SetState(State s) {
         __state = s;
     }
+private:
+    /**
+     * ------------------------------------------------------------------------
+     * variables
+     * ------------------------------------------------------------------------
+     */
+    std::atomic<State> __state;
 };
 /**
  * ------------------------------------------------------------------------------------------------
