@@ -40,7 +40,7 @@ public:
     template<typename Func, typename... Args> explicit
     STask(Func&& f, Args&&... args) 
     : std::thread(f, args...), __event(0) {
-        __Init(std::this_thread::get_id());
+        __Init(std::thread::get_id());
     }
     /**
      * ----------------------------------------------------
@@ -48,7 +48,7 @@ public:
      * ----------------------------------------------------
      */
     virtual ~STask() {
-        __End(std::this_thread::get_id());
+        __End(std::thread::get_id());
     }
     /**
      * ----------------------------------------------------
