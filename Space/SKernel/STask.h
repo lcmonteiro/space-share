@@ -10,66 +10,66 @@
  * std
  */
 #include <thread>
+#include <mutex>
+#include <map>
 /**
  * space
  */
 #include "SEventResource.h"
 /**
- */
-using namespace std;
-using namespace std::this_thread;
-/**
- * ------------------------------------------------------------------------------------------------*
+ * ------------------------------------------------------------------------------------------------
  * task
  * ------------------------------------------------------------------------------------------------
  **/
-class STask : public thread {
+class STask : public std::thread {
 public:
+    using Time = std::chrono::milliseconds;
     /**
      * ----------------------------------------------------
-     * constructors / destructor
+     * defaults
      * ----------------------------------------------------
-     * default
      */
-    STask()        = default;
-    STask(STask&&) = default;
+    STask()                     = default;
+    STask(STask&&)              = default;
+    STask& operator=(STask&& t) = default;
     /**
-     * template
+     * ----------------------------------------------------
+     * constructor
+     * ----------------------------------------------------
      */
     template<typename Func, typename... Args> explicit
-    STask(Func&& f, Args&&... args) : thread(f, args...), __event(0) {
-        __Init(get_id());
+    STask(Func&& f, Args&&... args) 
+    : std::thread(f, args...), __event(0) {
+        __Init(std::this_thread::get_id());
     }
     /**
+     * ----------------------------------------------------
      * destructor
+     * ----------------------------------------------------
      */
     virtual ~STask() {
-        __End(get_id());
+        __End(std::this_thread::get_id());
     }
     /**
      * ----------------------------------------------------
      * interface
      * ----------------------------------------------------
-     * move operator
-     */
-    STask& operator=(STask&& t) = default;
-    /**
      * check if joinable
      */
     inline bool Joinable() {
-        return thread::joinable();
+        return std::thread::joinable();
     }
     /**
      * wait for Join
      */
     inline void Join() {
-        thread::join();
+        std::thread::join();
     }
     /**
      * detach from object
      */
     inline void Detach() {
-        thread::detach();
+        std::thread::detach();
     }
     /**
      * interrupt thread
@@ -84,9 +84,9 @@ public:
         return __event;
     }
     /**
-     * ----------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * Global
-     * ----------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * enable main task
      */
     static STask& Enable(); 
@@ -97,21 +97,45 @@ public:
     /**
      * sleep this task
      */
-    static bool Sleep(chrono::milliseconds timeout = chrono::milliseconds(0));
+    static bool Sleep(const Time& timeout = Time::zero());
 protected:
     /**
-     * event
+     * protected constructor
      */
-    SEventResource __event;
-private:
+    STask(int init): __event(init) {} 
     /**
      * ------------------------------------------------------------------------
      * manager tasks 
      * ------------------------------------------------------------------------
      * init / end
      */
-    void __Init(thread::id id);
-    void __End(thread::id  id);
+    void __Init(std::thread::id id);
+    void __End(std::thread::id  id);
+private:
+    /**
+     * ------------------------------------------------------------------------
+     * variables 
+     * ------------------------------------------------------------------------
+     * event
+     */
+    SEventResource __event;
+    /**
+     * ------------------------------------------------------------------------
+     * tasks data base - declaration
+     * ------------------------------------------------------------------------
+     * static variables 
+     */
+    using DataBase = std::map<thread::id, STask*>; 
+    using Mutex    = std::mutex; 
+    static DataBase __tasks;
+    static Mutex    __mutex;
+    static STask    __init;
+    /**
+     * interfaces
+     */
+    static void   __Insert(std::thread::id id, STask* p_task);
+    static STask* __Find  (std::thread::id id);
+    static void   __Remove(std::thread::id id);
 };
 /**
  * ------------------------------------------------------------------------------------------------*
