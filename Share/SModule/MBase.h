@@ -120,26 +120,7 @@ protected:
      **
      * update resources 
      */
-    template<class... R>
-    void Update(const Clock::Pointer& end, R... resource) {
-        for(Clock::Alarm a(end); !a.Active(); STask::Sleep()) {
-            try {
-                auto x = {(resource->Update(),0)...};
-                return;
-            } catch(RoadDetached& e) {
-            }
-        } 
-    }
-    /**
-     * wait resources
-     */
-    inline std::list<size_t> Wait(ResourceMonitor& monitor, const Clock::Pointer& end) {
-        auto timeout = Clock::Remaining(end);
-        if(timeout > Clock::Distance::zero()) {
-            return monitor.Wait(timeout);
-        }
-        return {};
-    }
+    
     /**
      * status
      */
