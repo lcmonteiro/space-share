@@ -66,6 +66,7 @@ public:
      */
     inline  SProcess& Insert(const Command& cmd) {
         __cmds.Insert(cmd);
+        return *this;
     }
     /**
      * ------------------------------------------------------------------------

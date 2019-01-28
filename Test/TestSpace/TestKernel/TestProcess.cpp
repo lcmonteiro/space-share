@@ -18,9 +18,10 @@ TEST(SProcess, Create)
         using SProcess<SCommand<string, string>, SVariable<string>>::SProcess;
     protected:
         int Execute() override {
-            for(auto& cmd : __cmds.Remove()) {
+            for(auto& cmd : __Commands()) {
                 return stoi(cmd["I"][0]["A"]);
             }
+            return 0;
         }
     };
     SProcess1 p({

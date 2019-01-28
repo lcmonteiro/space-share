@@ -13,6 +13,7 @@ PUBLIC
 #dependencies
 target_link_libraries(ShareInterface
 PUBLIC
+	ShareModule
 	ShareKernel
 	SpaceMonitor
 	SpaceResource

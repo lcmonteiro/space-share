@@ -13,23 +13,25 @@
 #ifndef SMACHINE_H
 #define SMACHINE_H
 /**
- * Space Kernel
+ * space
  */
 #include "SLocalResource.h"
 #include "SCommandMonitor.h"
 /**
- * Share Kernel
+ * share - module
  */
-#include "SModule.h"
+#include "MBase.h"
 /**
  */
 class SMachine {
+    using ResourceMonitor = SResourceMonitor<>;
 public:
     /**
      * machine helper types
      */
     using Command = SModule::Command;
     using Key     = SModule::Key;
+    using Val     = SModule::Val;
     /**
      */
     class Config : public vector<Command> {
@@ -45,7 +47,7 @@ public:
         /**
          * swap
          */
-        inline Config& Swap(Command::Key k1, Command::Key k2){
+        inline Config& Swap(Key k1, Key k2) {
             for (auto& m : *this){
                 m.Swap(k1, k2);
             }
@@ -54,7 +56,7 @@ public:
         /**
          * update
          */
-        inline Config& Update(Command::Key k1, Command::Key k2, Command::Val val){
+        inline Config& Update(Key k1, Key k2, Val val) {
             for (auto& m : *this){
                 m.Update(k1, k2, val);
             }
@@ -114,7 +116,7 @@ public:
      * @return - good rate
      */
     inline float Good() {
-        return float(IsState(SModule::PROCESS)) / __modules.size();
+        return float(IsState(SModule::PLAY)) / __modules.size();
     }
     /**
      * bad

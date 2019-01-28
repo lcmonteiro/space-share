@@ -29,7 +29,7 @@ public:
      * definitions
      * ------------------------------------------------------------------------
      */
-    class Group : public map<Key, Val> {
+    class Group : public std::map<Key, Val> {
         using std::map<Key, Val>::at;
     public:
         using std::map<Key, Val>::map;
@@ -93,7 +93,7 @@ public:
     /***
      * main
      */
-    SCommand(initializer_list<typename Options::value_type> o)
+    SCommand(std::initializer_list<typename Options::value_type> o)
     :__opts(o) {}
     /***
      * unserialize
@@ -190,9 +190,9 @@ private:
      * ------------------------------------------------------------------------
      */
     template <class T>
-    static inline T __Transform(const string& s) {
+    static inline T __Transform(const std::string& s) {
         T val;
-        istringstream(s) >> val;
+        std::istringstream(s) >> val;
         return val;
     }
 };

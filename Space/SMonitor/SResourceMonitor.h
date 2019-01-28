@@ -87,7 +87,7 @@ public:
      * check
      */
     inline bool Good() {
-        (__timeout != Time::zero()) && (BASE::Size() != 0);
+        return (__timeout != Time::zero()) && (BASE::Size() != 0);
     }
     /**
      * wait

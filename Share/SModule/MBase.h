@@ -111,8 +111,8 @@ protected:
         INFO("CLOSE = { }");
         return 0;
     }
-    virtual State __ProcessMachine(const State&, const Clock::Pointer&) {}
-    virtual void  __ProcessCommand(const Command&                     ) {}
+    virtual State __ProcessMachine(const State&, const Clock::Pointer&) = 0;
+    virtual void  __ProcessCommand(const Command&                     ) = 0;
     /**
      * --------------------------------------------------------------------------------------------
      * Helpers

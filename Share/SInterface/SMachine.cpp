@@ -40,7 +40,7 @@ bool SMachine::Process(chrono::milliseconds timeout) {
         /**
          * wait data
          */
-        SResourceMonitor(timeout, &__monitor).Wait();
+        ResourceMonitor(timeout, &__monitor).Wait();
         /**
          * process data
          */
@@ -79,9 +79,9 @@ void SMachine::ProcessData(const Command& cmd) {
      */
     for(auto& m : cmd.GetModules()) {
         try {
-            InsertModule(MakeURI(m[SModule::URI]), cmd);
+            InsertModule(MakeURI(m[Module::URI]), cmd);
         } catch(...){
-            UpdateModule(MakeURI(m[SModule::URI]), cmd);
+            UpdateModule(MakeURI(m[Module::URI]), cmd);
         }
     }
 }
