@@ -9,7 +9,7 @@
 /**
  * Module
  */
-#include "SModule.h" 
+#include "MBase.h" 
 /**
  *-------------------------------------------------------------------------------------------------
  * Module name space
@@ -19,55 +19,63 @@ namespace Module {
 /**
  */
 template<class I, class D, class O>
-class MSpread : public SModule {
+class MSpread : public MBase {
     /**
+     * ------------------------------------------------------------------------
      * exception types
+     * ------------------------------------------------------------------------
      */
     using IRoadExceptionDETACHED = SRoadExceptionDETACHED<I>;
     using ORoadExceptionDETACHED = SRoadExceptionDETACHED<O>;
     /**
-     * builder types
+     * ------------------------------------------------------------------------
+     * builders
+     * ------------------------------------------------------------------------
      */
     using IBuilder = Input::Builder<I>;
     using FBuilder = Spread::Builder<I, D, O>;
     using OBuilder = Output::Builder<O>; 
     /** 
+     * ------------------------------------------------------------------------
      * connector types
+     * ------------------------------------------------------------------------
      */
     using IRoad = SRoadMonitor<SConnector::Key, I>;
     using ORoad = SRoad<SConnector::Key, O>;
     /**
+     * ------------------------------------------------------------------------
      * function type
+     * ------------------------------------------------------------------------
      */
     using Function = typename FBuilder::Pointer;
 public:
     /**
-     * --------------------------------------------------------------------------------------------
-     * constructor
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
+     * defaults
+     * ------------------------------------------------------------------------
      */
-    MSpread(const Command& cmd): MDefault(cmd), 
-    // input connections
-    __in(
-        cmd[""][0].get(Properties::TIMEOUT, 10), 
-        cmd[""][0].get(Properties::NOMINAL, cmd["I"].size()),
-        cmd[""][0].get(Properties::MINIMUM, Properties::NOMINAL, cmd["I"].size())
-    ),
-    // output connections
-    __out(
-        cmd[""][0].get(Properties::NOMINAL, cmd["O"].size()),
-        cmd[""][0].get(Properties::MINIMUM, Properties::NOMINAL, cmd["O"].size())
-    ){}
+    MSpread(MSpread&&)            = default;
+    MSpread& operator=(MSpread&&) = default;
+    /**
+     * ------------------------------------------------------------------------
+     * constructor
+     * ------------------------------------------------------------------------
+     */
+    MSpread(const Command& cmd): MBase(cmd[Command::MODULE].Head(), {
+        {Command::FUNCTION, cmd[Command::FUNCTION]},
+        {Command::INPUT,    cmd[Command::INPUT]   },
+        {Command::OUTPUT,   cmd[Command::OUTPUT]  },
+    }) { }
 protected:
     /**
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * Variables
-     * --------------------------------------------------------------------------------------------
-     * inputs
+     * ------------------------------------------------------------------------
+     * input
      */
     IRoad __in;
     /**
-     * outputs
+     * output
      */
     ORoad __out;
     /**
@@ -77,102 +85,173 @@ protected:
      * --------------------------------------------------------------------------------------------
      * Execute
      * --------------------------------------------------------------------------------------------
-     * init execution
+     * process command
+     * ---------------------------------------------------------------------------
      */
-    void __Init() {
-        // create and insert inputs
-        for(auto& o: __cmd["I"]) {
-            __in.Insert(o[Properties::URI], IBuilder::Build(o));
+    void __ProcessCommand(const Command& cmd) {
+        // create and insert inputs -----------------------
+        for(auto& o: cmd[Command::INPUT]) {
+            __in.Insert(o[IO::URI], IBuilder::Build(o));
         }
-        // create and insert outputs
-        for(auto o: __cmd["O"]) {
-            __out.Insert(o[Properties::URI], OBuilder::Build(o));
+        // create and insert outputs ----------------------
+        for(auto o: cmd[Command::OUTPUT]) {
+            __out.Insert(o[IO::URI], OBuilder::Build(o));
         }
-        // create and assigned function
-        __func = FBuilder::Build(__cmd["F"][0]);
+        // create and insert outputs ----------------------
+        for(auto o: cmd[Command::FUNCTION]) {
+            __func = FBuilder::Build(o);
+        }
     }
     /**
-     * process execution
+     * --------------------------------------------------------------------------------------------
+     * process machine
+     * --------------------------------------------------------------------------------------------
      */
-    void __Process(const TimePoint& end) override {
-        // procces commands
-        auto ProcessCmd = [this]() {
-            UpdateFunction(
-                __func, UpdateOutputs(__out, UpdateInputs(__in, ReadCommand()))
-            );
-        };
-        // state machine
-        INFO("Process:" 
-           << "{ energy:" << SEnergy::Get() << ", input:" << Status(__in) << " }"
+    State __ProcessMachine(const State& state, const Clock::Pointer& end) override {
+        // log info -----------------------------------------------------------
+        INFO("Process={ "
+            << "energy:"     << SEnergy::Get() << ", "
+            << "inputs:"     << Status(__in)   << ", "
+            << "outputs:"    << Status(__out)  << "  "
+            << "}"
         );
+        /**
+         * --------------------------------------------------------------------
+         * state machine process
+         * --------------------------------------------------------------------
+         */
         try {
-            switch(GetState()) {
+            switch(state) {
+                // default --------------------------------
                 default: {
-                    SetState(OPEN);
-                    break;
+                    return OPEN;
                 }
+                // open -----------------------------------
                 case OPEN: {
                     __out.Open();
-                    SetState(OWAIT);
-                    break;
+                    return OWAIT;
                 }
+                // out wait -------------------------------
                 case OWAIT: {
-                    Update(end, ProcessCmd, &__out);
-                    __in.Open();
-                    SetState(IWAIT);
-                    break;
+                    return __ProcessOWAIT(end);
                 }
+                // in wait --------------------------------
                 case IWAIT: {
-                    Update(end, ProcessCmd, &__in);
-                    SetState(PROCESS);
-                    break;
+                    return __ProcessIWAIT(end);
                 }
-                case PROCESS: {
-                    try { 
-                        if(Monitor(end, ProcessCmd, &__in)) {
-                            SResourceMonitor m (&__in);
-                            while(m.Good()) {
-                                for(auto& i : Wait(m, end)) {
-                                    __func->Process(__in, __out);
-                                }
-                            }
-                        }                        
-                    } catch (MonitorExceptionTIMEOUT & ex) {
-                        __func->Drain(__in, __out);
-                        __func->Decay();
-                    }
-                    SetState(UPDATE);
-                    break;
+                // play -----------------------------------
+                case PLAY: {
+                    return __ProcessPLAY(end);
                 }
+                // update ---------------------------------
                 case UPDATE : {
-                    Update(end, ProcessCmd, &__in, &__out);
-                    SetState(PROCESS);
-                    break;
+                    __out.Update();
+                    __in.Update();
+                    return PLAY;
                 }
             }
         }
-        // state machine exceptions
+        /**
+         * --------------------------------------------------------------------
+         * state machine exceptions
+         * --------------------------------------------------------------------
+         * out road detach
+         */
         catch (ORoadExceptionDETACHED & ex) {
-            WARNING("OUT={ " << Status(__out) << " }");
-            if(IsState(PROCESS)) {
+            WARNING("OUT = { " << Status(__out) << " }");
+            if(PLAY == state) {
                 SEnergy::Decay();
             }
             __func->Recover();
             __in.Close();
-            SetState(OWAIT);
-        } catch (IRoadExceptionDETACHED & ex) {
+            return OWAIT;
+        }
+        // in road detach --------------------------------- 
+        catch (IRoadExceptionDETACHED & ex) {
             WARNING("IN = {" << Status(__in) << " }");
-            if(IsState(PROCESS)) {
+            if(PLAY == state) {
                 SEnergy::Decay();
             }
             __func->Recover();
-            SetState(IWAIT);
-        } catch (FunctionExceptionDEAD& ex) {
+            return IWAIT;
+        }
+        // function dead ---------------------------------- 
+        catch (FunctionExceptionDEAD& ex) {
             SEnergy::Decay();
             __func->Recover();
         }
+        return state;
+    }
+    /**
+     * --------------------------------------------------------------------------------------------
+     * process states
+     * --------------------------------------------------------------------------------------------
+     * OWAIT
+     * ------------------------------------------------------------------------
+     */
+    inline State __ProcessOWAIT(const Clock::Pointer& end) {
+         for(Timer t(end, Clock::Distance(100)); !t.Active(); t.Sleep()) {
+            try {
+                __out.Update();
+                __in.Open();
+                return IWAIT;
+            } catch(RoadDetached& e) { }
+        } 
+        __out.Update();
+        __in.Open();
+        return IWAIT;
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * IWAIT
+     * ------------------------------------------------------------------------
+     */
+    inline State __ProcessIWAIT(const Clock::Pointer& end) {
+        for(Timer t(end, Clock::Distance(100)); !t.Active(); t.Sleep()) {
+            try {
+                __in.Update();
+                return PLAY;
+            } catch(RoadDetached& e) { }
+        } 
+        __in.Update();
+        return PLAY; 
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * PLAY
+     * ------------------------------------------------------------------------
+     */
+    inline State __ProcessPLAY(const Clock::Pointer& end) {
+        ResourceMonitor m (&__in);
+
+        // first ------------------------------------------
+        try { 
+            for(auto& i : m.Wait(Clock::Remaining(end))) {
+                __func->Process(__in, __out);
+            }
+        } catch (MonitorExceptionTIMEOUT & ex) {
+            __func->Drain(__in, __out);
+            __func->Decay();
+            return UPDATE;
+        }
+        // reamaining -------------------------------------
+        try { 
+            do {
+                for(auto& i : m.Wait(Clock::Remaining(end))) {
+                    __func->Process(__in, __out);
+                }                
+            } while(Clock::Remaining(end) > Clock::Distance::zero());
+        } catch (MonitorExceptionTIMEOUT & ex) { }
+
+        // return state -----------------------------------
+        return UPDATE;
     }
 };
 }
+/**
+ *-------------------------------------------------------------------------------------------------
+ * end
+ *-------------------------------------------------------------------------------------------------
+ */
 #endif /* MSPREAD_H */
 

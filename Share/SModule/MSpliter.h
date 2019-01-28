@@ -93,7 +93,7 @@ protected:
      * --------------------------------------------------------------------------------------------
      * Execute
      * --------------------------------------------------------------------------------------------
-     * init execution
+     * process command
      * ---------------------------------------------------------------------------
      */
     void __ProcessCommand(const Command& cmd) {
@@ -120,7 +120,6 @@ protected:
      * --------------------------------------------------------------------------------------------
      */
     State __ProcessMachine(const State& state, const Clock::Pointer& end) override {
-        using Timer = Clock::Alarm;
         // log info -----------------------------------------------------------
         INFO("Process={ "
             << "energy:"     << SEnergy::Get() << ", "
@@ -145,15 +144,15 @@ protected:
                     __out.Open();
                     return OWAIT;
                 }
-                // out wait --------------------------------------------------
+                // out wait ---------------------------------------------------
                 case OWAIT: {
                     return __ProcessOWAIT(end);
                 }
-                //  in wait ---------------------------------------------------
+                // in wait ----------------------------------------------------
                 case IWAIT: {
                     return __ProcessIWAIT(end);
                 }
-                // process ----------------------------------------------------
+                // play -------------------------------------------------------
                 case PLAY: {
                     return __ProcessPLAY(end);
                 }
@@ -190,7 +189,7 @@ protected:
             __func->Recover();
             return IWAIT;
         }
-        // fuction dead ------------------------------------------------------- 
+        // function dead ------------------------------------------------------- 
         catch (FunctionExceptionDEAD& ex) {
             SEnergy::Decay();
             __func->Recover();
@@ -205,7 +204,7 @@ protected:
      * ------------------------------------------------------------------------
      */
     inline State __ProcessOWAIT(const Clock::Pointer& end) {
-         for(Timer t(end); !t.Active(); t.Sleep()) {
+         for(Timer t(end, Clock::Distance(100)); !t.Active(); t.Sleep()) {
             try {
                 __out.Update();
                 __io.Open();
@@ -224,7 +223,7 @@ protected:
      * ------------------------------------------------------------------------
      */
     inline State __ProcessIWAIT(const Clock::Pointer& end) {
-        for(Timer t(end); !t.Active(); t.Sleep()) {
+        for(Timer t(end, Clock::Distance(100)); !t.Active(); t.Sleep()) {
             try {
                 __io.Update();
                 __in.Update();
@@ -258,14 +257,14 @@ protected:
         }
         // reamaining -------------------------------------
         try { 
-            for(Timer t(end); !t.Active(); t.Sleep()) {
+            do {
                 for(auto& i : m.Wait(Clock::Remaining(end))) {
                     switch(i) {
                         case 1: __func->Process(__io, __out); break;
                         case 2: __func->Process(__in, __io);  break;
                     }
                 }                
-            }
+            } while(Clock::Remaining(end) > Clock::Distance::zero());
         } catch (MonitorExceptionTIMEOUT & ex) { }
 
         // return state -----------------------------------

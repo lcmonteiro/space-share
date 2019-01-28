@@ -21,6 +21,7 @@
  */
 TEST(SModule, EchoSpliter)
 {
+    STask::Enable();
     // define types -----------------------------------------------------------
     using Spliter  = Module::MSpliter<
         Decoded::IOConnector, Decoded::IConnector, Decoded::OConnector
