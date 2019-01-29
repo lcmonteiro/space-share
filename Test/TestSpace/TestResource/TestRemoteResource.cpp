@@ -25,6 +25,8 @@ TEST(SRemoteResource, Create)
  */
 TEST(SRemoteResource, Link)
 {
+    STask::Enable();
+    // variables --------------------------------------------------------------
     Message::SRemoteResource rem_c;
     Message::SRemoteResource rem_s;
     // settings ---------------------------------------------------------------

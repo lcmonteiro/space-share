@@ -86,10 +86,10 @@ public:
             try {
                 return Run();
             } catch (exception& ex) {
-                ERROR("Exit= " << ex.what());
+                ERROR("Unexpected Exit = " << ex.what());
                 return -1;
             } catch (...) {
-                ERROR("Exit= ");
+                ERROR("Unexpected Exit = ??");
                 return -1;
             }
         });

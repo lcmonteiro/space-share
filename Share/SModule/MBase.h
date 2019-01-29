@@ -83,28 +83,26 @@ protected:
         
         // run the precess ----------------------------------------------------
         INFO("OPEN = {}");
-        for(t.Wait(); t.Yield(); t.Snooze()) {
-        
-            // procces commands -----------------------------------------------
-            for(auto& c : __Commands()) {
-                __ProcessCommand(c);
-            }
-            // procces machine ------------------------------------------------
-            try {
+        try {
+            for(t.Wait(); t.Yield(); t.Snooze()) {
+
+                // procces commands -------------------------------------------
+                for(auto& c : __Commands()) {
+                    __ProcessCommand(c);
+                }
+                // procces machine --------------------------------------------
                 SetState(__ProcessMachine(GetState(), t.Tigger()));
-            }  catch (exception& ex) {
-        
-                // set in close state -----------------------------------------
-                SetState(CLOSE);
-                ERROR("CLOSE = { what: " << ex.what() << " }");
-                return -1;
-            } catch (...) {
-        
-                // set in close state -----------------------------------------
-                SetState(CLOSE);
-                ERROR("CLOSE = { }");
-                return -1;
             }
+        }  catch (exception& ex) {
+            // set in close state ---------------------------------------------
+            SetState(CLOSE);
+            ERROR("CLOSE = { what: " << ex.what() << " }");
+            return -1;
+        } catch (...) {
+            // set in close state ---------------------------------------------
+            SetState(CLOSE);
+            ERROR("CLOSE = { }");
+            return -1;
         }
         // set in close state -------------------------------------------------
         SetState(CLOSE);

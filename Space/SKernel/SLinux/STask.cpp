@@ -109,17 +109,19 @@ void STask::__Insert(std::thread::id id, STask* task) {
  * --------------------------------------------------------
  */
 STask* STask::__Find(std::thread::id id) {    
+    // find by id ---------------------
     try {
-        // create guard ---------------
         guard_t lock(__mutex);
-        // find by id -----------------
         return __tasks.at(id);
     } catch(std::out_of_range& e) {
         // concurrency ---------------- 
         std::this_thread::yield(); 
     }
     // try again ----------------------
-    return __Find(id);
+    {
+        guard_t lock(__mutex);
+        return __tasks.at(id);
+    }
 }
 /**
  * --------------------------------------------------------
