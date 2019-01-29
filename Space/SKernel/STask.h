@@ -41,8 +41,8 @@ public:
     __event(0) {
         __Init(std::thread::get_id());
     }
-    STask(STask&& t): std::thread(std::forward<thread>(t)) {
-        __Init(std::thread::get_id());
+    STask(STask&& t): std::thread(), __event() {
+        *this = std::move(t);
     }
     /**
      * ------------------------------------------------------------------------
@@ -50,8 +50,13 @@ public:
      * ------------------------------------------------------------------------
      */
     STask& operator=(STask&& t) {
-        static_cast<std::thread&>(*this) = std::forward<thread>(t);
+        // swap thread base -------------------------------
+        std::thread::swap(t);
+        // swap event -------------------------------------
+        std::swap(__event, t.__event);
+        // update tasks data base -------------------------
         __Init(std::thread::get_id());
+        // return updated task ----------------------------
         return *this;
     }
     /**

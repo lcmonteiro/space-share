@@ -73,8 +73,12 @@ STask& STask::Instance() {
  * --------------------------------------------------------
  */
 bool STask::Sleep(const Time& timeout) {
-    SStaticMonitorHandler().Wait(timeout);
-    return true;
+    try {
+        SStaticMonitorHandler().Wait(timeout);
+    } catch(const MonitorExceptionTIMEOUT& ){
+        return true;
+    }
+    return false;
 }
 /**
  * ------------------------------------------------------------------------------------------------
