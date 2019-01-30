@@ -181,7 +181,7 @@ public:
         return __state;
     }
     inline bool IsState(State s) {
-        return __state == s;
+        return __state >= s;
     }
     inline bool WaitState(const Time& timeout, State s) {
         SClock<Time>::Alarm timer(timeout, Time(10));

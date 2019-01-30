@@ -65,7 +65,7 @@ public:
  * template
  */
 template<class R>
-class SITcpConnectorT : public SIOStreamConnector<R> {
+class SITcpConnectorT : public SIStreamConnector<R> {
 public:
     using SIStreamConnector<R>::SIStreamConnector;
     /**

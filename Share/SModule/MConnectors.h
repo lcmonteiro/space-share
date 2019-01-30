@@ -50,7 +50,9 @@ namespace Input {
         }
     };
     /**
+     * ------------------------------------------------------------------------
      * Decoder Builder
+     * ------------------------------------------------------------------------
      */
     template <>
     struct Builder<Decoded::IConnector> {
@@ -75,7 +77,17 @@ namespace Input {
                     in->SetVerbose(o.Get(IO::VERBOSE, 0));
                     in->SetEnergy(o.Get( IO::ENERGY,  1));
                     return in;
-                }}
+                }},
+                {SConnector::Key(IO::Type::STREAM_REMOTE), [](const SModule::Command::Group& o) {
+                    auto io = Decoded::Stream::ITcpConnector::Make(
+                        o.Get(IO::URI),
+                        o.Get(IO::NFRAMES, 50),
+                        o.Get(IO::SFRAMES, 4096)
+                    );
+                    io->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    io->SetEnergy(o.Get(IO::ENERGY,   1));
+                    return io;
+                }},
             };
             try {
                 return GENERATOR[
@@ -87,7 +99,9 @@ namespace Input {
         }
     };
     /**
+     * ------------------------------------------------------------------------
      * Encoded Builder
+     * ------------------------------------------------------------------------
      */
     template <>
     struct Builder<Encoded::IConnector> {
@@ -128,7 +142,9 @@ namespace Output {
         }
     };
     /**
+     * ------------------------------------------------------------------------
      * Decoded Builder
+     * ------------------------------------------------------------------------
      */
     template <>
     struct Builder<Decoded::OConnector> {
@@ -136,6 +152,14 @@ namespace Output {
             static map<SConnector::Key, function <Decoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
                     auto out = Decoded::Message::OUdpConnector::Make(
+                        o.Get(IO::URI,  string("127.0.0.1:9751"))
+                    );
+                    out->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    out->SetEnergy(o.Get(IO::ENERGY,   1));
+                    return out;
+                }},
+                {SConnector::Key(IO::Type::STREAM_REMOTE), [](const SModule::Command::Group& o) {
+                    auto out = Decoded::Stream::OTcpConnector::Make(
                         o.Get(IO::URI,  string("127.0.0.1:9751"))
                     );
                     out->SetVerbose(o.Get(IO::VERBOSE, 0));
@@ -153,7 +177,9 @@ namespace Output {
         }
     };
     /**
+     * ------------------------------------------------------------------------
      * Encoded Builder
+     * ------------------------------------------------------------------------
      */
     template <>
     struct Builder<Encoded::OConnector> {
@@ -194,7 +220,9 @@ namespace IOput {
         }
     };
     /**
+     * ------------------------------------------------------------------------
      * Decoded Builder
+     * ------------------------------------------------------------------------
      */
     template <>
     struct Builder<Decoded::IOConnector> {
@@ -231,7 +259,9 @@ namespace IOput {
         }
     };
     /**
+     * ------------------------------------------------------------------------
      * Encoded Builder
+     * ------------------------------------------------------------------------
      */
     template <>
     struct Builder<Encoded::IOConnector> {
@@ -250,4 +280,9 @@ namespace IOput {
     };
 }
 }
+/**
+ *-------------------------------------------------------------------------------------------------
+ * End
+ *-------------------------------------------------------------------------------------------------
+ */
 #endif /* SMODULE_CONNECTORS_H */

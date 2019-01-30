@@ -145,7 +145,7 @@ public:
      * @param nominal
      * @param min
      */
-    SRoad(size_t nominal = 1, size_t minimum = 0)
+    SRoad(size_t nominal = 1, size_t minimum = 1)
     : __nominal(nominal), __minimum(minimum), __revision(0) {
     }
     /**
@@ -163,22 +163,18 @@ public:
      * insert an object
      * ------------------------------------------------------------------------
      */
-    inline SRoad& Insert(Key key, Object obj) {
+    inline SRoad& Insert(Key k, Object o) {
         // remove the existing one ------------------------
         for(auto s : {Backup, Repairing, Running, Dead}) {
-            __process[s].erase(key);
+            __process[s].erase(k);
         }
         // insert a new one -------------------------------
-        if (__process[Repairing].size() < __nominal) {
+        if (__Length({Repairing, Running}) < __nominal) {
             // main connector
-            __process[Repairing].emplace(
-                key, std::move(obj)
-            );
+            __process[Repairing].emplace(k, std::move(o));
         } else {
             // backup connector
-            __process[Backup].emplace(
-                key, std::move(obj)
-            ); 
+            __process[Backup].emplace(k, std::move(o)); 
         }
         // update revision --------------------------------
         __UpdateResvision();
@@ -235,7 +231,7 @@ public:
         //  repair connector ------------------------------
         it->second->Repair();
         
-        // __Jump to repairing queue ------------------------
+        // Jump to repairing queue ------------------------
         it = __Jump(it, Running, Repairing);
     }
     /**
@@ -255,11 +251,9 @@ public:
                 continue;
             }
             if (it->second->Inactive()) {
-                it = __Jump(
-                    Backup, Repairing, __Jump(
-                        it, Repairing, Dead
-                    )
-                );
+                it = __Jump(Backup, Repairing, __Jump(
+                    it, Repairing, Dead
+                ));
                 continue;
             }
             ++it;

@@ -69,7 +69,7 @@ public:
         {Command::INOUT,    cmd[Command::INOUT]   },
         {Command::INPUT,    cmd[Command::INPUT]   },
         {Command::OUTPUT,   cmd[Command::OUTPUT]  },
-    }) {    }
+    }) { }
 protected:
     /**
      * ------------------------------------------------------------------------
@@ -99,7 +99,11 @@ protected:
     void __ProcessCommand(const Command& cmd) {
         // create and insert input/outputs
         for(auto& o: cmd[Command::INOUT]) {
-            __io.Insert(o[IO::URI], IOBuilder::Build(o));
+            try {
+                __io.Insert(o[IO::URI], IOBuilder::Build(o));
+            } catch (...){
+                //__Update(__io, o);
+            }
         }
         // create and insert inputs
         for(auto& o: cmd[Command::INPUT]) {
@@ -141,23 +145,28 @@ protected:
                 }
                 // open -------------------------------------------------------
                 case OPEN: {
+                    DEBUG("OPEN");
                     __out.Open();
                     return OWAIT;
                 }
                 // out wait ---------------------------------------------------
                 case OWAIT: {
+                    DEBUG("OWAIT");
                     return __ProcessOWAIT(end);
                 }
                 // in wait ----------------------------------------------------
                 case IWAIT: {
+                    DEBUG("IWAIT");
                     return __ProcessIWAIT(end);
                 }
                 // play -------------------------------------------------------
                 case PLAY: {
+                    DEBUG("PLAY");
                     return __ProcessPLAY(end);
                 }
                 // update -----------------------------------------------------
                 case UPDATE : {
+                    DEBUG("UPDATE");
                     __out.Update();
                     __io.Update();
                     __in.Update();
