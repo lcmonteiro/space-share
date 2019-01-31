@@ -118,7 +118,7 @@ public:
     /**
      * process states
      */
-    typedef enum {Backup, Repairing, Running, Dead} State;
+    typedef enum {Backlog, Repairing, Running, Dead} State;
     /**
      * --------------------------------------------------------------------------------------------
      * helpers
@@ -145,7 +145,7 @@ public:
      * @param nominal
      * @param min
      */
-    SRoad(size_t nominal = 1, size_t minimum = 1)
+    SRoad(size_t nominal = 1, size_t minimum = 0)
     : __nominal(nominal), __minimum(minimum), __revision(0) {
     }
     /**
@@ -160,25 +160,36 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
+     * update parameters 
+     * ------------------------------------------------------------------------
+     */
+    inline SRoad& SetNominal(size_t nominal) {
+        __nominal = nominal;
+        return *this;
+    }
+    inline SRoad& SetMinimum(size_t minimum) {
+        __minimum = minimum;
+        return *this;
+    }
+    /**
+     * ------------------------------------------------------------------------
      * insert an object
      * ------------------------------------------------------------------------
      */
     inline SRoad& Insert(Key k, Object o) {
         // remove the existing one ------------------------
-        for(auto s : {Backup, Repairing, Running, Dead}) {
-            __process[s].erase(k);
+        for (auto& p: __process) {
+            auto found = p.second.find(k);
+            if(p.second.end() != found) {
+                p.second.erase(found);
+                if(Running == p.first) {
+                    __UpdateResvision();
+                }
+            }
         }
-        // insert a new one -------------------------------
-        if (__Length({Repairing, Running}) < __nominal) {
-            // main connector
-            __process[Repairing].emplace(k, std::move(o));
-        } else {
-            // backup connector
-            __process[Backup].emplace(k, std::move(o)); 
-        }
-        // update revision --------------------------------
-        __UpdateResvision();
-        
+        // insert on backlog ------------------------------   
+        __process[Backlog].emplace(k, std::move(o));
+    
         // return self ------------------------------------
         return *this;
     }
@@ -189,9 +200,9 @@ public:
      */
     inline Object& Find(Key k) {
         for(auto& p : __process) {
-            auto it = p.second.find(k);
-            if(it != p.second.end()) {
-                return it->second;
+            auto found = p.second.find(k);
+            if(p.second.end() != found) {
+                return found->second;
             }
         }
         throw range_error(__func__);
@@ -224,15 +235,12 @@ public:
      * try to repair
      * -----------------------------------------------------------------------
      */
-    inline void Repair(Location& it) {
+    inline void Exception(Location& it) {
+        // jump to backlog --------------------------------
+        it = __Jump(it, Running, Backlog);
+    
         // update revision --------------------------------
         __UpdateResvision();
-
-        //  repair connector ------------------------------
-        it->second->Repair();
-        
-        // Jump to repairing queue ------------------------
-        it = __Jump(it, Running, Repairing);
     }
     /**
      * ------------------------------------------------------------------------
@@ -240,31 +248,41 @@ public:
      * ------------------------------------------------------------------------
      */
     inline Road& Update() {
-        // update areas -----------------------------------
         Area& rep = __process[Repairing];
+        // update areas -----------------------------------
         for (auto it = rep.begin(); it != rep.end();) {
             if (it->second->Good()) {
-                // update revision
+                // update revision ------------------------
                 __UpdateResvision();
-                // __Jump to running 
+                // jump to running ------------------------ 
                 it = __Jump(it, Repairing, Running); 
                 continue;
             }
             if (it->second->Inactive()) {
-                it = __Jump(Backup, Repairing, __Jump(
-                    it, Repairing, Dead
-                ));
-                continue;
+                try {
+                    it->second->Repair();
+                } catch(...) {
+                    // jump to dead ----------------------- 
+                    it = __Jump(it, Repairing, Dead);
+                    continue;
+                }
             }
             ++it;
         }
-        //waiting ---------------------------------------- 
+        // reload repairing queue (if needed) -------------
+        int delta =  (__nominal - __Length({Repairing, Running})); 
+        for(auto 
+            it = rep.begin(); 
+            (0 < delta) && (__Jump(Backlog, Repairing, it) != it); 
+            it = rep.begin()
+        ) { --delta; }
+        // is dead ----------------------------------------
+        if (0 < delta) {
+            throw SRoadExceptionDEAD<Object>(Status());
+        }
+        // keep waiting ----------------------------------- 
         if (__Length({Running}) < __minimum) {
             throw SRoadExceptionDETACHED<Object>(Status());
-        }
-        // is dead ----------------------------------------
-        if (__Length({Repairing, Running}) < __nominal) {
-            throw SRoadExceptionDEAD<Object>(Status());
         }
         return *this;
     }
@@ -273,12 +291,13 @@ public:
      * block all connectors
      * ------------------------------------------------------------------------
      */
-    inline void Close() {
+    inline void Reset() {
         // repairing --------------------------------------
         Area& rep = __process[Repairing];
         for (auto it = rep.begin() , e = rep.end(); it != e;) {
             try {
-                it->second->Break(); ++it;
+                it->second->Break();
+                it = __Jump(it, Repairing, Backlog);
             } catch(...) {
                 it = __Jump(it, Repairing, Dead);
             }
@@ -287,64 +306,20 @@ public:
         Area& run = __process[Running];
         for (auto it = run.begin(), e = run.end(); it != e;) {
             try {
-                it->second->Break(); ++it;
-            } catch(...) {
-                it = __Jump(it, Running, Dead);
-            }
-        }
-        // update revision --------------------------------
-        __UpdateResvision();
-    }
-    /**
-     * ------------------------------------------------------------------------
-     * enable all 
-     * ------------------------------------------------------------------------
-     */
-    inline void Open() {
-        // repairing --------------------------------------
-        Area& rep = __process[Repairing];
-        for (auto it = rep.begin(), e = rep.end(); it != e;) {
-            try {
-                it->second->Repair(); ++it;
+                it->second->Break();
+                it = __Jump(it, Running, Backlog);
             } catch(...) {
                 it = __Jump(it, Repairing, Dead);
             }
+            // update revision ----------------------------
+            __UpdateResvision();
         }
-        // running ----------------------------------------
-        Area& run = __process[Running];
-        for (auto it = run.begin(), e = run.end(); it != e;) {
-            try {
-                it->second->Repair();
-                it = __Jump(it, Running, Repairing);
-            } catch(...) {
-                it = __Jump(it, Running, Dead);
-            }  
-        }
-        // update revision --------------------------------
-        __UpdateResvision();
     }
     /**
      * ------------------------------------------------------------------------
-     * reset all 
-     * ------------------------------------------------------------------------
-     */
-    inline void Reset() {
-        // close resources --------------------------------
-        Close();
-
-        // change context ---------------------------------
-        STask::Sleep(std::chrono::milliseconds(10));
-
-        // open resources ---------------------------------
-        Open();
-
-        // change context ---------------------------------
-        STask::Sleep(std::chrono::milliseconds(10));
-    }
-    /**------------------------------------------------------------------------
      * diagnostic
-     *-------------------------------------------------------------------------
-     *  
+     * ------------------------------------------------------------------------
+     * lengths
      */
     inline std::map<State, size_t> Lengths() {
         map<State, size_t> out;
@@ -360,11 +335,11 @@ public:
         std::ostringstream out;
         out << "{ ";
         for(auto& p :__process) {
-                out << "'" << p.first << "':[ ";
-                for(auto&a :p.second){
-                        out << "'" << a.first << "' ";
-                }
-                out << "] ";
+            out << "'" << p.first << "':[ ";
+            for(auto&a :p.second){
+                out << "'" << a.first << "' ";
+            }
+            out << "] ";
         }
         out << "}";
         return out.str();
@@ -378,7 +353,7 @@ public:
 protected:
     /**
      * ------------------------------------------------------------------------
-     * __Jumps
+     * Jumps
      * ------------------------------------------------------------------------
      */
     inline Location __Jump(const Location& pos, const State& from, const State& to) {
@@ -392,15 +367,45 @@ protected:
         Location it = __process[from].begin();
         Location p = pos;
         if (it != __process[from].end()) {
+
+            // move ---------------------------------------
+            p = __process[to].insert(p, std::move(*it));   
             
-            // move to queue ------------------------------
-            p = __process[to].insert(
-                p, std::pair<Key, Object>(it->first, it->second)
-            );   
             // remove -------------------------------------
             __process[from].erase(it);
         }
         return p;
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * updates
+     * ------------------------------------------------------------------------
+     */
+    inline void __UpdateRunning() {
+        Area& rep = __process[Repairing];
+        for (auto it = rep.begin(); it != rep.end();) {
+            if (it->second->Good()) {
+                // update revision
+                __UpdateResvision();
+                // jump to running 
+                it = __Jump(it, Repairing, Running); 
+            } else {
+                ++it;
+            }
+        }
+    }
+    inline void __UpdateDead() {
+        Area& rep = __process[Repairing];
+        for (auto it = rep.begin(); it != rep.end();) {
+            if (it->second->Good()) {
+                // update revision
+                __UpdateResvision();
+                // jump to running 
+                it = __Jump(it, Repairing, Running); 
+            } else {
+                ++it;
+            }
+        }
     }
     /**
      * ------------------------------------------------------------------------

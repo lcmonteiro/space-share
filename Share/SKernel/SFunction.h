@@ -124,7 +124,7 @@ public:
                     try {
                         for(auto& d: it->second->Drain()){ processData(move(d), out); }
                     } catch (...) {}
-                    in.Repair(it);
+                    in.Exception(it);
                 } catch (ConnectorExceptionTIMEOUT& ex){}
             }
         } catch (MonitorException& ex) {
@@ -161,7 +161,7 @@ protected:
             try {
                 for (auto& d : it->second->Drain()) { processData(move(d), out); }
             } catch (IConnectorExceptionDEAD& ex) {
-                in.Repair(it);
+                in.Exception(it);
             }
         }
     }
@@ -242,7 +242,7 @@ protected:
                 try {
                     for(auto& d: it->second->Drain()){ processData(move(d), out); }
                 } catch (...) {}
-                in.Repair(it);
+                in.Exception(it);
             } catch (ConnectorExceptionTIMEOUT& ex){}
         }
     }
@@ -255,7 +255,7 @@ protected:
             try {
                 for (auto& d : it->second->Drain()) { processData(move(d), out); }
             } catch (IConnectorExceptionDEAD& ex) {
-                in.Repair(it);
+                in.Exception(it);
             }
         }
     }
@@ -268,7 +268,7 @@ protected:
             try {
                 it->second->Write(data); ++it;
             } catch (ConnectorExceptionDEAD& ex) {
-                out.Repair(it);
+                out.Exception(it);
             } catch (ConnectorExceptionTIMEOUT& ex) {
             }
         }

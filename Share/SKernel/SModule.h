@@ -143,7 +143,7 @@ public:
      * --------------------------------------------------------------------------------------------
      * state type
      */
-    typedef enum {OPEN = 0, OWAIT, IWAIT, PLAY, UPDATE, CLOSE} State;
+    typedef enum {OPEN = 0, OWAIT, IOWAIT, IWAIT, PLAY, UPDATE, CLOSE} State;
     /**
      */
     using Key = string;

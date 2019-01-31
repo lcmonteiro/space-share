@@ -42,25 +42,25 @@ public:
      */
     SEncodeT(const Stamp& stamp, const uint32_t reduncancy, const uint32_t energy = 1, const uint8_t verbose = 0)
     : Super("Encode", energy, verbose), __stamp(stamp), __reduncancy(reduncancy) {
-    Recover();
+        Recover();
     }
     SEncodeT(const string& id, 
     const Stamp& stamp, const uint32_t reduncancy, const uint32_t energy = 1, const uint8_t verbose = 0
     ): Super(string("Encode(") + id + ")", energy, verbose), __stamp(stamp), __reduncancy(reduncancy) {
-    Recover();
+        Recover();
     }
     /**
      * Recover 
      */
     void Recover() override {
-    /**
-     * refresh stream position 
-     */
-    __position.reset();
-    /**
-     * call base recover 
-     */
-    SFunction::Recover();
+        /**
+         * refresh stream position 
+         */
+        __position.reset();
+        /**
+         * call base recover 
+         */
+        SFunction::Recover();
     }
 protected:
     /*----------------------------------------------------------------------------------------*
@@ -101,17 +101,15 @@ protected:
 	             * data length based on energy
 	             */
 	            size_t len = ceil(float(it->second->GetEnergy()) / float(total));
-	            /**
-	             */
 	            try {
-	                /**
-	                 * write and update iterator and data
-	                 */
+                /**
+                 * write and update iterator and data
+                 */
 	            it->second->Write(Document(en.length(len).pop(), ctxt)); ++it; remain -= len;
 	            /**
 	             */
 		        } catch (ConnectorExceptionDEAD& ex) {
-		                    out.Repair(it);
+		            out.Exception(it);
 		        } catch (ConnectorExceptionTIMEOUT& ex){
 	            }    
             } 

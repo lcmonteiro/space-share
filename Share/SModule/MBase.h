@@ -116,19 +116,34 @@ protected:
      * Helpers
      * --------------------------------------------------------------------------------------------
      **
-     * update resources 
+     * wait 
      */
-    
+    template<typename ROAD>
+    inline State __ProcessWAIT(const Clock::Pointer& end, ROAD& r, State next) {
+         for(Timer t(end, Clock::Distance(100)); !t.Active(); t.Sleep()) {
+            try {
+                r.Update(); return next;
+            } catch(RoadDetached& e) { }
+        } 
+        r.Update(); return next;
+    }
     /**
      * status
      */
-    template<class T>
-    std::string Status(T& r) {
+    template<typename ROAD>
+    std::string __GetStatus(ROAD& r) {
         std::ostringstream out;
         for (auto i = r.begin(), e = r.end(); i != e; ++i) {
             out << i->second->Uri() << ' ';
         }
         return out.str();
+    }
+    /**
+     * update road
+     */
+    template<typename ROAD>
+    void __UpdateRoad(ROAD& r, const Command::Group&) {
+
     }
     private:
     /**

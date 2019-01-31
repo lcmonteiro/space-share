@@ -97,23 +97,31 @@ protected:
      * ---------------------------------------------------------------------------
      */
     void __ProcessCommand(const Command& cmd) {
-        // create and insert input/outputs
+        // create and insert input/outputs ----------------
         for(auto& o: cmd[Command::INOUT]) {
             try {
                 __io.Insert(o[IO::URI], IOBuilder::Build(o));
-            } catch (...){
-                //__Update(__io, o);
+            } catch (...) {
+                __UpdateRoad(__io, o);
             }
         }
-        // create and insert inputs
+        // create and insert inputs -----------------------
         for(auto& o: cmd[Command::INPUT]) {
-            __in.Insert(o[IO::URI], IBuilder::Build(o));
+            try {
+                __in.Insert(o[IO::URI], IBuilder::Build(o));
+            } catch (...) {
+                __UpdateRoad(__in, o);
+            }
         }
-        // create and insert outputs
+        // create and insert outputs ----------------------
         for(auto o: cmd[Command::OUTPUT]) {
-            __out.Insert(o[IO::URI], OBuilder::Build(o));
+            try {
+                __out.Insert(o[IO::URI], OBuilder::Build(o));
+            } catch (...) {
+                __UpdateRoad(__out, o);
+            }
         }
-        // create and insert outputs
+        // create and insert outputs ----------------------
         for(auto o: cmd[Command::FUNCTION]) {
             __func = FBuilder::Build(o);
         }
@@ -126,10 +134,10 @@ protected:
     State __ProcessMachine(const State& state, const Clock::Pointer& end) override {
         // log info -----------------------------------------------------------
         INFO("Process={ "
-            << "energy:"     << SEnergy::Get() << ", "
-            << "inputs:"     << Status(__in)   << ", "
-            << "outputs:"    << Status(__out)  << ", "
-            << "in|outputs:" << Status(__io)   << "  "
+            << "energy:"     << SEnergy::Get()      << ", "
+            << "inputs:"     << __GetStatus(__in)   << ", "
+            << "outputs:"    << __GetStatus(__out)  << ", "
+            << "in|outputs:" << __GetStatus(__io)   << "  "
             << "}"
         );
         /**
@@ -145,31 +153,28 @@ protected:
                 }
                 // open -------------------------------------------------------
                 case OPEN: {
-                    DEBUG("OPEN");
-                    __out.Open();
                     return OWAIT;
                 }
                 // out wait ---------------------------------------------------
                 case OWAIT: {
-                    DEBUG("OWAIT");
-                    return __ProcessOWAIT(end);
+                    return __ProcessWAIT(end, __out, IOWAIT);
+                }
+                // in wait ----------------------------------------------------
+                case IOWAIT: {
+                    return __ProcessWAIT(end, __io, IWAIT);
                 }
                 // in wait ----------------------------------------------------
                 case IWAIT: {
-                    DEBUG("IWAIT");
-                    return __ProcessIWAIT(end);
+                    return __ProcessWAIT(end, __out, PLAY);
                 }
                 // play -------------------------------------------------------
                 case PLAY: {
-                    DEBUG("PLAY");
                     return __ProcessPLAY(end);
                 }
                 // update -----------------------------------------------------
                 case UPDATE : {
-                    DEBUG("UPDATE");
-                    __out.Update();
-                    __io.Update();
-                    __in.Update();
+                    //return __ProcessUpdate(__out, __io, __in, PLAY);
+                    __out.Update(); __io.Update(); __in.Update();
                     return PLAY;
                 }
             }
@@ -181,17 +186,28 @@ protected:
          * out road detach
          */
         catch (ORoadExceptionDETACHED & ex) {
-            WARNING("OUT = { " << Status(__out) << " }");
+            WARNING("OUT = { " << __GetStatus(__out) << " }");
             if(PLAY == state) {
                 SEnergy::Decay();
             }
             __func->Recover();
-            __in.Close();
+            __in.Reset();
+            __io.Reset();
             return OWAIT;
         } 
+        // io road detach --------------------------------------------------------
+        catch (IORoadExceptionDETACHED & ex) {
+            WARNING("IO = {" << __GetStatus(__io) << " }");
+            if(PLAY == state) {
+                SEnergy::Decay();
+            }
+            __func->Recover();
+            __in.Reset();
+            return IOWAIT;
+        }
         // in road detach --------------------------------------------------------
         catch (IRoadExceptionDETACHED & ex) {
-            WARNING("IN = {" << Status(__in) << " }");
+            WARNING("IN = {" << __GetStatus(__in) << " }");
             if(PLAY == state) {
                 SEnergy::Decay();
             }
@@ -209,42 +225,6 @@ protected:
      * --------------------------------------------------------------------------------------------
      * process states
      * --------------------------------------------------------------------------------------------
-     * OWAIT
-     * ------------------------------------------------------------------------
-     */
-    inline State __ProcessOWAIT(const Clock::Pointer& end) {
-         for(Timer t(end, Clock::Distance(100)); !t.Active(); t.Sleep()) {
-            try {
-                __out.Update();
-                __io.Open();
-                __in.Open();
-                return IWAIT;
-            } catch(RoadDetached& e) { }
-        } 
-        __out.Update();
-        __io.Open();
-        __in.Open();
-        return IWAIT;
-    }
-    /**
-     * ------------------------------------------------------------------------
-     * IWAIT
-     * ------------------------------------------------------------------------
-     */
-    inline State __ProcessIWAIT(const Clock::Pointer& end) {
-        for(Timer t(end, Clock::Distance(100)); !t.Active(); t.Sleep()) {
-            try {
-                __io.Update();
-                __in.Update();
-                return PLAY;
-            } catch(RoadDetached& e) { }
-        } 
-        __io.Update();
-        __in.Update();
-        return PLAY; 
-    }
-    /**
-     * ------------------------------------------------------------------------
      * PLAY
      * ------------------------------------------------------------------------
      */

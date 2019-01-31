@@ -79,9 +79,9 @@ protected:
      *----------------------------------------------------------------------------------------*/
     inline void processData(ORoad& out) {
 	    for (Document& code: __cache.Pop()) {
-	        /**------------------------------------------------------------------------------------------------*
+	        /**
 	         * write
-	         *-------------------------------------------------------------------------------------------------*/
+	         */
 	        DEBUG("decode={" 
 	            << "p=" << code.GetPosition()
 	            << "}"
@@ -90,7 +90,7 @@ protected:
 	            try {
 	                it->second->Write(code); ++it;
 	            } catch (ConnectorExceptionDEAD& ex) {
-	                out.Repair(it);
+	                out.Exception(it);
 	            } catch (ConnectorExceptionTIMEOUT& ex) {
 	            }
 	        }
@@ -103,13 +103,10 @@ protected:
 	        << " s=" << data.size() 
 	        << " }"
 	    );
-	    /**---------------------------------------------------------------------------------------------------------
+	    /**
 	     * insert coded data
-	     *---------------------------------------------------------------------------------------------------------*/
+	     */
 	    if(__cache.Push(move(data))){
-	        /**
-	         * process
-	         */
 	        processData(out);
 	    }
     }
@@ -207,6 +204,7 @@ public:
 	        c.Clear(); 
 	    }
 	    /** 
+		 * recover function
 	     */
 	    SFunction::Recover();
     }
@@ -216,16 +214,16 @@ protected:
      *----------------------------------------------------------------------------------------*/
     inline void processData(Road& out){
 	    for (Document& code: __cache.Pop()) {
-	        /**----------------------------------------------------------------------------------------------------*
+	        /**
 	         * write
-	         *-----------------------------------------------------------------------------------------------------*/
+	         */
 	        DEBUG("decode::" << "pos=" << code.GetPosition());
 	        for(auto it = out.begin(); it != out.end();){
 		        try {
 		            it->second->Write(code); ++it;
 		        } catch (ConnectorExceptionDEAD& ex) {
-		            out.Repair(it);
-		        } catch (ConnectorExceptionTIMEOUT& ex){}
+		            out.Exception(it);
+		        } catch (ConnectorExceptionTIMEOUT& ex) {}
 	        }
 	        /**
 	         * reset cache aux
@@ -235,10 +233,14 @@ protected:
 	    }
     }
     inline void processData(Data&& data, Road& out) {
-	    /**--------------------------------------------------------------------------------------------------------*
-	     * insert
-	     *---------------------------------------------------------------------------------------------------------*/
-	    DEBUG("receive::" << "pos=" << data.GetPosition() << " n=" << data.GetNumFrames() << " s=" << data.size());
+	    /**
+	     * insert on cache
+	     */
+	    DEBUG("receive::" 
+			<< "pos=" << data.GetPosition()  << " " 
+			<< "n="   << data.GetNumFrames() << " "
+			<<"s=" << data.size()
+		);
 	    if (!__cache.Push(move(data))) {
 	        /**
 	         * add to aux caches
@@ -266,9 +268,9 @@ protected:
 	        __cache_aux.back().Push(move(data));
 	        return;
 	    }
-	    /**--------------------------------------------------------------------------------------------------------*
-	     * remove
-	     *---------------------------------------------------------------------------------------------------------*/
+	    /**
+	     * remove cache
+	     */
 	    processData(out);
     }
     /**
@@ -289,8 +291,8 @@ protected:
 	         */
 	        WARNING("broken::"
 	 	       	<< " aux=" << aux.Density() << " cur=" << main.Density()
-	    	   	<< " aux=" << aux.Length() << " cur=" << main.Length()
-	        	<< " aux=" << aux.Weight() << " cur=" << main.Weight()
+	    	   	<< " aux=" << aux.Length()  << " cur=" << main.Length()
+	        	<< " aux=" << aux.Weight()  << " cur=" << main.Weight()
 	        );
 	        /**
 	         *  swap caches 
