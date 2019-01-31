@@ -133,7 +133,7 @@ public:
      * ------------------------------------------------------------------------
      * get uri 
      */
-    inline string Uri() {
+    inline const SAddress& GetURI() const {
         return __uri;
     }
     /**

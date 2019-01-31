@@ -63,7 +63,7 @@ protected:
         conf.Get(ENERGY,  1),   // default energy    -> 1
         conf.Get(VERBOSE, 0)    // default verbosity -> 0
     ), __delay(
-        conf.Get(DELAY, 0)      // default delay     -> 0
+        conf.Get(DELAY,   0)    // default delay     -> 0
     ), __timeout(
         conf.Get(TIMEOUT, 1000) // default delay     -> 1s
     ) {  
@@ -85,7 +85,6 @@ protected:
         INFO("OPEN = {}");
         try {
             for(t.Wait(); t.Yield(); t.Snooze()) {
-
                 // procces commands -------------------------------------------
                 for(auto& c : __Commands()) {
                     __ProcessCommand(c);
@@ -134,16 +133,17 @@ protected:
     std::string __GetStatus(ROAD& r) {
         std::ostringstream out;
         for (auto i = r.begin(), e = r.end(); i != e; ++i) {
-            out << i->second->Uri() << ' ';
+            out << i->second->GetURI() << ' ';
         }
         return out.str();
     }
     /**
-     * update road
+     * update
      */
     template<typename ROAD>
-    void __UpdateRoad(ROAD& r, const Command::Group&) {
-
+    void __UpdateRoad(ROAD& r, const Command::Group& o) {
+         try { r.SetNominal(o.Get<size_t>(IO::NOMINAL)); } catch(...) {}
+         try { r.SetMinimum(o.Get<size_t>(IO::MINIMUM)); } catch(...) {}
     }
     private:
     /**

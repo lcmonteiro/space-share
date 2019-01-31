@@ -30,7 +30,7 @@ TEST(SModule, EchoSpliter)
     >;
     // settings ---------------------------------------------------------------
     auto size   = 100;
-    auto addr   = "localhost";
+    auto addr   = "127.0.0.1";
     auto port1  = 9999;
     auto port2  = 8888;
 
@@ -47,6 +47,8 @@ TEST(SModule, EchoSpliter)
             {Module::IO::URI, SText(addr, ":", port1)}
         }}},
         {Spliter::Command::INPUT,    {{
+            {Module::IO::MINIMUM, "1"}
+        }, {
             {Module::IO::TYPE, Module::IO::Type::STREAM_REMOTE},
             {Module::IO::URI, SText(addr, ":", port2)}
         }}},
@@ -66,11 +68,12 @@ TEST(SModule, EchoSpliter)
     .Detach();
 
     // wait -------------------------------------------------------------------
-    EXPECT_EQ(s.WaitState(Spliter::Time(100), Spliter::IWAIT), true);
+    EXPECT_EQ(s.WaitState(Spliter::Time(1000), Spliter::PLAY), true);
 
     // send ------------------------------------------------------------------- 
     EXPECT_EQ(interface.Drain(in).Good(), true);
 
+    std::cout << "1" << std::endl;
     // wait ------------------------------------------------------------------- 
     Monitor(Monitor::Time(2000), &interface).Wait();
 
@@ -80,8 +83,11 @@ TEST(SModule, EchoSpliter)
     // test data --------------------------------------------------------------
     EXPECT_EQ(in, out);
 
+    std::cout << "2" << std::endl;
     // end module -------------------------------------------------------------
     s.Join();
+
+    std::cout << "3" << std::endl;
 }
 
 // TEST(SModule, CreateSpread)

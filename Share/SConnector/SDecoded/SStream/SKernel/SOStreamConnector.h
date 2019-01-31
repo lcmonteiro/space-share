@@ -33,7 +33,7 @@ public:
      */
     SOStreamConnector(
         const string address // connection address
-    ) : __res() {}
+    ) : SOutputConnector(address), __res() {}
     /**
      * destructor
      */

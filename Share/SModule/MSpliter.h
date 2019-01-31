@@ -70,6 +70,12 @@ public:
         {Command::INPUT,    cmd[Command::INPUT]   },
         {Command::OUTPUT,   cmd[Command::OUTPUT]  },
     }) { }
+    /**
+     * ------------------------------------------------------------------------
+     * destructor
+     * ------------------------------------------------------------------------
+     */
+    virtual ~MSpliter() { Attach(); }
 protected:
     /**
      * ------------------------------------------------------------------------
@@ -207,7 +213,7 @@ protected:
         }
         // in road detach --------------------------------------------------------
         catch (IRoadExceptionDETACHED & ex) {
-            WARNING("IN = {" << __GetStatus(__in) << " }");
+            WARNING("IN = " << __in.Status());
             if(PLAY == state) {
                 SEnergy::Decay();
             }

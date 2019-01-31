@@ -7,75 +7,76 @@
 #ifndef SADDRESS_H
 #define SADDRESS_H
 /**
- * std
+ * space
  */
-#include <string>
+#include "SText.h"
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Address
+ * ------------------------------------------------------------------------------------------------
  */
-using namespace std;
-/**
- */
-class SAddress : public string {
+class SAddress : public SText {
 public:
 	/**
-	 * defaut constructor
+	 * ------------------------------------------------------------------------
+	 * defauts
+	 * ------------------------------------------------------------------------
 	 */
-	SAddress() = default;
-
-	SAddress(SAddress&& addr) = default;
-        
-	SAddress(const SAddress& addr) = default;
+	SAddress() 						= default;
+	SAddress(SAddress&& addr) 		= default;
+	SAddress(const SAddress& addr) 	= default;
+	virtual ~SAddress() 			= default;
 	/**
+	 * operator
+	 */
+	SAddress& operator=(SAddress&& addr) 		= default;
+	SAddress& operator=(const SAddress& addr) 	= default;
+	/**
+	 * ------------------------------------------------------------------------
+	 * constructors
+	 * ------------------------------------------------------------------------
 	 * process constructor
 	 */
 	SAddress( 
-		const string& addr
+		const std::string& addr
 	);
 	SAddress(
-		const string& user, 
-		const string& host, 
-		const uint16_t port, 
-		const string& path
+		const std::string& user, 
+		const std::string& host, 
+		const uint16_t     port, 
+		const std::string& path
 	);
 	/**
 	 * derivated constructor
 	 */
-	SAddress(const char* addr): SAddress(string(addr)){}
+	SAddress(const char* addr): SAddress(std::string(addr)){}
 	/**
-	 * destructor
-	 */
-	virtual ~SAddress() = default;
-	/**
-	 * move operator
-	 */
-	SAddress& operator=(SAddress&& addr) = default;
-	/**
-	 * copy operator 
-	 */
-	SAddress& operator=(const SAddress& addr) = default;
-	/**
+	 * ------------------------------------------------------------------------
 	 * accessors
+	 * ------------------------------------------------------------------------
 	 */
-	inline const string& File() const {
+	inline const std::string& File()    const {
 		return __name;
 	}
-	inline const string& User() const {
+	inline const std::string& User()    const {
 		return __name;
 	}
-	inline const string& Host() const {
+	inline const std::string& Host()    const {
 		return __host;
 	}
-	inline const uint16_t Port() const {
+	inline const uint16_t     Port()    const {
 		return __port;
 	}
-	inline const string& Path() const {
+	inline const std::string& Path()    const {
 		return __path;
 	}
-	inline const string& Channel() {
+	inline const std::string& Channel() const {
 		return __path;
 	}
 	/**
+	 * ------------------------------------------------------------------------
 	 * friends
+	 * ------------------------------------------------------------------------
 	 */
   	friend SAddress operator+(const SAddress& lhs, const SAddress& rhs) {
 		return SAddress(
@@ -87,21 +88,29 @@ public:
 	}
 private:
 	/**
+	 * ------------------------------------------------------------------------
 	 * attributes
+	 * ------------------------------------------------------------------------
 	 */
-	string   __name;
-	string   __host;
-	uint16_t __port;
-	string   __path;
+	std::string   __name;
+	std::string   __host;
+	uint16_t      __port;
+	std::string   __path;
 	/**
+	 * ------------------------------------------------------------------------
 	 * utils
+	 * ------------------------------------------------------------------------
 	 */
-	static string Merge(string s1, string sep, string s2){
+	static std::string Merge(std::string s1, std::string sep, std::string s2) {
 		if(s1.empty() || s2.empty()){
 			return s1 + s2;
 		}
 		return s1 + sep + s2;
 	}
 };
-
+/**
+ * ------------------------------------------------------------------------------------------------
+ * end
+ * ------------------------------------------------------------------------------------------------
+ */
 #endif /* SADDRESS_H */

@@ -57,7 +57,7 @@ public:
          * sleep
          */
         inline Alarm& Wait() {
-            STask::Sleep(Remaining(__end));
+            STask::Sleep(std::max(Distance::zero(), Remaining(__end)));
             return *this;
         }
         /**

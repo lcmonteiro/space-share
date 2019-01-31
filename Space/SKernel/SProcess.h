@@ -109,7 +109,7 @@ public:
      */
     inline bool Join() {
         try {
-            __worker.join();
+            __worker.Join();
         } catch(...) {
             return false;
         }
