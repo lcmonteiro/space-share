@@ -163,22 +163,18 @@ protected:
                 }
                 // out wait ---------------------------------------------------
                 case OWAIT: {
-                    DEBUG("OWAIT");
                     return __ProcessWAIT(end, __out, IOWAIT);
                 }
                 // in wait ----------------------------------------------------
                 case IOWAIT: {
-                    DEBUG("IOWAIT");
                     return __ProcessWAIT(end, __io, IWAIT);
                 }
                 // in wait ----------------------------------------------------
                 case IWAIT: {
-                    DEBUG("IWAIT");
-                    return __ProcessWAIT(end, __out, PLAY);
+                    return __ProcessWAIT(end, __in, PLAY);
                 }
                 // play -------------------------------------------------------
                 case PLAY: {
-                    DEBUG("PLAY");
                     return __ProcessPLAY(end);
                 }
                 // update -----------------------------------------------------

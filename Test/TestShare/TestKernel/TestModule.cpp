@@ -73,7 +73,6 @@ TEST(SModule, EchoSpliter)
     // send ------------------------------------------------------------------- 
     EXPECT_EQ(interface.Drain(in).Good(), true);
 
-    std::cout << "1" << std::endl;
     // wait ------------------------------------------------------------------- 
     Monitor(Monitor::Time(2000), &interface).Wait();
 
@@ -83,11 +82,8 @@ TEST(SModule, EchoSpliter)
     // test data --------------------------------------------------------------
     EXPECT_EQ(in, out);
 
-    std::cout << "2" << std::endl;
     // end module -------------------------------------------------------------
-    s.Join();
-
-    std::cout << "3" << std::endl;
+    s.Attach();
 }
 
 // TEST(SModule, CreateSpread)

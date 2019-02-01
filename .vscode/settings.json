@@ -95,7 +95,10 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "resumable": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "execution": "cpp",
+        "queue": "cpp",
+        "stack": "cpp"
     },
     "python.pythonPath": "/usr/bin/python3"
 }
