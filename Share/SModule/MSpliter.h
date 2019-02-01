@@ -143,7 +143,7 @@ protected:
             << "energy:"     << SEnergy::Get()      << ", "
             << "inputs:"     << __GetStatus(__in)   << ", "
             << "outputs:"    << __GetStatus(__out)  << ", "
-            << "in|outputs:" << __GetStatus(__io)   << "  "
+            << "in|outputs:" << __GetStatus(__io)   << " "
             << "}"
         );
         /**
