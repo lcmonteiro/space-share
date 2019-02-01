@@ -270,12 +270,12 @@ public:
             ++it;
         }
         // reload repairing queue (if needed) -------------
-        int delta =  (__nominal - __Length({Repairing, Running})); 
+        int delta = (__nominal - __Length({Repairing, Running})); 
         for(auto 
             it = rep.begin(); 
             (0 < delta) && (__Jump(Backlog, Repairing, it) != it); 
             it = rep.begin()
-        ) { --delta; }
+        ) { --delta; rep.begin()->second->Repair(); }
         // is dead ----------------------------------------
         if (0 < delta) {
             throw SRoadExceptionDEAD<Object>(Status());

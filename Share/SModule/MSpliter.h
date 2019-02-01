@@ -163,18 +163,22 @@ protected:
                 }
                 // out wait ---------------------------------------------------
                 case OWAIT: {
+                    DEBUG("OWAIT");
                     return __ProcessWAIT(end, __out, IOWAIT);
                 }
                 // in wait ----------------------------------------------------
                 case IOWAIT: {
+                    DEBUG("IOWAIT");
                     return __ProcessWAIT(end, __io, IWAIT);
                 }
                 // in wait ----------------------------------------------------
                 case IWAIT: {
+                    DEBUG("IWAIT");
                     return __ProcessWAIT(end, __out, PLAY);
                 }
                 // play -------------------------------------------------------
                 case PLAY: {
+                    DEBUG("PLAY");
                     return __ProcessPLAY(end);
                 }
                 // update -----------------------------------------------------
@@ -192,7 +196,7 @@ protected:
          * out road detach
          */
         catch (ORoadExceptionDETACHED & ex) {
-            WARNING("OUT = { " << __GetStatus(__out) << " }");
+            WARNING("OUT = " << __out.Status());
             if(PLAY == state) {
                 SEnergy::Decay();
             }
@@ -203,7 +207,7 @@ protected:
         } 
         // io road detach --------------------------------------------------------
         catch (IORoadExceptionDETACHED & ex) {
-            WARNING("IO = {" << __GetStatus(__io) << " }");
+            WARNING("IO = " << __io.Status());
             if(PLAY == state) {
                 SEnergy::Decay();
             }
