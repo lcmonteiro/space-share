@@ -24,13 +24,13 @@
  * exceptions 
  * ------------------------------------------------------------------------------------
  **/
-typedef class SFunctionException : public logic_error {
+typedef class SFunctionException : public std::logic_error {
 public:
-    using logic_error::logic_error;
+    using std::logic_error::logic_error;
     /**
      * constructor
      */
-    SFunctionException(const string& msg):logic_error(msg){
+    SFunctionException(const std::string& msg): std::logic_error(msg) {
     }
 } FunctionException;
 
@@ -40,7 +40,7 @@ public:
     /**
      * constructor
      */
-    SFunctionExceptionDead(string s) : SFunctionException(s) {
+    SFunctionExceptionDead(const std::string& s) : SFunctionException(s) {
     }
 } FunctionExceptionDEAD;
 /**
@@ -156,10 +156,10 @@ protected:
     /*---------------------------------------------------------------------------------
      * drain road 
      *-------------------------------------------------------------------------------**/
-    inline void drainRoad(IRoad& in, ORoad& out){
+    inline void drainRoad(IRoad& in, ORoad& out) {
         for (auto it = in.begin(), end = in.end(); it != end;) {
             try {
-                for (auto& d : it->second->Drain()) { processData(move(d), out); }
+                for (auto& d : it->second->Drain()) { processData(move(d), out); } ++it;
             } catch (IConnectorExceptionDEAD& ex) {
                 in.Exception(it);
             }
@@ -168,9 +168,18 @@ protected:
     /**--------------------------------------------------------------------------------
      * process Data
      *-------------------------------------------------------------------------------**/
-    virtual void processData(Data&& data, ORoad& out) = 0;
-    
-    virtual void processData(ORoad& out) = 0;
+    virtual void processData(Data&& data, ORoad& out) {
+        for (auto it = out.begin(), end = out.end(); it != end;) {
+            try {
+                it->second->Write(data); ++it;
+            } catch (ConnectorExceptionDEAD& ex) {
+                out.Exception(it);
+            } catch (ConnectorExceptionTIMEOUT& ex) {
+            }
+        }
+	}
+    virtual void processData(ORoad& out) {
+    }
 };
 /**
  * ------------------------------------------------------------------------------------------------
@@ -194,7 +203,7 @@ public:
      * default constructor
      */ 
     SFunctionSpliter(size_t energy = UINT32_MAX, uint8_t verbose = 0)
-    : SFunction("Spliter", energy, verbose){}
+    : SFunction("Spliter", energy, verbose) {}
     /**--------------------------------------------------------------------------------
      * process
      *-------------------------------------------------------------------------------**/
@@ -243,7 +252,7 @@ protected:
                     for(auto& d: it->second->Drain()){ processData(move(d), out); }
                 } catch (...) {}
                 in.Exception(it);
-            } catch (ConnectorExceptionTIMEOUT& ex){}
+            } catch (ConnectorExceptionTIMEOUT& ex) {}
         }
     }
     /*---------------------------------------------------------------------------------

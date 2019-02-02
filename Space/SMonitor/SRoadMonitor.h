@@ -48,11 +48,23 @@ public:
      * ------------------------------------------------------------------------
      * interfaces
      * ------------------------------------------------------------------------
+     * insert 
      */
     inline SRoadMonitor& Insert(KEY k, OBJ o) {
         Road::Insert(std::forward<KEY>(k), std::forward<OBJ>(o));
         return *this;
     }
+    /**
+     * update
+     */
+    inline SRoadMonitor& Update() {
+        Road::Update();
+        Super::Update();
+        return *this;
+    }
+    /**
+     * detach
+     */
     inline SRoadMonitor Detach() {
         return move(*this);
     }

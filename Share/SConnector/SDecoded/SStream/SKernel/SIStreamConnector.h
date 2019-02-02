@@ -123,7 +123,7 @@ protected:
     inline void _Open() override {
         mt19937_64 eng{random_device{}()};
         // sleep distribution -----------------------------
-        uniform_int_distribution<> dist{1000, 5000};
+        uniform_int_distribution<> dist{100, 1000};
         // main loop --------------------------------------
         int i = 0;
         do {
@@ -133,7 +133,7 @@ protected:
             } catch (system_error& ex) {
                 WARNING(ex.what());
             }
-        } while (STask::Sleep(chrono::milliseconds{dist(eng) + (1000 * i++)}));
+        } while (STask::Sleep(chrono::milliseconds{dist(eng) * ++i}));
     }
     /**
      * ------------------------------------------------------------------------

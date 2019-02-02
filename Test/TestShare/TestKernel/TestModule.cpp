@@ -44,17 +44,20 @@ TEST(SModule, EchoSpliter)
         }}},
         {Spliter::Command::INOUT,    {{
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_REMOTE},
-            {Module::IO::URI, SText(addr, ":", port1)}
+            {Module::IO::URI, SText(addr, ":", port1)},
+            {Module::IO::VERBOSE, "4"}
         }}},
         {Spliter::Command::INPUT,    {{
             {Module::IO::MINIMUM, "1"}
         }, {
             {Module::IO::TYPE, Module::IO::Type::STREAM_REMOTE},
-            {Module::IO::URI, SText(addr, ":", port2)}
+            {Module::IO::URI, SText(addr, ":", port2)},
+            {Module::IO::VERBOSE, "4"}
         }}},
         {Spliter::Command::OUTPUT,   {{
             {Module::IO::TYPE, Module::IO::Type::STREAM_REMOTE},
-            {Module::IO::URI, SText(addr, ":", port2)}
+            {Module::IO::URI, SText(addr, ":", port2)},
+            {Module::IO::VERBOSE, "4"}
         }}}
     });
     s.Detach();

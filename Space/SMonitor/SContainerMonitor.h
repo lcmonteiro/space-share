@@ -83,9 +83,25 @@ public:
      * interfaces
      * ------------------------------------------------------------------------
      * wait 
+     * ----------------------------------------------------
      */
     inline std::list<Location> Wait() {
-        // reload if changed ------------------------------
+        // update monitor -------------
+        Update();
+        // wait and map ---------------
+        std::list<Location> res;
+        for(auto& r : Monitor::Wait()) {
+            res.emplace_back(__map.at(r));
+        }
+        return res;
+    }
+    /**
+     * ----------------------------------------------------
+     * update
+     * ----------------------------------------------------
+     */
+    inline SContainerMonitor& Update() {
+        // reload if changed ----------
         if(__Changed()) {
             static_cast<Monitor&>(*this) = Monitor();
             for(auto it = Container::begin(); Container::end() != it; ++it) {
@@ -94,12 +110,8 @@ public:
                 );
             }
         }
-        // wait and map -----------------------------------
-        std::list<Location> res;
-        for(auto& r : Monitor::Wait()) {
-            res.emplace_back(__map.at(r));
-        }
-        return res;
+        // return self ----------------
+        return *this;
     }
 protected:
     /**
