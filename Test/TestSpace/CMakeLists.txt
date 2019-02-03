@@ -11,6 +11,7 @@ SOURCES
     TestKernel/TestProcess.cpp
     TestKernel/TestAddress.cpp
     TestKernel/TestContainer.cpp
+    TestKernel/TestFrame.cpp
 DEPENDS
     SpaceKernel
 )

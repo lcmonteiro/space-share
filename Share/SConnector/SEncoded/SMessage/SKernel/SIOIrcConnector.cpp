@@ -51,8 +51,12 @@ Document SIOIrcConnector::_Read() {
  * 
  */
 void SIOIrcConnector::_Write(const Document& container) {
-	IFrame in(sizeof (reference_t) + sizeof (numframes_t) + sizeof (framesize_t) + container.GetFrameSize());
-	/**------------------------------------------------------------------------------------------------------------*
+	IFrame in = Frame(
+                sizeof (reference_t) + 
+                sizeof (numframes_t) + 
+                sizeof (framesize_t) + container.GetFrameSize()
+        );
+	/**----------------------------------------------------------------------------------------
 	 * write context
 	 *----------------------------------------------------------------------------------------*/
 	in.Write(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));

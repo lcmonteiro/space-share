@@ -222,6 +222,7 @@ protected:
         }
         // function dead ------------------------------------------------------- 
         catch (FunctionExceptionDEAD& ex) {
+            WARNING("FUNC");
             SEnergy::Decay();
             __func->Recover();
         }

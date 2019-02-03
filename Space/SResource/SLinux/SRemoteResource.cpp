@@ -98,19 +98,26 @@ void SRemoteResource::SetNoDelay(bool flag) {
  * ------------------------------------------------------------------------------------------------
  * IO functions
  * ------------------------------------------------------------------------------------------------
- * fill
+ * fill and read
+ * ----------------------------------------------------------------------------
  */
+SRemoteResource& SRemoteResource::Read(IFrame& f) {
+    f.Insert(__Recv(
+        GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+    );
+    return *this;
+}
 SRemoteResource& SRemoteResource::Fill(Frame& f) {
-    // send loop ----------------------
     for (auto it = f.begin(), end = f.end(); it != end;) {
         it = next(it, __Recv(
             GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
         ));
     }
-    return *this;
 }
 /**
+ * ----------------------------------------------------------------------------
  * drain
+ * ----------------------------------------------------------------------------
  */
 SRemoteResource& SRemoteResource::Drain(const Frame& f) {
     // send loop ----------------------
@@ -121,8 +128,12 @@ SRemoteResource& SRemoteResource::Drain(const Frame& f) {
     }
     return *this;
 }
-
-
+SRemoteResource& SRemoteResource::Write(OFrame& f) {
+    f.Remove(
+        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+    );
+    return *this;
+}
 // /**
 //  * ------------------------------------------------------------------------------------------------
 //  * Text IO functions

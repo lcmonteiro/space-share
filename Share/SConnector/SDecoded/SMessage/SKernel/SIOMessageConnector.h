@@ -67,7 +67,7 @@ protected:
         swap(__container, container);    
 
         // info -------------------------------------------
-        INFO("DATA(read)::IN::n=" << container.size() << "=" << container.front());
+        INFO("DATA::IN::n=" << container.size() << "=" << container.front());
         
         // return filled container ------------------------
         return container;
