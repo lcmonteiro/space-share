@@ -101,7 +101,15 @@ void SRemoteResource::SetNoDelay(bool flag) {
  * fill and read
  * ----------------------------------------------------------------------------
  */
+template<>
 SRemoteResource& SRemoteResource::Read(IFrame& f) {
+    f.Insert(__Recv(
+        GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+    );
+    return *this;
+}
+template<>
+SRemoteResource& SRemoteResource::Read(Frame& f) {
     f.Insert(__Recv(
         GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
     );

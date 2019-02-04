@@ -58,7 +58,7 @@ protected:
         Container container(__container.capacity());
 
         // fill buffer ------------------------------------
-        __res.Fill(__buffer.Expand());
+        __res.Read(__buffer.Expand());
         
         // split buffer -----------------------------------
         TOOL::Split(__buffer, __container);

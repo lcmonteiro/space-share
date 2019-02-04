@@ -64,7 +64,7 @@ protected:
                 __res.Read(__buffer);
             }
             // reset buffers ------------------------------
-            buffer = IFrame(__buffer.size());
+            buffer = IFrame(__buffer.Capacity());
             swap(__buffer, buffer);
         }
         // reset container --------------------------------
@@ -93,7 +93,7 @@ protected:
         }
         // check if frame is full -------------------------
         if (!__buffer.Empty()) {
-            auto buffer = IFrame(__buffer.size());
+            auto buffer = IFrame(__buffer.Capacity());
             swap(__buffer, buffer);
             tmp.Write(move(buffer.Shrink()));
         }
