@@ -16,18 +16,18 @@
  * connectors
  */
 #include "SDecoded/SMessage/SUdpConnector.h"
-#include "SDecoded/SMessage/SLocConnector.h"
+//#include "SDecoded/SMessage/SLocConnector.h"
 //#include "SConnector/SDecoded/SMessage/SDirConnector.h"
 //#include "SConnector/SDecoded/SMessage/SFileConnector.h"
-#include "SDecoded/SStream/SLocConnector.h"
+//#include "SDecoded/SStream/SLocConnector.h"
 #include "SDecoded/SStream/STcpConnector.h"
 //#include "SConnector/SDecoded/SStream/SFileConnector.h"
 #include "SEncoded/SMessage/SFileConnector.h"
 //#include "SConnector/SEncoded/SMessage/SDirConnector.h"
 //#include "SConnector/SEncoded/SMessage/SIrcConnector.h"
 //#include "SConnector/SEncoded/SMessage/SLocConnector.h"
-#include "SEncoded/SStream/SLocConnector.h"
-#include "SEncoded/SStream/STcpConnector.h"
+//#include "SEncoded/SStream/SLocConnector.h"
+//#include "SEncoded/SStream/STcpConnector.h"
 /**
  *-------------------------------------------------------------------------------------------------
  * Module name space
@@ -58,16 +58,16 @@ namespace Input {
     struct Builder<Decoded::IConnector> {
         static inline Decoded::IConnector Build(const SModule::Command::Group& o) {
             static map<SConnector::Key, function <Decoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
-                {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
-                    auto in = Decoded::Message::ILocConnector::Make(
-                        o.Get(IO::URI),
-                        o.Get(IO::NFRAMES, 50),
-                        o.Get(IO::SFRAMES, 1550)
-                    );
-                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    in->SetEnergy(o.Get(IO::ENERGY,   1));
-                    return in;
-                }},
+                // {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
+                //     auto in = Decoded::Message::ILocConnector::Make(
+                //         o.Get(IO::URI),
+                //         o.Get(IO::NFRAMES, 50),
+                //         o.Get(IO::SFRAMES, 1550)
+                //     );
+                //     in->SetVerbose(o.Get(IO::VERBOSE, 0));
+                //     in->SetEnergy(o.Get(IO::ENERGY,   1));
+                //     return in;
+                // }},
                 {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::IUdpConnector::Make(
                         o.Get(IO::URI),
@@ -228,16 +228,16 @@ namespace IOput {
     struct Builder<Decoded::IOConnector> {
         static inline Decoded::IOConnector Build(const SModule::Command::Group& o) {
             static map<SConnector::Key, function <Decoded::IOConnector(const SModule::Command::Group&)>> GENERATOR {
-                {SConnector::Key(IO::Type::STREAM_LOCAL), [](const SModule::Command::Group& o) {
-                    auto io = Decoded::Stream::IOLocConnector::Make(
-                        o.Get(IO::URI,     string("/tmp/data.y")),
-                        o.Get(IO::NFRAMES, 50),
-                        o.Get(IO::SFRAMES, 4096)
-                    );
-                    io->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    io->SetEnergy(o.Get(IO::ENERGY,   1));
-                    return io;
-                }},
+                // {SConnector::Key(IO::Type::STREAM_LOCAL), [](const SModule::Command::Group& o) {
+                //     auto io = Decoded::Stream::IOLocConnector::Make(
+                //         o.Get(IO::URI,     string("/tmp/data.y")),
+                //         o.Get(IO::NFRAMES, 50),
+                //         o.Get(IO::SFRAMES, 4096)
+                //     );
+                //     io->SetVerbose(o.Get(IO::VERBOSE, 0));
+                //     io->SetEnergy(o.Get(IO::ENERGY,   1));
+                //     return io;
+                // }},
                 {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::IOUdpConnector::Make(
                         o.Get(IO::URI),

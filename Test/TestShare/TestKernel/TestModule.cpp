@@ -80,7 +80,7 @@ TEST(SModule, EchoSpliter)
     Monitor(Monitor::Time(2000), &interface).Wait();
 
     // receive ----------------------------------------------------------------
-    EXPECT_EQ(interface.Fill(out).Good(), true);
+    EXPECT_EQ(interface.Read(out).Good(), true);
 
     // test data --------------------------------------------------------------
     EXPECT_EQ(in, out);

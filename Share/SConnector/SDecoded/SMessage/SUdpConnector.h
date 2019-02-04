@@ -43,7 +43,7 @@ public:
      */
     using Super::SRemoteResource;
     using Super::operator=;
-    using Super::Fill;
+    using Super::Read;
     using Super::Drain;
     using Super::Good;
     /**

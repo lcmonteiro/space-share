@@ -76,13 +76,21 @@ public:
      */
     SFrame(const size_t  size, const size_t  capacity, const uint8_t value = 0)
     : Super() {
-        reserve(capacity); 
-        assign(size, value);
+        Capacity(capacity).assign(size, value);
     }
     /**
      * string 
      */
     SFrame(const std::string& s) : Super(s.begin(), s.end()) {
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * set capacity
+     * ------------------------------------------------------------------------
+     */
+    inline SFrame& Capacity(size_t size) {
+        reserve(size);
+        return *this;
     }
     /**
      * ------------------------------------------------------------------------
@@ -192,14 +200,34 @@ public:
         resize(capacity());
         return *this;
     }
+    /**
+     * ------------------------------------------------------------------------
+     * shift to position given by (offset)
+     * ------------------------------------------------------------------------
+     */
+    inline SFrame& Shift(size_t offset) {
+        std::rotate(
+            begin(), next(begin(), offset), end()
+        );
+        return *this;
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * check size 
+     * ------------------------------------------------------------------------
+     */
+    inline SFrame&& Detach() {
+        return std::move(*this);
+    }
 } Frame;
 /**
  * ------------------------------------------------------------------------------------------------
  * SIFrame
  * ------------------------------------------------------------------------------------------------
  */
-typedef class SIFrame : public Frame {
+typedef class SIFrame {
 public:
+    using pointer = Frame::pointer;
     /**
      * ------------------------------------------------------------------------
      * defaults
@@ -211,25 +239,76 @@ public:
     SIFrame& operator=(SIFrame&& f) = default;
     /**
      * ------------------------------------------------------------------------
-     * constructors
+     * constructor 
      * ------------------------------------------------------------------------
      */
-    SIFrame(size_t capacity) 
-    : Frame(capacity), __cur(begin()) {
+    SIFrame(size_t capacity) : __frame(capacity), __it(__frame.begin()) {}
+    /**
+     * ------------------------------------------------------------------------
+     * Frame - interface
+     * ------------------------------------------------------------------------
+     * constructors
+     * ----------------------------------------------------
+     * move
+     */
+    SIFrame(SFrame&& f)
+    : __frame(std::move(f)), __it(__frame.end()) {}
+    /**
+     * copy
+     */
+    SIFrame(const SFrame& f)
+    : __frame(f), __it(__frame.end()) {}
+    /**
+     * ----------------------------------------------------
+     * operators =
+     * ----------------------------------------------------
+     * move
+     */
+    SIFrame& operator=(Frame&& f) {
+        *this = SIFrame(std::move(f));
     }
-    SIFrame(Frame&& f) 
-    : Frame(std::move(f)), __cur(begin()) {
+    /**
+     * copy
+     */
+    SIFrame& operator=(const Frame& f) {
+        *this = SIFrame(f);
     }
-    SIFrame(const Frame& f) 
-    : Frame(f), __cur(begin()) {
+    /**
+     * ----------------------------------------------------
+     *  cast operators
+     * ----------------------------------------------------
+     */
+    operator SFrame&() {
+        Shrink(); 
+        return __frame; 
     }
     /**
      * ------------------------------------------------------------------------
-     * shrink frame
+     * position
      * ------------------------------------------------------------------------
+     * begin position
+     * ----------------------------------------------------
      */
-    inline SIFrame& Shrink() {
-        resize(distance(begin(), __cur));
+    inline SIFrame& Reset() {
+        __it = __frame.begin();
+        return *this;
+    }
+    /**
+     * ----------------------------------------------------
+     * move position forward (n)
+     * ----------------------------------------------------
+     */
+    inline SIFrame& Insert(size_t n) {
+        __it = std::next(__frame.begin(), n);
+        return *this;
+    }
+    /**
+     * ----------------------------------------------------
+     * seek to position (p)
+     * ----------------------------------------------------
+     */
+    inline SIFrame& Seek(size_t p) {
+        __it = std::next(__frame.begin(), p);
         return *this;
     }
     /**
@@ -237,40 +316,50 @@ public:
      * get data
      * ------------------------------------------------------------------------
      */
-    inline pointer Data() {
-        return __cur.base();
+    inline pointer Data() const {
+        return __it.base();
     }
     /**
      * ------------------------------------------------------------------------
      * get size
      * ------------------------------------------------------------------------
      */
-    inline size_t Size() {
-        return distance(__cur, end());
+    inline size_t Size() const {
+        return std::distance(SFrame::const_iterator(__it), __frame.end());
     }
     /**
      * ------------------------------------------------------------------------
-     * reserve size
+     * shrink frame
      * ------------------------------------------------------------------------
      */
-    inline SIFrame& Reserve(size_t sz) {
-        auto sz_rem = Size();
-        if (sz > sz_rem) {
-            auto sz_cur = size();
-            // resize vector ------------------------------    
-            resize(sz_cur + sz - sz_rem);
-            // reset pointer ------------------------------
-            __cur = begin() + sz_cur;
-        }
+    inline SIFrame& Shrink() {
+        __frame.resize(std::distance(__frame.begin(), __it));
         return *this;
     }
     /**
      * ------------------------------------------------------------------------
-     * insert size
+     * expand frame
      * ------------------------------------------------------------------------
      */
-    inline SIFrame& Insert(size_t size) {
-        __cur += size;
+    inline SIFrame& Expand() {
+        __frame.resize(__frame.capacity());
+        return *this;
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * reserve size (guaranty that exist size (sz) )
+     * ------------------------------------------------------------------------
+     */
+    inline SIFrame& Reserve(size_t sz) {
+        auto sz_rem = Size();
+        // verify current size ----------------------------
+        if (sz > sz_rem) {
+            auto sz_cur = __frame.size();
+            // resize vector ------------------------------    
+            __frame.resize(sz_cur + sz - sz_rem);
+            // reset pointer ------------------------------
+            __it = __frame.begin() + sz_cur;
+        }
         return *this;
     }
     /**
@@ -279,16 +368,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SIFrame& Write(const Frame& frame) {
-        __cur = copy(frame.begin(), frame.end(), __cur);
-        return *this;
-    }
-    /**
-     * ------------------------------------------------------------------------
-     * seek to position given by (pos)
-     * ------------------------------------------------------------------------
-     */
-    inline SIFrame& Seek(size_t pos) {
-        __cur = next(begin(), pos);
+        __it = std::copy(frame.begin(), frame.end(), __it);
         return *this;
     }
     /**
@@ -297,7 +377,9 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SIFrame& Shift(size_t offset) {
-        __cur = __rotate(begin(), next(begin(), offset), __cur);
+        __it = __rotate(
+            __frame.begin(), next(__frame.begin(), offset), __it
+        );
         return *this;
     }
     /**
@@ -306,26 +388,32 @@ public:
      * ------------------------------------------------------------------------
      */
     inline bool Empty() const {
-        return (__cur <= begin());
+        return (__it <= __frame.begin());
     }
     inline bool Full() const {
-        return (__cur >= end());
+        return (__it >= __frame.end());
     }
 private:
     /**
      * ------------------------------------------------------------------------
      * variable
      * ------------------------------------------------------------------------
+     * frame
      */
-    iterator __cur;
+    SFrame __frame;
+    /**
+     * iterator
+     */
+    SFrame::iterator __it;
 } IFrame;
 /**
  * ------------------------------------------------------------------------------------------------
  * OFrame
  * ------------------------------------------------------------------------------------------------
  */
-typedef class SOFrame : public Frame {
+typedef class SOFrame {
 public:
+    using pointer = Frame::pointer;
     /**
      * ------------------------------------------------------------------------
      * defaults
@@ -338,14 +426,71 @@ public:
     SOFrame& operator=(const SOFrame&) = default;
     /**
      * ------------------------------------------------------------------------
-     * constructors
+     * Frame - interface
      * ------------------------------------------------------------------------
+     * constructors
+     * ----------------------------------------------------
+     * move
      */
-    SOFrame(SFrame&& f) 
-    : Frame(std::move(f)), __cur(begin()) {
+    SOFrame(Frame&& f)
+    : __frame(std::move(f)), __it(__frame.begin()) {}
+    /**
+     * copy
+     */
+    SOFrame(const Frame& f)
+    : __frame(f), __it(__frame.begin()) {}
+    /**
+     * ----------------------------------------------------
+     * operators =
+     * ----------------------------------------------------
+     * move
+     */
+    SIFrame& operator=(Frame&& f) {
+        *this = SOFrame(std::move(f));
     }
-    SOFrame(const SFrame& f) 
-    : Frame(f), __cur(begin()) {
+    /**
+     * copy
+     */
+    SIFrame& operator=(const Frame& f) {
+        *this = SOFrame(f);
+    }
+    /**
+     * ----------------------------------------------------
+     *  cast operators 
+     * ----------------------------------------------------
+     */
+    operator Frame&() {
+        Shrink();
+        return __frame; 
+    }
+     /**
+     * ------------------------------------------------------------------------
+     * position
+     * ------------------------------------------------------------------------
+     * begin position
+     * ----------------------------------------------------
+     */
+    inline SOFrame& Reset() {
+        __it = __frame.begin();
+        return *this;
+    }
+    /**
+     * ----------------------------------------------------
+     * move position forward (n)
+     * ----------------------------------------------------
+     */
+    inline SOFrame& Remove(size_t n) {
+        __it = next(__it, n);
+        return *this;
+    }
+    /**
+     * ----------------------------------------------------
+     * seek to position (p)
+     * ----------------------------------------------------
+     */
+    inline SOFrame& Seek(size_t p) {
+        __it = next(__frame.begin(), p);
+        return *this;
     }
     /**
      * ------------------------------------------------------------------------
@@ -353,7 +498,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline pointer Data() {
-        return __cur.base();
+        return __it.base();
     }
     /**
      * ------------------------------------------------------------------------
@@ -361,20 +506,28 @@ public:
      * ------------------------------------------------------------------------
      */
     inline size_t Size() {
-        return distance(__cur, end());
+        return distance(__it, __frame.end());
     }
     /**
      * ------------------------------------------------------------------------
-     * remove size
+     * Shrink
      * ------------------------------------------------------------------------
      */
-    inline SOFrame& Remove(size_t size) {
-        __cur += size;
+    inline SOFrame& Shrink() {
+        // current size -----------------------------------  
+        auto sz = Size();
+        // rotate ----------------------------------------- 
+        std::rotate(__frame.begin(), __it, __frame.end()); 
+        // reset ------------------------------------------
+        Reset();
+        // resize -----------------------------------------
+        __frame.resize(sz);
         return *this;
     }
     /**
      * ------------------------------------------------------------------------
      * Read frame
+     * ------------------------------------------------------------------------
      */
     inline SFrame Read(size_t size) {
         // size check -------------------------------------
@@ -384,9 +537,9 @@ public:
             );
         }
         // move reference ---------------------------------
-        auto prev = __cur; __cur += size;
+        auto prev = __it; __it += size;
         // copy to new frame ------------------------------
-        return SFrame(prev, __cur);
+        return SFrame(prev, __it);
     }
     /**
      * ------------------------------------------------------------------------
@@ -394,18 +547,23 @@ public:
      * ------------------------------------------------------------------------
      */
     inline bool Empty() const {
-        return (__cur >= end());
+        return (__it >= __frame.end());
     }
     inline bool Full() const {
-        return (__cur <= begin());
+        return (__it <= __frame.begin());
     }
 private:
     /**
      * ------------------------------------------------------------------------
      * variable
      * ------------------------------------------------------------------------
+     * frame
      */
-    iterator __cur;
+    SFrame __frame;
+    /**
+     *iterator 
+     */
+    SFrame::iterator __it;
 } OFrame;
 /**
  * ------------------------------------------------------------------------------------------------

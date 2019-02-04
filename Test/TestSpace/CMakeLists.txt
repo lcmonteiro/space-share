@@ -43,5 +43,17 @@ DEPENDS
     SpaceKernel
 )
 # ---------------------------------------------------------
+# add temporary
+# ---------------------------------------------------------
+add_gtests(
+TARGET 
+    TestTemporary 
+SOURCES 
+    TestKernel/TestFrame.cpp
+INCLUDES
+    ../../Space/SKernel
+    ../../Space/SHelper
+)
+# ---------------------------------------------------------
 # end
 # ---------------------------------------------------------

@@ -36,16 +36,19 @@ public:
     static inline Container& Split(Frame& buf, Container& chunks) {
         // process chunk size -----------------------------
         auto res = div(
-            (int)(buf.Size() + sizeof (framesize_t)), (int)chunks.capacity()
+            static_cast<int>(buf.Size() + sizeof (framesize_t)), 
+            static_cast<int>(chunks.capacity())
         );
         // normalize chunks size --------------------------
         size_t size = res.rem > 0 ? res.quot + 1 : res.quot;
         
-        // resize frame and add buffer size ----------------------
-        buf.Insert(size * chunks.capacity()).Number<framesize_t>(buf.Size());
+        // resize frame and add buffer size ---------------
+        buf.Insert(
+            size * chunks.capacity()
+        ).Number<framesize_t>(buf.Size());
 
         // container fill up ------------------------------
-        OFrame out(move(buf));
+        OFrame out = move(buf);
         while(!chunks.Full()) {
             chunks.emplace_back(move(out.Read(size)));
         }
@@ -62,7 +65,7 @@ public:
      */
     static inline Frame& Join(const Container& chunks, Frame& buf) {
         // fill up tmp frame ------------------------------
-        IFrame tmp(move(buf));
+        IFrame tmp = move(buf);
         for(auto& c: chunks) {
             tmp.Reserve(c.Size()).Write(c);
         }

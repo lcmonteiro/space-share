@@ -3,17 +3,22 @@
  * space
  */
 #include "SFrame.h"
-#include "SRandom.h"
+//#include "SRandom.h"
 /**
  * ------------------------------------------------------------------------------------------------
  * frame to number
  * ------------------------------------------------------------------------------------------------
  */
-TEST(SFrame, Build)
+TEST(SFrame, Conversion)
 {
-    // test case 1 --------------------
-    IFrame f = SFrame(10);
-    f = Frame(20);
+    // use case 1 --------------------
+    IFrame in = SFrame().Capacity(10).Insert(1).Detach();
+
+    // write --------------------------
+    in.Expand().Write({1, 2, 3}).Write({9, 8, 7});
+
+    //test case 
+    EXPECT_EQ(OFrame(Frame(in)).Read(5), Frame({0, 1, 2, 3, 9}));
 }
 /**
  * ------------------------------------------------------------------------------------------------

@@ -61,7 +61,7 @@ protected:
             
             // fill buffer --------------------------------
             while (!__buffer.Full()) {
-                __res.Fill(__buffer);
+                __res.Read(__buffer);
             }
             // reset buffers ------------------------------
             buffer = IFrame(__buffer.size());

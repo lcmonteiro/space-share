@@ -43,12 +43,9 @@ public:
      * ------------------------------------------------------------------------
      * IO functions
      * ------------------------------------------------------------------------
-     * fill and read frame
+     * fill and drain frame
      */
-    SRemoteResource& Fill(Frame&  f);
-    /**
-     * drain and write frame
-     */
+    //SRemoteResource& Fill(Frame&  f);
     SRemoteResource& Drain(const Frame& f);
     /**
      * read and write frame

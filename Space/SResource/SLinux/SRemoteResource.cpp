@@ -107,13 +107,13 @@ SRemoteResource& SRemoteResource::Read(IFrame& f) {
     );
     return *this;
 }
-SRemoteResource& SRemoteResource::Fill(Frame& f) {
-    for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, __Recv(
-            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
-        ));
-    }
-}
+// SRemoteResource& SRemoteResource::Fill(Frame& f) {
+//     for (auto it = f.begin(), end = f.end(); it != end;) {
+//         it = next(it, __Recv(
+//             GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
+//         ));
+//     }
+// }
 /**
  * ----------------------------------------------------------------------------
  * drain

@@ -6,8 +6,8 @@ STATIC
 	SLinuxFile.cpp
 	SLinuxIRC.cpp
 	SLinuxPoll.cpp
-	SLinuxResource.cpp
-	SLinuxSocket.cpp
+	#SLinuxResource.cpp
+	#SLinuxSocket.cpp
 )
 # includes
 target_include_directories(SpaceResourceLinux 
