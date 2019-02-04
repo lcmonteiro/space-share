@@ -129,33 +129,42 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * consinterfacestructor
+     * interface
      * ------------------------------------------------------------------------
      * get uri 
+     * ----------------------------------------------------
      */
     inline const SAddress& GetURI() const {
         return __uri;
     }
     /**
+     * ----------------------------------------------------
      * set energy
+     * ----------------------------------------------------
      */
     inline void SetEnergy(size_t energy) {
         SEnergy::Set(energy);    
     }
     /**
+     * ----------------------------------------------------
      * get energy
+     * ----------------------------------------------------
      */
     inline size_t GetEnergy() {
         return SEnergy::Get();
     }
     /**
+     * ----------------------------------------------------
      * is worker is inactive 
+     * ----------------------------------------------------
      */
     inline bool Inactive() {
         return !__waiter.joinable();
     }
     /**
+     * ----------------------------------------------------
      * repair connector
+     * ----------------------------------------------------
      */
     inline void Repair() {
         // decay energy resource ------ 
@@ -170,7 +179,9 @@ public:
         });
     }
     /**
+     * ----------------------------------------------------
      * break connector
+     * ----------------------------------------------------
      **/
     inline void Break() {
         // cancel decay ---------------
@@ -185,17 +196,25 @@ public:
         });
     }
     /**
-     * check good
+     * ----------------------------------------------------
+     * check status
+     * ----------------------------------------------------
      */
     inline bool Good() {
         return !Empty() && _Good();
     }
     /**
-     * wait to be good
+     * ----------------------------------------------------
+     * wait (timeout) to be good
+     * ----------------------------------------------------
      */
     SConnector& Wait(chrono::milliseconds timeout);
 protected:
     /**
+     * ----------------------------------------------------
+     * variables
+     * ----------------------------------------------------
+     **
      * stream identifier
      */
     SAddress __uri;
@@ -230,41 +249,52 @@ protected:
      */
     list<pair<size_t, size_t>> Shape(size_t len, size_t split);
     /**
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
      * logging
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
      * debug
+     * ----------------------------------------------------
      */
     inline void __DEBUG(const string& msg) {
         SLog::__DEBUG(__uri, msg);
     }
     /**
+     * ----------------------------------------------------
      * information
+     * ----------------------------------------------------
      */
     inline void __INFO(const string& msg) {
         SLog::__INFO(__uri, msg);
     }
     /**
+     * ----------------------------------------------------
      * warning
+     * ----------------------------------------------------
      */
     inline void __WARNING(const string& msg) {
         SLog::__WARNING(__uri, msg);
     }
     /**
+     * ----------------------------------------------------
      * error
+     * ----------------------------------------------------
      */
     inline void __ERROR(const string& msg) {
         SLog::__ERROR(__uri, msg);
     }
     /**
+     * ----------------------------------------------------
      * critical error
+     * ----------------------------------------------------
      */
     inline void __CRITITAL(const string& msg) {
         SLog::__CRITITAL(__uri, msg);
     }
 };
 /**
+ * ----------------------------------------------------------------------------
  * definitions
+ * ----------------------------------------------------------------------------
  */
 typedef shared_ptr<SConnector> Connector;
 /**
@@ -298,11 +328,13 @@ public:
     inline Container Read() {
         try {
             return _Read();
-        } catch (ResourceExceptionABORT& ex) {
-            throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
+            INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
-        } catch (ContainerException& ex){
+        } catch (ResourceExceptionABORT& ex) {
+            WARNING(ex.what());
+            throw IConnectorExceptionDEAD(__uri);
+        }  catch (ContainerException& ex){
             ERROR(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
         }
@@ -313,10 +345,12 @@ public:
     inline list<Container> Drain() {
         try {
             return _Drain();
-        } catch (ResourceExceptionABORT& ex) {
-            throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
+            INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
+        } catch (ResourceExceptionABORT& ex) {
+            WARNING(ex.what());
+            throw IConnectorExceptionDEAD(__uri);
         }
     }
 
@@ -325,13 +359,14 @@ protected:
      * ----------------------------------------------------
      * IO interfaces
      * ----------------------------------------------------
+     **
      * read
      */
     virtual Container _Read() = 0;
     /**
      * drain 
      **/
-    virtual list<Container> _Drain() { return {_Read()}; }
+    virtual list<Container> _Drain() { return {}; }
 };
 /**
  * ----------------------------------------------------------------------------
@@ -356,6 +391,7 @@ public:
         try {
             _Write(data);
         } catch (ResourceExceptionABORT& ex) {
+            WARNING(ex.what());
             throw OConnectorExceptionDEAD(__uri);
         }
     }
@@ -394,11 +430,13 @@ public:
     inline Container Read() {
         try {
             return _Read();
-        } catch (ResourceExceptionABORT& ex) {
-            throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
+            INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
-        } catch (ContainerException& ex){
+        } catch (ResourceExceptionABORT& ex) {
+            WARNING(ex.what());
+            throw IConnectorExceptionDEAD(__uri);
+        }  catch (ContainerException& ex){
             ERROR(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
         }
@@ -409,10 +447,12 @@ public:
     inline list<Container> Drain() {
         try {
             return _Drain();
-        } catch (ResourceExceptionABORT& ex) {
-            throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
+            INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
+        } catch (ResourceExceptionABORT& ex) {
+            WARNING(ex.what());
+            throw IConnectorExceptionDEAD(__uri);
         }
     }
     /**
@@ -422,6 +462,7 @@ public:
         try {
             _Write(data);
         } catch (ResourceExceptionABORT& ex) {
+            WARNING(ex.what());
             throw OConnectorExceptionDEAD(__uri);
         }
     }
@@ -430,20 +471,23 @@ protected:
      * ----------------------------------------------------
      * IO interfaces
      * ----------------------------------------------------
+     **
      * read
      */
     virtual Container _Read() = 0;
     /**
      * drain  
      */
-    virtual list<Container> _Drain() { return {_Read()}; }
+    virtual list<Container> _Drain() { return {}; }
     /**
      * write 
      */
     virtual void _Write(const Container& container) = 0;
 };
 /**
+ * ----------------------------------------------------------------------------
  * definitions
+ * ----------------------------------------------------------------------------
  */
 typedef shared_ptr<SInputConnector>    IConnector;
 typedef shared_ptr<SOutputConnector>   OConnector;
@@ -481,10 +525,12 @@ public:
     inline Document Read() {
         try {
             return _Read();
-        } catch (ResourceExceptionABORT& ex) {
-            throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
+            INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
+        } catch (ResourceExceptionABORT& ex) {
+            WARNING(ex.what());
+            throw IConnectorExceptionDEAD(__uri);
         } catch (ContainerException& ex){
             ERROR(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
@@ -496,10 +542,12 @@ public:
     inline list<Document> Drain() {
         try {
             return _Drain();
-        } catch (ResourceExceptionABORT& ex) {
-            throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
+            INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
+        } catch (ResourceExceptionABORT& ex) {
+            WARNING(ex.what());
+            throw IConnectorExceptionDEAD(__uri);
         }
     }
 protected:
@@ -511,13 +559,14 @@ protected:
      * ----------------------------------------------------
      * IO interfaces
      * ----------------------------------------------------
+     **
      * read
      */
     virtual Document _Read() = 0;
     /**
      * drain
      */
-    virtual list<Document> _Drain() { return {_Read()}; }
+    virtual list<Document> _Drain() { return {}; }
 };
 /**
  * ----------------------------------------------------------------------------
@@ -542,6 +591,7 @@ public:
         try {
             _Write(data);
         } catch (ResourceExceptionABORT& ex) {
+            WARNING(ex.what());
             throw OConnectorExceptionDEAD(__uri);
         }
     }
@@ -579,10 +629,12 @@ public:
     inline Document Read(){
         try {
             return _Read();
-        } catch (ResourceExceptionABORT& ex) {
-            throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
+            INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
+        } catch (ResourceExceptionABORT& ex) {
+            WARNING(ex.what());
+            throw IConnectorExceptionDEAD(__uri);
         } catch (ContainerException& ex){
             ERROR(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
@@ -594,10 +646,12 @@ public:
     inline list<Document> Drain() {
         try {
             return _Drain();
-        } catch (ResourceExceptionABORT& ex) {
-            throw IConnectorExceptionDEAD(__uri);
         } catch (ResourceExceptionTIMEOUT& ex) {
+            INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
+        } catch (ResourceExceptionABORT& ex) {
+            WARNING(ex.what());
+            throw IConnectorExceptionDEAD(__uri);
         }
     }
     /**
@@ -607,6 +661,7 @@ public:
         try {
             _Write(data);
         } catch (ResourceExceptionABORT& ex) {
+            WARNING(ex.what());
             throw OConnectorExceptionDEAD(__uri);
         }
     }
@@ -619,26 +674,32 @@ protected:
      * ----------------------------------------------------
      * IO interfaces
      * ----------------------------------------------------
+     **
      * read
      */
     virtual Document _Read() = 0;
     /**
      * drain 
      */
-    virtual list<Document> _Drain() { return {_Read()}; }
+    virtual list<Document> _Drain() { return {}; }
     /**
      * write 
      */
     virtual void _Write(const Document& container) = 0;
 };
 /**
+ * ----------------------------------------------------------------------------
  * definitions
+ * ----------------------------------------------------------------------------
  */
 typedef shared_ptr<SInputConnector>    IConnector;
 typedef shared_ptr<SOutputConnector>   OConnector;
 typedef shared_ptr<SInOutputConnector> IOConnector;
 }
 /**
+ * ------------------------------------------------------------------------------------------------
+ * end
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* SCONNECTOR_H */
 

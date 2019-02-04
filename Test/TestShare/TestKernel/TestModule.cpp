@@ -40,7 +40,8 @@ TEST(SModule, EchoSpliter)
             {Module::VERBOSE, "4"}
         }}},
         {Spliter::Command::FUNCTION, {{
-            {Module::Function::TYPE, Module::Function::Type::MESSAGE}
+            {Module::Function::TYPE, Module::Function::Type::MESSAGE},
+            {Module::IO::VERBOSE, "4"}
         }}},
         {Spliter::Command::INOUT,    {{
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_REMOTE},
@@ -77,7 +78,7 @@ TEST(SModule, EchoSpliter)
     EXPECT_EQ(interface.Drain(in).Good(), true);
 
     // wait ------------------------------------------------------------------- 
-    Monitor(Monitor::Time(2000), &interface).Wait();
+    Monitor(Monitor::Time(1000), &interface).Wait();
 
     // receive ----------------------------------------------------------------
     EXPECT_EQ(interface.Read(out).Good(), true);

@@ -259,7 +259,7 @@ protected:
      * drain road 
      *-------------------------------------------------------------------------------**/
     template<class I, class O>
-    void drainRoad(I& in, O& out){
+    void drainRoad(I& in, O& out) {
         for (auto it = in.begin(), end = in.end(); it != end;) {
             try {
                 for (auto& d : it->second->Drain()) { processData(move(d), out); } ++it;

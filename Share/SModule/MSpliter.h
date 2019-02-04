@@ -140,6 +140,7 @@ protected:
     State __ProcessMachine(const State& state, const Clock::Pointer& end) override {
         // log info -----------------------------------------------------------
         INFO("Process={ "
+            << "state: "      << state               << ", "
             << "energy: "     << SEnergy::Get()      << ", "
             << "inputs: "     << __GetStatus(__in)   << ", "
             << "outputs: "    << __GetStatus(__out)  << ", "

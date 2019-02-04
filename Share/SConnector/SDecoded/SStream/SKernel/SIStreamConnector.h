@@ -57,7 +57,6 @@ protected:
     Container _Read() override {
         IFrame buffer;
 
-        INFO("DATA");
         // fill container ---------------------------------
         for (;!__container.Full(); __container.push_back(move(buffer))) {
             
