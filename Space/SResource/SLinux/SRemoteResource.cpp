@@ -124,7 +124,7 @@ SRemoteResource& SRemoteResource::Read(Frame& f) {
 // }
 /**
  * ----------------------------------------------------------------------------
- * drain
+ * drain and write
  * ----------------------------------------------------------------------------
  */
 SRemoteResource& SRemoteResource::Drain(const Frame& f) {
@@ -136,7 +136,18 @@ SRemoteResource& SRemoteResource::Drain(const Frame& f) {
     }
     return *this;
 }
+/**
+ * write
+ */
+template<>
 SRemoteResource& SRemoteResource::Write(OFrame& f) {
+    f.Remove(
+        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+    );
+    return *this;
+}
+template<>
+SRemoteResource& SRemoteResource::Write(Frame& f) {
     f.Remove(
         __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
     );

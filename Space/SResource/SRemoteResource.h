@@ -50,9 +50,8 @@ public:
     /**
      * read and write frame
      */
-    template<typename T>
-    SRemoteResource& Read (T& f);
-    SRemoteResource& Write(OFrame& f);
+    template<typename T> SRemoteResource& Read (T& f);
+    template<typename T> SRemoteResource& Write(T& f);
     /**
      * utils
      */
