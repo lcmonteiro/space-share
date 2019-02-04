@@ -11,6 +11,7 @@
  */
 #include <string>
 #include <vector>
+#include <ostream>
 #include <algorithm>
 #include <stdexcept>
 /**
@@ -573,6 +574,19 @@ private:
      */
     SFrame::iterator __it;
 } OFrame;
+/**
+ * ------------------------------------------------------------------------------------------------
+ * uilities
+ * ------------------------------------------------------------------------------------------------
+ **/
+inline std::ostream& operator<<(std::ostream& os, const Frame& b) {
+    os << "[";
+    for (auto v : b) {
+        os << int(v) << " ";
+    }
+    return os << "]";
+}
+
 /**
  * ------------------------------------------------------------------------------------------------
  * end

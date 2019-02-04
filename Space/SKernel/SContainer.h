@@ -9,10 +9,8 @@
 /**
  * std
  */
-#include <map>
 #include <vector>
 #include <ostream>
-#include <sstream>
 #include <cstdint>
 #include <cstring>
 #include <algorithm>
@@ -21,9 +19,7 @@
  * space
  */
 #include "SFrame.h"
-/**
- */
-using namespace std;
+#include "SText.h"
 /**
  * -------------------------------------------------------------------------------------------------
  * Definitions
@@ -38,9 +34,9 @@ typedef uint32_t framesize_t;
  * Exceptions
  * ------------------------------------------------------------------------------------------------
  **/
-typedef class SContainerException : public range_error {
+typedef class SContainerException : public std::range_error {
 public:
-    using range_error::range_error;
+    using std::range_error::range_error;
 } ContainerException;
 /**
  * ------------------------------------------------------------------------------------------------
@@ -85,10 +81,10 @@ public:
     /**
      * constructors
      */
-    SBuffer():Super(){
+    SBuffer(): Super() {
         exceptions(std::ios::failbit);
     }
-    SBuffer(const Frame& frame):Super() {
+    SBuffer(const Frame& frame): Super() {
         exceptions(std::ios::failbit);
         Write(frame);
     }
@@ -101,10 +97,10 @@ public:
     /**
      * write frame
      */
-    inline SBuffer& Write(const Frame& frame){
+    inline SBuffer& Write(const Frame& frame) {
         write(frame.data(), frame.size()); return *this;
     }
-    inline SBuffer& Write(Frame&& frame){
+    inline SBuffer& Write(Frame&& frame) {
         write(frame.data(), frame.size()); return *this;
     }
     /**
@@ -121,7 +117,7 @@ public:
      */
     inline Frame Read(size_t len) {
         if (Length() < len) {
-            throw ContainerException("len=" + to_string(len));
+            throw ContainerException(SText("len=", len));
         }
         Frame frame(len);
         read(frame.data(), frame.size());
@@ -223,23 +219,29 @@ public:
     /**
      * context constructor
      */
-    SDocument(SContext&& ctx) : Container(), Context(move(ctx)) {
+    SDocument(SContext&& ctx) 
+    : Container(), Context(std::move(ctx)) {
     }
-    SDocument(const SContext& ctx) : Container(), Context(ctx) {
+    SDocument(const SContext& ctx) 
+    : Container(), Context(ctx) {
     }
     /**
      * container constructor
      */
-    SDocument(SContainer&& ctn) : Container(move(ctn)), Context() {
+    SDocument(SContainer&& ctn) 
+    : Container(std::move(ctn)), Context() {
     }
-    SDocument(const SContainer& ctn) : Container(ctn), Context() {
+    SDocument(const SContainer& ctn) 
+    : Container(ctn), Context() {
     }
     /**
      * container&context constructor
      */
-    SDocument(SContainer&& ctn, SContext&& ctx) : Container(move(ctn)), Context(move(ctx)) {
+    SDocument(SContainer&& ctn, SContext&& ctx) 
+    : Container(std::move(ctn)), Context(std::move(ctx)) {
     }
-    SDocument(const SContainer& ctn, const SContext& ctx) : Container(ctn), Context(ctx) {
+    SDocument(const SContainer& ctn, const SContext& ctx) 
+    : Container(ctn), Context(ctx) {
     }
     /**
      * destructor
@@ -317,25 +319,20 @@ protected:
 } IDocument;
 /**
  * ------------------------------------------------------------------------------------------------
- * Utilities
+ * utilities
  * ------------------------------------------------------------------------------------------------
  **/
-inline std::ostream& operator<<(std::ostream& os, const Frame& b) {
-    os << "[";
-    for (auto v : b) {
-        os << int(v) << " ";
-    }
-    return os << "]" << std::endl;
-}
-
 inline std::ostream& operator<<(std::ostream& os, const Container& l) {
     os << "[" << std::endl;
     for (auto v : l) {
         os << " " << v;
     }
-    return os << "]" << std::endl;
+    return os << "]";
 }
 /**
- */
+ * ------------------------------------------------------------------------------------------------
+ * end
+ * ------------------------------------------------------------------------------------------------
+ **/
 #endif /* SSCONTAINER_H */
 

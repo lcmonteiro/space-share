@@ -30,7 +30,7 @@ public:
      */
     SRoadException(std::error_code ec) : std::system_error(ec) {
     }
-    SRoadException(std::error_code ec, const string& what) : system_error(ec, what) {
+    SRoadException(std::error_code ec, const std::string& what) : system_error(ec, what) {
     }
     /**
      * destructor
@@ -322,7 +322,7 @@ public:
      * lengths
      */
     inline std::map<State, size_t> Lengths() {
-        map<State, size_t> out;
+        std::map<State, size_t> out;
         for(auto& a : __process) {
             out[a.first] = a.second.size();
         }
