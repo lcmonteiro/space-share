@@ -267,12 +267,14 @@ public:
      */
     SIFrame& operator=(Frame&& f) {
         *this = SIFrame(std::move(f));
+        return *this;
     }
     /**
      * copy
      */
     SIFrame& operator=(const Frame& f) {
         *this = SIFrame(f);
+        return *this;
     }
     /**
      * ----------------------------------------------------
@@ -280,9 +282,12 @@ public:
      * ----------------------------------------------------
      */
     operator SFrame&() {
-        Shrink(); 
-        return __frame; 
+        Shrink();
+        return __frame;
     }
+    // operator SFrame&&() { 
+    //     return move(SFrame(__frame).Insert(std::distance(__frame.begin(), __it))); 
+    // }
     /**
      * ------------------------------------------------------------------------
      * capacity
@@ -325,7 +330,7 @@ public:
      * get data
      * ------------------------------------------------------------------------
      */
-    inline pointer Data() const {
+    inline pointer Data() {
         return __it.base();
     }
     /**
@@ -333,8 +338,8 @@ public:
      * get size
      * ------------------------------------------------------------------------
      */
-    inline size_t Size() const {
-        return std::distance(SFrame::const_iterator(__it), __frame.end());
+    inline size_t Size() {
+        return std::distance(__it, __frame.end());
     }
     /**
      * ------------------------------------------------------------------------
@@ -454,14 +459,16 @@ public:
      * ----------------------------------------------------
      * move
      */
-    SIFrame& operator=(Frame&& f) {
+    SOFrame& operator=(Frame&& f) {
         *this = SOFrame(std::move(f));
+        return *this;
     }
     /**
      * copy
      */
-    SIFrame& operator=(const Frame& f) {
+    SOFrame& operator=(const Frame& f) {
         *this = SOFrame(f);
+        return *this;
     }
     /**
      * ----------------------------------------------------

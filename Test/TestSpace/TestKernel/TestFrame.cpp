@@ -3,7 +3,7 @@
  * space
  */
 #include "SFrame.h"
-//#include "SRandom.h"
+#include "SRandom.h"
 /**
  * ------------------------------------------------------------------------------------------------
  * frame to number
