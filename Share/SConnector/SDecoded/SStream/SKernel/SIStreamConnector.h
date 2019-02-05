@@ -57,23 +57,28 @@ protected:
     Container _Read() override {
         IFrame buffer;
 
+        DEBUG("DATA::IN" << Frame(__buffer));
+
         // fill container ---------------------------------
-        for (;!__container.Full(); __container.push_back(move(buffer))) {
+        while (!__container.Full()) {
             
             // fill buffer --------------------------------
             while (!__buffer.Full()) {
-                __res.Read(__buffer);    
+                __res.Read(__buffer);   
             }
             // reset buffers ------------------------------
             buffer = IFrame(__buffer.Capacity());
-            swap(__buffer, buffer);
+            std::swap(__buffer, buffer);
+
+            // save buffer --------------------------------
+            __container.emplace_back(std::move(buffer));
         }
         // reset container --------------------------------
         Container container(__container.capacity());
-        swap(__container, container);    
+        std::swap(__container, container);    
 
         // info -------------------------------------------
-        INFO("DATA::IN::n=" << container.size() << "=" << container.front());
+        INFO("DATA::IN::n=" << container.size() << "=" << container.at(0));
 
         // return filled container ------------------------
         return container;
@@ -110,6 +115,7 @@ protected:
 
         // info -------------------------------------------
         INFO("DATA(drain)::IN::n=" << out.size());
+        for(auto&c : out) DEBUG(c);
         
         // return filled container ------------------------
         return out;

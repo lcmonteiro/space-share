@@ -37,24 +37,29 @@ TEST(SModule, EchoSpliter)
     // build a spliter -------------------------------------------------------- 
     Spliter s ({
         {Spliter::Command::MODULE,   {{
-            {Module::TIMEOUT, "200"}
+            {Module::TIMEOUT, "200"},
+            {Module::IO::VERBOSE, "1"}
         }}},
         {Spliter::Command::FUNCTION, {{
-            {Module::Function::TYPE, Module::Function::Type::MESSAGE}
+            {Module::Function::TYPE, Module::Function::Type::MESSAGE},
+            {Module::IO::VERBOSE, "1"}
         }}},
         {Spliter::Command::INOUT,    {{
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_REMOTE},
-            {Module::IO::URI, SText(addr, ":", port1)}
+            {Module::IO::URI, SText(addr, ":", port1)},
+            {Module::IO::VERBOSE, "1"}
         }}},
         {Spliter::Command::INPUT,    {{
             {Module::IO::MINIMUM, "1"}
         }, {
             {Module::IO::TYPE, Module::IO::Type::STREAM_REMOTE},
-            {Module::IO::URI, SText(addr, ":", port2)}
+            {Module::IO::URI, SText(addr, ":", port2)},
+            {Module::IO::VERBOSE, "4"}
         }}},
         {Spliter::Command::OUTPUT,   {{
             {Module::IO::TYPE, Module::IO::Type::STREAM_REMOTE},
-            {Module::IO::URI, SText(addr, ":", port2)}
+            {Module::IO::URI, SText(addr, ":", port2)},
+            {Module::IO::VERBOSE, "1"}
         }}}
     });
     s.Detach();
@@ -74,7 +79,7 @@ TEST(SModule, EchoSpliter)
     EXPECT_EQ(interface.Drain(in).Good(), true);
 
     // wait ------------------------------------------------------------------- 
-    Monitor(Monitor::Time(1000), &interface).Wait();
+    Monitor(Monitor::Time(5000), &interface).Wait();
 
     // receive ----------------------------------------------------------------
     EXPECT_EQ(interface.Read(out).Good(), true);
