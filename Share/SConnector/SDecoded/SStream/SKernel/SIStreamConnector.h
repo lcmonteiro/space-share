@@ -62,7 +62,7 @@ protected:
             
             // fill buffer --------------------------------
             while (!__buffer.Full()) {
-                __res.Read(__buffer);
+                __res.Read(__buffer);    
             }
             // reset buffers ------------------------------
             buffer = IFrame(__buffer.Capacity());
@@ -73,7 +73,7 @@ protected:
         swap(__container, container);    
 
         // info -------------------------------------------
-        INFO("DATA(read)::IN::n=" << container.size() << "=" << container.front());
+        INFO("DATA::IN::n=" << container.size() << "=" << container.front());
 
         // return filled container ------------------------
         return container;
@@ -110,7 +110,7 @@ protected:
 
         // info -------------------------------------------
         INFO("DATA(drain)::IN::n=" << out.size());
-
+        
         // return filled container ------------------------
         return out;
     }

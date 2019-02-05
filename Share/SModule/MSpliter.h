@@ -69,7 +69,7 @@ public:
         {Command::INOUT,    cmd[Command::INOUT]   },
         {Command::INPUT,    cmd[Command::INPUT]   },
         {Command::OUTPUT,   cmd[Command::OUTPUT]  },
-    }) { }
+    }), __io(), __in(), __out(), __func() {}
     /**
      * ------------------------------------------------------------------------
      * destructor

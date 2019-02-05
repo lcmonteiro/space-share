@@ -27,7 +27,7 @@
 /**
  * definitions
  */
-#define IO_TIMEOUT   5
+#define INIT_IO_TIMEOUT   10000 // us
 /**
  * ------------------------------------------------------------------------------------------------
  * linux interface
@@ -61,7 +61,7 @@ bool SRemoteResource::Good() {
 /**
  * Set Timeout
  */
-void SRemoteResource::SetTxTimeout(int timeout) {
+SRemoteResource& SRemoteResource::SetTxTimeout(int timeout) {
     struct timeval t = {
         .tv_sec = timeout,
         .tv_usec = 0
@@ -71,8 +71,9 @@ void SRemoteResource::SetTxTimeout(int timeout) {
     ) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
+    return *this;
 }
-void SRemoteResource::SetRxTimeout(int timeout) {
+SRemoteResource& SRemoteResource::SetRxTimeout(int timeout) {
     struct timeval t = {
         .tv_sec = timeout,
         .tv_usec = 0
@@ -82,17 +83,19 @@ void SRemoteResource::SetRxTimeout(int timeout) {
     ) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
+    return *this;
 }
 /**
  * SetNoDelay
  */
-void SRemoteResource::SetNoDelay(bool flag) {
+SRemoteResource& SRemoteResource::SetNoDelay(bool flag) {
     int f = flag ? 1 : 0;
     if (::setsockopt(
         GetHandler<SResourceHandler>()->FD(), IPPROTO_TCP, TCP_NODELAY, (void*) & f, sizeof (f)
     ) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
+    return *this;
 }
 /**
  * ------------------------------------------------------------------------------------------------
@@ -281,6 +284,13 @@ Message::SRemoteResource& Message::SRemoteResource::Wait(
         if (::bind(h->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
             continue;
         }
+        struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+            continue;
+        }
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+            continue;
+        }
 #ifdef __DEBUG__
         char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
         if (::getnameinfo(
@@ -367,6 +377,16 @@ Message::SRemoteResource& Message::SRemoteResource::Link(const string& host, uin
         if (::connect(h->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
             continue;
         }
+        /**
+         * set options
+         */
+        struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+            continue;
+        }
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+            continue;
+        }
 #ifdef __DEBUG__
         char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
         if (::getnameinfo(
@@ -448,6 +468,13 @@ Stream::SRemoteResource& Stream::SRemoteResource::Wait(
         if (::listen(h->FD(), 1) < -1) {
             continue;
         }
+        struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+            continue;
+        }
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+            continue;
+        }
 #ifdef __DEBUG__
         char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
         if (::getnameinfo(
@@ -516,6 +543,16 @@ Stream::SRemoteResource& Stream::SRemoteResource::Link(const string& host, uint1
          * try to connect
          */
         if (::connect(h->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
+            continue;
+        }
+        /**
+         * set options
+         */
+        struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+            continue;
+        }
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
             continue;
         }
 #ifdef __DEBUG__
@@ -768,7 +805,7 @@ size_t __Send(int fd, Frame::const_pointer p, Frame::size_type s) {
 /**
  */
 size_t __Recv(int fd, Frame::pointer p, Frame::size_type s) {
-    auto n = ::recv(fd, p, s, MSG_DONTWAIT);
+    auto n = ::recv(fd, p, s, 0);
     if (n <= 0) {
         if (n < 0) {
             if (errno == EAGAIN) {

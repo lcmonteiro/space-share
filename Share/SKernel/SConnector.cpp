@@ -37,15 +37,19 @@ list<pair<size_t, size_t>> SConnector::Shape(size_t len, size_t split) {
 	/**
 	 * conditions
 	 */
-	if (ref.quot == 0) {
-		if (ref.rem == 0) {
+	if (0 == ref.quot) {
+		if (0 == ref.rem) {
 			return out;
 		}
 		out.emplace_back(len, 1);
 		return out;
 	}
-	if (ref.rem == 0) {
+	if (0 == ref.rem) {
 		out.emplace_back(split, ref.quot);
+		return out;
+	}
+	if(1 == ref.quot) {
+		out.emplace_back(ref.rem + split, 1);
 		return out;
 	}
 	/**
@@ -53,7 +57,5 @@ list<pair<size_t, size_t>> SConnector::Shape(size_t len, size_t split) {
 	 */
 	out.emplace_back(split, ref.quot - 1);
 	out.emplace_back(ref.rem + split, 1);
-	/**
-	 */
 	return out;
 }

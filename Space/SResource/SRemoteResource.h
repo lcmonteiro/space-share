@@ -33,12 +33,12 @@ public:
     /**
      * timeout
      */
-    void SetRxTimeout(int timeout);
-    void SetTxTimeout(int timeout);
+    SRemoteResource& SetRxTimeout(int timeout);
+    SRemoteResource& SetTxTimeout(int timeout);
     /**
      * behavior
      */
-    void SetNoDelay(bool flag);
+    SRemoteResource& SetNoDelay(bool flag);
     /**
      * ------------------------------------------------------------------------
      * IO functions

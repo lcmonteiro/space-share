@@ -51,7 +51,7 @@ protected:
     void _Write(const Container& container) override {
 
         // log info ---------------------------------------
-        INFO("DATA::OUT::n=" <<container.size() << "=" << container.front());
+        INFO("DATA::OUT::n=" << container.size() << "=" << container.front());
 
         // write nframes ----------------------------------
         for (auto& f : container) {
