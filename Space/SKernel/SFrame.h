@@ -80,17 +80,27 @@ public:
         Capacity(capacity).assign(size, value);
     }
     /**
-     * string 
+     * templates 
      */
-    SFrame(const std::string& s) : Super(s.begin(), s.end()) {
+    template<typename T> SFrame(T&&);
+    template<typename T> SFrame(const T&);
+    
+    SFrame(const std::string& s) 
+    : Super(s.begin(), s.end()) {
     }
     /**
      * ------------------------------------------------------------------------
      * convertions
      * ------------------------------------------------------------------------
      */
-    template<typename T> SFrame& operator=(T&& f);
-    template<typename T> SFrame& operator=(T&  f);
+    template<typename T> 
+    SFrame& operator=(T&& f) {
+        return (*this = SFrame(std::move(f)));
+    }
+    template<typename T> 
+    SFrame& operator=(const T& f){
+        return (*this = SFrame(f));
+    }
     /**
      * ------------------------------------------------------------------------
      * set capacity
@@ -257,31 +267,33 @@ public:
      * ------------------------------------------------------------------------
      * constructors
      * ----------------------------------------------------
-     * move
      */
     SIFrame(SFrame&& f)
-    : __frame(std::move(f)), __it(__frame.end()) {}
-    /**
-     * copy
-     */
+    : __frame(std::move(f)), __it(__frame.end()) {
+    }
     SIFrame(const SFrame& f)
-    : __frame(f), __it(__frame.end()) {}
+    : __frame(f), __it(__frame.end()) {
+    }
     /**
      * ----------------------------------------------------
      * convertions
      * ----------------------------------------------------
      */
-    template<typename T> SIFrame& operator=(T&& f);
-    template<typename T> SIFrame& operator=(const T& f);
+    SIFrame& operator=(SFrame&& f) {
+        return (*this = SIFrame(std::move(f)));
+    }
+    SIFrame& operator=(const SFrame& f) {
+        return (*this = SIFrame(f));
+    }
     /**
      * ----------------------------------------------------
      *  cast operators
      * ----------------------------------------------------
      */
-    operator SFrame&() {
-        Shrink();
-        return __frame;
-    }
+    // operator SFrame&() {
+    //     Shrink();
+    //     return __frame;
+    // }
     // operator SFrame&&() { 
     //     return move(SFrame(__frame).Insert(std::distance(__frame.begin(), __it))); 
     // }
@@ -405,6 +417,7 @@ public:
         return (__it >= __frame.end());
     }
 private:
+    friend class SFrame;
     /**
      * ------------------------------------------------------------------------
      * variable
@@ -441,7 +454,6 @@ public:
      * ------------------------------------------------------------------------
      * constructors
      * ----------------------------------------------------
-     * move
      */
     SOFrame(Frame&& f)
     : __frame(std::move(f)), __it(__frame.begin()) {}
@@ -455,23 +467,11 @@ public:
      * convertions
      * ----------------------------------------------------
      */
-    template<typename T> SOFrame& operator=(T&& f);
-    template<typename T> SOFrame& operator=(const T& f);
-    /**
-     * ----------------------------------------------------
-     * operators =
-     * ----------------------------------------------------
-     * move
-     */
-   
-    /**
-     * ----------------------------------------------------
-     *  cast operators 
-     * ----------------------------------------------------
-     */
-    operator Frame&() {
-        Shrink();
-        return __frame; 
+    SOFrame& operator=(Frame&& f) {
+        return (*this = SOFrame(std::move(f)));
+    }
+    SOFrame& operator=(Frame& f) {
+        return (*this = SOFrame(f));
     }
      /**
      * ------------------------------------------------------------------------
@@ -563,6 +563,7 @@ public:
         return (__it <= __frame.begin());
     }
 private:
+    friend class SFrame;
     /**
      * ------------------------------------------------------------------------
      * variable
