@@ -12,8 +12,9 @@ endif()
 add_library(SpaceKernel 
 STATIC
     ${sources}
-	SAddress.cpp
 	SContainer.cpp
+	SAddress.cpp
+	SFrame.cpp
 	SLog.cpp
 )
 # includes

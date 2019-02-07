@@ -86,6 +86,13 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
+     * convertions
+     * ------------------------------------------------------------------------
+     */
+    template<typename T> SFrame& operator=(T&& f);
+    template<typename T> SFrame& operator=(T&  f);
+    /**
+     * ------------------------------------------------------------------------
      * set capacity
      * ------------------------------------------------------------------------
      */
@@ -261,19 +268,11 @@ public:
     : __frame(f), __it(__frame.end()) {}
     /**
      * ----------------------------------------------------
-     * operators =
+     * convertions
      * ----------------------------------------------------
-     * move
      */
-    SIFrame& operator=(Frame&& f) {
-        *this = SIFrame(std::move(f));
-    }
-    /**
-     * copy
-     */
-    SIFrame& operator=(const Frame& f) {
-        *this = SIFrame(f);
-    }
+    template<typename T> SIFrame& operator=(T&& f);
+    template<typename T> SIFrame& operator=(const T& f);
     /**
      * ----------------------------------------------------
      *  cast operators
@@ -450,19 +449,18 @@ public:
     : __frame(f), __it(__frame.begin()) {}
     /**
      * ----------------------------------------------------
+     * convertions
+     * ----------------------------------------------------
+     */
+    template<typename T> SOFrame& operator=(T&& f);
+    template<typename T> SOFrame& operator=(const T& f);
+    /**
+     * ----------------------------------------------------
      * operators =
      * ----------------------------------------------------
      * move
      */
-    SIFrame& operator=(Frame&& f) {
-        *this = SOFrame(std::move(f));
-    }
-    /**
-     * copy
-     */
-    SIFrame& operator=(const Frame& f) {
-        *this = SOFrame(f);
-    }
+   
     /**
      * ----------------------------------------------------
      *  cast operators 
