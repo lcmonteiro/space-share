@@ -279,9 +279,12 @@ public:
      * ----------------------------------------------------
      */
     operator SFrame&() {
-        Shrink(); 
-        return __frame; 
+        Shrink();
+        return __frame;
     }
+    // operator SFrame&&() { 
+    //     return move(SFrame(__frame).Insert(std::distance(__frame.begin(), __it))); 
+    // }
     /**
      * ------------------------------------------------------------------------
      * capacity
@@ -324,7 +327,7 @@ public:
      * get data
      * ------------------------------------------------------------------------
      */
-    inline pointer Data() const {
+    inline pointer Data() {
         return __it.base();
     }
     /**
@@ -332,8 +335,8 @@ public:
      * get size
      * ------------------------------------------------------------------------
      */
-    inline size_t Size() const {
-        return std::distance(SFrame::const_iterator(__it), __frame.end());
+    inline size_t Size() {
+        return std::distance(__it, __frame.end());
     }
     /**
      * ------------------------------------------------------------------------
