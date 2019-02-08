@@ -256,15 +256,6 @@ public:
     using pointer = Frame::pointer;
     /**
      * ------------------------------------------------------------------------
-     * defaults
-     * ------------------------------------------------------------------------
-     */
-    SIFrame()                       = default;
-    SIFrame(SIFrame&&)              = default;
-    SIFrame(const SIFrame&)         = default;
-    SIFrame& operator=(SIFrame&& f) = default;
-    /**
-     * ------------------------------------------------------------------------
      * initialization 
      * ------------------------------------------------------------------------
      * constructor
@@ -280,9 +271,12 @@ public:
      * constructors
      * ----------------------------------------------------
      */
+    SIFrame();
     SIFrame(SFrame&&  f);
+    SIFrame(SIFrame&& f);
     SIFrame(SOFrame&& f);
     SIFrame(const SFrame& f);
+    SIFrame(const SIFrame& f);
     SIFrame(const SOFrame& f);
     /**
      * ----------------------------------------------------
@@ -441,25 +435,18 @@ public:
     using pointer = Frame::pointer;
     /**
      * ------------------------------------------------------------------------
-     * defaults
-     * ------------------------------------------------------------------------
-     */
-    SOFrame()                          = default;
-    SOFrame(SOFrame&&)                 = default;
-    SOFrame(const SOFrame&)            = default;
-    SOFrame& operator=(SOFrame&&)      = default;
-    SOFrame& operator=(const SOFrame&) = default;
-    /**
-     * ------------------------------------------------------------------------
      * conversions
      * ------------------------------------------------------------------------
      * constructors
      * ----------------------------------------------------
      */
+    SOFrame();
     SOFrame(SFrame&&  f);
     SOFrame(SIFrame&& f);
+    SOFrame(SOFrame&& f);
     SOFrame(const SFrame& f);
     SOFrame(const SIFrame& f);
+    SOFrame(const SOFrame& f);
     /**
      * ----------------------------------------------------
      * operators
