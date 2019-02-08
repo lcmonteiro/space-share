@@ -60,6 +60,8 @@ public:
  * Frame
  * -------------------------------------------------------------------------------------------------
  **/
+class SIFrame;
+class SOFrame;
 typedef class SFrame : public std::vector<uint8_t> {
 public:
     using Super = std::vector<uint8_t>;
@@ -71,27 +73,33 @@ public:
     using Super::Super;
     /**
      * ------------------------------------------------------------------------
-     * constructors
-     * ------------------------------------------------------------------------
      * initialization
+     * ------------------------------------------------------------------------
+     * constructors
+     * ----------------------------------------------------
      */
     SFrame(const size_t  size, const size_t  capacity, const uint8_t value = 0)
     : Super() {
         Capacity(capacity).assign(size, value);
     }
-    /**
-     * templates 
-     */
-    template<typename T> SFrame(T&&);
-    template<typename T> SFrame(const T&);
-    
     SFrame(const std::string& s) 
     : Super(s.begin(), s.end()) {
     }
     /**
      * ------------------------------------------------------------------------
-     * convertions
+     * conversions
      * ------------------------------------------------------------------------
+     * constructors
+     * ----------------------------------------------------
+     */
+    SFrame(SIFrame&&);
+    SFrame(SOFrame&&);
+    SFrame(const SIFrame&);
+    SFrame(const SOFrame&);
+    /**
+     * ----------------------------------------------------
+     * operations
+     * ----------------------------------------------------
      */
     template<typename T> 
     SFrame& operator=(T&& f) {
@@ -257,46 +265,38 @@ public:
     SIFrame& operator=(SIFrame&& f) = default;
     /**
      * ------------------------------------------------------------------------
-     * constructor 
+     * initialization 
      * ------------------------------------------------------------------------
+     * constructor
+     * ----------------------------------------------------
      */
-    SIFrame(size_t capacity) : __frame(capacity), __it(__frame.begin()) {}
+    SIFrame(size_t capacity) 
+    : __frame(capacity), __it(__frame.begin()) {
+    }
     /**
      * ------------------------------------------------------------------------
-     * Frame - interface
+     * conversions
      * ------------------------------------------------------------------------
      * constructors
      * ----------------------------------------------------
      */
-    SIFrame(SFrame&& f)
-    : __frame(std::move(f)), __it(__frame.end()) {
-    }
-    SIFrame(const SFrame& f)
-    : __frame(f), __it(__frame.end()) {
-    }
+    SIFrame(SFrame&&  f);
+    SIFrame(SOFrame&& f);
+    SIFrame(const SFrame& f);
+    SIFrame(const SOFrame& f);
     /**
      * ----------------------------------------------------
-     * convertions
+     * operators
      * ----------------------------------------------------
      */
-    SIFrame& operator=(SFrame&& f) {
+    template<typename T> 
+    SIFrame& operator=(T&& f) {
         return (*this = SIFrame(std::move(f)));
     }
-    SIFrame& operator=(const SFrame& f) {
+    template<typename T> 
+    SIFrame& operator=(const T& f){
         return (*this = SIFrame(f));
     }
-    /**
-     * ----------------------------------------------------
-     *  cast operators
-     * ----------------------------------------------------
-     */
-    // operator SFrame&() {
-    //     Shrink();
-    //     return __frame;
-    // }
-    // operator SFrame&&() { 
-    //     return move(SFrame(__frame).Insert(std::distance(__frame.begin(), __it))); 
-    // }
     /**
      * ------------------------------------------------------------------------
      * capacity
@@ -347,8 +347,8 @@ public:
      * get size
      * ------------------------------------------------------------------------
      */
-    inline size_t Size() {
-        return std::distance(__it, __frame.end());
+    inline size_t Size() const {
+        return distance(SFrame::const_iterator(__it), __frame.end());
     }
     /**
      * ------------------------------------------------------------------------
@@ -418,6 +418,7 @@ public:
     }
 private:
     friend class SFrame;
+    friend class SOFrame;
     /**
      * ------------------------------------------------------------------------
      * variable
@@ -450,27 +451,26 @@ public:
     SOFrame& operator=(const SOFrame&) = default;
     /**
      * ------------------------------------------------------------------------
-     * Frame - interface
+     * conversions
      * ------------------------------------------------------------------------
      * constructors
      * ----------------------------------------------------
      */
-    SOFrame(Frame&& f)
-    : __frame(std::move(f)), __it(__frame.begin()) {}
-    /**
-     * copy
-     */
-    SOFrame(const Frame& f)
-    : __frame(f), __it(__frame.begin()) {}
+    SOFrame(SFrame&&  f);
+    SOFrame(SIFrame&& f);
+    SOFrame(const SFrame& f);
+    SOFrame(const SIFrame& f);
     /**
      * ----------------------------------------------------
-     * convertions
+     * operators
      * ----------------------------------------------------
      */
-    SOFrame& operator=(Frame&& f) {
+    template<typename T> 
+    SOFrame& operator=(T&& f) {
         return (*this = SOFrame(std::move(f)));
     }
-    SOFrame& operator=(Frame& f) {
+    template<typename T> 
+    SOFrame& operator=(const T& f){
         return (*this = SOFrame(f));
     }
      /**
@@ -515,8 +515,8 @@ public:
      * get size
      * ------------------------------------------------------------------------
      */
-    inline size_t Size() {
-        return distance(__it, __frame.end());
+    inline size_t Size() const {
+        return distance(SFrame::const_iterator(__it), __frame.end());
     }
     /**
      * ------------------------------------------------------------------------
@@ -564,6 +564,7 @@ public:
     }
 private:
     friend class SFrame;
+    friend class SIFrame;
     /**
      * ------------------------------------------------------------------------
      * variable
@@ -588,7 +589,6 @@ inline std::ostream& operator<<(std::ostream& os, const Frame& b) {
     }
     return os << "]";
 }
-
 /**
  * ------------------------------------------------------------------------------------------------
  * end

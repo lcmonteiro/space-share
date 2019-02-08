@@ -20,40 +20,17 @@
  * constructors
  * --------------------------------------------------------
  **/
-template<>
-SFrame::SFrame(SIFrame& f) 
+SFrame::SFrame(SIFrame&& f) 
+: Super(std::move(f.Shrink().__frame)) {
+}
+SFrame::SFrame(SOFrame&& f) 
+: Super(std::move(f.Shrink().__frame)) {
+}
+SFrame::SFrame(const SIFrame& f) 
 : Super(std::move(SIFrame(f).Shrink().__frame)) {
 }
-
-
-/**
- * --------------------------------------------------------
- * operatores
- * --------------------------------------------------------
- **/
-template<>
-SFrame& SFrame::operator=(SIFrame&& f) {
-    f.Shrink();
-    *this = std::move(f.__frame);
-    f.Reset();
-    return *this;
-}
-template<>
-SFrame& SFrame::operator=(const SIFrame& f) {
-    *this = std::move(SIFrame(f).Shrink().__frame);
-    return *this;
-}
-template<>
-SFrame& SFrame::operator=(SOFrame&& f) {
-    f.Shrink();
-    *this = std::move(f.__frame);
-    f.Reset();
-    return *this;
-}
-template<>
-SFrame& SFrame::operator=(const SOFrame& f) {
-    *this = std::move(SOFrame(f).Shrink().__frame);
-    return *this;
+SFrame::SFrame(const SOFrame& f) 
+: Super(std::move(SOFrame(f).Shrink().__frame)) {
 }
 /**
  * ----------------------------------------------------------------------------
@@ -62,12 +39,18 @@ SFrame& SFrame::operator=(const SOFrame& f) {
  * constructors
  * --------------------------------------------------------
  **/
-/**
- * --------------------------------------------------------
- * operatores
- * --------------------------------------------------------
- **/
-
+SIFrame::SIFrame(SOFrame&& f)
+: __frame(std::move(f.__frame)), __it(f.__it) {
+}
+SIFrame::SIFrame(SFrame&& f)
+: __frame(std::move(f)), __it(__frame.end()) {
+}
+SIFrame::SIFrame(const SOFrame& f)
+: __frame(f.__frame), __it(std::prev(__frame.end(), f.Size())) {
+}
+SIFrame::SIFrame(const SFrame& f)
+: __frame(f), __it(__frame.end()) {
+}
 /**
  * ----------------------------------------------------------------------------
  * SOFrame
@@ -75,27 +58,18 @@ SFrame& SFrame::operator=(const SOFrame& f) {
  * constructors
  * --------------------------------------------------------
  **/
-// template<>
-// SOFrame::SOFrame(SFrame&& f)
-// : __frame(std::move(f)), __it(__frame.begin()) {
-// }
-// template<>
-// SOFrame::SOFrame(const SFrame& f)
-// : __frame(f), __it(__frame.begin()) {
-// }
-/**
- * --------------------------------------------------------
- * operatores
- * --------------------------------------------------------
- **/
-// template<>
-// SOFrame& SOFrame::operator=(Frame&& f) {
-//     *this = SOFrame(std::move(f));
-// }
-// template<>
-// SOFrame& SOFrame::operator=(Frame& f) {
-//     *this = SOFrame(f);
-// }
+SOFrame::SOFrame(SIFrame&& f)
+: __frame(std::move(f.__frame)), __it(f.__it) {
+}    
+SOFrame::SOFrame(SFrame&& f)
+: __frame(std::move(f)), __it(__frame.begin()) {
+}    
+SOFrame::SOFrame(const SIFrame& f)
+: __frame(f.__frame), __it(std::prev(__frame.end(), f.Size())) {   
+}
+SOFrame::SOFrame(const SFrame& f)
+: __frame(f), __it(__frame.begin()) {   
+}
 /**
  * ------------------------------------------------------------------------------------------------
  * end
