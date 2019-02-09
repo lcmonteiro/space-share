@@ -4,10 +4,6 @@
  *
  * Created on February  2, 2019, 10:21 AM
  **
- * std 
- */
-#include <iostream>
-/** 
  * space
  */
 #include "SFrame.h"
@@ -21,18 +17,18 @@
  * --------------------------------------------------------
  **/
 SFrame::SFrame(SIFrame&& f) 
-: Super(std::move(f.Shrink().__frame)) {
+: Super(std::move(f.Shrink())) {
     f.Reset();
 }
 SFrame::SFrame(SOFrame&& f) 
-: Super(std::move(f.Shrink().__frame)) {
+: Super(std::move(f.Shrink())) {
     f.Reset();
 }
 SFrame::SFrame(const SIFrame& f) 
-: Super(std::move(SIFrame(f).Shrink().__frame)) {
+: Super(std::move(SIFrame(f).Shrink())) {
 }
 SFrame::SFrame(const SOFrame& f) 
-: Super(std::move(SOFrame(f).Shrink().__frame)) {
+: Super(std::move(SOFrame(f).Shrink())) {
 }
 /**
  * ----------------------------------------------------------------------------
@@ -42,27 +38,29 @@ SFrame::SFrame(const SOFrame& f)
  * --------------------------------------------------------
  **/
 SIFrame::SIFrame() 
-: __frame(), __it(__frame.end()) { 
+: SFrame(), __it(end()) { 
 }
 SIFrame::SIFrame(SFrame&& f)
-: __frame(std::move(f)), __it(__frame.end()) {
+: SFrame(std::move(f)), __it(end()) {
+
 }
+
 SIFrame::SIFrame(SIFrame&& f)
-: __frame(std::move(f.__frame)), __it(f.__it) {
+: SFrame(std::move(f)), __it(f.__it) {
     f.Reset();
 }
 SIFrame::SIFrame(SOFrame&& f)
-: __frame(std::move(f.__frame)), __it(f.__it) {
+: SFrame(std::move(f)), __it(f.__it) {
     f.Reset();
 }
 SIFrame::SIFrame(const SFrame& f)
-: __frame(f), __it(__frame.end()) {
+: SFrame(f.capacity(), f.begin(), f.end()), __it(end()) {
 }
 SIFrame::SIFrame(const SIFrame& f)
-: __frame(f.__frame), __it(std::prev(__frame.end(), f.Size())) {
+: SFrame(f.capacity(), f.begin(), f.end()), __it(std::prev(end(), f.Size())) {
 }
 SIFrame::SIFrame(const SOFrame& f)
-: __frame(f.__frame), __it(std::prev(__frame.end(), f.Size())) {
+: SFrame(f.capacity(), f.begin(), f.end()), __it(std::next(begin(), f.Size())) {
 }
 /**
  * ----------------------------------------------------------------------------
@@ -72,29 +70,28 @@ SIFrame::SIFrame(const SOFrame& f)
  * --------------------------------------------------------
  **/
 SOFrame::SOFrame()
-: __frame(), __it(__frame.begin()) {
+: SFrame(), __it(begin()) {
 }    
 SOFrame::SOFrame(SFrame&& f)
-: __frame(std::move(f)), __it(__frame.begin()) {
+: SFrame(std::move(f)), __it(begin()) {
 }
 SOFrame::SOFrame(SIFrame&& f)
-: __frame(std::move(f.__frame)), __it(f.__it) {
+: SFrame(std::move(f)), __it(f.__it) {
     f.Reset();
 }    
 SOFrame::SOFrame(SOFrame&& f)
-: __frame(std::move(f.__frame)), __it(f.__it) {
+: SFrame(std::move(f)), __it(f.__it) {
     f.Reset();
 }    
 SOFrame::SOFrame(const SFrame& f)
-: __frame(f), __it(__frame.begin()) {   
+: SFrame(f.capacity(), f.begin(), f.end()), __it(begin()) {   
 }
 SOFrame::SOFrame(const SIFrame& f)
-: __frame(f.__frame), __it(std::prev(__frame.end(), f.Size())) {   
+: SFrame(f.capacity(), f.begin(), f.end()), __it(std::prev(end(), f.Size())) {   
 }
 SOFrame::SOFrame(const SOFrame& f)
-: __frame(f.__frame), __it(std::prev(__frame.end(), f.Size())) {   
+: SFrame(f.capacity(), f.begin(), f.end()), __it(std::next(begin(), f.Size())) {   
 }
-
 /**
  * ------------------------------------------------------------------------------------------------
  * end

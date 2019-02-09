@@ -12,7 +12,7 @@
 TEST(SFrame, Conversion)
 {
     // use case 1 --------------------
-    IFrame in = SFrame().Capacity(10).Insert(1).Detach();
+    IFrame in = SFrame(10, 1).Detach();
 
     // write --------------------------
     in.Expand().Write({1, 2, 3}).Write({9, 8, 7});
@@ -30,14 +30,14 @@ TEST(SFrame, Number)
     auto sample = SRandom::Number<int>();
 
     // test case 1 --------------------
-    SFrame frm1 (10);
+    Frame frm1 (10, 10);
     // set sample on a frame
     frm1.Number(sample);
     // test case 1 
     EXPECT_EQ(frm1.Number<int>(), sample);
     
     // test case 2 --------------------
-    SFrame frm2 (4);
+    Frame frm2 (4, 4);
     // set sample on a frame
     frm2.Number(sample);
     // test case 1 
