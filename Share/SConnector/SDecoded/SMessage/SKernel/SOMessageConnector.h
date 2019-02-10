@@ -48,7 +48,7 @@ protected:
      */
     void _Write(const Container& container) override {
         // log info ---------------------------------------
-        INFO("DATA::OUT::n=" <<container.size());
+        INFO("DATA::OUT::n=" << container.size());
         
         // compress and remove buffer size ----------------
         TOOL::Join(container, __buffer);

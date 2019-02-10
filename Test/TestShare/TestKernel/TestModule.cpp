@@ -54,7 +54,7 @@ TEST(SModule, EchoSpliter)
         }, {
             {Module::IO::TYPE, Module::IO::Type::STREAM_REMOTE},
             {Module::IO::URI, SText(addr, ":", port2)},
-            {Module::IO::VERBOSE, "4"}
+            {Module::IO::VERBOSE, "1"}
         }}},
         {Spliter::Command::OUTPUT,   {{
             {Module::IO::TYPE, Module::IO::Type::STREAM_REMOTE},
@@ -65,7 +65,7 @@ TEST(SModule, EchoSpliter)
     s.Detach();
     // build a test frames ---------------------------------------------------- 
     auto in  = SRandom::Frame(size);
-    auto out = Frame(size);
+    auto out = IFrame(size);
 
     // interface resource -----------------------------------------------------
     auto interface = Message::SRemoteResource()

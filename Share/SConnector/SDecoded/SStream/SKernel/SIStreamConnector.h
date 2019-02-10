@@ -56,16 +56,12 @@ protected:
      */
     Container _Read() override {
         IFrame buffer;
-
-        DEBUG("DATA::IN" << Frame(__buffer));
-
         // fill container ---------------------------------
         while (!__container.Full()) {
             
             // fill buffer --------------------------------
-            while (!__buffer.Full()) {
-                __res.Read(__buffer);   
-            }
+            __res.Fill(__buffer); 
+
             // reset buffers ------------------------------
             buffer = IFrame(__buffer.Capacity());
             std::swap(__buffer, buffer);
@@ -90,32 +86,30 @@ protected:
      */
     list<Container> _Drain() override {
         Buffer tmp;
-
         // check if container is full ---------------------
         if (!__container.empty()) {
             auto container = Container(__container.capacity());
-            swap(__container, container);
-            tmp.Write(move(container));
+            std::swap(__container, container);
+            tmp.Write(std::move(container));
         }
         // check if frame is full -------------------------
         if (!__buffer.Empty()) {
             auto buffer = IFrame(__buffer.Capacity());
-            swap(__buffer, buffer);
-            tmp.Write(move(buffer.Shrink()));
+            std::swap(__buffer, buffer);
+            tmp.Write(std::move(buffer.Shrink()));
         }
         // fill container ---------------------------------
         list<Container> out;
         for (auto& p : Shape(tmp.Length(), __container.capacity())) {
             auto container = Container(p.first);
             while (!container.Full()) {
-                container.push_back(move(tmp.Read(p.second)));
+                container.emplace_back(tmp.Read(p.second));
             }
-            out.push_back(move(container));
+            out.emplace_back(std::move(container));
         }
 
         // info -------------------------------------------
         INFO("DATA(drain)::IN::n=" << out.size());
-        for(auto&c : out) DEBUG(c);
         
         // return filled container ------------------------
         return out;

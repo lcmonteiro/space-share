@@ -64,10 +64,10 @@ protected:
         TOOL::Split(__buffer, __container);
 
         // reset container --------------------------------
-        swap(__container, container);    
+        std::swap(__container, container);    
 
         // info -------------------------------------------
-        INFO("DATA::IN::n=" << container.size() << "=" << container.front());
+        INFO("DATA::IN::n=" << container.size() << "=" << container.at(0));
         
         // return filled container ------------------------
         return container;
@@ -82,7 +82,7 @@ protected:
         INFO("DATA::OUT::n=" <<container.size());
         
         // compress and remove buffer size ----------------
-        TOOL::Join(container, __buffer);
+        TOOL::Join(container, __buffer.Shrink());
         
         // write buffer -----------------------------------
         __res.Drain(__buffer);

@@ -105,13 +105,24 @@ SRemoteResource& SRemoteResource::SetNoDelay(bool flag) {
  * ----------------------------------------------------------------------------
  * fill
  */
-// SRemoteResource& SRemoteResource::Fill(Frame& f) {
-//     for (auto it = f.begin(), end = f.end(); it != end;) {
-//         it = next(it, __Recv(
-//             GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
-//         ));
-//     }
-// }
+template<>
+SRemoteResource& SRemoteResource::Fill(IFrame& f) {
+    while (!f.Full()) {
+        f.Insert(__Recv(
+            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
+        ));
+    }
+    return *this;
+}
+template<>
+SRemoteResource& SRemoteResource::Fill(Frame& f) {
+    for (auto it = f.begin(), end = f.end(); it != end;) {
+        it = next(it, __Recv(
+            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
+        ));
+    }
+    return *this;
+}
 /**
  * read
  */
@@ -129,14 +140,34 @@ SRemoteResource& SRemoteResource::Read(Frame& f) {
     );
     return *this;
 }
-
 /**
  * ----------------------------------------------------------------------------
  * Output
  * ----------------------------------------------------------------------------
  * drain
  */
+template<>
+SRemoteResource& SRemoteResource::Drain(OFrame& f) {
+    // send loop ----------------------
+    while (!f.Empty()) {
+        f.Remove(__Send(
+            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
+        ));
+    }
+    return *this;
+}
+template<>
 SRemoteResource& SRemoteResource::Drain(const Frame& f) {
+    // send loop ----------------------
+    for (auto it = f.begin(), end = f.end(); it != end;) {
+        it = next(it, __Send(
+            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
+        ));
+    }
+    return *this;
+}
+template<>
+SRemoteResource& SRemoteResource::Drain(Frame& f) {
     // send loop ----------------------
     for (auto it = f.begin(), end = f.end(); it != end;) {
         it = next(it, __Send(

@@ -257,8 +257,8 @@ protected:
             do {
                 for(auto& i : m.Wait(Clock::Remaining(end))) {
                     switch(i) {
-                        case 1: __func->Process(__io, __out); break;
-                        case 2: __func->Process(__in, __io);  break;
+                        case 0: __func->Process(__io, __out); break;
+                        case 1: __func->Process(__in, __io);  break;
                     }
                 }                
             } while(Clock::Remaining(end) > Clock::Distance::zero());

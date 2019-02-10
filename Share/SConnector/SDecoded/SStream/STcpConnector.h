@@ -39,7 +39,7 @@ public:
      */
     using Super::Super;
     using Super::operator=;
-    using Super::Read;
+    using Super::Fill;
     using Super::Drain;
     using Super::Good;
     /**

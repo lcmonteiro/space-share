@@ -108,17 +108,17 @@ public:
      */ 
     inline SFrame& operator=(SFrame&&  f) = default;
     inline SFrame& operator=(SIFrame&& f) {
-        return (*this = SFrame(std::move(f)));
+        return __Consume(SFrame(std::move(f)));
     }
     inline SFrame& operator=(SOFrame&& f) {
-        return (*this = SFrame(std::move(f)));
+        return __Consume(SFrame(std::move(f)));
     } 
     inline SFrame& operator=(const SFrame&  f) = default;
     inline SFrame& operator=(const SIFrame& f) {
-        return (*this = SFrame(f));
+        return __Consume(SFrame(f));
     }
     inline SFrame& operator=(const SOFrame& f) {
-        return (*this = SFrame(f));
+        return __Consume(SFrame(f));
     }
     /**
      * ------------------------------------------------------------------------
@@ -219,11 +219,9 @@ public:
      *  - throw exception when size > Size()
      * ------------------------------------------------------------------------
      */
-    inline SFrame& Shrink(size_t size) {
+    inline SFrame& Shrink(size_t size = 0) {
         if (Size() < size) {
-            throw FrameException(
-                SText("Shrink=(", Size(), "<", size, ")")
-            );
+            throw FrameException(SText("Shrink=(", Size(), "<", size, ")"));
         }
         resize(size);
         return *this;
@@ -255,6 +253,18 @@ public:
      */
     inline SFrame&& Detach() {
         return std::move(*this);
+    }
+protected:
+    /**
+     * ------------------------------------------------------------------------
+     * consume
+     * ------------------------------------------------------------------------
+     */
+    inline SFrame& __Consume(SFrame&& f) {
+        // consume super ----------------------------------
+        Super::operator=(std::move(f));
+        // return this frame ------------------------------
+        return *this;
     }
 } Frame;
 /**
@@ -294,11 +304,11 @@ public:
      */
     template<typename T> 
     SIFrame& operator=(T&& f) {
-        return (*this = SIFrame(std::move(f)));
-    }
+        return __Consume(SIFrame(std::move(f)));
+    } 
     template<typename T> 
-    SIFrame& operator=(const T& f){
-        return (*this = SIFrame(f));
+    SIFrame& operator=(const T& f) {
+        return __Consume(SIFrame(f));
     }
     /**
      * ------------------------------------------------------------------------
@@ -325,7 +335,7 @@ public:
      * ----------------------------------------------------
      */
     inline SIFrame& Insert(size_t n) {
-        __it = std::next(begin(), n);
+        __it = std::next(__it, n);
         return *this;
     }
     /**
@@ -419,6 +429,20 @@ public:
     inline bool Full() const {
         return (__it >= end());
     }
+protected:
+    /**
+     * ------------------------------------------------------------------------
+     * consume
+     * ------------------------------------------------------------------------
+     */
+    inline SIFrame& __Consume(SIFrame&& f) {
+        // consume super ----------------------------------
+        Super::operator=(std::move(f));
+        // consume itrator --------------------------------
+        __it = std::move(f.__it);
+        // return this frame ------------------------------
+        return *this;
+    }
 private:
     friend class SOFrame;
     /**
@@ -458,11 +482,11 @@ public:
      */
     template<typename T> 
     SOFrame& operator=(T&& f) {
-        return (*this = SOFrame(std::move(f)));
+        return __Consume(SOFrame(std::move(f)));
     }
     template<typename T> 
-    SOFrame& operator=(const T& f){
-        return (*this = SOFrame(f));
+    SOFrame& operator=(const T& f) {
+        return __Consume(SOFrame(f));
     }
      /**
      * ------------------------------------------------------------------------
@@ -552,6 +576,20 @@ public:
     }
     inline bool Full() const {
         return (__it <= begin());
+    }
+protected:
+    /**
+     * ------------------------------------------------------------------------
+     * consume
+     * ------------------------------------------------------------------------
+     */
+    inline SOFrame& __Consume(SOFrame&& f) {
+        // consume super ----------------------------------
+        Super::operator=(std::move(f));
+        // consume itrator --------------------------------
+        __it = std::move(f.__it);
+        // return this frame ------------------------------
+        return *this;
     }
 private:
     friend class SIFrame;

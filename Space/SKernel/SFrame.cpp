@@ -41,16 +41,14 @@ SIFrame::SIFrame()
 : SFrame(), __it(end()) { 
 }
 SIFrame::SIFrame(SFrame&& f)
-: SFrame(std::move(f)), __it(end()) {
-
+: SFrame(std::forward<SFrame>(f)), __it(end()) {
 }
-
 SIFrame::SIFrame(SIFrame&& f)
-: SFrame(std::move(f)), __it(f.__it) {
+: SFrame(std::forward<SFrame>(f)), __it(f.__it) {
     f.Reset();
 }
 SIFrame::SIFrame(SOFrame&& f)
-: SFrame(std::move(f)), __it(f.__it) {
+: SFrame(std::forward<SFrame>(f)), __it(f.__it) {
     f.Reset();
 }
 SIFrame::SIFrame(const SFrame& f)

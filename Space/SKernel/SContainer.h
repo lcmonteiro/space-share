@@ -119,8 +119,8 @@ public:
         if (Length() < len) {
             throw ContainerException(SText("len=", len));
         }
-        Frame frame(len);
-        read(frame.data(), frame.size());
+        auto frame = Frame(len).Expand().Detach();
+        read(frame.Data(), frame.Size());
         return std::move(frame);
     }
     /**

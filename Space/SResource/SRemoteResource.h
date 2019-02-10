@@ -43,18 +43,17 @@ public:
      * ------------------------------------------------------------------------
      * IO functions
      * ------------------------------------------------------------------------
-     * fill and drain frame
+     * fill and read frame
      */
-    //SRemoteResource& Fill(Frame&  f);
-    SRemoteResource& Drain(const Frame& f);
-    /**
-     * read and write frame
-     */
+    template<typename T> SRemoteResource& Fill (T& f);
     template<typename T> SRemoteResource& Read (T& f);
-    template<typename T> SRemoteResource& Write(T& f);
     /**
-     * utils
+     * drain and write frame
      */
+    template<typename T> SRemoteResource& Drain (T& f);
+    template<typename T> SRemoteResource& Write (T& f);
+    template<typename T> SRemoteResource& Drain (const T& f);
+    template<typename T> SRemoteResource& Write (const T& f);
 protected:
     /**
      * ------------------------------------------------------------------------
