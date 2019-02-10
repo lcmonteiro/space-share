@@ -19,7 +19,7 @@
 /**
  * space 
  */
-#include "SContainer.h"
+#include "SDocument.h"
 #include "SResource.h"
 #include "SAddress.h"
 #include "SEnergy.h"
@@ -27,14 +27,11 @@
 #include "SLog.h"
 #include "STask.h"
 /**
- */
-using namespace std;
-/**
  * -----------------------------------------------------------------------------------------------
  * exceptions
  * -----------------------------------------------------------------------------------------------
  */
-typedef class SConnectorExection : public system_error {
+typedef class SConnectorExection : public std::system_error {
 public:
     /**
      * constructor

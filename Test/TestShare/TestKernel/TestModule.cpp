@@ -13,7 +13,7 @@
  * share
  */
 #include "MSpliter.h"
-//#include <MSpread.h>
+#include "MSpread.h"
 /**
  * -------------------------------------------------------------------------------------------------
  * echo Spliter
@@ -38,28 +38,28 @@ TEST(SModule, EchoSpliter)
     Spliter s ({
         {Spliter::Command::MODULE,   {{
             {Module::TIMEOUT, "200"},
-            {Module::IO::VERBOSE, "1"}
+            {Module::IO::VERBOSE, "0"}
         }}},
         {Spliter::Command::FUNCTION, {{
             {Module::Function::TYPE, Module::Function::Type::MESSAGE},
-            {Module::IO::VERBOSE, "1"}
+            {Module::IO::VERBOSE, "0"}
         }}},
         {Spliter::Command::INOUT,    {{
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_REMOTE},
             {Module::IO::URI, SText(addr, ":", port1)},
-            {Module::IO::VERBOSE, "1"}
+            {Module::IO::VERBOSE, "0"}
         }}},
         {Spliter::Command::INPUT,    {{
             {Module::IO::MINIMUM, "1"}
         }, {
             {Module::IO::TYPE, Module::IO::Type::STREAM_REMOTE},
             {Module::IO::URI, SText(addr, ":", port2)},
-            {Module::IO::VERBOSE, "1"}
+            {Module::IO::VERBOSE, "0"}
         }}},
         {Spliter::Command::OUTPUT,   {{
             {Module::IO::TYPE, Module::IO::Type::STREAM_REMOTE},
             {Module::IO::URI, SText(addr, ":", port2)},
-            {Module::IO::VERBOSE, "1"}
+            {Module::IO::VERBOSE, "0"}
         }}}
     });
     s.Detach();
@@ -73,13 +73,13 @@ TEST(SModule, EchoSpliter)
     .Detach();
 
     // wait -------------------------------------------------------------------
-    EXPECT_EQ(s.WaitState(Spliter::Time(1000), Spliter::PLAY), true);
+    EXPECT_EQ(s.WaitState(Spliter::Time(3000), Spliter::PLAY), true);
 
     // send ------------------------------------------------------------------- 
     EXPECT_EQ(interface.Drain(in).Good(), true);
 
     // wait ------------------------------------------------------------------- 
-    Monitor(Monitor::Time(5000), &interface).Wait();
+    Monitor(Monitor::Time(3000), &interface).Wait();
 
     // receive ----------------------------------------------------------------
     EXPECT_EQ(interface.Read(out).Good(), true);
@@ -91,25 +91,18 @@ TEST(SModule, EchoSpliter)
     s.Attach();
 }
 
-// TEST(SModule, CreateSpread)
-// {
-//     typedef Module::MSpread<Decoded::IConnector, Container, Encoded::OConnector> Spread;
-//     // build 
-//     Spread s ({
-//         {"", {{
-//             {"uri", "test"}
-//         }}},
-//         {"F", {{
-//             {"uri", "test"}
-//         }}},
-//         {"I", {{
-//             {"uri", "test"}
-//         }}},
-//         {"O", {{
-//             {"uri", "test"}
-//         }}}
-//     });
-//     //use case 1 -> positive
-//     //EXPECT_EQ(s.Run(), 0);
-//     //EXPECT_EQ(c.at("I").at(0).at("A"), "a");
-// }
+TEST(SModule, CreateSpread)
+{
+    STask::Enable();
+    // define types -----------------------------------------------------------
+    using Encode  = Module::MSpread<
+        Decoded::IConnector, Decoded::Document, Decoded::OConnector
+    >;
+    using Decode  = Module::MSpread<
+        Decoded::IConnector, Decoded::Document, Decoded::OConnector
+    >;
+    using Monitor = SResourceMonitor<
+    >;
+
+    
+}

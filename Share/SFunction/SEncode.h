@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   SEncode.h
  * Author: Luis Monteiro
  *
  * Created on November 11, 2015, 9:49 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SENCODE_FUNCTION_H
 #define SENCODE_FUNCTION_H
@@ -18,39 +20,50 @@
 #include "SFunction.h"
 #include "SCodec.h"
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Encoder Template
+ * @MIM = minimun redundancy
+ * ------------------------------------------------------------------------------------------------
  */
-template <class W>
-class SEncodeT : public SFunctionSpread<SConnector::Key, Decoded::IConnector, Container, Encoded::OConnector> {
+template <class WALKER, size_t MIN = 10>
+class SEncodeT : public SFunctionSpread<
+    SConnector::Key, Decoded::IConnector, Decoded::Document, Encoded::OConnector> {
     /**
-     * settings
-     */
-    const size_t MIN = 10;
-    /**
-     * define types
+     * super class
      */ 
-    using Super    = SFunctionSpread<SConnector::Key, Decoded::IConnector, Container, Encoded::OConnector>;
+    using Super = SFunctionSpread<
+        SConnector::Key, Decoded::IConnector, Decoded::Document, Encoded::OConnector
+    >;
+    /**
+     * helpers
+     */
     using ORoad    = typename Super::ORoad;
     using Data     = typename Super::Data;
     using Location = typename ORoad::Location;
     using Encoder  = CodecEncoder;
-    using Walker   = W;
+    using Walker   = WALKER;
 public:
     /**
+     * ------------------------------------------------------------------------
      * Encode
      * @param stamp
-     * @param reduncancy
+     * @param redundancy
+     * ------------------------------------------------------------------------
      */
-    SEncodeT(const Stamp& stamp, const uint32_t reduncancy, const uint32_t energy = 1, const uint8_t verbose = 0)
-    : Super("Encode", energy, verbose), __stamp(stamp), __reduncancy(reduncancy) {
+    SEncodeT(
+        const Stamp& stamp, const uint32_t redundancy, const uint32_t energy = 1, const uint8_t verbose = 0
+    ): Super("Encode", energy, verbose), __stamp(stamp), __redundancy(redundancy) {
         Recover();
     }
     SEncodeT(const string& id, 
-    const Stamp& stamp, const uint32_t reduncancy, const uint32_t energy = 1, const uint8_t verbose = 0
-    ): Super(string("Encode(") + id + ")", energy, verbose), __stamp(stamp), __reduncancy(reduncancy) {
+        const Stamp& stamp, const uint32_t redundancy, const uint32_t energy = 1, const uint8_t verbose = 0
+    ): Super(string("Encode(") + id + ")", energy, verbose), __stamp(stamp), __redundancy(redundancy) {
         Recover();
     }
     /**
+     * ------------------------------------------------------------------------
      * Recover 
+     * ------------------------------------------------------------------------
      */
     void Recover() override {
         /**
@@ -63,20 +76,22 @@ public:
         SFunction::Recover();
     }
 protected:
-    /*----------------------------------------------------------------------------------------*
-     * process container
-     *----------------------------------------------------------------------------------------*/
+    /**
+     * ------------------------------------------------------------------------
+     * process Data
+     *-------------------------------------------------------------------------
+     */
     void processData(ORoad& out) override {    
     }
     void processData(Data&& data, ORoad& out) override {
 	    /**
 	     * create encoder
 	     */
-	    Encoder en(move(data), __stamp);
+	    Encoder en(std::move(data), __stamp);
 	    /**
 	     * create context
 	     **/
-	    Context ctxt (__position.next(), en.size(), en.nframesize());
+	    Encoded::Context ctxt (__position.next(), en.size(), en.nframesize());
 	    /**
 	     * log
 	     */
@@ -84,7 +99,7 @@ protected:
 	    /**
 	     * process road until no remain load (remain > 0)
 	     */
-	    size_t remain = max(size_t(ctxt.GetNumFrames()) + __reduncancy, MIN);
+	    size_t remain = std::max(size_t(ctxt.GetNumFrames()) + __redundancy, MIN);
 	    do {
 	        /**
 	         * sum energy
@@ -100,14 +115,16 @@ protected:
 	            /**
 	             * data length based on energy
 	             */
-	            size_t len = ceil(float(it->second->GetEnergy()) / float(total));
+	            size_t len = std::ceil(float(it->second->GetEnergy()) / float(total));
 	            try {
-                /**
-                 * write and update iterator and data
-                 */
-	            it->second->Write(Document(en.length(len).pop(), ctxt)); ++it; remain -= len;
-	            /**
-	             */
+                    /**
+                     * write and update iterator and data
+                     */
+                    it->second->Write(Encoded::Document(en.length(len).pop(), ctxt)); 
+                    /**
+                     * update references
+                     */
+                    ++it; remain -= len;
 		        } catch (ConnectorExceptionDEAD& ex) {
 		            out.Exception(it);
 		        } catch (ConnectorExceptionTIMEOUT& ex){
@@ -117,18 +134,22 @@ protected:
 	}
 private:
     /**
-     * settings
+     * ------------------------------------------------------------------------
+     * variables
+     * ------------------------------------------------------------------------
+     **
+     * stamp
      */
     StampReference __stamp;
     /**
+     * redundancy
      */
-    size_t __reduncancy;
+    size_t __redundancy;
     /**
-     * runtime
+     * position flow 
      */
     Walker __position; 
 };
-
 /**
  *-------------------------------------------------------------------------------------------------
  * message context
@@ -136,7 +157,9 @@ private:
  */
 namespace Message {
 /**
+ * ----------------------------------------------------------------------------
  * walker
+ * ----------------------------------------------------------------------------
  */
 class SWalker {
     typedef minstd_rand0 Generator;
@@ -163,7 +186,9 @@ private:
     Codec::Random __rand;
 };
 /**
+ * ----------------------------------------------------------------------------
  * encoder
+ * ----------------------------------------------------------------------------
  */
 class SEncode : public SEncodeT<SWalker> {
 public:
@@ -177,7 +202,9 @@ public:
  */
 namespace Stream {
 /**
+ * ----------------------------------------------------------------------------
  * walker
+ * ----------------------------------------------------------------------------
  */
 class SWalker {
 public:
@@ -204,12 +231,19 @@ private:
     Codec::Random __rand;
 };
 /**
+ * ----------------------------------------------------------------------------
  * encoder
+ * ----------------------------------------------------------------------------
  */
 class SEncode : public SEncodeT<SWalker> {
 public:
     using SEncodeT<SWalker>::SEncodeT;
 };
 }
+/**
+ * ------------------------------------------------------------------------------------------------
+ * end
+ * ------------------------------------------------------------------------------------------------
+ */
 #endif    /* SENCODE_FUNCTION_H */
 

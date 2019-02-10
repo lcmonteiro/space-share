@@ -11,12 +11,9 @@
  */
 #include "SDirectoryResource.h"
 /**
- * Space Kernel
+ * Share
  */
-#include "SContainer.h"
-/**
- * Share Kernel
- */
+#include "SDocument.h"
 #include "SConnector.h"
 /**
  * Begin namespace Decoded

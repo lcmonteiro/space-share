@@ -73,9 +73,9 @@ namespace Spread {
      * Encode Builder
      */
     template <>
-    struct Builder<Decoded::IConnector, Container, Encoded::OConnector> 
-    : BaseBuilder<Decoded::IConnector, Container, Encoded::OConnector> {
-        using Pointer = typename BaseBuilder<Decoded::IConnector, Container, Encoded::OConnector>::Pointer;
+    struct Builder<Decoded::IConnector, Decoded::Document, Encoded::OConnector> 
+    : BaseBuilder<Decoded::IConnector, Decoded::Document, Encoded::OConnector> {
+        using Pointer = typename BaseBuilder<Decoded::IConnector, Decoded::Document, Encoded::OConnector>::Pointer;
         static inline Pointer Build(const SModule::Command::Group& o){
             static map<SConnector::Key, function <Pointer(const SModule::Command::Group&)>> GENERATOR {
                 {Function::Type::MESSAGE, [](const SModule::Command::Group& o) {
@@ -102,9 +102,9 @@ namespace Spread {
      * Decode Builder
      */
     template <>
-    struct Builder<Encoded::IConnector, Document, Decoded::OConnector> 
-    : BaseBuilder<Encoded::IConnector, Document, Decoded::OConnector> {
-        using Pointer = typename BaseBuilder<Encoded::IConnector, Document, Decoded::OConnector>::Pointer;
+    struct Builder<Encoded::IConnector, Encoded::Document, Decoded::OConnector> 
+    : BaseBuilder<Encoded::IConnector, Encoded::Document, Decoded::OConnector> {
+        using Pointer = typename BaseBuilder<Encoded::IConnector, Encoded::Document, Decoded::OConnector>::Pointer;
         static inline Pointer Build(const SModule::Command::Group& o){
             static map<SConnector::Key, function <Pointer(const SModule::Command::Group&)>> GENERATOR {
                 {Function::Type::MESSAGE, [](const SModule::Command::Group& o) {

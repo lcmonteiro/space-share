@@ -24,6 +24,7 @@
  * message context
  *-------------------------------------------------------------------------------------------------
  */
+namespace Encoded {
 namespace Message {
 /**
  * message cache
@@ -473,7 +474,6 @@ protected:
      */
     Storage __storage;
 };
-}
-
+}}
 #endif /* SCACHE_H */
 

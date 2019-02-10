@@ -4,6 +4,7 @@ add_subdirectory(SCodecV1)
 # SpaceShare target
 add_library(ShareKernel STATIC
 	SConnector.cpp
+	SDocument.cpp
 )
 # includes
 target_include_directories(ShareKernel 

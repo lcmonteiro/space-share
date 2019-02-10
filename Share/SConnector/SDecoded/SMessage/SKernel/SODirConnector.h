@@ -12,12 +12,9 @@
 #include "SDirectoryResource.h"
 #include "SFileResource.h"
 /**
- * Space Kernel
- */
-#include "SContainer.h"
-/**
  * Share Kernel
  */
+#include "SDocument.h"
 #include "SConnector.h"
 /**
  * Begin namespace Decoded

@@ -1,11 +1,13 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   SDecode.h
  * Author: Luis Monteiro
  *
  * Created on November 11, 2015, 9:49 AM
+ * ------------------------------------------------------------------------------------------------
  */
-#ifndef SDECODE_H
-#define    SDECODE_H
+#ifndef SDECODE_FUNCTION_H
+#define SDECODE_FUNCTION_H
 /**
  * C++
  */
@@ -26,22 +28,31 @@ namespace Message {
 /**
  * decode
  */
-class SDecode : public SFunctionSpread<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector> {
+class SDecode : public SFunctionSpread<
+	SConnector::Key, Encoded::IConnector, Encoded::Document, Decoded::OConnector> {
     /**
-     * define types
+     * super class
      */ 
-    using Super    = SFunctionSpread<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
+    using Super = SFunctionSpread<
+        SConnector::Key, Encoded::IConnector, Encoded::Document, Decoded::OConnector
+    >;
+    /**
+     * helpers
+     */
     using ORoad    = typename Super::ORoad;
     using Data     = typename Super::Data;
-    using Cache    = Message::SCache;
+    using Cache    = Encoded::Message::SCache;
 public:
     /**
+	 * ------------------------------------------------------------------------
      * SDecode 
      * @param stamp
      * @param nContainers
+	 * ------------------------------------------------------------------------
      */
-    SDecode(const Stamp& stamp, const uint32_t nContainers, const uint32_t energy = 3, const uint8_t verbose = 0)
-    : Super("Decode", energy, verbose), __cache(stamp, nContainers) {
+    SDecode(
+		const Stamp& stamp, const uint32_t nContainers, const uint32_t energy = 3, const uint8_t verbose = 0
+	): Super("Decode", energy, verbose), __cache(stamp, nContainers) {
     }
     SDecode(
 		const string& id, 
@@ -49,7 +60,9 @@ public:
     ): Super(string("Decode(") + id + ")", energy, verbose), __cache(stamp, nContainers) {
     }
     /**
-     * process
+	 * ------------------------------------------------------------------------
+     * Drain
+	 * ------------------------------------------------------------------------
      */
     void Drain(ORoad& out) {
 	    /**
@@ -62,7 +75,9 @@ public:
 	    processData(out);
     }
     /**
+	 * ------------------------------------------------------------------------
      * Recover
+	 * ------------------------------------------------------------------------
      */
     void Recover() override {
 	    /**
@@ -74,11 +89,13 @@ public:
 	    SFunction::Recover();
     }
 protected:
-    /*----------------------------------------------------------------------------------------*
+    /**
+     * ------------------------------------------------------------------------
      * process Data
-     *----------------------------------------------------------------------------------------*/
-    inline void processData(ORoad& out) {
-	    for (Document& code: __cache.Pop()) {
+     *-------------------------------------------------------------------------
+     */
+	void processData(ORoad& out) override {
+	    for (Encoded::Document& code: __cache.Pop()) {
 	        /**
 	         * write
 	         */
@@ -96,7 +113,7 @@ protected:
 	        }
         }
     }
-	inline void processData(Data&& data, ORoad& out) {
+	void processData(Data&& data, ORoad& out) override {
 	    DEBUG("receive={" 
 	        << " p=" << data.GetPosition() 
 	        << " n=" << data.GetNumFrames() 
@@ -111,8 +128,12 @@ protected:
 	    }
     }
 private:
-    /**
-     * container
+	/**
+     * ------------------------------------------------------------------------
+     * variables
+     *-------------------------------------------------------------------------
+	 **
+     * cache
      */
     Cache __cache;
 };
@@ -124,28 +145,36 @@ private:
  */
 namespace Stream {
 /**
- * decode
+ * Decode
  */
-class SDecode : public SFunctionSpread<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector> {
+class SDecode : public SFunctionSpread<
+	SConnector::Key, Encoded::IConnector, Encoded::Document, Decoded::OConnector> {
     /**
      * settings
      */
     const size_t AUX_SIZE = 5;
     /**
+     * super class
+     */ 
+    using Super = SFunctionSpread<
+        SConnector::Key, Encoded::IConnector, Encoded::Document, Decoded::OConnector
+    >;
+	/**
      * define types
      */ 
-    using Super    = SFunctionSpread<SConnector::Key, Encoded::IConnector, Document, Decoded::OConnector>;
-    using Road     = typename Super::ORoad;
-    using Data     = typename Super::Data;
-    using Cache    = Stream::SCache;
+    using Road  = typename Super::ORoad;
+    using Data  = typename Super::Data;
+    using Cache = Encoded::Stream::SCache;
 public:
     /**
+	 * ------------------------------------------------------------------------
      * SDecode Connector
      * @param nContainers
-     * @param n
+	 * ------------------------------------------------------------------------
      */
-    SDecode(const Stamp& stamp, const uint32_t nContainers, const uint32_t energy = 3, const uint8_t verbose = 0)
-    : Super("Decode", energy, verbose), __cache(stamp, nContainers), __cache_aux(AUX_SIZE) {
+    SDecode(
+		const Stamp& stamp, const uint32_t nContainers, const uint32_t energy = 3, const uint8_t verbose = 0
+	): Super("Decode", energy, verbose), __cache(stamp, nContainers), __cache_aux(AUX_SIZE) {
     	for(auto&c :__cache_aux){ c = Cache(stamp, nContainers); }
     }
     SDecode(
@@ -155,7 +184,9 @@ public:
     	for(auto&c :__cache_aux){ c = Cache(stamp, nContainers); }
     }
     /**
-     * process
+	 * ------------------------------------------------------------------------
+     * Drain
+	 * ------------------------------------------------------------------------
      */
     void Drain(Road& out) {
 	    /**
@@ -190,7 +221,9 @@ public:
 	    }
     }
     /**
+	 * ------------------------------------------------------------------------
      * Recover
+	 * ------------------------------------------------------------------------
      */
     void Recover() override {
 	    /**
@@ -209,11 +242,13 @@ public:
 	    SFunction::Recover();
     }
 protected:
-    /*----------------------------------------------------------------------------------------*
+    /**
+	 * ------------------------------------------------------------------------
      * process Data
-     *----------------------------------------------------------------------------------------*/
-    inline void processData(Road& out){
-	    for (Document& code: __cache.Pop()) {
+     * ------------------------------------------------------------------------
+	 */
+    void processData(Road& out) override {
+	    for (Encoded::Document& code: __cache.Pop()) {
 	        /**
 	         * write
 	         */
@@ -274,7 +309,11 @@ protected:
 	    processData(out);
     }
     /**
-     * sort cache 
+	 * ------------------------------------------------------------------------
+     * cache tools 
+	 * ------------------------------------------------------------------------
+	 **
+	 * sort cache
      */
     inline void sortCache(){
 	    sort(__cache_aux.begin(), __cache_aux.end(), [](Cache& a, Cache& b) {
@@ -307,7 +346,11 @@ protected:
 	    return false;
     }
 private:
-    /**
+	/**
+	 * ------------------------------------------------------------------------
+	 * variables
+	 * ------------------------------------------------------------------------
+	 **
      * main container
      */
     Cache __cache;
@@ -317,5 +360,10 @@ private:
     vector<Cache> __cache_aux;
 };
 }
+/**
+ * ------------------------------------------------------------------------------------------------
+ * end
+ * ------------------------------------------------------------------------------------------------
+ */
 #endif    /* SDECODE_H */
 
