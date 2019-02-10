@@ -30,6 +30,8 @@ public:
     bool Inactive() {
         return false;
     }
+    void Repair() {
+    }
 };
 TEST(SRoadMonitor, Create)
 {

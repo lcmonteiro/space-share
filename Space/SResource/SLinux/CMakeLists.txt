@@ -6,8 +6,8 @@ STATIC
 	SLinuxFile.cpp
 	SLinuxIRC.cpp
 	SLinuxPoll.cpp
-	#SLinuxResource.cpp
-	#SLinuxSocket.cpp
+	SLinuxResource.cpp
+	SLinuxSocket.cpp
 )
 # includes
 target_include_directories(SpaceResourceLinux 
@@ -30,6 +30,7 @@ set(includes
 # source files
 set(sources  
 	${CMAKE_CURRENT_LIST_DIR}/SRemoteResource.cpp
+	${CMAKE_CURRENT_LIST_DIR}/SLocalResource.cpp
 	${CMAKE_CURRENT_LIST_DIR}/SEventResource.cpp
 	PARENT_SCOPE
 )

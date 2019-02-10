@@ -82,19 +82,19 @@ namespace Message {
          * wait
          */
         SRemoteResource& Wait(
-            const string& host, uint16_t port, chrono::seconds timeout=chrono::hours{24}
+            const std::string& host, uint16_t port, std::chrono::seconds timeout=std::chrono::hours{24}
         );
         /**
          * link
          */
         SRemoteResource& Link(
-            const string& host, uint16_t host_port
+            const std::string& host, uint16_t port
         );
         /**
          * detach
          */
         inline SRemoteResource Detach() {
-            return move(*this);
+            return std::move(*this);
         }
     };
 }
@@ -116,19 +116,19 @@ namespace Stream {
          * wait
          */
         SRemoteResource& Wait(
-            const string& host, uint16_t port, chrono::seconds timeout=chrono::hours{24}
+            const std::string& host, uint16_t port, std::chrono::seconds timeout=std::chrono::hours{24}
         );
         /**
          * link
          */
         SRemoteResource& Link(
-            const string& host, uint16_t host_port
+            const std::string& host, uint16_t port
         );
         /**
          * detach
          */
         inline SRemoteResource Detach() {
-            return move(*this);
+            return std::move(*this);
         }
     };
 }

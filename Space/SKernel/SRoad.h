@@ -205,7 +205,7 @@ public:
                 return found->second;
             }
         }
-        throw range_error(__func__);
+        throw std::range_error(__func__);
     }
     /**
      * ------------------------------------------------------------------------

@@ -81,14 +81,12 @@ public:
     using Options = std::map<Key, Groups>;
     /**
      * ------------------------------------------------------------------------
-     * constructure
+     * constructures
      * ------------------------------------------------------------------------
      * default
      */
-    SCommand() = default;
-
-    SCommand(SCommand&&) = default;
-
+    SCommand()                = default;
+    SCommand(SCommand&&)      = default;
     SCommand(const SCommand&) = default;
     /***
      * main
@@ -138,7 +136,7 @@ public:
     }
     inline SCommand& Update(const Key& k1, const Key& k2, const Val& val) {
         for(auto& g : __opts.at(k1)) {
-            g.set(k2, val);
+            g.Set(k2, val);
         }
         return *this;
     }

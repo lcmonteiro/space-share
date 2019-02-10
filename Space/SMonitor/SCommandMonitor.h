@@ -32,7 +32,7 @@ public:
      * ------------------------------------------------------------------------
      */
     SCommandMonitor(const SAddress& add) : __res() {
-        __res.Bind(add.Host());
+        __res.Wait(add.Host());
     }
     /**
      * ------------------------------------------------------------------------
@@ -54,7 +54,7 @@ public:
         __res.Fill(frame);
         
         // create a comand (by parse a command) -----------
-        return Command(string(frame.begin(), frame.end()));
+        return Command(SText(frame.begin(), frame.end()));
     }
 private:
     /**

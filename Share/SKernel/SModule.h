@@ -1,8 +1,10 @@
 /** 
- * File:   SProcess.h
+ * ------------------------------------------------------------------------------------------------
+ * File:   SModule.h
  * Author: Luis Monteiro
  *
  * Created on January 20, 2017, 11:34 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SMODULE_H
 #define SMODULE_H
@@ -21,7 +23,7 @@
 #include "SClock.h"
 #include "SRoad.h"
 /**
- * ------------------------------------------------------------------------------------------------*
+ * ------------------------------------------------------------------------------------------------
  * exceptions 
  * ------------------------------------------------------------------------------------------------
  **/
@@ -45,7 +47,7 @@ public:
     }
 } ModuleExceptionDEAD;
 /**
- * ------------------------------------------------------------------------------------------------*
+ * ------------------------------------------------------------------------------------------------
  * module 
  * ------------------------------------------------------------------------------------------------
  **/
@@ -123,11 +125,6 @@ public:
     GET(MODULE,   Module  );
     GET(FUNCTION, Function);
 };
-constexpr const char* SModuleCommand::MODULE;
-constexpr const char* SModuleCommand::FUNCTION;
-constexpr const char* SModuleCommand::INPUT;
-constexpr const char* SModuleCommand::OUTPUT;
-constexpr const char* SModuleCommand::INOUT;
 /**
  * ------------------------------------------------------------------------------------------------
  * module 
@@ -156,22 +153,10 @@ public:
     using Link    = shared_ptr<SModule>;
     /**
      * --------------------------------------------------------------------------------------------
-     * Fabric
+     * Fabric - create modules
      * --------------------------------------------------------------------------------------------
      */
-    static Link Create(const Command& cmd) {
-        static map<Key, function <Link(const Command& cmd)>> GENERATOR {
-            {"encode", [](const Command& cmd) {
-                auto in = nullptr;
-                return in;
-            }}
-        };
-        try {
-            return GENERATOR[""](cmd);
-        } catch(...) {
-            throw runtime_error("invalid input");
-        }
-    }
+    static Link Create(const Command& cmd);
     /**
      * --------------------------------------------------------------------------------------------
      * Check state

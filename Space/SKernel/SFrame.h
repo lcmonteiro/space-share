@@ -9,6 +9,7 @@
 /**
  * std
  */
+#include <cstring>
 #include <string>
 #include <vector>
 #include <ostream>
@@ -508,6 +509,17 @@ public:
         __it = next(__it, n);
         return *this;
     }
+    /**
+     * ----------------------------------------------------
+     * transfer data to iframe
+     * ----------------------------------------------------
+     */
+    inline SOFrame& Transfer(IFrame& frame) {
+        auto sz = std::min(Size(), frame.Size());
+        std::memcpy(frame.Data(), Data(), sz);
+        frame.Insert(sz);
+        return Remove(sz);
+    }   
     /**
      * ----------------------------------------------------
      * seek to position (p)

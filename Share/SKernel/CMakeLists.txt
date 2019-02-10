@@ -5,6 +5,7 @@ add_subdirectory(SCodecV1)
 add_library(ShareKernel STATIC
 	SConnector.cpp
 	SDocument.cpp
+	SModule.cpp
 )
 # includes
 target_include_directories(ShareKernel 

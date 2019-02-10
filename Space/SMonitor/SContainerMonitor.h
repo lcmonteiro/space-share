@@ -77,7 +77,7 @@ public:
      */
     template<typename... Args>
     SContainerMonitor(Time timeout, Args... args)
-    : Container(forward<Args>(args)...), Monitor(timeout), __rev(0) {}
+    : Container(std::forward<Args>(args)...), Monitor(timeout), __rev(0) {}
     /**
      * ------------------------------------------------------------------------
      * interfaces
@@ -129,7 +129,7 @@ protected:
         }
     }
 private:
-    using Map = map<size_t, Location>;
+    using Map = std::map<size_t, Location>;
     /**
      * ------------------------------------------------------------------------
      * Variables
