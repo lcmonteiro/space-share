@@ -55,7 +55,7 @@
 #ifdef __ANDROID__
 #include "Sandroid/SAndroidLog.h"
 #else
-#include "SLinux/SLinuxLog.h"
+#include "SLinux/SImplement/SLinuxLog.h"
 #endif
 #endif /* SLOG_H */
 
