@@ -10,6 +10,7 @@
 #include "SEventResource.h"
 #include "SRandom.h"
 #include "SText.h"
+#include "STask.h"
 /**
  * ------------------------------------------------------------------------------------------------
  * test - ResourceMonitor & Events
@@ -17,6 +18,8 @@
  */
 TEST(SResourceMonitor, Events)
 {
+    STask::Enable();
+    // definitions ---------------------------------------
     typedef SResourceMonitor<> ResourceMonitor;
 
     // create events -------------------------------------

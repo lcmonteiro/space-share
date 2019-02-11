@@ -101,10 +101,10 @@ protected:
         for (auto& c : STools::Split(move(container), __buffer.Size() - HEADER_SIZE)) {
             IFrame msg(move(__buffer));
             // write context ------------------------------
-            msg.Write(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));
-            msg.Write(Frame(sizeof (numframes_t)).Number<numframes_t>(container.GetNumFrames()));
-            msg.Write(Frame(sizeof (numframes_t)).Number<numframes_t>(c.size()));
-            msg.Write(Frame(sizeof (framesize_t)).Number<framesize_t>(container.GetFrameSize()));
+            msg.Write(Frame().Number<reference_t>(container.GetPosition()));
+            msg.Write(Frame().Number<numframes_t>(container.GetNumFrames()));
+            msg.Write(Frame().Number<numframes_t>(c.size()));
+            msg.Write(Frame().Number<framesize_t>(container.GetFrameSize()));
             // write container ----------------------------
             for (auto& f : container) {    
                 msg.Write(f);

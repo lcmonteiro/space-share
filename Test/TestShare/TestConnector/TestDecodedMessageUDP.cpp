@@ -33,7 +33,7 @@ TEST(DecodedMessageUDP, Link)
 
     // create data --------------------
     Container idata {
-        SRandom::Frame(size), SFrame(4).Number(size)
+        SRandom::Frame(size), SFrame().Number(size)
     }; 
     
     // test oconnection ---------------

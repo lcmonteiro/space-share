@@ -37,28 +37,30 @@ SODirConnector::SODirConnector(const string address, const uint32_t nfiles)
 /**
  */
 void SODirConnector::_Write(const Document& container) {
-	/**------------------------------------------------------------------------------------------------------------*
-	 * open file
-	 *----------------------------------------------------------------------------------------*/
-	auto res = __res.GetResource();
-	/**------------------------------------------------------------------------------------------------------------*
-	 * write context
-	 *----------------------------------------------------------------------------------------*/
-	res.Drain(Frame(sizeof (reference_t)).Number<reference_t>(container.GetPosition()));
-	res.Drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.GetNumFrames()));
-	res.Drain(Frame(sizeof (numframes_t)).Number<numframes_t>(container.size()));
-	res.Drain(Frame(sizeof (framesize_t)).Number<framesize_t>(container.GetFrameSize()));
-	// log ------------------------------------------------
-	INFO("CODE::OUT::"
-		<< "pos=" << container.GetPosition() << " " << "n=" << container.GetNumFrames() << " "
-		<< "sz=" << container.GetFrameSize() << " " << "len=" << container.size()
-	);
-	/**------------------------------------------------------------------------------------------------------------*
-	 * write nframes
-	 *----------------------------------------------------------------------------------------*/
-	for (auto& f : container) {
-		res.Drain(f);
-	}
+    /**------------------------------------------------------------------------------------------------------------*
+     * open file
+     *----------------------------------------------------------------------------------------*/
+    auto res = __res.GetResource();
+    /**------------------------------------------------------------------------------------------------------------*
+     * write context
+     *----------------------------------------------------------------------------------------*/
+    res.Drain(Frame().Number<reference_t>(container.GetPosition()));
+    res.Drain(Frame().Number<numframes_t>(container.GetNumFrames()));
+    res.Drain(Frame().Number<numframes_t>(container.size()));
+    res.Drain(Frame().Number<framesize_t>(container.GetFrameSize()));
+    // log ------------------------------------------------
+    INFO("CODE::OUT::"
+        << "pos=" << container.GetPosition()  << " " 
+        << "n="   << container.GetNumFrames() << " "
+        << "sz="  << container.GetFrameSize() << " " 
+        << "len=" << container.size()
+    );
+    /**------------------------------------------------------------------------------------------------------------*
+     * write nframes
+     *----------------------------------------------------------------------------------------*/
+    for (auto& f : container) {
+        res.Drain(f);
+    }
 }
 /**
  * End namespace Message

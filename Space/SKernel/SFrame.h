@@ -144,20 +144,34 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
+     * reserve size (guaranty that exist size (sz) )
+     * ------------------------------------------------------------------------
+     */
+    inline SFrame& Reserve(size_t sz) {
+        if (sz > Size()) {  
+            resize(sz);
+        }
+        return *this;
+    }
+    /**
+     * ------------------------------------------------------------------------
      * unserialize number
      * ------------------------------------------------------------------------
      */
     template <class T>
     T Number() const {
-        // set iterator position --------------------------
         auto rit = rbegin();
-        for (auto i = 0; (i < sizeof (T)) && (rit != rend()); ++i, ++rit);
+        // set iterator position --------------------------
+        for (auto i = 0; (i < sizeof(T)) && (rit != rend());) {
+            ++i, ++rit;
+        } 
         // decode number ----------------------------------
         T result = 0;
         for (auto it = rit.base(); it != end(); ++it) {
             result <<= 8;
             result |= T(*it);
         }
+        // return nunber -----------------------------------
         return result;
     }
     /**
@@ -167,12 +181,15 @@ public:
      */
     template <class T>
     SFrame& Number(T val) {
+        // reserve sizeof (val) --------------------------- 
+        Reserve(sizeof (T));
         // encode number ----------------------------------
         size_t i = 0;
-        for (auto it = rbegin(); (it != rend()) && (i < sizeof (T)); ++it, ++i) {
+        for (auto it = rbegin(); i < sizeof (T); ++it, ++i) {
             *it = value_type(val);
             val >>= 8;
         }
+        // return frame -----------------------------------
         return *this;
     }
     /**

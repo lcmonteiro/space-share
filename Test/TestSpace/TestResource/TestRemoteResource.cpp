@@ -58,7 +58,7 @@ TEST(SRemoteResource, Link)
     EXPECT_EQ(in, out);
 
     // test reverse send & reset frame ----------------------------------------
-    out = Frame(size);  
+    out = Frame(size).Expand();  
     
     // test -------------------------------------------------------------------
     EXPECT_EQ(rem_s.Drain(in).Good(), true);

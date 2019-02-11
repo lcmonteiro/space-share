@@ -6,10 +6,11 @@
 /**
  * space
  */
-#include "SRoadMonitor.h"
 #include "SEventResource.h"
+#include "SRoadMonitor.h"
 #include "SRandom.h"
 #include "SText.h"
+#include "STask.h"
 /**
  * ------------------------------------------------------------------------------------------------
  * test - SRoadMonitor & Event resource
@@ -35,6 +36,7 @@ public:
 };
 TEST(SRoadMonitor, Create)
 {
+    STask::Enable();
     // create monitor type --------------------------------
     typedef SRoadMonitor<
         SText, 

@@ -47,7 +47,7 @@ public:
         /**
          * insert length
          */        
-        Buffer buff(Frame(sizeof(filesize_t)).Number(filesize_t(len)));
+        Buffer buff(Frame().Number(filesize_t(len)));
         //
         auto frame = IFrame(sz);
         //
