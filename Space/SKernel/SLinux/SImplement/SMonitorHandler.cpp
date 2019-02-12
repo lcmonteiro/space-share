@@ -129,11 +129,8 @@ SDynamicMonitorHandler::SDynamicMonitorHandler(std::initializer_list<Handler> ha
  *  helpers
  * ----------------------------------------------------------------------------
  */
-size_t SDynamicMonitorHandler::__Insert(Handler h) {
-    // get current position  ------------------------------
-    auto position = __handlers.size();
-    
-    // insert on resource container -----------------------
+void SDynamicMonitorHandler::__Insert(Handler h, size_t position) {
+    // insert resource on container -----------------------
     ::epoll_event ev;
     ev.data.u64 = position;
     ev.events   = EPOLLIN | EPOLLERR | EPOLLHUP;
@@ -142,11 +139,9 @@ size_t SDynamicMonitorHandler::__Insert(Handler h) {
     ) < 0) {
         throw ResourceExceptionABORT(strerror(errno));
     }
-    // return position ------------------------------------
-    return position;
 }
 void SDynamicMonitorHandler::__Remove(Handler h) {
-    // insert on resource container -----------------------
+    // remove resource from container ---------------------
     ::epoll_event ev;
     if (epoll_ctl(
         FD(), EPOLL_CTL_DEL, h->FD(), &ev
@@ -161,8 +156,11 @@ void SDynamicMonitorHandler::__Remove(Handler h) {
  */
 size_t SDynamicMonitorHandler::Insert(Handler h) {
 
+    // get reference --------------------------------------
+    auto position = __handlers.size();
+
     // insert on resource container -----------------------
-    auto position = __Insert(h);
+    __Insert(h, position);
 
     // insert on handler container ------------------------
     __handlers.emplace_back(h);
@@ -180,7 +178,7 @@ std::list<size_t> SDynamicMonitorHandler::Wait(const chrono::milliseconds& timeo
     std::list<size_t> res;
     try {
         // insert this task -------------------------------
-        __Insert(handler);
+        __Insert(handler, __handlers.size());
 
         // check resources --------------------------------
         res = __Check(timeout);
@@ -195,6 +193,10 @@ std::list<size_t> SDynamicMonitorHandler::Wait(const chrono::milliseconds& timeo
     // check timeout --------------------------------------
     if (res.empty()) {
         throw MonitorExceptionTIMEOUT();
+    }
+    // check this task ------------------------------------
+    if (res.back() == __handlers.size()) {
+        throw MonitorExceptionCANCEL();
     }
     // return active positions ----------------------------
     return res;

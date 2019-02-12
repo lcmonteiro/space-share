@@ -122,9 +122,11 @@ STask* STask::__Find(std::thread::id id) {
         std::this_thread::yield(); 
     }
     // try again ----------------------
-    {
+    try {
         guard_t lock(__mutex);
         return __tasks.at(id);
+    } catch(std::out_of_range& e) {
+        throw std::runtime_error("Task Not Found!!!");
     }
 }
 /**

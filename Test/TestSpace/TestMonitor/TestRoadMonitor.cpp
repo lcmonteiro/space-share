@@ -57,8 +57,8 @@ TEST(SRoadMonitor, Create)
     monitor.Update().Find("1")->Send();
 
     // monitor test --------------------------------------
-    auto res1 = monitor.Wait();
-    EXPECT_EQ(res1.size(),           1);
+    auto res1 = monitor.Update().Wait();
+    EXPECT_EQ(res1.size(),                   1);
     EXPECT_EQ(res1.front()->second->Clear(), 1);
 
     // set event 1 ---------------------------------------

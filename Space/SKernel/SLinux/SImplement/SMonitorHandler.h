@@ -156,9 +156,9 @@ protected:
     /**
      * helpers
      */
-    inline size_t __Insert(Handler h);
+    inline void __Insert(Handler h, size_t position);
 
-    inline void   __Remove(Handler h);
+    inline void __Remove(Handler h);
 };
 /**
  * -------------------------------------------------------------------------------------------------
