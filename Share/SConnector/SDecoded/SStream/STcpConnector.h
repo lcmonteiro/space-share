@@ -19,12 +19,11 @@
 #include "SOStreamConnector.h"
 #include "SIOStreamConnector.h"
 /**
- * Begin namespace Decoded
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Decoded & Stream
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Decoded {
-/**
- * Begin namespace Stream
- */
 namespace Stream {
 /**
  * ------------------------------------------------------------------------------------------------
@@ -76,7 +75,7 @@ public:
      */
     template<typename...Args>
     static IConnector Make(Args &&...args) {
-        return make_shared<SITcpConnectorT>(forward<Args>(args)...);
+        return std::make_shared<SITcpConnectorT>(std::forward<Args>(args)...);
     }
 };
 /**
@@ -97,7 +96,7 @@ public:
      */
     template<typename...Args>
     static OConnector Make(Args &&...args) {
-        return make_shared<SOTcpConnectorT>(forward<Args>(args)...);
+        return std::make_shared<SOTcpConnectorT>(std::forward<Args>(args)...);
     }
 };
 /**
@@ -118,7 +117,7 @@ public:
      */
     template<typename...Args>
     static IOConnector Make(Args &&...args) {
-        return make_shared<SIOTcpConnectorT>(forward<Args>(args)...);
+        return std::make_shared<SIOTcpConnectorT>(std::forward<Args>(args)...);
     }
 };
 /**
@@ -129,15 +128,11 @@ public:
 typedef SIOTcpConnectorT<ResourceAdapterTcp> IOTcpConnector;
 typedef SITcpConnectorT<ResourceAdapterTcp>  ITcpConnector;
 typedef SOTcpConnectorT<ResourceAdapterTcp>  OTcpConnector;
+}}
 /**
- * End namespace Stream
- */
-}
-/**
- * End namespace Decoded
- */
-}
-/**
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Decoded & Stream
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* STCPSTREAMCONNECTOR_H */
 

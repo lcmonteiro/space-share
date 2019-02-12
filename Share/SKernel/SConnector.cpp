@@ -8,7 +8,7 @@
 /**
  * wait to be good
  */
-SConnector& SConnector::Wait(chrono::milliseconds timeout) {
+SConnector& SConnector::Wait(std::chrono::milliseconds timeout) {
 	auto start = std::chrono::steady_clock::now();
 	auto end = start + timeout;
 	do {
@@ -28,12 +28,12 @@ SConnector& SConnector::Wait(chrono::milliseconds timeout) {
 /**
  * Shape stream
  */
-list<pair<size_t, size_t>> SConnector::Shape(size_t len, size_t split) {
-	list<pair<size_t, size_t>> out;
+std::list<std::pair<size_t, size_t>> SConnector::Shape(size_t len, size_t split) {
+	std::list<std::pair<size_t, size_t>> out;
 	/**
 	 * compute references
 	 */
-	auto ref = div(int(len), int(split));
+	auto ref = std::div(int(len), int(split));
 	/**
 	 * conditions
 	 */

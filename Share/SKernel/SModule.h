@@ -143,14 +143,14 @@ public:
     typedef enum {OPEN = 0, OWAIT, IOWAIT, IWAIT, PLAY, UPDATE, CLOSE} State;
     /**
      */
-    using Key = string;
-    using Val = string;
+    using Key = std::string;
+    using Val = std::string;
     /**
      */
     using Command = SModuleCommand;
     using Group   = Command::Group;
     using Groups  = Command::Groups;
-    using Link    = shared_ptr<SModule>;
+    using Link    = std::shared_ptr<SModule>;
     /**
      * --------------------------------------------------------------------------------------------
      * Fabric - create modules

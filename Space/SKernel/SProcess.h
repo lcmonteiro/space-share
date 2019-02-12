@@ -1,8 +1,10 @@
 /**
+ * ------------------------------------------------------------------------------------------------
  * File:   SProcess.h
  * Author: Luis Monteiro
  *
  * Created on January 20, 2017, 11:34 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SPROCESS_H
 #define SPROCESS_H
@@ -85,7 +87,7 @@ public:
         __worker = Task([this]() {
             try {
                 return Run();
-            } catch (exception& ex) {
+            } catch (std::exception& ex) {
                 ERROR("Unexpected Exit = " << ex.what());
                 return -1;
             } catch (...) {
@@ -135,19 +137,19 @@ protected:
      * Logging
      * ------------------------------------------------------------------------
      */
-    inline void __DEBUG(const string& msg) {
+    inline void __DEBUG(const std::string& msg) {
         SLog::__DEBUG(__uri, msg);
     }
-    inline void __INFO(const string& msg) {
+    inline void __INFO(const std::string& msg) {
         SLog::__INFO(__uri, msg);
     }
-    inline void __WARNING(const string& msg) {
+    inline void __WARNING(const std::string& msg) {
         SLog::__WARNING(__uri, msg);
     }
-    inline void __ERROR(const string& msg) {
+    inline void __ERROR(const std::string& msg) {
         SLog::__ERROR(__uri, msg);
     }
-    inline void __CRITITAL(const string& msg) {
+    inline void __CRITITAL(const std::string& msg) {
         SLog::__CRITITAL(__uri, msg);
     }
 private:

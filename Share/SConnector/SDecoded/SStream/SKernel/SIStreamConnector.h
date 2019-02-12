@@ -12,6 +12,7 @@
 #include "SContainer.h"
 #include "SAddress.h"
 #include "STask.h"
+#include "SText.h"
 /**
  * Share Kernel
  */
@@ -32,7 +33,7 @@ public:
      * constructor
      */
     SIStreamConnector(
-        const string address,  // con address
+        const SText  address,  // con address
         const size_t nframes,  // num of frames
         const size_t sframes   // size of frame
     ) : SInputConnector(address), __container(nframes), __buffer(sframes), __res() {}
@@ -84,7 +85,7 @@ protected:
      * drain 
      * ------------------------------------------------------------------------
      */
-    list<Container> _Drain() override {
+    std::list<Container> _Drain() override {
         Buffer tmp;
         // check if container is full ---------------------
         if (!__container.empty()) {
@@ -99,7 +100,7 @@ protected:
             tmp.Write(std::move(buffer.Shrink()));
         }
         // fill container ---------------------------------
-        list<Container> out;
+        std::list<Container> out;
         for (auto& p : Shape(tmp.Length(), __container.capacity())) {
             auto container = Container(p.first);
             while (!container.Full()) {
@@ -122,19 +123,19 @@ protected:
      * ------------------------------------------------------------------------
      */
     inline void _Open() override {
-        mt19937_64 eng{random_device{}()};
+        std::default_random_engine eng{std::random_device{}()};
         // sleep distribution -----------------------------
-        uniform_int_distribution<> dist{100, 1000};
+        std::uniform_int_distribution<> dist{100, 1000};
         // main loop --------------------------------------
         int i = 0;
         do {
             try {
                 __res.Wait(__uri);
                 break;
-            } catch (system_error& ex) {
+            } catch (std::system_error& ex) {
                 WARNING(ex.what());
             }
-        } while (STask::Sleep(chrono::milliseconds{dist(eng) * ++i}));
+        } while (STask::Sleep(std::chrono::milliseconds{dist(eng) * ++i}));
     }
     /**
      * ------------------------------------------------------------------------
@@ -170,12 +171,10 @@ private:
      */
     RESOURCE __res;
 };
-}
-}
+}}
 /**
  * ------------------------------------------------------------------------------------------------
  * End namespace Decoded & Stream
  * ------------------------------------------------------------------------------------------------
  */
 #endif /* SISTREAMCONNECTOR_H */
-

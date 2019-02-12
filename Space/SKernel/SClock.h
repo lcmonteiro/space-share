@@ -88,7 +88,7 @@ public:
      * --------------------------------------------------------------------------------------------
      */
     static inline Distance Remaining(const Pointer& end) {
-        return chrono::duration_cast<DURATION>(end-CLOCK::now());
+        return std::chrono::duration_cast<DURATION>(end-CLOCK::now());
     }
 
 

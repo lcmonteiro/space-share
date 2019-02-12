@@ -12,6 +12,7 @@
 #include "SContainer.h"
 #include "SAddress.h"
 #include "STask.h"
+#include "SText.h"
 /**
  * Share Kernel
  */
@@ -32,7 +33,7 @@ public:
      * constructor
      */
     SOMessageConnector(
-        const string address  // connection address
+        const SText address  // connection address
     ) : SOutputConnector(address), __buffer(), __res() {}
     /**
      * destructor
@@ -64,19 +65,19 @@ protected:
      * ------------------------------------------------------------------------
      */
     inline void _Open() override {
-        default_random_engine eng{random_device{}()};
+        std::default_random_engine eng{std::random_device{}()};
         // sleep distribution -----------------------------
-        uniform_int_distribution<> dist{1000, 5000};
+        std::uniform_int_distribution<> dist{100, 1000};
         // main loop --------------------------------------
         int i = 0;
         do {
             try {
                 __res.Link(__uri);
                 break;
-            } catch (system_error& ex) {
+            } catch (std::system_error& ex) {
                 WARNING(ex.what());
             }
-        } while (STask::Sleep(chrono::milliseconds{dist(eng) + (1000 * i++)}));
+        } while (STask::Sleep(std::chrono::milliseconds{dist(eng) * ++i}));
     }
     /**
      * ------------------------------------------------------------------------

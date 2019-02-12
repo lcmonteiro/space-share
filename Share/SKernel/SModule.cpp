@@ -23,7 +23,7 @@ constexpr const char* SModuleCommand::INOUT;
  * ------------------------------------------------------------------------------------------------
  */
 SModule::Link SModule::Create(const Command& cmd) {
-    static map<Key, function <Link(const Command& cmd)>> GENERATOR {
+    static std::map<Key, std::function <Link(const Command& cmd)>> GENERATOR {
         {"encode", [](const Command& cmd) {
             auto in = nullptr;
             return in;
@@ -32,7 +32,7 @@ SModule::Link SModule::Create(const Command& cmd) {
     try {
         return GENERATOR[""](cmd);
     } catch(...) {
-        throw runtime_error("invalid input");
+        throw std::runtime_error("invalid input");
     }
 }
 /**

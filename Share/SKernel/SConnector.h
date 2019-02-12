@@ -36,10 +36,10 @@ public:
     /**
      * constructor
      */
-    SConnectorExection(string uri, error_code ec) 
+    SConnectorExection(std::string uri, std::error_code ec) 
     : system_error(ec), __uri(uri) {
     }
-    SConnectorExection(string uri, error_code ec, const string& what) 
+    SConnectorExection(std::string uri, std::error_code ec, const std::string& what) 
     : system_error(ec, what), __uri(uri) {
     }
     /**
@@ -48,11 +48,11 @@ public:
     virtual ~SConnectorExection() = default;
     /**
      */
-    inline string operator()(void) const {
+    inline std::string operator()(void) const {
         return __uri;
     }
 private:
-    string __uri;
+    std::string __uri;
 } ConnectorExection;
 /**
  */
@@ -62,8 +62,8 @@ public:
     /**
      * constructor
      */
-    SConnectorExceptionTIMEOUT(string s) 
-    : SConnectorExection(s, make_error_code(errc::no_message)) {
+    SConnectorExceptionTIMEOUT(std::string s) 
+    : SConnectorExection(s, std::make_error_code(std::errc::no_message)) {
     }
 } ConnectorExceptionTIMEOUT;
 typedef class SIConnectorExceptionTIMEOUT : public ConnectorExceptionTIMEOUT {
@@ -82,8 +82,8 @@ public:
     /**
      * constructor
      */
-    SConnectorExceptionDead(string s) 
-    : SConnectorExection(s, make_error_code(errc::no_message)) {
+    SConnectorExceptionDead(std::string s) 
+    : SConnectorExection(s, std::make_error_code(std::errc::no_message)) {
     }
 } ConnectorExceptionDEAD;
 typedef class SIConnectorExceptionDead : public ConnectorExceptionDEAD {
@@ -108,7 +108,7 @@ public:
     /**
      * connector default
      */
-    typedef string  Key;
+    typedef std::string  Key;
     /**
      * ------------------------------------------------------------------------
      * defaults
@@ -121,7 +121,7 @@ public:
      * constructor
      * ------------------------------------------------------------------------
      */
-    SConnector(string uri, size_t energy = 1) 
+    SConnector(std::string uri, size_t energy = 1) 
     : SLog(), SEnergy(energy), __uri(uri) {
     }
     /**
@@ -170,7 +170,7 @@ public:
         __waiter = STask([this]() {
             try {
                 _Open();
-            } catch (exception& ){} catch (...) {
+            } catch (std::exception& ){} catch (...) {
                 throw;
             }
         });
@@ -187,7 +187,7 @@ public:
         __waiter = STask([this]() {
             try {
                 _Close();
-            } catch (exception& ){} catch (...) {
+            } catch (std::exception& ){} catch (...) {
                 throw;
             }
         });
@@ -205,7 +205,7 @@ public:
      * wait (timeout) to be good
      * ----------------------------------------------------
      */
-    SConnector& Wait(chrono::milliseconds timeout);
+    SConnector& Wait(std::chrono::milliseconds timeout);
 protected:
     /**
      * ----------------------------------------------------
@@ -244,7 +244,7 @@ protected:
      * ----------------------------------------------------
      * reshape 
      */
-    list<pair<size_t, size_t>> Shape(size_t len, size_t split);
+    std::list<std::pair<size_t, size_t>> Shape(size_t len, size_t split);
     /**
      * ------------------------------------------------------------------------
      * logging
@@ -252,7 +252,7 @@ protected:
      * debug
      * ----------------------------------------------------
      */
-    inline void __DEBUG(const string& msg) {
+    inline void __DEBUG(const std::string& msg) {
         SLog::__DEBUG(__uri, msg);
     }
     /**
@@ -260,7 +260,7 @@ protected:
      * information
      * ----------------------------------------------------
      */
-    inline void __INFO(const string& msg) {
+    inline void __INFO(const std::string& msg) {
         SLog::__INFO(__uri, msg);
     }
     /**
@@ -268,7 +268,7 @@ protected:
      * warning
      * ----------------------------------------------------
      */
-    inline void __WARNING(const string& msg) {
+    inline void __WARNING(const std::string& msg) {
         SLog::__WARNING(__uri, msg);
     }
     /**
@@ -276,7 +276,7 @@ protected:
      * error
      * ----------------------------------------------------
      */
-    inline void __ERROR(const string& msg) {
+    inline void __ERROR(const std::string& msg) {
         SLog::__ERROR(__uri, msg);
     }
     /**
@@ -284,7 +284,7 @@ protected:
      * critical error
      * ----------------------------------------------------
      */
-    inline void __CRITITAL(const string& msg) {
+    inline void __CRITITAL(const std::string& msg) {
         SLog::__CRITITAL(__uri, msg);
     }
 };
@@ -293,7 +293,7 @@ protected:
  * definitions
  * ----------------------------------------------------------------------------
  */
-typedef shared_ptr<SConnector> Connector;
+typedef std::shared_ptr<SConnector> Connector;
 /**
  * ------------------------------------------------------------------------------------------------
  * IO decoded stream  
@@ -339,7 +339,7 @@ public:
     /**
      * read residual data 
      */
-    inline list<Container> Drain() {
+    inline std::list<Container> Drain() {
         try {
             return _Drain();
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -363,7 +363,7 @@ protected:
     /**
      * drain 
      **/
-    virtual list<Container> _Drain() { return {}; }
+    virtual std::list<Container> _Drain() { return {}; }
 };
 /**
  * ----------------------------------------------------------------------------
@@ -441,7 +441,7 @@ public:
     /**
      * read residual data 
      */
-    inline list<Container> Drain() {
+    inline std::list<Container> Drain() {
         try {
             return _Drain();
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -475,7 +475,7 @@ protected:
     /**
      * drain  
      */
-    virtual list<Container> _Drain() { return {}; }
+    virtual std::list<Container> _Drain() { return {}; }
     /**
      * write 
      */
@@ -486,9 +486,9 @@ protected:
  * definitions
  * ----------------------------------------------------------------------------
  */
-typedef shared_ptr<SInputConnector>    IConnector;
-typedef shared_ptr<SOutputConnector>   OConnector;
-typedef shared_ptr<SInOutputConnector> IOConnector;
+typedef std::shared_ptr<SInputConnector>    IConnector;
+typedef std::shared_ptr<SOutputConnector>   OConnector;
+typedef std::shared_ptr<SInOutputConnector> IOConnector;
 }
 /**
  * ------------------------------------------------------------------------------------------------
@@ -536,7 +536,7 @@ public:
     /**
      * read residual coded data 
      */
-    inline list<Document> Drain() {
+    inline std::list<Document> Drain() {
         try {
             return _Drain();
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -563,7 +563,7 @@ protected:
     /**
      * drain
      */
-    virtual list<Document> _Drain() { return {}; }
+    virtual std::list<Document> _Drain() { return {}; }
 };
 /**
  * ----------------------------------------------------------------------------
@@ -640,7 +640,7 @@ public:
     /**
      * read residual coded data 
      */
-    inline list<Document> Drain() {
+    inline std::list<Document> Drain() {
         try {
             return _Drain();
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -678,7 +678,7 @@ protected:
     /**
      * drain 
      */
-    virtual list<Document> _Drain() { return {}; }
+    virtual std::list<Document> _Drain() { return {}; }
     /**
      * write 
      */
@@ -689,9 +689,9 @@ protected:
  * definitions
  * ----------------------------------------------------------------------------
  */
-typedef shared_ptr<SInputConnector>    IConnector;
-typedef shared_ptr<SOutputConnector>   OConnector;
-typedef shared_ptr<SInOutputConnector> IOConnector;
+typedef std::shared_ptr<SInputConnector>    IConnector;
+typedef std::shared_ptr<SOutputConnector>   OConnector;
+typedef std::shared_ptr<SInOutputConnector> IOConnector;
 }
 /**
  * ------------------------------------------------------------------------------------------------

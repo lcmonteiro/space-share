@@ -15,7 +15,6 @@ STATIC
 	SContainer.cpp
 	SAddress.cpp
 	SFrame.cpp
-	SLog.cpp
 )
 # includes
 target_include_directories(SpaceKernel 

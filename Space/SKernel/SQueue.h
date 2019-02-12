@@ -25,7 +25,7 @@ public:
         __locker.unlock();
     }
 private:
-    mutex __locker;
+    std::mutex __locker;
 };
 /**
  * ----------------------------------------------------------------------------
@@ -36,7 +36,7 @@ template<class TYPE, class GUARD = SQueueGuard>
 class SQueue {
 public:
     using Type = TYPE;
-    using List = list<TYPE>;
+    using List = std::list<TYPE>;
     /**
      * ----------------------------------------------------
      * default

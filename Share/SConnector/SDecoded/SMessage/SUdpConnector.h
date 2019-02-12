@@ -23,12 +23,11 @@
  */
 #include "SDefault.h"
 /**
- * Begin namespace Decoded
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Decoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Decoded {
-/**
- * Begin namespace Stream
- */
 namespace Message {
 /**
  * ------------------------------------------------------------------------------------------------
@@ -80,7 +79,7 @@ public:
      */
     template<typename...Args>
     static IConnector Make(Args &&...args) {
-        return make_shared<SIUdpConnectorT>(forward<Args>(args)...);
+        return std::make_shared<SIUdpConnectorT>(std::forward<Args>(args)...);
     }
 };
 /**
@@ -101,7 +100,7 @@ public:
      */
     template<typename...Args>
     static OConnector Make(Args &&...args) {
-        return make_shared<SOUdpConnectorT>(forward<Args>(args)...);
+        return std::make_shared<SOUdpConnectorT>(std::forward<Args>(args)...);
     }
 };
 /**
@@ -122,7 +121,7 @@ public:
      */
     template<typename...Args>
     static IOConnector Make(Args &&...args) {
-        return make_shared<SIOUdpConnectorT>(forward<Args>(args)...);
+        return std::make_shared<SIOUdpConnectorT>(std::forward<Args>(args)...);
     }
 };
 /**
@@ -133,15 +132,11 @@ public:
 typedef SIOUdpConnectorT<ResourceAdapterUdp, SDefault> IOUdpConnector;
 typedef SIUdpConnectorT<ResourceAdapterUdp, SDefault>  IUdpConnector;
 typedef SOUdpConnectorT<ResourceAdapterUdp, SDefault>  OUdpConnector;
+}}
 /**
- * End namespace Stream
- */
-}
-/**
- * End namespace Decoded
- */
-}
-/**
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Decoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* SUDPMESSAGECONNECTOR_H */
 
