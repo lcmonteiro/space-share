@@ -1,46 +1,47 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * Container:  SIOIrcConnector.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SIOIRCCONNECTORCODED_H
 #define SIOIRCCONNECTORCODED_H
 /**
- * C++ std
+ * std
  */
 #include <random>
 /**
- * Space Resource
+ * Space
  */
 #include "SIRCResource.h"
-/**
- * Space Kernel
- */
 #include "SContainer.h"
 #include "SAddress.h"
 #include "SChannel.h"
 #include "STask.h"
 /**
- * Share Kernel
+ * Share
  */
 #include "SConnector.h"
 /**
- * Begin namespace Encoded
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
-/**
- * Begin namespace Message
- */
 namespace Message {
 /**
+ * ------------------------------------------------------------------------------------------------
+ * IOIrcConnector
+ * ------------------------------------------------------------------------------------------------
  */
 class SIOIrcConnector : public SInOutputConnector {
 public:
 	/**
 	 * constructor
 	 */
-	SIOIrcConnector(const string address);
+	SIOIrcConnector(const std::string& address);
 	/**
 	 * destructor
 	 */
@@ -59,9 +60,9 @@ protected:
 	 * read
 	 */
 	Document _Read() override;
-	/**/
-	list<Document> _Drain() override;
-	/**/
+	/**
+	 * write
+	 */
 	void _Write(const Document& container) override;
 	/**
 	 * ----------------------------------------------------
@@ -89,13 +90,11 @@ private:
 	 */
 	IDocument __container;
 };
+}}
 /**
- * End namespace Message
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- * End namespace Encoded
- */
-}
 #endif /* SIOIRCCONNECTORCODED_H */
 

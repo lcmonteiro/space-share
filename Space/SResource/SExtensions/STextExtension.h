@@ -50,7 +50,7 @@ public:
                     Super::Fill(in.Reset());
                 }
                 if(in.front() == '\n') {
-                    str.erase(it, end);
+                    txt.erase(it, txt.end());
                     break;
                 }
                 continue;
@@ -65,7 +65,7 @@ public:
      * operator <<
      * ----------------------------------------------------
      */
-    STextExtension& operator<<(const Text& txt) {
+    STextExtension& operator<<(const SText& txt) {
         Super::Drain(
             OFrame(Frame(txt.begin(), txt.end()))
         );

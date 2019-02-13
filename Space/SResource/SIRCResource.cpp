@@ -1,52 +1,37 @@
-/*
- * Container:   SLinuxIRC.cpp
+/**
+ * ------------------------------------------------------------------------------------------------
+ * Container:   SIRCResource.cpp
  * Author: Luis Monteiro
  *
  * Created on June 3, 2015, 10:12 AM
- */
-/*
- * linux
- */
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <netdb.h>
-#include <string.h>
-#include <stdio.h>
-/**
- * C++
+ * ------------------------------------------------------------------------------------------------
+ **
+ * Std
  */
 #include <regex>
 #include <iostream>
 /**
- * Space Kernel
+ * Space 
  */
 #include "SBase64.h"
 #include "SRandom.h"
-/**
- * Local
- */
-#include "SLinuxIRC.h"
+#include "SIRCResource.h"
+#include "SResourceMonitor.h"
 /**
  * definitions
  */
 #define TOPIC_STR "share"
 /**
- */
-//#define __TRACE__
-/**
- */
-SLinuxIRC::~SLinuxIRC() {
-}
-
-/*------------------------------------------------------------------------------------------------*
+ * ----------------------------------------------------------------------------
  * Connect
- *------------------------------------------------------------------------------------------------*/
-void SLinuxIRC::Connect(const string& host, uint16_t port, int tx_timeout, int rx_timeout) {
+ * ----------------------------------------------------------------------------
+ **/
+void SIRCResource::Connect(
+    const std::string& host, uint16_t port, int tx_timeout, int rx_timeout) {
     /**
      * connect
      */
-    SLinuxSocket::Connect(host, port, SLinuxSocket::STREAM);
+    Super::Link(host, port);
     /**
      * configuration
      */
@@ -54,22 +39,27 @@ void SLinuxIRC::Connect(const string& host, uint16_t port, int tx_timeout, int r
     SetRxTimeout(rx_timeout);
     SetNoDelay(true);
 }
-
-/*------------------------------------------------------------------------------------------------*
+/**
+ * ----------------------------------------------------------------------------
  * Join
- *------------------------------------------------------------------------------------------------*/
-void SLinuxIRC::Join(string user, string channel, int timeout) {
-    auto end = chrono::system_clock::now() + chrono::seconds{timeout};
-    /*----------------------------------------------------------------------------------------*
+ * ----------------------------------------------------------------------------
+ */
+void SIRCResource::Join(std::string user, std::string channel, int timeout) {
+    auto end = std::chrono::system_clock::now() + std::chrono::seconds{timeout};
+    /**
+     * ----------------------------------------------------
      * validation
-     *----------------------------------------------------------------------------------------*/
+     * ----------------------------------------------------
+     */
     if(user.empty()) {
         user = SRandom::Name(8);
     }
-    /*----------------------------------------------------------------------------------------*
+    /**
+     * ----------------------------------------------------
      * functions
-     *----------------------------------------------------------------------------------------*/
-    auto register_func = [&](const string& user) {
+     * -----------------------------------------------------
+     */
+    auto register_func = [&](const std::string& user) {
         /**
          * set user and channel
          */
@@ -96,7 +86,7 @@ void SLinuxIRC::Join(string user, string channel, int timeout) {
     };
     /**
      */
-    auto join_func = [&](const string& channel) {
+    auto join_func = [&](const std::string& channel) {
         /**
          * set channel
          */
@@ -115,67 +105,70 @@ void SLinuxIRC::Join(string user, string channel, int timeout) {
          */
         WaitFor(JOIN, end);
     };
-    /*----------------------------------------------------------------------------------------*
+    /**
+     * ------------------------------------------------------------------------
      * process
-     *----------------------------------------------------------------------------------------*/
+     * ------------------------------------------------------------------------
+     */
     try {
         /**
-         * register and join
+         * ------------------------------------------------
+         * try
+         * -----------------------------------------------
+         * user register
          */
         register_func(user);
-        /**/
+        /**
+         * chennel join
+         */
         join_func(channel);
     } catch (IRCExceptionUSER& ex) {
         /**
-         * register and join
+         * ------------------------------------------------
+         * retry
+         * ------------------------------------------------
+         * user register
          */
         register_func(user + "_");
-        /**/
+        /**
+         * chanel join
+         */
         join_func(channel);
     }
 }
-/*------------------------------------------------------------------------------------------------*
+/**
+ * ------------------------------------------------------------------------------------------------
  * IO functions
- *------------------------------------------------------------------------------------------------*/
-SLinuxIRC& SLinuxIRC::Receive(Frame& frame) {
-    string line(MAX_LINE_SZ, ' ');
+ * ------------------------------------------------------------------------------------------------
+ * receive
+ * ----------------------------------------------------------------------------
+ */
+SIRCResource& SIRCResource::Read(Frame& frame) {
+    SText line(MAX_LINE_SZ, ' ');
     /**
+     * process line
      */
     if (Process(line) == MSG) {
         /**
+         * process message
          */
         frame = SBase64::Decode(line);
-        /**
-         */
         return *this;
     }
     throw ResourceExceptionTIMEOUT();
 }
-SLinuxIRC& SLinuxIRC::Receive(Frame& frame, const chrono::seconds& time) {
-    /**
-     */
-    frame = SBase64::Decode(WaitFor(MSG, chrono::system_clock::now() + time));
-    /**
-     */
+SIRCResource& SIRCResource::Read(Frame& frame, const std::chrono::seconds& time) {
+    frame = SBase64::Decode(
+        WaitFor(MSG, std::chrono::system_clock::now() + time)
+    );
     return *this;
 }
 /**
+ * ----------------------------------------------------------------------------
+ * Send
+ * ----------------------------------------------------------------------------
  */
-Frame SLinuxIRC::Read() {
-    string line(MAX_LINE_SZ, ' ');
-    /**
-     */
-    if (Process(line) == MSG) {
-        /**
-         */
-        return SBase64::Decode(line);
-    }
-    throw ResourceExceptionTIMEOUT();
-}
-
-/**
- */
-SLinuxIRC& SLinuxIRC::Send(const Frame& frame) {
+SIRCResource& SIRCResource::Write(const Frame& frame) {
     /**
      * write
      */
@@ -189,11 +182,23 @@ SLinuxIRC& SLinuxIRC::Send(const Frame& frame) {
      */
     return *this;
 }
-
-/*------------------------------------------------------------------------------------------------*
- * Process
- *------------------------------------------------------------------------------------------------*/
-SLinuxIRC::TYPE SLinuxIRC::Process(string& line) {
+/**
+ * ----------------------------------------------------------------------------
+ * keep
+ * ----------------------------------------------------------------------------
+ */
+void SIRCResource::Keep() {
+    while (!SResourceMonitor<>(this).Wait(std::chrono::hours{24}).empty()) {
+        SText line(MAX_LINE_SZ, ' ');
+        Process(line);
+    }
+} 
+/**
+ * ----------------------------------------------------------------------------
+ * process line
+ * ----------------------------------------------------------------------------
+ **/
+SIRCResource::TYPE SIRCResource::Process(SText& line) {
     /**
      * commands
      */
@@ -396,12 +401,14 @@ SLinuxIRC::TYPE SLinuxIRC::Process(string& line) {
      */
     return OTHER;
 }
-
-string SLinuxIRC::WaitFor(TYPE type, const chrono::system_clock::time_point& end) {
-    for (; chrono::system_clock::now() < end;) {
-        /**
-         */
-        string line(MAX_LINE_SZ, ' ');
+/**
+ * ----------------------------------------------------------------------------
+ * wait for message type 
+ * ----------------------------------------------------------------------------
+ */
+std::string SIRCResource::WaitFor(TYPE type, const std::chrono::system_clock::time_point& end) {
+    while(chrono::system_clock::now() < end) {
+        SText line(MAX_LINE_SZ, ' ');
         /**
          * wait for next message
          */

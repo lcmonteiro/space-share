@@ -12,6 +12,7 @@ endif()
 add_library(SpaceResource 
 STATIC 
 	${sources}
+	SIRCResource.cpp
 )
 # includes
 target_include_directories(SpaceResource 

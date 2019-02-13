@@ -77,11 +77,13 @@ public:
     : Super() {
         Capacity(capacity).assign(size, value);
     }
-    SFrame(const size_t capacity, const_iterator beg, const_iterator end)
+    template<typename ITERATOR>
+    SFrame(const size_t capacity, ITERATOR beg, ITERATOR end)
     : Super() {
         Capacity(capacity).assign(beg, end);
     }
-    SFrame(const_iterator beg, const_iterator end)
+    template<typename ITERATOR>
+    SFrame(ITERATOR beg, ITERATOR end)
     : Super(beg, end) {
     }
     SFrame(std::initializer_list<uint8_t> l) 

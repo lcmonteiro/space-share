@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * Container:  SIIrcConnector.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SIIRCCONNECTORCODED_H
 #define SIIRCCONNECTORCODED_H
@@ -23,12 +25,11 @@
  */
 #include "SConnector.h"
 /**
- * Begin namespace Encoded
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
-/**
- * Begin namespace Message
- */
 namespace Message {
 /**
  * ------------------------------------------------------------------------------------------------
@@ -40,7 +41,7 @@ public:
     /**
      * constructor
      */
-    SIIrcConnector(const string address);
+    SIIrcConnector(const std::string& address);
     /**
      * destructor
      */
@@ -59,10 +60,6 @@ protected:
      * read
      */
     Document _Read() override;
-    /**
-     * drain
-     */
-    list<Document> _Drain() override;
     /**
      * ----------------------------------------------------
      * control functions
@@ -85,13 +82,11 @@ private:
      */
     SIRCResource __res;
 };
+}}
 /**
- * End namespace Message
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- * End namespace Encoded
- */
-}
 #endif /* SIIRCCONNECTORCODED_H */
 

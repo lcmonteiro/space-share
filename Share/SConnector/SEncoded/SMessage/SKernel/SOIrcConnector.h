@@ -1,42 +1,43 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * Container:   SOIrcConnector.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SOIRCSTREAMCODED_H
 #define SOIRCSTREAMCODED_H
 /**
- * Space Resource
+ * Space
  */
 #include "SIRCResource.h"
-/**
- * Space Kernel
- */
 #include "SContainer.h"
 #include "SAddress.h"
 #include "SChannel.h"
 #include "STask.h"
 /**
- * Share Kernel
+ * Share
  */
 #include "SConnector.h"
 /**
- * Begin namespace Encoded
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
-/**
- * Begin namespace Message
- */
 namespace Message {
 /**
+ * ------------------------------------------------------------------------------------------------
+ * OIrcConnector
+ * ------------------------------------------------------------------------------------------------
  */
 class SOIrcConnector : public SOutputConnector {
 public:
 	/**
 	 * constructor
 	 */
-	SOIrcConnector(const string address);
+	SOIrcConnector(const std::string address);
 	/**
 	 * destructor
 	 */
@@ -48,7 +49,7 @@ protected:
 	 * -----------------------------------------------------
 	 * IO functions
 	 * -----------------------------------------------------
-	 * read
+	 * write
 	 */
 	void _Write(const Document& container) override;
 	/**
@@ -73,13 +74,11 @@ private:
 	 */
 	SIRCResource __res;
 };
+}}
 /**
- * End namespace Message
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- * End namespace Encoded
- */
-}
 #endif /* SOIRCSTREAMCODED_H */
 

@@ -6,60 +6,51 @@
  */
 #include "SIIrcConnector.h"
 /**
- * Begin namespace Encoded
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
-/**
- * Begin namespace Message
- */
 namespace Message {
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Constructor
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
-SIIrcConnector::SIIrcConnector(const string address)
+SIIrcConnector::SIIrcConnector(const std::string& address)
 : SInputConnector(address){
 }
 /**
- * ------------------------------------------------------------------------------------------------
- * Drain
- * ------------------------------------------------------------------------------------------------
- */
-list<Document> SIIrcConnector::_Drain() {
-	// log ------------------------------------------------
-	INFO("CODE(drain)::IN::n=0");
-	// drain empty container ------------------------------
-	return {};
-}
-/**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Read
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 Document SIIrcConnector::_Read() {
-	// receive ----------------------------------------
-	OFrame out(__res.Read());
-	auto position = out.Read(sizeof (reference_t)).Number<reference_t>();
-	auto nframest = out.Read(sizeof (numframes_t)).Number<numframes_t>();
-	auto framelen = out.Read(sizeof (framesize_t)).Number<framesize_t>();
-	// log ------------------------------------------------
-	INFO("CODE::IN::" 
-		<< "pos=" << position << " " 
-                << "n="   << nframest << " " 
-                << "len=" << framelen
-	);
-	// read nframes ---------------------------------------
-	Document container(Context(position, nframest, framelen));
-	container.reserve(1);
-	container.push_back(out.Read(framelen));
-	// return container -----------------------------------
-	return container;
+    Frame tmp;
+    // receive --------------------------------------------
+    __res.Read(tmp);
+    // parse ----------------------------------------------
+    OFrame out    = std::move(tmp);
+    auto position = out.Read(sizeof (reference_t)).Number<reference_t>();
+    auto nframest = out.Read(sizeof (numframes_t)).Number<numframes_t>();
+    auto framelen = out.Read(sizeof (framesize_t)).Number<framesize_t>();
+    // log ------------------------------------------------
+    INFO("CODE::IN::" 
+        << "pos=" << position << " " 
+        << "n="   << nframest << " " 
+        << "len=" << framelen
+    );
+    // read nframes ---------------------------------------
+    Document container(Context(position, nframest, framelen));
+    container.reserve(1);
+    container.push_back(out.Read(framelen));
+    // return container -----------------------------------
+    return container;
 }
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Open
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 void SIIrcConnector::_Open() {
        mt19937_64 eng{random_device{}()};
@@ -68,40 +59,38 @@ void SIIrcConnector::_Open() {
        // process ---------------------------------------------------
        int i = 0;
        do {
-               try {
-                       SIRCResource res;
-                       // connect to server -------------------------
-                       res.Connect(__uri.Host(), __uri.Port());
-                       INFO("CONNECT");
-                       STask::Sleep(chrono::seconds{1});
-                       // join to channel ---------------------------
-                       res.Join(__uri.User(), __uri.Channel());
-                       INFO("JOIN");
-                       STask::Sleep(chrono::seconds{1});
-                       // swap resources ----------------------------
-                       swap(__res, res);
-                       // active ------------------------------------
-                       break;
-               } catch (IRCExceptionBANNED& ex) {
-                       ERROR(ex.what());
-                       // reset connection --------------------------
-                       __res = SIRCResource();
-                       break;
-               } catch (ResourceExceptionTIMEOUT& ex) {
-                       WARNING(ex.what());
-               } catch (ResourceExceptionABORT& ex) {
-                       WARNING(ex.what());
-               } catch (std::system_error& ex) {
-                       WARNING(ex.what());
-               }
-               // random sleep --------------------------------------
+           try {
+               SIRCResource res;
+               // connect to server -------------------------
+               res.Connect(__uri.Host(), __uri.Port());
+               INFO("CONNECTED");
+               STask::Sleep(chrono::seconds{1});
+               // join to channel ---------------------------
+               res.Join(__uri.User(), __uri.Channel());
+               INFO("JOINED");
+               STask::Sleep(chrono::seconds{1});
+               // swap resources ----------------------------
+               std::swap(__res, res);
+               // active ------------------------------------
+               break;
+           } catch (IRCExceptionBANNED& ex) {
+               ERROR(ex.what());
+               // reset connection --------------------------
+               __res = SIRCResource();
+               break;
+           } catch (ResourceExceptionTIMEOUT& ex) {
+               WARNING(ex.what());
+           } catch (ResourceExceptionABORT& ex) {
+               WARNING(ex.what());
+           } catch (std::system_error& ex) {
+               WARNING(ex.what());
+           }
+           // random sleep --------------------------------------
        } while (STask::Sleep(chrono::milliseconds{dist(eng) + (1000 * i++)}));
 }
+}}
 /**
- * End namespace Message
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- * End namespace Encoded
- */
-}

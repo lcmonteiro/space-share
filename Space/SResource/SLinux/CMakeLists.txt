@@ -4,7 +4,6 @@ add_library(SpaceResourceLinux
 STATIC
 	SLinuxDirectory.cpp
 	SLinuxFile.cpp
-	SLinuxIRC.cpp
 	SLinuxPoll.cpp
 	SLinuxResource.cpp
 	SLinuxSocket.cpp
