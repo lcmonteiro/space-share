@@ -31,7 +31,7 @@ public:
     /**
      * constructor
      */
-    SODirConnector(const string address);
+    SODirConnector(const SText address);
     /**
      * destructor
      */

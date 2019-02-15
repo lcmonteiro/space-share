@@ -34,7 +34,7 @@ public:
     /**
      * constructor
      */
-    SIFileConnector(const string address);
+    SIFileConnector(const SText address);
     /**
      * destructor
      */

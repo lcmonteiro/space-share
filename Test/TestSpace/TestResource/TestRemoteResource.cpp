@@ -46,10 +46,10 @@ TEST(SRemoteResource, Link)
     // wait -------------------------------------------------------------------
     auto future = async(std::launch::async, [&] {
         STask::Enable(); 
-        rem_s.Wait(addr, port, chrono::seconds(1));
+        rem_s.Wait(addr, port, std::chrono::seconds(1));
         return true;
     });
-    STask::Sleep(chrono::milliseconds(10));
+    STask::Sleep(std::chrono::milliseconds(10));
 
     // link & send ------------------------------------------------------------ 
     rem_c.Link(addr, port).Drain(in);
@@ -58,7 +58,7 @@ TEST(SRemoteResource, Link)
     EXPECT_EQ(future.get(), true);
     
     // wait -------------------------------------------------------------------
-    ResourceMonitor(&rem_s).Wait(chrono::milliseconds(100));
+    ResourceMonitor(&rem_s).Wait(std::chrono::milliseconds(100));
 
     // read -------------------------------------------------------------------
     EXPECT_EQ(rem_s.Fill(out).Good(), true);
@@ -73,7 +73,7 @@ TEST(SRemoteResource, Link)
     EXPECT_EQ(rem_s.Drain(in).Good(), true);
     
     // wait -------------------------------------------------------------------
-    ResourceMonitor(&rem_c).Wait(chrono::milliseconds(100));
+    ResourceMonitor(&rem_c).Wait(std::chrono::milliseconds(100));
 
     // receive ----------------------------------------------------------------
     EXPECT_EQ(rem_c.Fill(out).Good(), true);

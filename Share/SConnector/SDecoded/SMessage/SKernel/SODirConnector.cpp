@@ -27,7 +27,7 @@ namespace Decoded {
 namespace Message {
 /**
  */
-SODirConnector::SODirConnector(const string address)
+SODirConnector::SODirConnector(const SText address)
 : SOutputConnector(address) {
 	/**
 	 * create directory

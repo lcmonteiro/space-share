@@ -35,7 +35,7 @@ public:
 	/**
 	 * constructor
 	 */
-	SIDirConnectorT(const string address, const string file) : T(address, file) {
+	SIDirConnectorT(const std::string address, const std::string file) : T(address, file) {
 	}
 };
 /**

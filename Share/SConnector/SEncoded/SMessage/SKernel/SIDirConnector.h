@@ -36,7 +36,7 @@ public:
 	/**
 	 * constructor
 	 */
-	SIDirConnector(const string address);
+	SIDirConnector(const SText address);
 	/**
 	 * destructor
 	 */
@@ -58,7 +58,7 @@ protected:
 	/**
 	 * drain
 	 */
-	list<Document> _Drain() override;
+	std::list<Document> _Drain() override;
 	/**
 	 * ----------------------------------------------------
 	 * control functions
@@ -82,7 +82,7 @@ private:
 	/**
 	 * properties
 	 */
-	string __file;
+	std::string __file;
 };
 /**
  * End namespace Message

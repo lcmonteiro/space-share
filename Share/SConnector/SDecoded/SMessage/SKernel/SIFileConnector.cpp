@@ -19,7 +19,7 @@ namespace Decoded {
 namespace Message {
 /**
  */
-SIFileConnector::SIFileConnector(const string address, const size_t nframesize)
+SIFileConnector::SIFileConnector(const SText address, const size_t nframesize)
 : SInputConnector(address), __sframes(nframesize) {
 	//__state = 0;
 }

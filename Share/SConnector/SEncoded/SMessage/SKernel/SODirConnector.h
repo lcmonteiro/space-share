@@ -33,7 +33,7 @@ public:
 	/**
 	 * constructor
 	 */
-	SODirConnector(const string address, const uint32_t nfiles);
+	SODirConnector(const SText address, const uint32_t nfiles);
 	/**
 	 * destructor
 	 */

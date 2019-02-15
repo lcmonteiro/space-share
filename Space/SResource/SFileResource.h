@@ -1,52 +1,124 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------
  * Container:   SFileResource.h
  * Author:      Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SFILERESOURCE_H
 #define SFILERESOURCE_H
-/*------------------------------------------------------------------------------------------------*
- * linux platform 
- *------------------------------------------------------------------------------------------------*/
-#ifdef __linux__
 /**
+ * space
  */
-#include "SLinux/SLinuxFile.h"
+#include "SResource.h"
+#include "SText.h"
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Base
+ * ------------------------------------------------------------------------------------------------
  */
-class SFileResource : public SLinuxFile {
+class SFileResource : public SResource {
 public:
-        using SLinuxFile::SLinuxFile;
-};
-/**
- */
-class SIFileResource : public SILinuxFile {
-public:
-        using SILinuxFile::SILinuxFile;
-        using SILinuxFile::operator=;
-        /**
-	 * constructors
+    /**
+     * ------------------------------------------------------------------------
+     * Interfaces
+     * ------------------------------------------------------------------------
+     * check resource
+     */
+    bool Valid() const;
+    /**
+     * ------------------------------------------------------------------------
+     * Properties
+     * ------------------------------------------------------------------------
+     * get size
+     */
+    size_t Size(); 
+    /**
+     * get position
+     */
+    size_t Position();
+    /**
+	 * get location
 	 */
-        SIFileResource(SILinuxFile&& file) : SILinuxFile(move(file)) {
-        }
+	SText Path() const; 
+    /**
+     * ------------------------------------------------------------------------
+     * IO functions
+     * ------------------------------------------------------------------------
+     * fill and read frame
+     */
+    template<typename T> SFileResource& Fill (T& f);
+    template<typename T> SFileResource& Read (T& f);
+    /**
+     * drain and write frame
+     */
+    template<typename T> SFileResource& Drain (T& f);
+    template<typename T> SFileResource& Write (T& f);
+    template<typename T> SFileResource& Drain (const T& f);
+    template<typename T> SFileResource& Write (const T& f);
+    /**
+     * flush
+     */
+    SFileResource& Flush();
+    /**
+     * ------------------------------------------------------------------------
+     * Global
+     * ------------------------------------------------------------------------
+     * link file
+     */
+    static const std::string& Link(const std::string& from, const std::string& to);
+    /**
+     * get base name
+     */
+    static std::string BaseName(const std::string& pathname);
+    /**
+      * get temporary dir
+      */
+    static std::string TmpPath();
+protected:
+    /**
+     * ------------------------------------------------------------------------
+     * constructor
+     * ------------------------------------------------------------------------
+     */
+    using SResource::SResource;
 };
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Input FileResource
+ * ------------------------------------------------------------------------------------------------
  */
-class SOFileResource : public SOLinuxFile {
+class SIFileResource : public SFileResource {
 public:
-        using SOLinuxFile::SOLinuxFile;
-        using SOLinuxFile::operator=;
-        /**
-	 * constructors
-	 */
-        SOFileResource(SOLinuxFile&& file) : SOLinuxFile(move(file)) {
-        }
+    /**
+     * constructors
+     */
+    SIFileResource() = default;
+    SIFileResource(const std::string& path);
+    SIFileResource(const std::string& path, const SFileResource& link);
+    /**
+     * status
+     */
+    bool Good();
 };
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Output FileResource
+ * ------------------------------------------------------------------------------------------------
  */
-#endif
+class SOFileResource : public SFileResource {
+public:
+    /**
+     * constructors
+     */
+    SOFileResource() = default;
+    SOFileResource(const std::string& path);
+    SOFileResource(const std::string& path, const SFileResource& link);
+};
 /**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* SFILERESOURCE_H */
-

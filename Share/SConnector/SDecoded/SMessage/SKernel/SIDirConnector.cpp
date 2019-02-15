@@ -21,7 +21,8 @@ namespace Decoded {
 namespace Message {
 /**
  */
-SIDirConnector::SIDirConnector(const string address, const string file): SInputConnector(address), __file(file) {
+SIDirConnector::SIDirConnector(const SText address, const SText file)
+: SInputConnector(address), __file(file) {
 }
 /**
  */

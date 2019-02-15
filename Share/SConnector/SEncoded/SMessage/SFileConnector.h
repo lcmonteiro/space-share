@@ -38,12 +38,12 @@ public:
      */
     template<typename...Args>
     static IConnector Make(Args &&...args) {
-        return make_shared<SIFileConnectorT>(forward<Args>(args)...);
+        return std::make_shared<SIFileConnectorT>(std::forward<Args>(args)...);
     }
     /**
      * constructor
      */
-    SIFileConnectorT(const string address) : T(address) {
+    SIFileConnectorT(const SText address) : T(address) {
     }
 };
 /**
@@ -57,12 +57,12 @@ public:
      */
     template<typename...Args>
     static OConnector Make(Args &&...args) {
-        return make_shared<SOFileConnectorT>(forward<Args>(args)...);
+        return std::make_shared<SOFileConnectorT>(std::forward<Args>(args)...);
     }
     /**
      * constructor
      */
-    SOFileConnectorT(const string address) : T(address) {
+    SOFileConnectorT(const SText address) : T(address) {
     }
 };
 /**

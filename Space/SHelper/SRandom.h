@@ -38,24 +38,24 @@ public:
      * Random String
      * --------------------------------------------------------------------------------------------
      **/
-    static string String(size_t n) {
-        const string alphabet("abcdefghijklmnopqrstuvwxyz0123456789");
+    static std::string String(size_t n) {
+        const std::string alphabet("abcdefghijklmnopqrstuvwxyz0123456789");
         /**
          */
-        string out;
+        std::string out;
         out.reserve(n);
         for (unsigned int i = 0; i < n; ++i) {
             out.push_back(alphabet[rand() % alphabet.length()]);
         }
         return out;
     }
-    static string Name(size_t n) {
-        const vector<string> alphabet{
+    static std::string Name(size_t n) {
+        const std::vector<std::string> alphabet{
             "bcdfghjklmnpqrstvwxyz", "aeiouy"    
         };
         /**
          */
-        string out;
+        std::string out;
         out.reserve(n);
         for (unsigned int i = 0; i < n; ++i) {
             auto& group = alphabet[i % alphabet.size()];
@@ -66,13 +66,13 @@ public:
         return out;
     }
     template<class GEN>
-    static string Name(GEN& gen, size_t n) {
-        const vector<string> alphabet{
+    static std::string Name(GEN& gen, size_t n) {
+        const std::vector<std::string> alphabet{
             "bcdfghjklmnpqrstvwxyz", "aeiouy"    
         };
         /**
          */
-        string out;
+        std::string out;
         out.reserve(n);
         for (unsigned int i = 0; i < n; ++i) {
             auto& group = alphabet[i % alphabet.size()];
@@ -102,7 +102,7 @@ public:
      * --------------------------------------------------------------------------------------------
      **/
     template<size_t CHUNK=0x1000>
-    static SIFileResource File(const string& path, size_t n) {
+    static SIFileResource File(const std::string& path, size_t n) {
         SIFileResource out;
         auto d = div(int(n), int(CHUNK));
         for(size_t i=0; i<d.quot; ++i) {
@@ -111,12 +111,12 @@ public:
         out.Drain(SRandom::Frame(d.rem)).Flush();
         return out;
     }
-    static string FileName() {
+    static std::string FileName() {
         return SFileResource::TmpPath() + "/" + SRandom::String(16);
     }
 private:
-    static random_device::result_type __Device(){
-        static random_device device;
+    static std::random_device::result_type __Device(){
+        static std::random_device device;
         return device();
     }
 };

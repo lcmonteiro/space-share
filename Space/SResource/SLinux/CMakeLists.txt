@@ -2,9 +2,6 @@ cmake_minimum_required (VERSION 3.8)
 # target
 add_library(SpaceResourceLinux 
 STATIC
-	SLinuxDirectory.cpp
-	SLinuxFile.cpp
-	SLinuxPoll.cpp
 	SLinuxResource.cpp
 	SLinuxSocket.cpp
 )
@@ -28,9 +25,11 @@ set(includes
 )
 # source files
 set(sources  
+	${CMAKE_CURRENT_LIST_DIR}/SDirectoryResource.cpp
 	${CMAKE_CURRENT_LIST_DIR}/SRemoteResource.cpp
 	${CMAKE_CURRENT_LIST_DIR}/SLocalResource.cpp
 	${CMAKE_CURRENT_LIST_DIR}/SEventResource.cpp
+	${CMAKE_CURRENT_LIST_DIR}/SFileResource.cpp
 	PARENT_SCOPE
 )
 # link libraries

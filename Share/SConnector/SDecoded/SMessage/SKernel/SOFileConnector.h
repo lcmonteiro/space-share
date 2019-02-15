@@ -33,7 +33,7 @@ public:
     /**
      * constructor
      */
-    SOFileConnector(const string address);
+    SOFileConnector(const SText address);
     /**
      * destructor
      */

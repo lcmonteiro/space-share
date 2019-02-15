@@ -90,7 +90,7 @@ public:
 	 * handler pointer
 	 */
 	template<class H = SHandler>
-	inline pHandler<H> GetHandler() {
+	inline pHandler<H> GetHandler() const {
 		return std::static_pointer_cast<H>(__h);
 	}
 	/**

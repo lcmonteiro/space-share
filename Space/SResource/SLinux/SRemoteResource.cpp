@@ -24,6 +24,7 @@
  * space
  */
 #include "SRemoteResource.h"
+#include "SFrame.h"
 /**
  * definitions
  */

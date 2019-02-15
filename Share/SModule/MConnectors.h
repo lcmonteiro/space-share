@@ -57,7 +57,7 @@ namespace Input {
     template <>
     struct Builder<Decoded::IConnector> {
         static inline Decoded::IConnector Build(const SModule::Command::Group& o) {
-            static map<SConnector::Key, function <Decoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
+            static std::map<SConnector::Key, std::function <Decoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
                 // {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
                 //     auto in = Decoded::Message::ILocConnector::Make(
                 //         o.Get(IO::URI),
@@ -94,7 +94,7 @@ namespace Input {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_LOCAL))
                 ](o);
             } catch(...) {
-                throw runtime_error("invalid input connetor");
+                throw std::runtime_error("invalid input connetor");
             }
         }
     };
@@ -106,10 +106,10 @@ namespace Input {
     template <>
     struct Builder<Encoded::IConnector> {
         static inline Encoded::IConnector Build(const SModule::Command::Group& o){
-            static map<SConnector::Key, function <Encoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
+            static std::map<SConnector::Key, std::function <Encoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto in = Encoded::Message::IFileConnector::Make(
-                        o.Get(IO::URI, string("/tmp/coded"))
+                        o.Get(IO::URI, std::string("/tmp/coded"))
                     );
                     in->SetVerbose(o.Get(IO::VERBOSE, 0));
                     in->SetEnergy(o.Get(IO::ENERGY,   1));
@@ -121,7 +121,7 @@ namespace Input {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
                 ](o);
             } catch(...) {
-                throw runtime_error("invalid input connector");
+                throw std::runtime_error("invalid input connector");
             }
         }
     };
@@ -149,10 +149,10 @@ namespace Output {
     template <>
     struct Builder<Decoded::OConnector> {
         static inline Decoded::OConnector Build(const SModule::Command::Group& o) {
-            static map<SConnector::Key, function <Decoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
+            static std::map<SConnector::Key, std::function <Decoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
                     auto out = Decoded::Message::OUdpConnector::Make(
-                        o.Get(IO::URI,  string("127.0.0.1:9751"))
+                        o.Get(IO::URI,  std::string("127.0.0.1:9751"))
                     );
                     out->SetVerbose(o.Get(IO::VERBOSE, 0));
                     out->SetEnergy(o.Get(IO::ENERGY,   1));
@@ -160,7 +160,7 @@ namespace Output {
                 }},
                 {SConnector::Key(IO::Type::STREAM_REMOTE), [](const SModule::Command::Group& o) {
                     auto out = Decoded::Stream::OTcpConnector::Make(
-                        o.Get(IO::URI,  string("127.0.0.1:9751"))
+                        o.Get(IO::URI,  std::string("127.0.0.1:9751"))
                     );
                     out->SetVerbose(o.Get(IO::VERBOSE, 0));
                     out->SetEnergy(o.Get(IO::ENERGY,   1));
@@ -172,7 +172,7 @@ namespace Output {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_REMOTE))
                 ](o);
             } catch(...) {
-                throw runtime_error("invalid output");
+                throw std::runtime_error("invalid output");
             }
         }
     };
@@ -184,10 +184,10 @@ namespace Output {
     template <>
     struct Builder<Encoded::OConnector> {
         static inline Encoded::OConnector Build(const SModule::Command::Group& o){
-            static map<SConnector::Key, function <Encoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
+            static std::map<SConnector::Key, std::function <Encoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto out = Encoded::Message::OFileConnector::Make(
-                        o.Get(IO::URI, string("/tmp/code"))
+                        o.Get(IO::URI, std::string("/tmp/code"))
                     );
                     out->SetVerbose(o.Get(IO::VERBOSE, 0));
                     out->SetEnergy(o.Get(IO::ENERGY,   1));
@@ -199,7 +199,7 @@ namespace Output {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
                 ](o);
             } catch(...) {
-                throw runtime_error("invalid output");
+                throw std::runtime_error("invalid output");
             }
         }
     };
@@ -227,10 +227,10 @@ namespace IOput {
     template <>
     struct Builder<Decoded::IOConnector> {
         static inline Decoded::IOConnector Build(const SModule::Command::Group& o) {
-            static map<SConnector::Key, function <Decoded::IOConnector(const SModule::Command::Group&)>> GENERATOR {
+            static std::map<SConnector::Key, std::function <Decoded::IOConnector(const SModule::Command::Group&)>> GENERATOR {
                 // {SConnector::Key(IO::Type::STREAM_LOCAL), [](const SModule::Command::Group& o) {
                 //     auto io = Decoded::Stream::IOLocConnector::Make(
-                //         o.Get(IO::URI,     string("/tmp/data.y")),
+                //         o.Get(IO::URI,     std::string("/tmp/data.y")),
                 //         o.Get(IO::NFRAMES, 50),
                 //         o.Get(IO::SFRAMES, 4096)
                 //     );
@@ -254,7 +254,7 @@ namespace IOput {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
                 ](o);
             } catch(...) {
-                throw runtime_error("invalid input/output");
+                throw std::runtime_error("invalid input/output");
             }
         }
     };
@@ -266,7 +266,7 @@ namespace IOput {
     template <>
     struct Builder<Encoded::IOConnector> {
         static inline Encoded::IOConnector Build(const SModule::Command::Group& o){
-            static map<SConnector::Key, function <Encoded::IOConnector(const SModule::Command::Group&)>> GENERATOR {
+            static std::map<SConnector::Key, std::function <Encoded::IOConnector(const SModule::Command::Group&)>> GENERATOR {
                 
             };
             try {
@@ -274,7 +274,7 @@ namespace IOput {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
                 ](o);
             } catch(...) {
-                throw runtime_error("invalid input/output connector");
+                throw std::runtime_error("invalid input/output connector");
             }
         }
     };

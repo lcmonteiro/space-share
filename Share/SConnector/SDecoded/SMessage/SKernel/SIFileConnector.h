@@ -33,7 +33,7 @@ public:
     /**
      * constructor
      */
-    SIFileConnector(const string address, const size_t nframesize);
+    SIFileConnector(const SText address, const size_t nframesize);
     /**
      * destructor
      */

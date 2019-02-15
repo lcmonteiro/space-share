@@ -25,7 +25,7 @@ namespace Decoded {
 namespace Message {
 /**
  */
-SOFileConnector::SOFileConnector(const string address) : SOutputConnector(address) {
+SOFileConnector::SOFileConnector(const SText address) : SOutputConnector(address) {
 //	__state = 0;
 }
 /**

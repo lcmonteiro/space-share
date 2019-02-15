@@ -31,7 +31,7 @@ namespace Encoded {
 namespace Message {
 /**
  */
-SODirConnector::SODirConnector(const string address, const uint32_t nfiles)
+SODirConnector::SODirConnector(const SText address, const uint32_t nfiles)
 : SOutputConnector(address), __n(nfiles) {
 }
 /**

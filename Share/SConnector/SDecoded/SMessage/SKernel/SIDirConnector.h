@@ -30,7 +30,7 @@ public:
     /**
      * constructor
      */
-    SIDirConnector(const string address, const string file);
+    SIDirConnector(const SText address, const SText file);
     /**
      * destructor
      */
@@ -70,7 +70,7 @@ private:
     /**
      * properties
      */
-    string __file;
+    std::string __file;
 };
 /**
  * End namespace Message
