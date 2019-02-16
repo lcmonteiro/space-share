@@ -28,6 +28,7 @@ SOURCES
 DEPENDS
     SpaceResource
     SpaceKernel
+    SpaceHelper
 )
 # ---------------------------------------------------------
 # add monitor test 
@@ -42,6 +43,7 @@ DEPENDS
     SpaceResource
     SpaceMonitor
     SpaceKernel
+    SpaceHelper
 )
 # ---------------------------------------------------------
 # end

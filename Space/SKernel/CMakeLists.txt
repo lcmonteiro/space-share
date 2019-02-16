@@ -26,5 +26,6 @@ PRIVATE
 # target dependencies
 target_link_libraries(SpaceKernel 
 PUBLIC 
-	SpaceKernelLinux
+	${links}
+	SpaceResource
 )

@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------
  * Container:   SRemoteResource.h
  * Author:      Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SREMOTERESOURCE_H
 #define SREMOTERESOURCE_H

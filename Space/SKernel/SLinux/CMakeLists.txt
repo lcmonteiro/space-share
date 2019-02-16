@@ -19,7 +19,8 @@ set(sources
 	PARENT_SCOPE
 )
 # link libraries
-set(links  
+set(links
+	SpaceKernelLinux
 	PARENT_SCOPE
 )
 # ---------------------------------------------------------

@@ -14,6 +14,7 @@ target_link_libraries(SpaceMonitorLinux
 INTERFACE 
 	SpaceKernel
 	SpaceMonitor
-	SpaceKernelLinux
-	SpaceResourceLinux
 )
+# ---------------------------------------------------------
+# End
+# ---------------------------------------------------------

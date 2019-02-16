@@ -29,4 +29,5 @@ PUBLIC
 	SpaceKernel
 PRIVATE
 	SpaceMonitor
+	SpaceHelper
 )

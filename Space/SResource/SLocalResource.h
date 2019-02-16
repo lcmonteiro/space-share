@@ -37,10 +37,6 @@ public:
     SLocalResource& SetRxTimeout(int timeout);
     SLocalResource& SetTxTimeout(int timeout);
     /**
-     * behavior
-     */
-    SLocalResource& SetNoDelay(bool flag);
-    /**
      * ------------------------------------------------------------------------
      * IO functions
      * ------------------------------------------------------------------------
@@ -80,15 +76,13 @@ namespace Message {
         SLocalResource(SLocalResource&&)            = default;
         SLocalResource& operator=(SLocalResource&&) = default;
         /**
-         * wait
+         * bind
          */
-        SLocalResource& Wait(
-            const std::string& host, std::chrono::seconds timeout=std::chrono::hours{24}
-        );
+        SLocalResource& Bind(const std::string& local);
         /**
          * link
          */
-        SLocalResource& Link(const std::string& host);
+        SLocalResource& Link(const std::string& local);
         /**
          * detach
          */
@@ -115,12 +109,12 @@ namespace Stream {
          * wait
          */
         SLocalResource& Wait(
-            const std::string& host, std::chrono::seconds timeout=std::chrono::hours{24}
+            const std::string& local, std::chrono::seconds timeout=std::chrono::hours{24}
         );
         /**
          * link
          */
-        SLocalResource& Link(const std::string& host);
+        SLocalResource& Link(const std::string& local);
         /**
          * detach
          */

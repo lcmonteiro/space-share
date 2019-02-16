@@ -9,6 +9,7 @@ SOURCES
     TestConnector/TestDecodedMessageUDP.cpp
 DEPENDS
     ShareConnector
+    SpaceHelper
 )
 # ---------------------------------------------------------
 # add test for share kernel 

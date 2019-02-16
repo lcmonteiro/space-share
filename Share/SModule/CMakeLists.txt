@@ -11,9 +11,10 @@ target_include_directories(ShareModule INTERFACE
 # target dependencies
 target_link_libraries(ShareModule 
 INTERFACE 
-	ShareKernel
-	SpaceMonitor
-	SpaceResource
 	ShareConnector
 	ShareFunction
+	ShareKernel
+	SpaceResource
+	SpaceMonitor
+	SpaceHelper
 )

@@ -1,8 +1,10 @@
-/*
+/**
+ * ------------------------------------------------------------------------------------------------
  * Container:   SLinuxSocket.cpp
  * Author: Luis Monteiro
  *
  * Created on June 3, 2015, 10:12 AM
+ * ------------------------------------------------------------------------------------------------
  */
 //#define __DEBUG__
 /*
@@ -482,29 +484,22 @@ Stream::SRemoteResource& Stream::SRemoteResource::Wait(
         struct sockaddr_storage addr;
         socklen_t len = sizeof(addr);
         /**
-         * create a linux handler
+         * create a server handler
          */
-        auto h = make_shared<SResourceHandler>(
+        auto s = make_shared<SResourceHandler>(
             ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol)
         );
         /**
-         * set options
+         * bind and listen
          */
         int opt = 1;
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
+        if (::setsockopt(s->FD(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
             continue;
         }
-        if (::bind(h->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
+        if (::bind(s->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
             continue;
         }
-        if (::listen(h->FD(), 1) < -1) {
-            continue;
-        }
-        struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
-            continue;
-        }
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+        if (::listen(s->FD(), 1) < -1) {
             continue;
         }
 #ifdef __DEBUG__
@@ -525,13 +520,27 @@ Stream::SRemoteResource& Stream::SRemoteResource::Wait(
         /**
          * wait connection
          */
-        SStaticMonitorHandler({h}).Wait(timeout);        
+        SStaticMonitorHandler({s}).Wait(timeout);        
         /**
-         * accept & save handler
+         * accept handler
          */
-        SetHandler(make_shared<SResourceHandler>(
-            ::accept(h->FD(), (struct sockaddr *)&addr, &len)
-        ));
+        auto h = make_shared<SResourceHandler>(
+            ::accept(s->FD(), (struct sockaddr *)&addr, &len)
+        );
+        /**
+         * set options
+         */
+        struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+            throw ResourceException(make_error_code(errc(errno)));
+        }
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+            throw ResourceException(make_error_code(errc(errno)));
+        }
+        /**
+         * save handler
+         */
+        SetHandler(h);
         return *this;
     }
     /**
@@ -614,211 +623,6 @@ Stream::SRemoteResource& Stream::SRemoteResource::Link(const string& host, uint1
     ::freeaddrinfo(result);
     throw ResourceException(make_error_code(errc::no_such_device_or_address));
 }
-// /**
-//  * ------------------------------------------------------------------------------------------------
-//  * Connect
-//  * ------------------------------------------------------------------------------------------------
-//  */
-// void SLinuxSocket::Connect(const string& host, Type type) {
-//     /**
-//      * connect parameters
-//      */
-//     struct sockaddr_un caddr;
-//     memset(&caddr, 0, sizeof (caddr));
-//     caddr.sun_family = PF_LOCAL;
-//     strncpy(caddr.sun_path, host.data(), sizeof(caddr.sun_path)-1);
-//     /**
-//      * create socket
-//      */
-//     SLinuxSocket s(::socket(PF_LOCAL, MAP_TYPE[type], 0));    
-//     /**
-//      * settings
-//      */
-//     s.SetRxTimeout(IO_TIMEOUT);
-//     s.SetTxTimeout(IO_TIMEOUT);
-//     /**
-//      * connect
-//      */
-//     if (::connect(s._Handler(), (struct sockaddr*) &caddr, sizeof (caddr)) < 0) {
-//         throw ResourceException(make_error_code(errc(errno)));
-//     }
-//     /**
-//      * update
-//      **/
-//     *this = move(s);
-// }
-// /**
-//  * ------------------------------------------------------------------------------------------------
-//  * Bind
-//  * ------------------------------------------------------------------------------------------------
-//  */
-// void SLinuxSocket::Bind(const string& local, Type type) {
-//     /**
-//      * bind parameters
-//      */
-//     struct sockaddr_un baddr;
-//     memset(&baddr, 0, sizeof (baddr));
-//     baddr.sun_family = PF_LOCAL;
-//     strncpy(baddr.sun_path, local.data(), sizeof(baddr.sun_path) -1);
-//     /**
-//      * create socket
-//      */
-//     SLinuxSocket s(::socket(PF_LOCAL, MAP_TYPE[type], 0));
-//     /**
-//      * options
-//      */
-//     ::unlink(local.data());
-//     /**
-//      * bind
-//      */        
-//     if (::bind(s._Handler(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
-//         throw ResourceException(make_error_code(errc(errno)));
-//     }    
-//     /**
-//      * settings
-//      */
-//     s.SetRxTimeout(IO_TIMEOUT);
-//     s.SetTxTimeout(IO_TIMEOUT);
-//     /**
-//      * update
-//      **/
-//     *this = move(s);
-// }
-// /**
-//  * ------------------------------------------------------------------------------------------------
-//  * IO functions
-//  * ------------------------------------------------------------------------------------------------
-//  **/
-// Frame SLinuxSocket::Read(size_t size) {
-//     IFrame f(size);
-//     /**
-//      * receive
-//      */
-//     while (!f.Full()) {
-//         f.Insert(__Receive(f.Data(), f.Size()));
-//     }
-//     return f;
-// }
-// SLinuxSocket& SLinuxSocket::Drain(OFrame&& f) {
-//     /**
-//      * send
-//      */
-//     while (!f.Empty()) {
-//         f.Remove(__Send(f.Data(), f.Size()));
-//     }
-//     return *this;
-// }
-// SLinuxSocket& SLinuxSocket::Drain(const Frame& f) {
-//     /**
-//      * send
-//      */
-//     for (auto it = f.begin(), end = f.end(); it != end;) {
-//         it = next(it, __Send(it.base(), distance(it, end)));
-//     }
-//     return *this;
-// }
-// /**
-//  * ------------------------------------------------------------------------------------------------
-//  * Text IO functions
-//  * ------------------------------------------------------------------------------------------------
-//  */
-// SLinuxSocket& SLinuxSocket::operator>>(string& str) {
-//     /**
-//      * receive
-//      */
-//     for (auto it = str.begin(), end = str.end(); it != end; ++it) {
-//         string::value_type c;
-//         /**
-//          * read
-//          */
-//         auto n = ::recv(__h, &c, 1, MSG_WAITALL);
-//         if (n <= 0) {
-//             if (n < 0) {
-//                 if (errno == EAGAIN) {
-//                     str.erase(it, end);
-//                     if (it == str.begin()) {
-//                         throw ResourceExceptionTIMEOUT();
-//                     }
-//                     break;
-//                 }
-//                 *this = SLinuxSocket();
-//                 throw IResourceExceptionABORT(strerror(errno));
-//             }
-//             *this = SLinuxSocket();
-//             throw IResourceExceptionABORT();
-//         }
-//         /**
-//          * verify
-//          */
-//         if (::iscntrl(c)) {
-//             // read end line
-//             if (c == '\r') {
-//                 ::recv(__h, &c, 1, MSG_WAITALL);
-//                 str.erase(it, end);
-//                 break;
-//             }
-//             if(c == '\n') {
-//                 str.erase(it, end);
-//                 break;
-//             }
-//             continue;
-//         }
-//         /**
-//          * set
-//          */
-//         *it = c;
-//     }
-//     /**
-//      */
-//     return *this;
-// }
-// /**
-//  */
-// SLinuxSocket& SLinuxSocket::operator<<(const string& str) {
-//     /**
-//      * write
-//      */
-//     auto n = ::send(__h, str.data(), str.size(), MSG_NOSIGNAL | MSG_DONTWAIT);
-//     if (n != int(str.size())) {
-//         *this = SLinuxSocket();
-//         throw OResourceExceptionABORT(make_error_code(errc(errno)));
-//     }
-//     /**
-//      */
-//     return *this;
-// }
-// /**
-//  */
-// size_t SLinuxSocket::__Send(Frame::const_pointer p, Frame::size_type s) {
-//     auto n = ::send(__h, p, s, MSG_NOSIGNAL);
-//     if (n <= 0) {
-//         if (n < 0) {
-//             *this = SLinuxSocket();
-//             throw OResourceExceptionABORT(strerror(errno));
-//         }
-//         *this = SLinuxSocket();
-//         throw OResourceExceptionABORT();
-//     }
-//     return n;
-// }
-// /**
-//  */
-// size_t SLinuxSocket::__Receive(Frame::pointer p, Frame::size_type s) {
-//     auto n = recv(__h, p, s, MSG_DONTWAIT);
-//     if (n <= 0) {
-//         if (n < 0) {
-//             if (errno == EAGAIN) {
-//                 throw ResourceExceptionTIMEOUT();
-//             }
-//             *this = SLinuxSocket();
-//             throw IResourceExceptionABORT(strerror(errno));
-//         }
-//         *this = SLinuxSocket();
-//         throw IResourceExceptionABORT();
-//     }
-//     return n;
-// }
-
 /**
  * ------------------------------------------------------------------------------------------------
  * linux functions
@@ -849,3 +653,8 @@ size_t __Recv(int fd, Frame::pointer p, Frame::size_type s) {
     }
     return n;
 }
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */

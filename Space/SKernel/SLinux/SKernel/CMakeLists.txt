@@ -16,7 +16,6 @@ PUBLIC
 	pthread
 	SpaceKernel
 	SpaceMonitorLinux
-	SpaceResourceLinux
 )
 # ---------------------------------------------------------
 # end 
