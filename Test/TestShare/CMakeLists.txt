@@ -18,7 +18,18 @@ add_gtests(
 TARGET 
     TestShareKernel
 SOURCES
-    TestKernel/TestModule.cpp
+    TestKernel/TestCodec.cpp
+DEPENDS
+    ShareModule
+)
+# ---------------------------------------------------------
+# add test for module
+# ---------------------------------------------------------
+add_gtests(
+TARGET 
+    TestShareModule
+SOURCES
+    TestModule/TestSpliter.cpp
 DEPENDS
     ShareModule
 )

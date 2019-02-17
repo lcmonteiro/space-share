@@ -1,3 +1,11 @@
+/**
+ * ------------------------------------------------------------------------------------------------
+ * File:   TestSpliter.cpp
+ * Author: Luis Monteiro
+ *
+ * Created on February  2, 2019, 10:21 AM
+ * ------------------------------------------------------------------------------------------------
+ */
 #include <gtest/gtest.h>
 /**
  * std
@@ -90,19 +98,9 @@ TEST(SModule, EchoSpliter)
     // end module -------------------------------------------------------------
     s.Attach();
 }
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */
 
-TEST(SModule, CreateSpread)
-{
-    STask::Enable();
-    // define types -----------------------------------------------------------
-    using Encode  = Module::MSpread<
-        Decoded::IConnector, Decoded::Document, Decoded::OConnector
-    >;
-    using Decode  = Module::MSpread<
-        Decoded::IConnector, Decoded::Document, Decoded::OConnector
-    >;
-    using Monitor = SResourceMonitor<
-    >;
-
-    
-}
