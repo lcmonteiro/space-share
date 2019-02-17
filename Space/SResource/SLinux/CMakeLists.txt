@@ -15,6 +15,5 @@ set(sources
 )
 # link libraries
 set(links  
-	SpaceMonitorLinux
 	PARENT_SCOPE
 )

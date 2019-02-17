@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.8)
 # folders
-add_subdirectory(SLinux)
+#add_subdirectory(SLinux)
 # target
 add_library(SpaceMonitor 
 INTERFACE
@@ -14,5 +14,4 @@ INTERFACE
 target_link_libraries(SpaceMonitor 
 INTERFACE 
 	SpaceKernel
-	SpaceMonitorLinux
 )

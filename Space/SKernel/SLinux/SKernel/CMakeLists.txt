@@ -15,7 +15,6 @@ target_link_libraries(SpaceKernelLinux
 PUBLIC 
 	pthread
 	SpaceKernel
-	SpaceMonitorLinux
 )
 # ---------------------------------------------------------
 # end 
