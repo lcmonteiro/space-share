@@ -1,8 +1,10 @@
-/*
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   h
  * Author: Luis Monteiro
  *
  * Created on February  2, 2019, 10:21 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SFRAME_H
 #define SFRAME_H
@@ -65,7 +67,26 @@ class SIFrame;
 class SOFrame;
 typedef class SFrame : public std::vector<uint8_t> {
 public:
+    /**
+     * ------------------------------------------------------------------------
+     * helpres
+     * ------------------------------------------------------------------------
+     * super class
+     * ----------------------------------------------------
+     */
     using Super = std::vector<uint8_t>;
+    /**
+     * ----------------------------------------------------
+     * enable conditions
+     * ----------------------------------------------------
+     */
+    template <typename ITERATOR>
+    using if_iterator_t = std::enable_if_t<
+        std::is_base_of<
+            std::input_iterator_tag, 
+            typename std::iterator_traits<ITERATOR>::iterator_category
+        >::value
+    >;
     /**
      * ------------------------------------------------------------------------
      * initialization
@@ -77,29 +98,13 @@ public:
     : Super() {
         Capacity(capacity).assign(size, value);
     }
-    template<
-        typename ITERATOR, 
-        typename = std::enable_if_t<
-            std::is_base_of<
-                std::input_iterator_tag, 
-                typename std::iterator_traits<ITERATOR>::iterator_category
-            >::value
-        >
-    >
-    SFrame(const size_t capacity, ITERATOR beg, ITERATOR end)
+    template<typename T, typename = if_iterator_t<T>>
+    SFrame(const size_t capacity, T beg, T end)
     : Super() {
         Capacity(capacity).assign(beg, end);
     }
-    template<
-        typename ITERATOR, 
-        typename = std::enable_if_t<
-            std::is_base_of<
-                std::input_iterator_tag, 
-                typename std::iterator_traits<ITERATOR>::iterator_category
-            >::value
-        >
-    >
-    SFrame(ITERATOR beg, ITERATOR end)
+    template<typename T, typename = if_iterator_t<T>>
+    SFrame(T beg, T end)
     : Super(beg, end) {
     }
     SFrame(std::initializer_list<uint8_t> l) 
