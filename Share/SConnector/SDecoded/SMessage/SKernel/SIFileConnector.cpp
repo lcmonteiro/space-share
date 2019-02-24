@@ -25,7 +25,7 @@ SIFileConnector::SIFileConnector(const SText address, const size_t nframesize)
 }
 /**
  */
-Container SIFileConnector::_Read() {
+Document SIFileConnector::_Read() {
 //	IFrame out(__sframes);
 //	/**
 //	 * states 
@@ -70,7 +70,7 @@ Container SIFileConnector::_Read() {
 	 * info
 	 *----------------------------------------------------------------------------------------*/
 //	INFO("DATA(read)::IN::n=" << out.size() << "=" << out);
-	return Container();
+	return Document();
 }
 /**
  * End namespace Message

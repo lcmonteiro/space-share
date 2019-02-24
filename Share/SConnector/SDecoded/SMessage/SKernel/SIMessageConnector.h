@@ -55,8 +55,8 @@ protected:
      * read
      * ------------------------------------------------------------------------
      */
-    Container _Read() override {
-        Container container(__container.capacity());
+    Document _Read() override {
+        Document container(__container.capacity());
 
         // fill buffer ------------------------------------
         __res.Read(__buffer.Expand());
@@ -119,7 +119,7 @@ private:
      **
      * container
      */
-    Container __container;
+    Document __container;
     /**
      * buffer
      */

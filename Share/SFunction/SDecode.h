@@ -41,7 +41,7 @@ class SDecode : public SFunctionSpread<
      */
     using ORoad    = typename Super::ORoad;
     using Data     = typename Super::Data;
-    using Cache    = Encoded::Message::SCache;
+    using Cache    = Message::SCache;
 public:
     /**
 	 * ------------------------------------------------------------------------
@@ -95,17 +95,10 @@ protected:
      *-------------------------------------------------------------------------
      */
 	void processData(ORoad& out) override {
-	    for (Encoded::Document& code: __cache.Pop()) {
-	        /**
-	         * write
-	         */
-	        DEBUG("decode={" 
-	            << "p=" << code.GetPosition()
-	            << "}"
-	        );
+	    for (auto& doc: __cache.Pop()) {
 	        for (auto it = out.begin(), end = out.end(); it != end;) {
 	            try {
-	                it->second->Write(code); ++it;
+	                it->second->Write(doc); ++it;
 	            } catch (ConnectorExceptionDEAD& ex) {
 	                out.Exception(it);
 	            } catch (ConnectorExceptionTIMEOUT& ex) {
@@ -164,7 +157,7 @@ class SDecode : public SFunctionSpread<
      */ 
     using Road  = typename Super::ORoad;
     using Data  = typename Super::Data;
-    using Cache = Encoded::Stream::SCache;
+    using Cache = Stream::SCache;
 public:
     /**
 	 * ------------------------------------------------------------------------
@@ -248,14 +241,10 @@ protected:
      * ------------------------------------------------------------------------
 	 */
     void processData(Road& out) override {
-	    for (Encoded::Document& code: __cache.Pop()) {
-	        /**
-	         * write
-	         */
-	        DEBUG("decode::" << "pos=" << code.GetPosition());
+	    for (auto& data: __cache.Pop()) {
 	        for(auto it = out.begin(); it != out.end();){
 		        try {
-		            it->second->Write(code); ++it;
+		            it->second->Write(data); ++it;
 		        } catch (ConnectorExceptionDEAD& ex) {
 		            out.Exception(it);
 		        } catch (ConnectorExceptionTIMEOUT& ex) {}
@@ -263,7 +252,6 @@ protected:
 	        /**
 	         * reset cache aux
 	         */
-	        DEBUG("decode::" << "clear all");
 	        for(auto&c :__cache_aux){ c.Clear(); }
 	    }
     }

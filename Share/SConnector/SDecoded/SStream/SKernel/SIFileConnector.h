@@ -46,9 +46,9 @@ protected:
 	 * -----------------------------------------------------
 	 * read
 	 */
-	Container _Read() override;
+	Document _Read() override;
 	/**/
-	list<Container> _Drain() override;
+	list<Document> _Drain() override;
 	/**
 	 * ----------------------------------------------------
 	 * control functions
@@ -68,7 +68,7 @@ private:
 	/**
 	 * containers
 	 */
-	Container __container;
+	Document __container;
 	/**/
 	IFrame __buffer;
 	/**

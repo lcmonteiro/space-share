@@ -18,30 +18,30 @@
 namespace Module {
 /**
  */
-template<class I, class D, class O>
+template<class I_CON, class DOC, class O_CON>
 class MSpread : public MBase {
     /**
      * ------------------------------------------------------------------------
      * exception types
      * ------------------------------------------------------------------------
      */
-    using IRoadExceptionDETACHED = SRoadExceptionDETACHED<I>;
-    using ORoadExceptionDETACHED = SRoadExceptionDETACHED<O>;
+    using IRoadExceptionDETACHED = SRoadExceptionDETACHED<I_CON>;
+    using ORoadExceptionDETACHED = SRoadExceptionDETACHED<O_CON>;
     /**
      * ------------------------------------------------------------------------
      * builders
      * ------------------------------------------------------------------------
      */
-    using IBuilder = Input::Builder<I>;
-    using FBuilder = Spread::Builder<I, D, O>;
-    using OBuilder = Output::Builder<O>; 
+    using IBuilder = Input::Builder<I_CON>;
+    using FBuilder = Spread::Builder<I_CON, DOC, O_CON>;
+    using OBuilder = Output::Builder<O_CON>; 
     /** 
      * ------------------------------------------------------------------------
      * connector types
      * ------------------------------------------------------------------------
      */
-    using IRoad = SRoadMonitor<SConnector::Key, I>;
-    using ORoad = SRoad<SConnector::Key, O>;
+    using IRoad = SRoadMonitor<SConnector::Key, I_CON>;
+    using ORoad = SRoad<SConnector::Key, O_CON>;
     /**
      * ------------------------------------------------------------------------
      * function type
@@ -65,7 +65,13 @@ public:
         {Command::FUNCTION, cmd[Command::FUNCTION]},
         {Command::INPUT,    cmd[Command::INPUT]   },
         {Command::OUTPUT,   cmd[Command::OUTPUT]  },
-    }) { }
+    }), __in(), __out(), __func() {}
+    /**
+     * ------------------------------------------------------------------------
+     * destructor
+     * ------------------------------------------------------------------------
+     */
+    virtual ~MSpread() { Attach(); }
 protected:
     /**
      * ------------------------------------------------------------------------
@@ -91,11 +97,19 @@ protected:
     void __ProcessCommand(const Command& cmd) {
         // create and insert inputs -----------------------
         for(auto& o: cmd[Command::INPUT]) {
-            __in.Insert(o[IO::URI], IBuilder::Build(o));
+            try {
+                __in.Insert(o[IO::URI], IBuilder::Build(o));
+            } catch (...) {
+                __UpdateRoad(__in, o);
+            }
         }
         // create and insert outputs ----------------------
         for(auto o: cmd[Command::OUTPUT]) {
-            __out.Insert(o[IO::URI], OBuilder::Build(o));
+            try {
+                __out.Insert(o[IO::URI], OBuilder::Build(o));
+            } catch (...) {
+                __UpdateRoad(__out, o);
+            }
         }
         // create and insert outputs ----------------------
         for(auto o: cmd[Command::FUNCTION]) {
@@ -110,9 +124,10 @@ protected:
     State __ProcessMachine(const State& state, const Clock::Pointer& end) override {
         // log info -----------------------------------------------------------
         INFO("Process={ "
-            << "energy:"     << SEnergy::Get() << ", "
-            << "inputs:"     << Status(__in)   << ", "
-            << "outputs:"    << Status(__out)  << "  "
+            << "state: "     << state              << ", "
+            << "energy:"     << SEnergy::Get()     << ", "
+            << "inputs:"     << __GetStatus(__in)  << ", "
+            << "outputs:"    << __GetStatus(__out) << "  "
             << "}"
         );
         /**
@@ -122,31 +137,29 @@ protected:
          */
         try {
             switch(state) {
-                // default --------------------------------
+                // default ----------------------------------------------------
                 default: {
                     return OPEN;
                 }
-                // open -----------------------------------
+                // open -------------------------------------------------------
                 case OPEN: {
-                    __out.Open();
                     return OWAIT;
                 }
-                // out wait -------------------------------
+                // out wait ---------------------------------------------------
                 case OWAIT: {
-                    return __ProcessOWAIT(end);
+                    return __ProcessWAIT(end, __out, IWAIT);
                 }
-                // in wait --------------------------------
+                // in wait ----------------------------------------------------
                 case IWAIT: {
-                    return __ProcessIWAIT(end);
+                    return __ProcessWAIT(end, __in, PLAY);
                 }
-                // play -----------------------------------
+                // play -------------------------------------------------------
                 case PLAY: {
                     return __ProcessPLAY(end);
                 }
-                // update ---------------------------------
+                // update -----------------------------------------------------
                 case UPDATE : {
-                    __out.Update();
-                    __in.Update();
+                    __out.Update(); __in.Update();
                     return PLAY;
                 }
             }
@@ -158,17 +171,17 @@ protected:
          * out road detach
          */
         catch (ORoadExceptionDETACHED & ex) {
-            WARNING("OUT = { " << Status(__out) << " }");
+            WARNING("OUT = " << __out.Status());
             if(PLAY == state) {
                 SEnergy::Decay();
             }
             __func->Recover();
-            __in.Close();
+            __in.Reset();
             return OWAIT;
         }
-        // in road detach --------------------------------- 
+        // in road detach -------------------------------------------------------- 
         catch (IRoadExceptionDETACHED & ex) {
-            WARNING("IN = {" << Status(__in) << " }");
+            WARNING("IN = " << __in.Status());
             if(PLAY == state) {
                 SEnergy::Decay();
             }
@@ -177,6 +190,7 @@ protected:
         }
         // function dead ---------------------------------- 
         catch (FunctionExceptionDEAD& ex) {
+            WARNING("FUNC");
             SEnergy::Decay();
             __func->Recover();
         }
@@ -186,38 +200,6 @@ protected:
      * --------------------------------------------------------------------------------------------
      * process states
      * --------------------------------------------------------------------------------------------
-     * OWAIT
-     * ------------------------------------------------------------------------
-     */
-    inline State __ProcessOWAIT(const Clock::Pointer& end) {
-         for(Timer t(end, Clock::Distance(100)); !t.Active(); t.Sleep()) {
-            try {
-                __out.Update();
-                __in.Open();
-                return IWAIT;
-            } catch(RoadDetached& e) { }
-        } 
-        __out.Update();
-        __in.Open();
-        return IWAIT;
-    }
-    /**
-     * ------------------------------------------------------------------------
-     * IWAIT
-     * ------------------------------------------------------------------------
-     */
-    inline State __ProcessIWAIT(const Clock::Pointer& end) {
-        for(Timer t(end, Clock::Distance(100)); !t.Active(); t.Sleep()) {
-            try {
-                __in.Update();
-                return PLAY;
-            } catch(RoadDetached& e) { }
-        } 
-        __in.Update();
-        return PLAY; 
-    }
-    /**
-     * ------------------------------------------------------------------------
      * PLAY
      * ------------------------------------------------------------------------
      */

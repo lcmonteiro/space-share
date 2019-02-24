@@ -27,8 +27,8 @@ SIFileConnector::SIFileConnector(
 }
 /**
  */
-Container SIFileConnector::_Read() {
-	Container container;
+Document SIFileConnector::_Read() {
+	Document container;
 	IFrame buffer;
 	/**------------------------------------------------------------------------------------------------------------*
 	 * Fill container
@@ -49,7 +49,7 @@ Container SIFileConnector::_Read() {
 	/*----------------------------------------------------------------------------------------*
 	 * swap containers
 	 *----------------------------------------------------------------------------------------*/
-	container = Container(__container.capacity());
+	container = Document(__container.capacity());
 	swap(__container, container);
 	/*----------------------------------------------------------------------------------------*
 	 * log
@@ -61,13 +61,13 @@ Container SIFileConnector::_Read() {
 }
 /**
  */
-list<Container> SIFileConnector::_Drain() {
-	list<Container> out;
+list<Document> SIFileConnector::_Drain() {
+	list<Document> out;
 	/*----------------------------------------------------------------------------------------*
 	 * check if container is full 
 	 *----------------------------------------------------------------------------------------*/
 	if (!__container.empty()) {
-		auto container = Container(__container.capacity());
+		auto container = Document(__container.capacity());
 		swap(__container, container);
 		out.push_back(move(container));
 	}
@@ -77,7 +77,7 @@ list<Container> SIFileConnector::_Drain() {
 	if (!__buffer.Empty()) {
 		auto buffer = IFrame(__buffer.size());
 		swap(__buffer, buffer);
-		out.push_back(Container{move(buffer.Shrink())});
+		out.push_back(Document{move(buffer.Shrink())});
 	}
 	/*----------------------------------------------------------------------------------------*
 	 * log

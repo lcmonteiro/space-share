@@ -47,7 +47,7 @@ public:
     /**
      * constructors
      */
-    SContainer(size_t capacity = 0) : Super() {
+    SContainer(size_t capacity) : Super() {
         reserve(capacity);
     }
     /**

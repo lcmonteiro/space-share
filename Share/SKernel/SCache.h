@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   SCache.h
  * Author: Luis Monteiro
  *
  * Created on October 6, 2016, 9:49 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SCACHE_H
 #define SCACHE_H
@@ -20,28 +22,42 @@
 #include "SConnector.h"
 #include "SCodec.h"
 /**
- *-------------------------------------------------------------------------------------------------
- * message context
- *-------------------------------------------------------------------------------------------------
- */
-namespace Encoded {
-namespace Message {
-/**
+ * ------------------------------------------------------------------------------------------------
  * message cache
+ * ------------------------------------------------------------------------------------------------
  */
+namespace Message {
 class SCache {
     /**
+     * ------------------------------------------------------------------------
+     * Helpers
+     * ------------------------------------------------------------------------
      * types
      */
     typedef enum {Open, Done, Close} State;
     /**
      */
+    using Context = Encoded::SContext;
     using Decoder = CodecDecoder;
-    using Chain   = SChain<Context, Decoder>;
+    using Chain   = SChain<Encoded::Context, Decoder>;
     using Storage = map<State, Chain>;
 public:
     /**
+     * ------------------------------------------------------------------------
+     * defaults
+     * ------------------------------------------------------------------------
      * constructor
+     */
+    SCache(SCache&&) = default;
+    /**
+     * operator
+     */
+    SCache& operator=(SCache&&) = default;
+    /**
+     * ------------------------------------------------------------------------
+     * constructors
+     * ------------------------------------------------------------------------
+     * main
      * @param stamp
      * @param capacity - number max of containers
      */
@@ -52,91 +68,86 @@ public:
         __storage[Close] = Chain(capacity);
     }
     /**
-     * move constructor 
+     * ------------------------------------------------------------------------
+     * Add Encoded Document
+     * ------------------------------------------------------------------------
      */
-    SCache(SCache&& cache): 
-    __stamp(move(cache.__stamp)), 
-    __storage(move(cache.__storage)){
+    inline bool Push(Encoded::Document&& doc) {
+        if(__storage[Close].Exist(doc)) {
+            return false;
+        }
+        if(__storage[Done].Exist(doc)) {
+            return false;
+        }
+        try {
+            if(__storage[Open].Find(doc).push(std::move(doc)).full()) {
+                __storage[Done].Insert(
+                    doc, std::move(__storage[Open].Find(doc))
+                );
+            }
+        } catch(std::runtime_error&) {
+            Decoder c(doc.GetNumFrames(), std::move(doc), __stamp);
+            if (c.full()) {
+                __storage[Open].Insert(doc, std::move(c));
+            } else {
+                __storage[Done].Insert(doc, std::move(c));
+            }
+        }
+        return true;
     }
     /**
-     * move operator 
+     * ------------------------------------------------------------------------
+     * Remove Decoded Document
+     * ------------------------------------------------------------------------
      */
-    inline SCache& operator=(SCache&& cache) {
-    __stamp = move(cache.__stamp);
-    __storage = move(cache.__storage);
-    return *this;
-    }
-    /*----------------------------------------------------------------------------------------*
-     * Add container
-     *----------------------------------------------------------------------------------------*/
-    inline bool Push(Document&& container) {
-    if(__storage[Close].Exist(container)) {
-        return false;
-    }
-    if(__storage[Done].Exist(container)) {
-        return false;
-    }
-    try {
-        if(__storage[Open].Find(container).push(move(container)).full()) {
-            __storage[Done].Insert(container, move(__storage[Open].Find(container)));
-        }
-    } catch(runtime_error& e) {
-        Decoder c(container.GetNumFrames(), move(container), __stamp);
-        if (c.full()) {
-            __storage[Open].Insert(container, move(c));
-        } else {
-            __storage[Done].Insert(container, move(c));
-        }
-    }
-    return true;
-    }
-    /*----------------------------------------------------------------------------------------*
-     * Remove container
-     *----------------------------------------------------------------------------------------*/
-    inline list<Document> Pop() {
+    inline std::list<Decoded::Document> Pop() {
 	    auto& done  = __storage[Done];
 	    auto& close = __storage[Close];
 	    /**
 	     * get all decoded messages
 	     */
-	    list<Document> docs;
+	    std::list<Decoded::Document> docs;
 	    for(auto it = done.begin(); it != done.end(); it = done.erase(it)) {
 	        auto p = *it;
 	        /**
 	         * create document 
 	         */
-	        docs.emplace_back(Document(move(p->second.pop()), p->first));
+	        docs.emplace_back(std::move(p->second.pop()));
 	        /**
 	         * move context to close
 	         */
-	        close.Insert(p->first, move(p->second.clear()));
+	        close.Insert(p->first, std::move(p->second.clear()));
 	    }
         return docs;
     } 
-    /*----------------------------------------------------------------------------------------*
-     * clear 
-     *----------------------------------------------------------------------------------------*/
+    /**
+     * ------------------------------------------------------------------------
+     * Clear 
+     * ------------------------------------------------------------------------
+     */
     inline void Clear() {
         __storage.clear();
     }
-    /*----------------------------------------------------------------------------------------*
-     * move 
-     *----------------------------------------------------------------------------------------*/
+    /* ------------------------------------------------------------------------
+     * Move 
+     * ------------------------------------------------------------------------
+     */
     inline void Move() {
-    /**
-     * create a random context
-     */
-    Context ctxt(__rand(), 0);
-    /**
-     * insert a random context on done and close states
-     */
-    __storage[Done].Insert(Context(), Decoder());
-    __storage[Close].Insert(Context(), Decoder());
+        /**
+         * create a random context
+         */
+        Context ctxt(__rand(), 0);
+        /**
+         * insert a random context on done and close states
+         */
+        __storage[Done].Insert(Context(), Decoder());
+        __storage[Close].Insert(Context(), Decoder());
     }
 protected:
-    /**----------------------------------------------------------------------------------------
+    /**
+     * ------------------------------------------------------------------------
      * settings
-     **----------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * codec stamp 
      */
     StampReference __stamp;
@@ -150,156 +161,147 @@ protected:
 };
 }
 /**
- *-------------------------------------------------------------------------------------------------
- * stream context
- *-------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
+ * Stream Cache
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Stream {
-/**
- * stream cache
- */
 class SCache {
+    using Context = Encoded::SContext;
     /**
+     * ------------------------------------------------------------------------
+     * Reference
+     * ------------------------------------------------------------------------
      */
     typedef class SReference {
-    public:
-    SReference(uint32_t pos = 0) : __pos(pos) {
-    }
-    /**
-     * SReference operators
-     */
-    inline SReference& operator=(const SReference& ref) {
-        __pos = ref.__pos;
-        return *this;
-    }
-    inline SReference operator-(uint32_t n) {
-        return (__pos - n);
-    }
-    /**
-     * SReference compare
-     */
-    inline bool gt(const SReference& ref) const {
-        return (__pos - ref.__pos) < (UINT32_MAX >> 1);
-    }
-    inline bool lt(const SReference& ref) const {
-        return (__pos - ref.__pos) > (UINT32_MAX >> 1);
-    }
-    inline void next() {
-        ++__pos;
-    }
-    inline void prev() {
-        --__pos;
-    }
-    /**
-     *  SContextConnector operators
-     */
-    inline SReference& operator=(const SContext& s) {
-        __pos = s.GetPosition();
-        return *this;
-    }
-    inline operator SContext() const {
-        return SContext(__pos, 0, 0);
-    }
-    /**
-     * SContextConnector compare
-     */
-    inline bool gt(const SContext& s) const {
-        return (__pos - s.GetPosition()) < (UINT32_MAX >> 1);
-    }
-    inline bool lt(const SContext& s) const {
-        return (__pos - s.GetPosition()) > (UINT32_MAX >> 1);
-    }
-    inline bool eq(const SContext& s) const {
-        return (__pos == s.GetPosition());
-    }
-    inline bool neq(const SContext& s) const {
-        return (__pos != s.GetPosition());
-    }
-
-    private:
-    uint32_t __pos;
+        public:
+        SReference(uint32_t pos = 0) : __pos(pos) {
+        }
+        /**
+         * SReference operators
+         */
+        inline SReference& operator=(const SReference& ref) {
+            __pos = ref.__pos;
+            return *this;
+        }
+        inline SReference operator-(uint32_t n) {
+            return (__pos - n);
+        }
+        /**
+         * SReference compare
+         */
+        inline bool gt(const SReference& ref) const {
+            return (__pos - ref.__pos) < (UINT32_MAX >> 1);
+        }
+        inline bool lt(const SReference& ref) const {
+            return (__pos - ref.__pos) > (UINT32_MAX >> 1);
+        }
+        inline void next() {
+            ++__pos;
+        }
+        inline void prev() {
+            --__pos;
+        }
+        /**
+         *  Context operators
+         */
+        inline SReference& operator=(const Context& s) {
+            __pos = s.GetPosition();
+            return *this;
+        }
+        inline operator Context() const {
+            return Context(__pos, 0, 0);
+        }
+        /**
+         * Context compare
+         */
+        inline bool gt(const Context& s) const {
+            return (__pos - s.GetPosition()) < (UINT32_MAX >> 1);
+        }
+        inline bool lt(const Context& s) const {
+            return (__pos - s.GetPosition()) > (UINT32_MAX >> 1);
+        }
+        inline bool eq(const Context& s) const {
+            return (__pos == s.GetPosition());
+        }
+        inline bool neq(const Context& s) const {
+            return (__pos != s.GetPosition());
+        }
+        private:
+        uint32_t __pos;
     } Reference;
     /**
      */
     typedef map<Context, CodecDecoder> Storage;
 public:
     /**
+     * ------------------------------------------------------------------------
+     * defaults
+     * ------------------------------------------------------------------------
      * constructor
+     */
+    SCache(SCache&&) = default;
+    /**
+     * operator
+     */
+    SCache& operator=(SCache&&) = default;
+    /**
+     * ------------------------------------------------------------------------
+     * constructors
+     * ------------------------------------------------------------------------
+     * main
      * @param n - number of Containers
      */
     SCache(const Stamp& stamp = CodecStamp::Get(CodecStamp::NONE), uint32_t n = 0) 
     : __stamp(stamp), __n(n), __min(), __back(), __front(), __max() {
     }
     /**
-     * move constructor 
+     * ------------------------------------------------------------------------
+     * Add Encoded document
+     * ------------------------------------------------------------------------
      */
-    SCache(SCache&& cache): 
-	    __stamp(move(cache.__stamp)), 
-	    __n(move(cache.__n)), 
-	    __min(move(cache.__min)), 
-	    __back(move(cache.__back)), 
-	    __front(move(cache.__front)), 
-	    __max(move(cache.__max)),
-	    __storage(move(cache.__storage)){
-    }
-    /**
-     * move operator 
-     */
-    inline SCache& operator=(SCache&& cache) {
-	    __stamp = move(cache.__stamp);
-	    __n = move(cache.__n);
-	    __min = move(cache.__min);
-	    __max = move(cache.__max);
-	    __back = move(cache.__back);
-	    __front = move(cache.__front);
-	    __storage = move(cache.__storage);
-	    return *this;
-    }
-    /*----------------------------------------------------------------------------------------*
-     * Add container
-     *----------------------------------------------------------------------------------------*/
-    inline bool Push(Document&& container) {
+    inline bool Push(Encoded::Document&& doc) {
 	    /**
 	     * check context
 	     */
-	    if (__min.gt(container)) {
+	    if (__min.gt(doc)) {
 	        if (__min.neq(__max)) {
 	        	return false;
 	        }
-	        __min = Reference(container.GetPosition() - __n);
-	        __max = Reference(container.GetPosition() + __n);
-	        __back = __front = container;
+	        __min = Reference(doc.GetPosition() - __n);
+	        __max = Reference(doc.GetPosition() + __n);
+	        __back = __front = doc;
 	    }
-	    if (__max.lt(container)) {
+	    if (__max.lt(doc)) {
 	        if (__min.neq(__max)) {
 	        	return false;
 	        }
-	        __min = Reference(container.GetPosition() - __n);
-	        __max = Reference(container.GetPosition() + __n);
-	        __back = __front = container;
+	        __min = Reference(doc.GetPosition() - __n);
+	        __max = Reference(doc.GetPosition() + __n);
+	        __back = __front = doc;
 	    }
 	    /**
 	     * update storage
 	     */
-	    auto it = __storage.find(container);
+	    auto it = __storage.find(doc);
 	    if (it != __storage.end()) {
-	            /**
-	             * update an existed container
-	             */
-	        it->second.push(move(container));
+            /**
+             * update an existed container
+             */
+	        it->second.push(std::move(doc));
 	    } else {
 	        /**
 	         * inset a new container 
 	         */
-	        __storage[container] = CodecDecoder(container.GetNumFrames(), move(container), __stamp);
+	        __storage[doc] = CodecDecoder(doc.GetNumFrames(), std::move(doc), __stamp);
 	        /**
 	         * update movement
 	         */
-	        if (__front.lt(container)) {
+	        if (__front.lt(doc)) {
 		        /**
 		         * update front
 		         */
-		        __front = container;
+		        __front = doc;
 		        /**
 		         * move window 
 		         */
@@ -316,72 +318,80 @@ public:
 	    }
     	return true;
     }
-    /*----------------------------------------------------------------------------------------*
-     * Remove container
-     *----------------------------------------------------------------------------------------*/
-    inline list<Document> Pop() {
     /**
-     * get all decoded messages
+     * ------------------------------------------------------------------------
+     * Remove Decoded Document
+     * ------------------------------------------------------------------------
      */
-    list<Document> docs;
-    for(auto it = __storage.find(__back); 
-        it != __storage.end() && it->second.full(); 
-        it = __storage.find(__back)
-    ){
+    inline std::list<Decoded::Document> Pop() {
         /**
-         * insert 
+         * get all decoded messages
          */
-        docs.emplace_back(Document(move(it->second.pop()), it->first));
-        /**
-         * clear decoder
-         */
-        it->second.clear();
-        /**
-         * move back reference
-         */
-        __back.next();
+        std::list<Decoded::Document> docs;
+        for(auto it = __storage.find(__back); 
+            it != __storage.end() && it->second.full(); 
+            it = __storage.find(__back)
+        ){
+            /**
+             * insert 
+             */
+            docs.emplace_back(std::move(it->second.pop()));
+            /**
+             * clear decoder
+             */
+            it->second.clear();
+            /**
+             * move back reference
+             */
+            __back.next();
+        }
+        return docs;
     }
-    return docs;
-    }
-    /*----------------------------------------------------------------------------------------*
+    /**
+     * ------------------------------------------------------------------------
      * Shrink
-     *----------------------------------------------------------------------------------------*/
+     * ------------------------------------------------------------------------
+     */
     inline SCache& Shrink() {
-    for (; __min.lt(__back); __min.next()) {
-        __storage.erase(__min);
-    }
-    return *this;
+        for (; __min.lt(__back); __min.next()) {
+            __storage.erase(__min);
+        }
+        return *this;
     }
     inline SCache& Shrink(size_t n) {
-    for (size_t i = 0; i< n && __min.lt(__back); ++i, __min.next()) {
-        __storage.erase(__min);
+        for (size_t i = 0; i< n && __min.lt(__back); ++i, __min.next()) {
+            __storage.erase(__min);
+        }
+        return *this;
     }
-    return *this;
-    }
-    /*----------------------------------------------------------------------------------------*
-     * move
-     *----------------------------------------------------------------------------------------*/
+    /**
+     * ------------------------------------------------------------------------
+     * Move
+     * ------------------------------------------------------------------------
+     */
     inline SCache& Move(size_t n = 1) {
-    /**
-     * shift
-     */
-    for (size_t i = 0;  i < n ; ++i, __min.next(), __max.next()) {
-        __storage.erase(__min);
+        /**
+         * shift
+         */
+        for (size_t i = 0;  i < n ; ++i, __min.next(), __max.next()) {
+            __storage.erase(__min);
+        }
+        /**
+         * check
+         */
+        if (__back.lt(__min)) { 
+            __back = __min;
+        }
+        if (__front.lt(__min)) {
+            __front = __min;
+        }
+        return *this;
     }
     /**
-     * check
+     * ------------------------------------------------------------------------
+     * Clear
+     * ------------------------------------------------------------------------
      */
-    if (__back.lt(__min)) { 
-        __back = __min;
-    }
-    if (__front.lt(__min)) {
-        __front = __min;
-    }
-    return *this;
-    }
-    /*----------------------------------------------------------------------------------------*
-     * clear
-     *----------------------------------------------------------------------------------------*/
     inline void Clear() {
 	    /**
 	     * erase all storage 
@@ -395,27 +405,33 @@ public:
 	    __min = Reference(0);
 	    __max = Reference(0);
     }
-    /*----------------------------------------------------------------------------------------*
-     * get length
-     *----------------------------------------------------------------------------------------*/
+    /**
+     * ------------------------------------------------------------------------
+     * Length 
+     * ------------------------------------------------------------------------
+     */
     inline size_t Length() {
 	    return __storage.size();
     }
-    /*----------------------------------------------------------------------------------------*
-     * get Count
-     *----------------------------------------------------------------------------------------*/
+    /**
+     * ------------------------------------------------------------------------
+     * Count - number of full contaires
+     * ------------------------------------------------------------------------
+     */
     inline size_t Count() {
 	    size_t size = 0;
 	    for (auto& c : __storage) {
 	        if (c.second.full()) {
-	        ++size;
+	            ++size;
 	        }
 	    }
 	    return size;
     }
-    /*----------------------------------------------------------------------------------------*
-     * get Weight
-     *----------------------------------------------------------------------------------------*/
+    /**
+     * ------------------------------------------------------------------------
+     * Weight
+     * ------------------------------------------------------------------------
+     */
     inline size_t Weight() {
 	    size_t size = 0;
 	    for (auto& c : __storage) {
@@ -423,9 +439,11 @@ public:
 	    }
 	    return size;
     }
-    /*----------------------------------------------------------------------------------------*
-     * get Density
-     *----------------------------------------------------------------------------------------*/
+    /**
+     * ------------------------------------------------------------------------
+     * Density
+     * ------------------------------------------------------------------------
+     */
     inline size_t Density() {
 	    size_t density = 0;
 	    /**
@@ -443,11 +461,13 @@ public:
 	        ++density, p.prev();
 	    }
 	    return density;
-	    }
-	    /*----------------------------------------------------------------------------------------*
-	     * compare
-	     *----------------------------------------------------------------------------------------*/
-	    inline bool Stronger(SCache& cache) {
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * Compare
+     * ------------------------------------------------------------------------
+     */
+    inline bool Stronger(SCache& cache) {
 	    if(cache.Density() < Density()){
 	        return true;
 	    }
@@ -458,22 +478,33 @@ public:
     }
 protected:
     /**
-     * settings
+     * ------------------------------------------------------------------------
+     * Settings
+     * ------------------------------------------------------------------------
+     * stamp
      */
     StampReference __stamp;
     /**
+     * tolerance
      */
     uint32_t __n;
     /**
+     * references
      */
     Reference __min;
     Reference __back;
     Reference __front;
     Reference __max;
     /**
+     * storage
      */
     Storage __storage;
 };
-}}
+}
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */
 #endif /* SCACHE_H */
 

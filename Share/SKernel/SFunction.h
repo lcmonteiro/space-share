@@ -96,15 +96,15 @@ protected:
  * spread template 
  *-------------------------------------------------------------------------------------------------
  **/
-template<class K, class I, class D, class O>
+template<class K, class IN, class DOC, class OUT>
 class SFunctionSpread : public SFunction {
 public:
     /**
      * type definitions
      */
-    using IRoad = SRoadMonitor<K, I>;
-    using ORoad = SRoad<K, O>;
-    using Data  = D;
+    using IRoad = SRoadMonitor<K, IN>;
+    using ORoad = SRoad<K, OUT>;
+    using Data  = DOC;
     /**
      * constructor
      */

@@ -322,7 +322,7 @@ public:
     /**
      * read data
      */
-    inline Container Read() {
+    inline Document Read() {
         try {
             return _Read();
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -339,7 +339,7 @@ public:
     /**
      * read residual data 
      */
-    inline std::list<Container> Drain() {
+    inline std::list<Document> Drain() {
         try {
             return _Drain();
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -359,11 +359,11 @@ protected:
      **
      * read
      */
-    virtual Container _Read() = 0;
+    virtual Document _Read() = 0;
     /**
      * drain 
      **/
-    virtual std::list<Container> _Drain() { return {}; }
+    virtual std::list<Document> _Drain() { return {}; }
 };
 /**
  * ----------------------------------------------------------------------------
@@ -384,7 +384,7 @@ public:
     /**
      * write data
      */
-    inline void Write(const Container& data){
+    inline void Write(const Document& data){
         try {
             _Write(data);
         } catch (ResourceExceptionABORT& ex) {
@@ -399,7 +399,7 @@ protected:
      * ----------------------------------------------------
      * write
      **/
-    virtual void _Write(const Container& container) = 0;
+    virtual void _Write(const Document& container) = 0;
 };
 /**
  * ----------------------------------------------------------------------------
@@ -424,7 +424,7 @@ public:
     /**
      * read data
      */
-    inline Container Read() {
+    inline Document Read() {
         try {
             return _Read();
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -441,7 +441,7 @@ public:
     /**
      * read residual data 
      */
-    inline std::list<Container> Drain() {
+    inline std::list<Document> Drain() {
         try {
             return _Drain();
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -455,7 +455,7 @@ public:
     /**
      * write data
      */
-    inline void Write(const Container& data) {
+    inline void Write(const Document& data) {
         try {
             _Write(data);
         } catch (ResourceExceptionABORT& ex) {
@@ -471,15 +471,15 @@ protected:
      **
      * read
      */
-    virtual Container _Read() = 0;
+    virtual Document _Read() = 0;
     /**
      * drain  
      */
-    virtual std::list<Container> _Drain() { return {}; }
+    virtual std::list<Document> _Drain() { return {}; }
     /**
      * write 
      */
-    virtual void _Write(const Container& container) = 0;
+    virtual void _Write(const Document& container) = 0;
 };
 /**
  * ----------------------------------------------------------------------------

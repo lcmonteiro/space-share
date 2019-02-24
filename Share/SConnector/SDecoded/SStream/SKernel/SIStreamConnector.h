@@ -55,7 +55,7 @@ protected:
      * read
      * ------------------------------------------------------------------------
      */
-    Container _Read() override {
+    Document _Read() override {
         IFrame buffer;
         // fill container ---------------------------------
         while (!__container.Full()) {
@@ -71,7 +71,7 @@ protected:
             __container.emplace_back(std::move(buffer));
         }
         // reset container --------------------------------
-        Container container(__container.capacity());
+        Document container(__container.capacity());
         std::swap(__container, container);    
 
         // info -------------------------------------------
@@ -85,11 +85,11 @@ protected:
      * drain 
      * ------------------------------------------------------------------------
      */
-    std::list<Container> _Drain() override {
+    std::list<Document> _Drain() override {
         Buffer tmp;
         // check if container is full ---------------------
         if (!__container.empty()) {
-            auto container = Container(__container.capacity());
+            auto container = Document(__container.capacity());
             std::swap(__container, container);
             tmp.Write(std::move(container));
         }
@@ -100,9 +100,9 @@ protected:
             tmp.Write(std::move(buffer.Shrink()));
         }
         // fill container ---------------------------------
-        std::list<Container> out;
+        std::list<Document> out;
         for (auto& p : Shape(tmp.Length(), __container.capacity())) {
-            auto container = Container(p.first);
+            auto container = Document(p.first);
             while (!container.Full()) {
                 container.emplace_back(tmp.Read(p.second));
             }
@@ -161,7 +161,7 @@ private:
      **
      * container
      */
-    Container __container;
+    Document __container;
     /**
      * buffer
      */

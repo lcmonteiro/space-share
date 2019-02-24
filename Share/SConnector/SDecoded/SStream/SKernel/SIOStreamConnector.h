@@ -55,7 +55,7 @@ protected:
      * read
      * ------------------------------------------------------------------------
      */
-    Container _Read() override {
+    Document _Read() override {
         IFrame buffer;
         // fill container ---------------------------------
         for (;!__container.Full(); __container.push_back(move(buffer))) {
@@ -69,7 +69,7 @@ protected:
             swap(__buffer, buffer);
         }
         // reset container --------------------------------
-        Container container(__container.capacity());
+        Document container(__container.capacity());
         swap(__container, container);    
 
         // info -------------------------------------------
@@ -83,12 +83,12 @@ protected:
      * drain 
      * ------------------------------------------------------------------------
      */
-    std::list<Container> _Drain() override {
+    std::list<Document> _Drain() override {
         Buffer tmp;
 
         // check if container is full ---------------------
         if (!__container.empty()) {
-            auto container = Container(__container.capacity());
+            auto container = Document(__container.capacity());
             swap(__container, container);
             tmp.Write(move(container));
         }
@@ -99,9 +99,9 @@ protected:
             tmp.Write(move(buffer.Shrink()));
         }
         // fill container ---------------------------------
-        std::list<Container> out;
+        std::list<Document> out;
         for (auto& p : Shape(tmp.Length(), __container.capacity())) {
-            auto container = Container(p.first);
+            auto container = Document(p.first);
             while (!container.Full()) {
                 container.push_back(move(tmp.Read(p.second)));
             }
@@ -119,7 +119,7 @@ protected:
      * write 
      * ------------------------------------------------------------------------
      */
-    void _Write(const Container& container) override {
+    void _Write(const Document& container) override {
 
         // log info ---------------------------------------
         INFO("DATA::OUT::n=" <<container.size() << "=" << container.front());
@@ -175,7 +175,7 @@ private:
      **
      * container
      */
-    Container __container;
+    Document __container;
     /**
      * buffer
      */

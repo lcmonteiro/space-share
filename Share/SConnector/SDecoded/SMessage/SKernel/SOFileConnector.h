@@ -47,7 +47,7 @@ protected:
 	 * -----------------------------------------------------
 	 * read
 	 */
-    void _Write(const Container& container) override;
+    void _Write(const Document& container) override;
     /**
 	 * ----------------------------------------------------
 	 * control functions

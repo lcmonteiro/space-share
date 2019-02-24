@@ -43,6 +43,45 @@ namespace Decoded {
  **/
 typedef class SDocument : public Container {
 public:
+    /**
+     * ----------------------------------------------------
+     * defaults
+     * ----------------------------------------------------
+     * constructors
+     * --------------------------------
+     */
+    SDocument()                 = default;
+    SDocument(SDocument&&)      = default;
+    SDocument(const SDocument&) = default;
+    /**
+     * --------------------------------
+     * destructor
+     * --------------------------------
+     */
+    virtual ~SDocument() = default;
+    /**
+     * --------------------------------
+     * operatores
+     * --------------------------------
+     */
+    SDocument& operator=(SDocument&&)      = default;
+    SDocument& operator=(const SDocument&) = default;
+    /**
+     * ----------------------------------------------------
+     * container constructor
+     * ----------------------------------------------------
+     */
+    SDocument(SContainer&& ctn) 
+    : Container(std::move(ctn)) {
+    }
+    SDocument(const SContainer& ctn) 
+    : Container(ctn) {
+    }
+    /**
+     * --------------------------------
+     * operatores
+     * --------------------------------
+     */
     using Container::Container;
     using Container::operator=;
 } Document;
@@ -53,12 +92,6 @@ public:
  * ------------------------------------------------------------------------------------------------
  **/
 namespace Encoded {
-/**
- * ----------------------------------------------------------------------------
- * Definitions
- * ----------------------------------------------------------------------------
- **/
-
 /**
  * ----------------------------------------------------------------------------
  * Context

@@ -55,8 +55,8 @@ protected:
      * read
      * ------------------------------------------------------------------------
      */
-    Container _Read() override {
-        Container container(__container.capacity());
+    Document _Read() override {
+        Document container(__container.capacity());
 
         // fill buffer ------------------------------------
         __res.Read(__buffer.Expand());
@@ -78,7 +78,7 @@ protected:
      * write
      * ------------------------------------------------------------------------
      */
-    void _Write(const Container& container) override {
+    void _Write(const Document& container) override {
         // log info ---------------------------------------
         INFO("DATA::OUT::n=" <<container.size());
         
@@ -134,7 +134,7 @@ private:
      **
      * container
      */
-    Container __container;
+    Document __container;
     /**
      * buffer
      */

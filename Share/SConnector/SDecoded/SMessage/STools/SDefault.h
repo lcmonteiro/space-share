@@ -33,7 +33,7 @@ public:
      * Split buffer
      * ------------------------------------------------------------------------
      */
-    static inline Container& Split(Frame& buf, Container& chunks) {
+    static inline Container& Split(Frame& buf, Document& chunks) {
         // process chunk size -----------------------------
         auto res = div(
             static_cast<int>(buf.Size() + sizeof (framesize_t)), 
@@ -63,7 +63,7 @@ public:
      * Join buffer
      * ------------------------------------------------------------------------
      */
-    static inline Frame& Join(const Container& chunks, Frame& buf) {
+    static inline Frame& Join(const Document& chunks, Frame& buf) {
         // fill up tmp frame ------------------------------
         IFrame tmp = std::move(buf);
         for(auto& c: chunks) {

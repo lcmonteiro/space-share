@@ -31,7 +31,7 @@ SOFileConnector::SOFileConnector(const SText address) : SOutputConnector(address
 /**
  * 
  */
-void SOFileConnector::_Write(const Container& frame) {
+void SOFileConnector::_Write(const Document& frame) {
 //	/*----------------------------------------------------------------------------------------*
 //	 * log
 //	 *----------------------------------------------------------------------------------------*/

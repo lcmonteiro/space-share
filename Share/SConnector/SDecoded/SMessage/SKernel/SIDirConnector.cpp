@@ -26,7 +26,7 @@ SIDirConnector::SIDirConnector(const SText address, const SText file)
 }
 /**
  */
-Container SIDirConnector::_Read() {
+Document SIDirConnector::_Read() {
 	/**------------------------------------------------------------------------------------------------------------*
 	 * open file
 	 *----------------------------------------------------------------------------------------*/
@@ -39,7 +39,7 @@ Container SIDirConnector::_Read() {
 	 *----------------------------------------------------------------------------------------*/
 //	auto res = SDireResource(fd);
 	// read nframes ---------------------------------------
-	Container container;
+	Document container;
 //	container.reserve(nnframesp);
 //	for (auto i = size_t(0); i < nnframesp; ++i) {
 //		container.push_back(res.Read(framelen));

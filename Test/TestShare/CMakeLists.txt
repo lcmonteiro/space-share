@@ -30,6 +30,7 @@ TARGET
     TestShareModule
 SOURCES
     TestModule/TestSpliter.cpp
+    TestModule/TestSpread.cpp
 DEPENDS
     ShareModule
 )

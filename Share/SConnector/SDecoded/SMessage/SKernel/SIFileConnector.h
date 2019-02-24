@@ -51,7 +51,7 @@ protected:
 	 * -----------------------------------------------------
 	 * read
 	 */
-    Container _Read() override;
+    Document _Read() override;
     /**
 	 * ----------------------------------------------------
 	 * control functions

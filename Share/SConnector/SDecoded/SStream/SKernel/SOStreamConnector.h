@@ -49,7 +49,7 @@ protected:
      * write
      * ------------------------------------------------------------------------
      */
-    void _Write(const Container& container) override {
+    void _Write(const Document& container) override {
 
         // log info ---------------------------------------
         INFO("DATA::OUT::n=" << container.size() << "=" << container.front());
