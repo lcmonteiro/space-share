@@ -251,7 +251,7 @@ Message::SLocalResource& Message::SLocalResource::Link(const std::string& local)
         ::socket(PF_LOCAL, SOCK_DGRAM, 0)
     );
     /**
-     * bind
+     * connect
      */        
     if (::connect(h->FD(), (struct sockaddr*) &caddr, sizeof(caddr)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));

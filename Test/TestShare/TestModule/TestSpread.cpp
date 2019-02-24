@@ -47,19 +47,17 @@ TEST(Spread, Create)
     auto addr_1 = SRandom::String(8);
     auto addr_2 = SRandom::String(8);
     auto addr_3 = SRandom::String(8);
-    auto addr   = SRandom::String(8);
-    auto port1  = 9999;
-    auto port2  = 8888;
 
     // build a encode -------------------------------------------------------- 
     Encode en ({
         {Encode::Command::MODULE,   {{
-            {Module::TIMEOUT, "200"},
-            {Module::IO::VERBOSE, "0"}
+            {Module::IO::URI, "Encode"},
+            {Module::TIMEOUT, "1000"},
+            {Module::IO::VERBOSE, "4"}
         }}},
         {Encode::Command::FUNCTION, {{
             {Module::Function::TYPE, Module::Function::Type::MESSAGE},
-            {Module::IO::VERBOSE, "0"}
+            {Module::IO::VERBOSE, "4"}
         }}},
         {Encode::Command::INPUT,   {{
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_LOCAL},
@@ -82,11 +80,13 @@ TEST(Spread, Create)
             {Module::IO::VERBOSE, "0"}
         }}}
     });
+
     // build a decode --------------------------------------------------------- 
     Decode de ({
         {Encode::Command::MODULE,   {{
-            {Module::TIMEOUT, "200"},
-            {Module::IO::VERBOSE, "0"}
+            {Module::IO::URI, "Decode"},
+            {Module::TIMEOUT, "1000"},
+            {Module::IO::VERBOSE, "4"}
         }}},
         {Encode::Command::FUNCTION, {{
             {Module::Function::TYPE, Module::Function::Type::MESSAGE},
@@ -113,24 +113,33 @@ TEST(Spread, Create)
             {Module::IO::VERBOSE, "0"}
         }}},
     });
-    // start ------------------------------------------------------------------
-    en.Detach();
-    de.Detach();
-    
-    // wait -------------------------------------------------------------------
-    EXPECT_EQ(en.WaitState(Encode::Time(3000), Encode::PLAY), true);
-    EXPECT_EQ(de.WaitState(Decode::Time(3000), Decode::PLAY), true);
 
     // build a test frame ----------------------------------------------------- 
     auto frame_i  = SRandom::Frame(size);
 
-    // interface resource -----------------------------------------------------
+    // out interface resource --------------------------------------------------
+    auto interface_o = Message::SLocalResource()
+        .Bind(addr_o)
+    .Detach();
+    // decode start ------------------------------------------------------------
+    de.Detach();
+
+    // encode wait -------------------------------------------------------------
+    EXPECT_EQ(de.WaitState(Encode::Time(30000), Encode::PLAY), true);
+    
+    // encode start ------------------------------------------------------------
+    en.Detach();
+    
+    // decode wait -------------------------------------------------------------
+    EXPECT_EQ(en.WaitState(Decode::Time(30000), Decode::PLAY), true);
+    
+    // in interface resource ---------------------------------------------------
     auto interface_i = Message::SLocalResource()
         .Link(addr_i)
     .Detach();
-    
-    // send ------------------------------------------------------------------- 
-    EXPECT_EQ(interface_i.Drain(frame_i).Good(), true);
+
+    // // send ------------------------------------------------------------------- 
+    // EXPECT_EQ(interface_i.Drain(frame_i).Good(), true);
 
 
     

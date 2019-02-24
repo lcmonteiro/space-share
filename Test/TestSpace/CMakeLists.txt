@@ -24,6 +24,7 @@ TARGET
     TestSpaceResource 
 SOURCES 
     TestResource/TestFileResource.cpp
+    TestResource/TestLocalResource.cpp
     TestResource/TestRemoteResource.cpp
 DEPENDS
     SpaceResource
