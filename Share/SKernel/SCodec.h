@@ -15,9 +15,9 @@
 #define SCODECI_H
 /**
  */
-#include "SCodecV1/SCodecDecoder.h"
-#include "SCodecV1/SCodecEncoder.h"
-#include "SCodecV1/SCodecStamp.h"
+#include "SCodec/SCodecDecoder.h"
+#include "SCodec/SCodecEncoder.h"
+#include "SCodec/SCodecStamp.h"
 /**
  */
 typedef v1::SCodecEncoder	CodecEncoder;

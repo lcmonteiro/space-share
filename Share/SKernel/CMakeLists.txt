@@ -1,6 +1,6 @@
 cmake_minimum_required (VERSION 3.8)
 # folder for core objects
-add_subdirectory(SCodecV1)
+add_subdirectory(SCodec)
 # SpaceShare target
 add_library(ShareKernel STATIC
 	SConnector.cpp
