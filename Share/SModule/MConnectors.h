@@ -109,7 +109,7 @@ namespace Input {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_LOCAL))
                 ](o);
             } catch(...) {
-                throw std::runtime_error("invalid input connetor");
+                throw std::runtime_error(SText("invalid input connetor: ", o.Get(IO::URI)));
             }
         }
     };
@@ -122,9 +122,14 @@ namespace Input {
     struct Builder<Encoded::IConnector> {
         static inline Encoded::IConnector Build(const SModule::Command::Group& o){
             static std::map<SConnector::Key, std::function <Encoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
+                /**
+                 * --------------------------------------------------------------------------------
+                 * message file 
+                 * --------------------------------------------------------------------------------
+                 */
                 {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto in = Encoded::Message::IFileConnector::Make(
-                        o.Get(IO::URI, std::string("/tmp/coded"))
+                        o.Get(IO::URI)
                     );
                     in->SetVerbose(o.Get(IO::VERBOSE, 0));
                     in->SetEnergy(o.Get(IO::ENERGY,   1));
@@ -136,7 +141,7 @@ namespace Input {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
                 ](o);
             } catch(...) {
-                throw std::runtime_error("invalid input connector");
+                throw std::runtime_error(SText("invalid input connetor: ", o.Get(IO::URI)));
             }
         }
     };
@@ -165,17 +170,40 @@ namespace Output {
     struct Builder<Decoded::OConnector> {
         static inline Decoded::OConnector Build(const SModule::Command::Group& o) {
             static std::map<SConnector::Key, std::function <Decoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
-                {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
-                    auto out = Decoded::Message::OUdpConnector::Make(
-                        o.Get(IO::URI,  std::string("127.0.0.1:9751"))
+                /**
+                 * --------------------------------------------------------------------------------
+                 * message local 
+                 * --------------------------------------------------------------------------------
+                 */
+                {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
+                    auto out = Decoded::Message::OLocConnector::Make(
+                        o.Get(IO::URI)
                     );
                     out->SetVerbose(o.Get(IO::VERBOSE, 0));
                     out->SetEnergy(o.Get(IO::ENERGY,   1));
                     return out;
                 }},
+                /**
+                 * --------------------------------------------------------------------------------
+                 * message remote 
+                 * --------------------------------------------------------------------------------
+                 */
+                {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
+                    auto out = Decoded::Message::OUdpConnector::Make(
+                        o.Get(IO::URI)
+                    );
+                    out->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    out->SetEnergy(o.Get(IO::ENERGY,   1));
+                    return out;
+                }},
+                /**
+                 * --------------------------------------------------------------------------------
+                 * stream remote 
+                 * --------------------------------------------------------------------------------
+                 */
                 {SConnector::Key(IO::Type::STREAM_REMOTE), [](const SModule::Command::Group& o) {
                     auto out = Decoded::Stream::OTcpConnector::Make(
-                        o.Get(IO::URI,  std::string("127.0.0.1:9751"))
+                        o.Get(IO::URI)
                     );
                     out->SetVerbose(o.Get(IO::VERBOSE, 0));
                     out->SetEnergy(o.Get(IO::ENERGY,   1));
@@ -187,7 +215,7 @@ namespace Output {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_REMOTE))
                 ](o);
             } catch(...) {
-                throw std::runtime_error("invalid output connector");
+                throw std::runtime_error(SText("invalid output connetor: ", o.Get(IO::URI)));
             }
         }
     };
@@ -202,7 +230,7 @@ namespace Output {
             static std::map<SConnector::Key, std::function <Encoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
                 {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto out = Encoded::Message::OFileConnector::Make(
-                        o.Get(IO::URI, std::string("/tmp/code"))
+                        o.Get(IO::URI)
                     );
                     out->SetVerbose(o.Get(IO::VERBOSE, 0));
                     out->SetEnergy(o.Get(IO::ENERGY,   1));
@@ -214,7 +242,7 @@ namespace Output {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
                 ](o);
             } catch(...) {
-                throw std::runtime_error("invalid output connector");
+                throw std::runtime_error(SText("invalid output connetor: ", o.Get(IO::URI)));
             }
         }
     };
@@ -269,7 +297,7 @@ namespace IOput {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
                 ](o);
             } catch(...) {
-                throw std::runtime_error("invalid input/output connector");
+                throw std::runtime_error(SText("invalid (in|out)put connetor: ", o.Get(IO::URI)));
             }
         }
     };
@@ -289,7 +317,7 @@ namespace IOput {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
                 ](o);
             } catch(...) {
-                throw std::runtime_error("invalid input/output connector");
+                throw std::runtime_error(SText("invalid (in|out)put connetor: ", o.Get(IO::URI)));
             }
         }
     };
