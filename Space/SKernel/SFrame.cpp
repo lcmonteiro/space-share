@@ -1,5 +1,5 @@
 /*
- * Container:   SFrame.cpp
+ * File:   SFrame.cpp
  * Author: Luis Monteiro
  *
  * Created on February  2, 2019, 10:21 AM

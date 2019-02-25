@@ -1,5 +1,5 @@
 /* 
- * Container:   SResourceHandler.h
+ * File:   SResourceHandler.h
  * Author: Luis Monteiro
  *
  * Created on January  2, 2019, 22:00 PM

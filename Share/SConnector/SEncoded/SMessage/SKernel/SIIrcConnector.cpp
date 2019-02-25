@@ -1,5 +1,5 @@
 /*
- * Container:   SIIrcConnector.cpp
+ * File:   SIIrcConnector.cpp
  * Author: Luis Monteiro
  *
  * Created on June 3, 2015, 10:12 AM

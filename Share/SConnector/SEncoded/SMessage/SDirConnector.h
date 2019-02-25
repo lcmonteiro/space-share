@@ -1,5 +1,5 @@
 /* 
- * Container:   SDirConnector.h
+ * File:   SDirConnector.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2016, 12:37 PM

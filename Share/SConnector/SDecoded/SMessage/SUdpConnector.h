@@ -1,25 +1,27 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SUdpMessageConnector.h
  * Author: Luis Monteiro
  *
  * Created on December 6, 2016, 11:17 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SUDPMESSAGECONNECTOR_H
 #define SUDPMESSAGECONNECTOR_H
 /**
- * space
+ * Space
  */
 #include "SContainer.h"
 #include "SConnector.h"
 #include "SRemoteResource.h"
 /**
- * kernel
+ * Kernel
  */
 #include "SIOMessageConnector.h"
 #include "SIMessageConnector.h"
 #include "SOMessageConnector.h"
 /**
- * tools
+ * Tools
  */
 #include "SDefault.h"
 /**
@@ -50,6 +52,9 @@ public:
      */
     inline Super& Base() {
         return *this;
+    }
+    inline void Bind(const SAddress& uri) {
+        Super::Bind(uri.Host(), uri.Port());
     }
     inline void Wait(const SAddress& uri) {
         Super::Wait(uri.Host(), uri.Port());
@@ -126,7 +131,7 @@ public:
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * definition
+ * Definition
  * ------------------------------------------------------------------------------------------------
  */
 typedef SIOUdpConnectorT<ResourceAdapterUdp, SDefault> IOUdpConnector;

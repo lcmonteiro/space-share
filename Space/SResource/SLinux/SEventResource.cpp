@@ -1,5 +1,5 @@
 /*
- * Container:   SEventResource.cpp
+ * File:   SEventResource.cpp
  * Author: Luis Monteiro
  *
  * Created on June 3, 2015, 10:12 AM

@@ -16,7 +16,7 @@
  * connectors
  */
 #include "SDecoded/SMessage/SUdpConnector.h"
-//#include "SDecoded/SMessage/SLocConnector.h"
+#include "SDecoded/SMessage/SLocConnector.h"
 //#include "SConnector/SDecoded/SMessage/SDirConnector.h"
 //#include "SConnector/SDecoded/SMessage/SFileConnector.h"
 //#include "SDecoded/SStream/SLocConnector.h"
@@ -36,7 +36,7 @@
 namespace Module {
 /**
  *-------------------------------------------------------------------------------------------------
- * Input
+ * INPUT
  *-------------------------------------------------------------------------------------------------
  */
 namespace Input {
@@ -50,24 +50,34 @@ namespace Input {
         }
     };
     /**
-     * ------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      * Decoder Builder
-     * ------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      */
     template <>
     struct Builder<Decoded::IConnector> {
         static inline Decoded::IConnector Build(const SModule::Command::Group& o) {
             static std::map<SConnector::Key, std::function <Decoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
-                // {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
-                //     auto in = Decoded::Message::ILocConnector::Make(
-                //         o.Get(IO::URI),
-                //         o.Get(IO::NFRAMES, 50),
-                //         o.Get(IO::SFRAMES, 1550)
-                //     );
-                //     in->SetVerbose(o.Get(IO::VERBOSE, 0));
-                //     in->SetEnergy(o.Get(IO::ENERGY,   1));
-                //     return in;
-                // }},
+                /**
+                 * --------------------------------------------------------------------------------
+                 * message local 
+                 * --------------------------------------------------------------------------------
+                 */
+                {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
+                    auto in = Decoded::Message::ILocConnector::Make(
+                        o.Get(IO::URI),
+                        o.Get(IO::NFRAMES, 50),
+                        o.Get(IO::SFRAMES, 1550)
+                    );
+                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    in->SetEnergy(o.Get(IO::ENERGY,   1));
+                    return in;
+                }},
+                /**
+                 * --------------------------------------------------------------------------------
+                 * message remote 
+                 * --------------------------------------------------------------------------------
+                 */
                 {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::IUdpConnector::Make(
                         o.Get(IO::URI),
@@ -78,6 +88,11 @@ namespace Input {
                     in->SetEnergy(o.Get( IO::ENERGY,  1));
                     return in;
                 }},
+                /**
+                 * --------------------------------------------------------------------------------
+                 * stream remote 
+                 * --------------------------------------------------------------------------------
+                 */
                 {SConnector::Key(IO::Type::STREAM_REMOTE), [](const SModule::Command::Group& o) {
                     auto io = Decoded::Stream::ITcpConnector::Make(
                         o.Get(IO::URI),
@@ -99,9 +114,9 @@ namespace Input {
         }
     };
     /**
-     * ------------------------------------------------------------------------
+     * ----------------------------------------------------------------------------------------------
      * Encoded Builder
-     * ------------------------------------------------------------------------
+     * ----------------------------------------------------------------------------------------------
      */
     template <>
     struct Builder<Encoded::IConnector> {
@@ -142,9 +157,9 @@ namespace Output {
         }
     };
     /**
-     * ------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      * Decoded Builder
-     * ------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      */
     template <>
     struct Builder<Decoded::OConnector> {
@@ -172,14 +187,14 @@ namespace Output {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_REMOTE))
                 ](o);
             } catch(...) {
-                throw std::runtime_error("invalid output");
+                throw std::runtime_error("invalid output connector");
             }
         }
     };
     /**
-     * ------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      * Encoded Builder
-     * ------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      */
     template <>
     struct Builder<Encoded::OConnector> {
@@ -199,7 +214,7 @@ namespace Output {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
                 ](o);
             } catch(...) {
-                throw std::runtime_error("invalid output");
+                throw std::runtime_error("invalid output connector");
             }
         }
     };
@@ -220,9 +235,9 @@ namespace IOput {
         }
     };
     /**
-     * ------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      * Decoded Builder
-     * ------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      */
     template <>
     struct Builder<Decoded::IOConnector> {
@@ -254,14 +269,14 @@ namespace IOput {
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
                 ](o);
             } catch(...) {
-                throw std::runtime_error("invalid input/output");
+                throw std::runtime_error("invalid input/output connector");
             }
         }
     };
     /**
-     * ------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      * Encoded Builder
-     * ------------------------------------------------------------------------
+     * --------------------------------------------------------------------------------------------
      */
     template <>
     struct Builder<Encoded::IOConnector> {

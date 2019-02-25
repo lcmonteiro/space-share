@@ -1,6 +1,6 @@
 /**
  * ------------------------------------------------------------------------------------------------
- * Container:   STextExtension.h
+ * File:   STextExtension.h
  * Author:      Luis Monteiro
  *
  * Created on February 2612, 2019, 23:37

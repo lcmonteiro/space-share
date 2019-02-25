@@ -1,58 +1,69 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SLocMessageConnector.h
  * Author: Luis Monteiro
  *
  * Created on December 6, 2016, 11:17 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SLOCMESSAGECONNECTOR_H
 #define SLOCMESSAGECONNECTOR_H
 /**
- * Space Kernel
+ * Space
  */
 #include "SContainer.h"
 #include "SConnector.h"
-#include "SSocketResource.h"
+#include "SLocalResource.h"
 /**
- * Message Kernel
+ * Kernel
  */
 #include "SIOMessageConnector.h"
 #include "SIMessageConnector.h"
 #include "SOMessageConnector.h"
 /**
- * Message Tools
+ * Tools
  */
 #include "SDefault.h"
 /**
- * Begin namespace Decoded
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Decoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Decoded {
-/**
- * Begin namespace Stream
- */
 namespace Message {
 /**
  * ------------------------------------------------------------------------------------------------
  * Resource adapter
  * ------------------------------------------------------------------------------------------------
  */
-class ResourceAdapterLoc : private SSocketResource {
+class ResourceAdapterLoc : private ::Message::SLocalResource {
 public:
-    using SSocketResource::SSocketResource;
-    using SSocketResource::operator=;
-    using SSocketResource::Fill;
-    using SSocketResource::Drain;
-    using SSocketResource::Good;
+    using Super = ::Message::SLocalResource;
+    /**
+     * default
+     */
+    using Super::SLocalResource;
+    using Super::operator=;
+    using Super::Read;
+    using Super::Drain;
+    using Super::Good;
     /**
      * interfaces
      */
-    inline SSocketResource& Base() {
+    inline Super& Base() {
         return *this;
     }
+    inline void Bind(const SAddress& uri) {
+        Super::Bind(uri.Path());
+    }
     inline void Wait(const SAddress& uri) {
-        SSocketResource::Bind(uri.Path(), DGRAM);
+        Super::Bind(uri.Path());
+    }
+    inline void Link(const SAddress& uri) {
+        Super::Link(uri.Path());
     }
     inline void Reset() {
-        *this = SSocketResource();
+        *this = Super();
     }
 };    
 /**
@@ -73,7 +84,7 @@ public:
      */
     template<typename...Args>
     static IConnector Make(Args &&...args) {
-        return make_shared<SILocConnectorT>(forward<Args>(args)...);
+        return std::make_shared<SILocConnectorT>(std::forward<Args>(args)...);
     }
 };
 /**
@@ -94,7 +105,7 @@ public:
      */
     template<typename...Args>
     static OConnector Make(Args &&...args) {
-        return make_shared<SOLocConnectorT>(forward<Args>(args)...);
+        return std::make_shared<SOLocConnectorT>(std::forward<Args>(args)...);
     }
 };
 /**
@@ -115,26 +126,22 @@ public:
      */
     template<typename...Args>
     static IOConnector Make(Args &&...args) {
-        return make_shared<SIOLocConnectorT>(forward<Args>(args)...);
+        return std::make_shared<SIOLocConnectorT>(std::forward<Args>(args)...);
     }
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * definition
+ * Definition
  * ------------------------------------------------------------------------------------------------
  */
 typedef SIOLocConnectorT<ResourceAdapterLoc, SDefault> IOLocConnector;
 typedef SILocConnectorT<ResourceAdapterLoc, SDefault>  ILocConnector;
 typedef SOLocConnectorT<ResourceAdapterLoc, SDefault>  OLocConnector;
+}}
 /**
- * End namespace Stream
- */
-}
-/**
- * End namespace Decoded
- */
-}
-/**
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Decoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* SLOCMESSAGECONNECTOR_H */
 

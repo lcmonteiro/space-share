@@ -1,5 +1,5 @@
 /*
- * Container:   SModule.cpp
+ * File:   SModule.cpp
  * Author: Luis Monteiro
  *
  * Created on February 10, 2019, 23:00

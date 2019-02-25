@@ -1,8 +1,10 @@
-/** 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   MSpliter.h
  * Author: Luis Monteiro
  *
  * Created on January 26, 2017, 5:59 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef MSPLITER_H
 #define MSPLITER_H
@@ -107,7 +109,7 @@ protected:
         for(auto& o: cmd[Command::INOUT]) {
             try {
                 __io.Insert(o[IO::URI], IOBuilder::Build(o));
-            } catch (...) {
+            } catch (std::out_of_range&) {
                 __UpdateRoad(__io, o);
             }
         }
@@ -115,7 +117,7 @@ protected:
         for(auto& o: cmd[Command::INPUT]) {
             try {
                 __in.Insert(o[IO::URI], IBuilder::Build(o));
-            } catch (...) {
+            } catch (std::out_of_range&) {
                 __UpdateRoad(__in, o);
             }
         }
@@ -123,7 +125,7 @@ protected:
         for(auto o: cmd[Command::OUTPUT]) {
             try {
                 __out.Insert(o[IO::URI], OBuilder::Build(o));
-            } catch (...) {
+            } catch (std::out_of_range&) {
                 __UpdateRoad(__out, o);
             }
         }
@@ -271,7 +273,7 @@ protected:
 }
 /**
  *-------------------------------------------------------------------------------------------------
- * end
+ * End
  *-------------------------------------------------------------------------------------------------
  */
 #endif /* MSPLITER_H */

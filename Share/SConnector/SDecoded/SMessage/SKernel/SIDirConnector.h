@@ -1,5 +1,5 @@
 /* 
- * Container:  SIDirConnector.h
+ * File:  SIDirConnector.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM

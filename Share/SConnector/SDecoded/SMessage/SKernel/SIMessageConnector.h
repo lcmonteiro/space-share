@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SIMessageConnector.h
  * Author: Luis Monteiro
  *
  * Created on June 6, 2018, 11:47 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SIMESSAGECONNECTOR_H
 #define SIMESSAGECONNECTOR_H
@@ -88,7 +90,7 @@ protected:
         int i = 0;
         do {
             try {
-                __res.Wait(__uri);
+                __res.Bind(__uri);
                 break;
             } catch (std::system_error& ex) {
                 WARNING(ex.what());
@@ -129,12 +131,10 @@ private:
      */
     RESOURCE __res;
 };
-}
-}
+}}
 /**
  * ------------------------------------------------------------------------------------------------
  * End namespace Decoded & Message
  * ------------------------------------------------------------------------------------------------
  */
 #endif /* SIMESSAGECONNECTOR_H */
-

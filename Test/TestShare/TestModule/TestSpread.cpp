@@ -83,16 +83,16 @@ TEST(Spread, Create)
 
     // build a decode --------------------------------------------------------- 
     Decode de ({
-        {Encode::Command::MODULE,   {{
+        {Decode::Command::MODULE,   {{
             {Module::IO::URI, "Decode"},
             {Module::TIMEOUT, "1000"},
             {Module::IO::VERBOSE, "4"}
         }}},
-        {Encode::Command::FUNCTION, {{
+        {Decode::Command::FUNCTION, {{
             {Module::Function::TYPE, Module::Function::Type::MESSAGE},
             {Module::IO::VERBOSE, "0"}
         }}},
-        {Encode::Command::INPUT,    {{
+        {Decode::Command::INPUT,    {{
             {Module::IO::MINIMUM, "1"}
         }, {
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_LOCAL},
@@ -107,7 +107,7 @@ TEST(Spread, Create)
             {Module::IO::URI, addr_3},
             {Module::IO::VERBOSE, "0"}
         }}},
-        {Encode::Command::OUTPUT,   {{
+        {Decode::Command::OUTPUT,   {{
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_LOCAL},
             {Module::IO::URI, addr_o},
             {Module::IO::VERBOSE, "0"}

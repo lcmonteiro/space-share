@@ -1,6 +1,6 @@
 /**
  * ------------------------------------------------------------------------------------------------
- * Container:   SContainer.cpp
+ * File:   SContainer.cpp
  * Author: Luis Monteiro
  *
  * Created on June 3, 2015, 10:12 AM
