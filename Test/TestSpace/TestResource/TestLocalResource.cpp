@@ -32,7 +32,7 @@ TEST(SLocalResource, Create)
  * link test
  * ------------------------------------------------------------------------------------------------
  */
-TEST(SLocalResource, Link)
+TEST(SLocalResource, OneWay)
 {
     STask::Enable();
     // definitions ---------------------------------------
@@ -62,21 +62,6 @@ TEST(SLocalResource, Link)
     // read -------------------------------------------------------------------
     EXPECT_EQ(rem_s.Fill(out).Good(), true);
 
-    // test data --------------------------------------------------------------
-    EXPECT_EQ(in, out);
-
-    // test reverse send & reset frame ----------------------------------------
-    out = IFrame(size);  
-    
-    // send -------------------------------------------------------------------
-    EXPECT_EQ(rem_s.Drain(in).Good(), true);
-    
-    // wait -------------------------------------------------------------------
-    ResourceMonitor(&rem_c).Wait(std::chrono::milliseconds(100));
-
-    // receive ----------------------------------------------------------------
-    EXPECT_EQ(rem_c.Fill(out).Good(), true);
-    
     // test data --------------------------------------------------------------
     EXPECT_EQ(in, out);
 }
