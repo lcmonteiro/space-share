@@ -229,7 +229,72 @@ Message::SLocalResource& Message::SLocalResource::Bind(const std::string& local)
 }
 /**
  * ----------------------------------------------------------------------------
- * link
+ * Wait
+ * ----------------------------------------------------------------------------
+ */
+Message::SLocalResource& Message::SLocalResource::Wait(
+    const std::string& local, std::chrono::seconds timeout
+) {
+    /**
+     * bind parameters
+     */
+    struct sockaddr_un baddr;
+    memset(&baddr, 0, sizeof (baddr));
+    baddr.sun_family  = PF_LOCAL;
+    baddr.sun_path[0] = '\0';
+    /**
+     * connect parameters
+     */
+    struct sockaddr_un caddr;
+    socklen_t len = sizeof(caddr);    
+    /**
+     * set location
+     */
+    strncpy(&baddr.sun_path[1], local.data(), sizeof(baddr.sun_path) - 2);
+    /**
+     * create a linux handler
+     */
+    auto h = make_shared<SResourceHandler>(
+        ::socket(PF_LOCAL, SOCK_DGRAM, 0)
+    );
+    /**
+     * bind
+     */        
+    if (::bind(h->FD(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
+        throw ResourceException(make_error_code(errc(errno)));
+    }
+    /**
+     * set options
+     */
+    struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
+    if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+        throw ResourceException(make_error_code(errc(errno)));
+    }
+    if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+        throw ResourceException(make_error_code(errc(errno)));
+    }
+    /**
+     * wait for data 
+     */
+    SStaticMonitorHandler({h}).Wait(timeout);
+    /**
+     * get address and connect
+     */
+    if (::recvfrom(h->FD(), nullptr, 0, MSG_PEEK,(struct sockaddr *)&caddr, &len) < 0) {
+        throw ResourceException(make_error_code(errc(errno)));
+    }
+    if (::connect(h->FD(), (struct sockaddr *)&caddr, len) < 0) {
+        throw ResourceException(make_error_code(errc(errno)));
+    }
+    /**
+     * save handler
+     */
+    SetHandler(h);
+    return *this;
+}
+/**
+ * ----------------------------------------------------------------------------
+ * Link
  * ----------------------------------------------------------------------------
  */
 Message::SLocalResource& Message::SLocalResource::Link(const std::string& local) {

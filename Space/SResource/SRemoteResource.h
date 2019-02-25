@@ -80,6 +80,12 @@ namespace Message {
         SRemoteResource(SRemoteResource&&)            = default;
         SRemoteResource& operator=(SRemoteResource&&) = default;
         /**
+         * bind
+         */
+        SRemoteResource& Bind(
+            const std::string& host, uint16_t port
+        );
+        /**
          * wait
          */
         SRemoteResource& Wait(

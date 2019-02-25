@@ -7,7 +7,7 @@
  * ------------------------------------------------------------------------------------------------
  */
 //#define __DEBUG__
-/*
+/**
  * base linux
  */
 #include <netinet/tcp.h>
@@ -15,8 +15,14 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <netdb.h>
-#include <string.h>
 #include <sys/un.h>
+/**
+ * std
+ */
+#ifdef __DEBUG__
+#include <iostream>
+#endif
+#include <cstring>
 /**
  * space linux
  */
@@ -196,85 +202,96 @@ SRemoteResource& SRemoteResource::Write(Frame& f) {
     );
     return *this;
 }
-// /**
-//  * ------------------------------------------------------------------------------------------------
-//  * Text IO functions
-//  * ------------------------------------------------------------------------------------------------
-//  */
-// SRemoteResource& SRemoteResource::operator>>(string& str) {
-//     for (auto it = str.begin(), end = str.end(); it != end; ++it) {
-//         string::value_type c;
-        
-//         // receive
-//         auto n = ::recv(__h, &c, 1, MSG_WAITALL);
-//         if (n <= 0) {
-//             if (n < 0) {
-//                 if (errno == EAGAIN) {
-//                     str.erase(it, end);
-//                     if (it == str.begin()) {
-//                         throw ResourceExceptionTIMEOUT();
-//                     }
-//                     break;
-//                 }
-//                 *this = SLinuxSocket();
-//                 throw IResourceExceptionABORT(strerror(errno));
-//             }
-//             *this = SLinuxSocket();
-//             throw IResourceExceptionABORT();
-//         }
-//         /**
-//          * verify
-//          */
-//         if (::iscntrl(c)) {
-//             // read end line
-//             if (c == '\r') {
-//                 ::recv(__h, &c, 1, MSG_WAITALL);
-//                 str.erase(it, end);
-//                 break;
-//             }
-//             if(c == '\n') {
-//                 str.erase(it, end);
-//                 break;
-//             }
-//             continue;
-//         }
-//         /**
-//          * set
-//          */
-//         *it = c;
-//     }
-//     /**
-//      */
-//     return *this;
-// }
-// /**
-//  */
-// SLinuxSocket& SLinuxSocket::operator<<(const string& str) {
-//     /**
-//      * write
-//      */
-//     auto n = ::send(__h, str.data(), str.size(), MSG_NOSIGNAL | MSG_DONTWAIT);
-//     if (n != int(str.size())) {
-//         *this = SLinuxSocket();
-//         throw OResourceExceptionABORT(make_error_code(errc(errno)));
-//     }
-//     /**
-//      */
-//     return *this;
-// }
-
-
 /**
  * ------------------------------------------------------------------------------------------------
  * MESSAGE general interfaces
  * ------------------------------------------------------------------------------------------------
+ * bind
+ */
+Message::SRemoteResource& Message::SRemoteResource::Bind(
+    const string& host, uint16_t port
+) {
+    /**
+     * bind parameters
+     */
+    struct addrinfo hints;
+    memset(&hints, 0, sizeof (struct addrinfo));
+    hints.ai_family = AF_UNSPEC;            // Allow IPv4 or IPv6
+    hints.ai_socktype = SOCK_DGRAM;         // Datagram socket
+    hints.ai_flags = AI_PASSIVE;            // For wildcard IP address
+    hints.ai_protocol = 0;                  // Any protocol
+    hints.ai_canonname = NULL;
+    hints.ai_addr = NULL;
+    hints.ai_next = NULL;
+    /**
+     * get info
+     */
+    struct addrinfo *result;
+    if (::getaddrinfo(host.c_str(), to_string(port).c_str(), &hints, &result) < 0) {
+        throw ResourceException(make_error_code(errc(errno)));
+    }
+    /**
+     * connect
+     */
+    int i = 0;
+    for (auto rp = result; rp != NULL; rp = rp->ai_next, ++i) {
+        struct sockaddr_storage addr;
+        socklen_t len = sizeof(addr);
+        /**
+         * create a linux handler
+         */
+        auto h = make_shared<SResourceHandler>(
+            ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol)
+        );
+        /**
+         * set options
+         */
+        int opt = 1;
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
+            continue;
+        }
+        if (::bind(h->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
+            continue;
+        }
+        struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+            continue;
+        }
+        if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+            continue;
+        }
+#ifdef __DEBUG__
+        char hbuf[NI_MAXHOST], sbuf[NI_MAXSERV];
+        if (::getnameinfo(
+            rp->ai_addr, rp->ai_addrlen,
+            hbuf, sizeof (hbuf),
+            sbuf, sizeof (sbuf),
+            NI_NUMERICHOST | NI_NUMERICSERV
+        ) == 0) {
+            cout << "binded: " << "host=" << hbuf << ", serv=" << sbuf << endl;
+        }
+#endif
+        /**
+         * free results
+         **/
+        ::freeaddrinfo(result);
+        /**
+         * save handler
+         */
+        SetHandler(h);
+        return *this;
+    }
+    /**
+     * fail
+     **/
+    ::freeaddrinfo(result);
+    throw ResourceException(make_error_code(errc::no_such_device_or_address));
+}
+/**
  * wait
  */
-#ifdef __DEBUG__
-#include <iostream>
-#endif
 Message::SRemoteResource& Message::SRemoteResource::Wait(
-    const string& host, uint16_t port, chrono::seconds timeout
+    const string& host, uint16_t port, std::chrono::seconds timeout
 ) {
     /**
      * bind parameters

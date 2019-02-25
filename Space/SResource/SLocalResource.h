@@ -80,6 +80,10 @@ namespace Message {
          */
         SLocalResource& Bind(const std::string& local);
         /**
+         * wait
+         */
+        SLocalResource& Wait(const std::string& local, std::chrono::seconds timeout);
+        /**
          * link
          */
         SLocalResource& Link(const std::string& local);
