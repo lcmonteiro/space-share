@@ -51,9 +51,9 @@ public:
  * module 
  * ------------------------------------------------------------------------------------------------
  **/
-class SModuleCommand: public SCommand<std::string, std::string> {
+class SModuleCommand: public SCommand<SText, SText> {
 public:
-    using Command = SCommand<std::string, std::string>;
+    using Command = SCommand<SText, SText>;
     /**
      * keys
      */

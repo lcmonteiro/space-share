@@ -52,6 +52,8 @@ TEST(SModule, EchoSpliter)
             {Module::IO::VERBOSE, "0"}
         }}},
         {Spliter::Command::INOUT,    {{
+            {Module::IO::MINIMUM, "0"}
+        }, {
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_REMOTE},
             {Module::IO::URI, SText(addr, ":", port1)},
             {Module::IO::VERBOSE, "0"}
@@ -64,6 +66,8 @@ TEST(SModule, EchoSpliter)
             {Module::IO::VERBOSE, "0"}
         }}},
         {Spliter::Command::OUTPUT,   {{
+            {Module::IO::MINIMUM, "0"}
+        }, {
             {Module::IO::TYPE, Module::IO::Type::STREAM_REMOTE},
             {Module::IO::URI, SText(addr, ":", port2)},
             {Module::IO::VERBOSE, "0"}

@@ -1,16 +1,14 @@
-/** 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   MFunctions.h
  * Author: Luis Monteiro
  *
  * Created on January 26, 2017, 5:59 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SMODULE_FUNCTIONS_H
 #define SMODULE_FUNCTIONS_H
 /**
- * ------------------------------------------------------------------------------------------------
- * Includes
- * ------------------------------------------------------------------------------------------------
- **
  * Space Kernel
  */
 #include "SHash.h"
@@ -20,12 +18,9 @@
 #include "SEncode.h"
 #include "SDecode.h"
 /**
- */
-//#include "MProcess.h"
-/**
- *-------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * Module name space
- *-------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Module {
 /**
@@ -60,17 +55,27 @@ namespace Spread {
         using Pointer = shared_ptr<SFunctionSpread<SConnector::Key, I, D, O>>;
     };
     /**
-     * Template Builder
+     * --------------------------------------------------------------------------------------------
+     * Default Builder
+     * --------------------------------------------------------------------------------------------
      */
     template <class I, class D, class O>
     struct Builder : BaseBuilder<I, D, O> {
         using Pointer = typename BaseBuilder<I, D, O>::Pointer;
         static inline Pointer Build(const SModule::Command::Group& o){
-            return nullptr;
+            /** 
+             * create function
+             */
+            return make_shared<SFunctionSpread<SConnector::Key, I, D, O>>(
+                o.Get(Function::ENERGY,  10), 
+                o.Get(Function::VERBOSE, 1)
+            );
         }
     };
     /**
+     * --------------------------------------------------------------------------------------------
      * Encode Builder
+     * --------------------------------------------------------------------------------------------
      */
     template <>
     struct Builder<Decoded::IConnector, Decoded::Document, Encoded::OConnector> 
@@ -92,14 +97,16 @@ namespace Spread {
                     );
                 }}
             };
-            return GENERATOR[
+            return GENERATOR.at(
                 o.Get(Function::TYPE, Function::Type::MESSAGE)
-            ](o);
+            )(o);
             
         }
     };
     /**
+     * --------------------------------------------------------------------------------------------
      * Decode Builder
+     * --------------------------------------------------------------------------------------------
      */
     template <>
     struct Builder<Encoded::IConnector, Encoded::Document, Decoded::OConnector> 
@@ -121,9 +128,9 @@ namespace Spread {
                     );
                 }}
             };
-            return GENERATOR[
+            return GENERATOR.at(
                 o.Get(Function::TYPE, Function::Type::MESSAGE)
-            ](o);
+            )(o);
         }
     };
 }
@@ -141,7 +148,9 @@ namespace Spliter {
         using Pointer = shared_ptr<SFunctionSpliter<SConnector::Key, IO, I, O>>;
     };
     /**
-     * Template Builder
+     * --------------------------------------------------------------------------------------------
+     * Default Builder
+     * --------------------------------------------------------------------------------------------
      */
     template <class IO, class I, class O>
     struct Builder : BaseBuilder<IO, I, O> {
@@ -155,4 +164,9 @@ namespace Spliter {
     };
 };
 }
+/**
+ *-------------------------------------------------------------------------------------------------
+ * End
+ *-------------------------------------------------------------------------------------------------
+ */
 #endif /* SMODULE_FUNCTIONS_H */

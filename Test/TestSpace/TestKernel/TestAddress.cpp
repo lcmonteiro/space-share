@@ -12,13 +12,15 @@
 using namespace std;
 TEST(SAddress, Create)
 {
+    //use case 1
     SAddress a("lm@host.pt/test");
-    //use case 1 -> positive
     EXPECT_EQ(a.Host(), "host.pt");
     EXPECT_EQ(a.User(), "lm");
     EXPECT_EQ(a.Port(), 0);
     EXPECT_EQ(a.Path(), "test");    
-    // use case 2 -> negative
+    // use case 2
+    SAddress b("7aquzu0b");
+    EXPECT_EQ(b.File(), "7aquzu0b");
 }
 
 TEST(SAddress, Sum1)

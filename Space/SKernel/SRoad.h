@@ -1,8 +1,10 @@
-/*
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   SRoad.h
  * Author: Luis Monteiro
  *
  * Created on February 22, 2017, 10:34 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SROAD_H
 #define SROAD_H
@@ -61,10 +63,10 @@ public:
      * constructor
      */
     SRoadExceptionDetached() 
-    : SRoadException(std::make_error_code(std::errc::no_message)) {
+    : SRoadException(std::make_error_code(std::errc::resource_unavailable_try_again)) {
     }
     SRoadExceptionDetached(const std::string& what) 
-    : SRoadException(std::make_error_code(std::errc::no_message), what) {
+    : SRoadException(std::make_error_code(std::errc::resource_unavailable_try_again), what) {
     }
 } RoadDetached;
 /**
@@ -76,10 +78,10 @@ public:
      * constructor
      */
     SRoadExceptionDead() 
-    : SRoadException(std::make_error_code(std::errc::no_message)) {
+    : SRoadException(std::make_error_code(std::errc::no_such_device)) {
     }
     SRoadExceptionDead(const std::string& what) 
-    : SRoadException(std::make_error_code(std::errc::no_message), what) {
+    : SRoadException(std::make_error_code(std::errc::no_such_device), what) {
     }
 } RoadDead;
 /**
@@ -145,7 +147,7 @@ public:
      * @param nominal
      * @param min
      */
-    SRoad(size_t nominal = 1, size_t minimum = 0)
+    SRoad(size_t nominal = 1, size_t minimum = 1)
     : __nominal(nominal), __minimum(minimum), __revision(0) {
     }
     /**
@@ -275,7 +277,7 @@ public:
             it = rep.begin(); 
             (0 < delta) && (__Jump(Backlog, Repairing, it) != it); 
             it = rep.begin()
-        ) { --delta; rep.begin()->second->Repair(); }
+        ) { --delta; rep.rbegin()->second->Repair(); }
         // is dead ----------------------------------------
         if (0 < delta) {
             throw SRoadExceptionDEAD<Object>(Status());

@@ -55,11 +55,11 @@ public:
 	 * accessors
 	 * ------------------------------------------------------------------------
 	 */
-	inline const std::string& File()    const {
-		return __name;
-	}
 	inline const std::string& User()    const {
 		return __name;
+	}
+	inline const std::string& File()    const {
+		return __host;
 	}
 	inline const std::string& Host()    const {
 		return __host;

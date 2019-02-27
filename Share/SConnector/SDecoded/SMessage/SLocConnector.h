@@ -54,13 +54,13 @@ public:
         return *this;
     }
     inline void Bind(const SAddress& uri) {
-        Super::Bind(uri.Path());
+        Super::Bind(uri.File());
     }
     inline void Wait(const SAddress& uri) {
-        Super::Bind(uri.Path());
+        Super::Bind(uri.File());
     }
     inline void Link(const SAddress& uri) {
-        Super::Link(uri.Path());
+        Super::Link(uri.File());
     }
     inline void Reset() {
         *this = Super();
