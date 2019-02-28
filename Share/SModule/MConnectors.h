@@ -22,10 +22,10 @@
 //#include "SDecoded/SStream/SLocConnector.h"
 #include "SDecoded/SStream/STcpConnector.h"
 //#include "SConnector/SDecoded/SStream/SFileConnector.h"
-#include "SEncoded/SMessage/SFileConnector.h"
-//#include "SConnector/SEncoded/SMessage/SDirConnector.h"
-//#include "SConnector/SEncoded/SMessage/SIrcConnector.h"
-//#include "SConnector/SEncoded/SMessage/SLocConnector.h"
+//#include "SEncoded/SMessage/SFileConnector.h"
+//#include "SEncoded/SMessage/SDirConnector.h"
+//#include "SEncoded/SMessage/SIrcConnector.h"
+#include "SEncoded/SMessage/SLocConnector.h"
 //#include "SEncoded/SStream/SLocConnector.h"
 //#include "SEncoded/SStream/STcpConnector.h"
 /**
@@ -105,9 +105,9 @@ namespace Input {
                 }},
             };
             try {
-                return GENERATOR[
+                return GENERATOR.at(
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_LOCAL))
-                ](o);
+                )(o);
             } catch(...) {
                 throw std::runtime_error(SText("invalid input connetor: ", o.Get(IO::URI)));
             }
@@ -127,19 +127,19 @@ namespace Input {
                  * message file 
                  * --------------------------------------------------------------------------------
                  */
-                {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
-                    auto in = Encoded::Message::IFileConnector::Make(
-                        o.Get(IO::URI)
-                    );
-                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    in->SetEnergy(o.Get(IO::ENERGY,   1));
-                    return in;
-                }}
+                // {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
+                //     auto in = Encoded::Message::IFileConnector::Make(
+                //         o.Get(IO::URI)
+                //     );
+                //     in->SetVerbose(o.Get(IO::VERBOSE, 0));
+                //     in->SetEnergy(o.Get(IO::ENERGY,   1));
+                //     return in;
+                // }}
             };
             try {
-                return GENERATOR[
+                return GENERATOR.at(
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
-                ](o);
+                )(o);
             } catch(...) {
                 throw std::runtime_error(SText("invalid input connetor: ", o.Get(IO::URI)));
             }
@@ -211,9 +211,9 @@ namespace Output {
                 }}
             };
             try{
-                return GENERATOR[
+                return GENERATOR.at(
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_REMOTE))
-                ](o);
+                )(o);
             } catch(...) {
                 throw std::runtime_error(SText("invalid output connetor: ", o.Get(IO::URI)));
             }
@@ -228,19 +228,19 @@ namespace Output {
     struct Builder<Encoded::OConnector> {
         static inline Encoded::OConnector Build(const SModule::Command::Group& o){
             static std::map<SConnector::Key, std::function <Encoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
-                {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
-                    auto out = Encoded::Message::OFileConnector::Make(
-                        o.Get(IO::URI)
-                    );
-                    out->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    out->SetEnergy(o.Get(IO::ENERGY,   1));
-                    return out;
-                }}
+                // {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
+                //     auto out = Encoded::Message::OFileConnector::Make(
+                //         o.Get(IO::URI)
+                //     );
+                //     out->SetVerbose(o.Get(IO::VERBOSE, 0));
+                //     out->SetEnergy(o.Get(IO::ENERGY,   1));
+                //     return out;
+                // }}
             };
             try {
-                return GENERATOR[
+                return GENERATOR.at(
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
-                ](o);
+                )(o);
             } catch(...) {
                 throw std::runtime_error(SText("invalid output connetor: ", o.Get(IO::URI)));
             }
@@ -293,9 +293,9 @@ namespace IOput {
                 }}
             };
             try {
-                return GENERATOR[
+                return GENERATOR.at(
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
-                ](o);
+                )(o);
             } catch(...) {
                 throw std::runtime_error(SText("invalid (in|out)put connetor: ", o.Get(IO::URI)));
             }
@@ -313,9 +313,9 @@ namespace IOput {
                 
             };
             try {
-                return GENERATOR[
+                return GENERATOR.at(
                     o.Get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
-                ](o);
+                )(o);
             } catch(...) {
                 throw std::runtime_error(SText("invalid (in|out)put connetor: ", o.Get(IO::URI)));
             }

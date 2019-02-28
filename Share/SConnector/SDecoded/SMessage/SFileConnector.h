@@ -15,13 +15,13 @@
 #define SFILESTREAMSOCKET_H
 /**
  */
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
+#include "SContainer.h"
+#include "SConnector.h"
 /**
  * Base item Connectors
  */
-#include "Sbase/SIFileConnector.h"
-#include "Sbase/SOFileConnector.h"
+#include "SKernel/SIFileConnector.h"
+#include "SKernel/SOFileConnector.h"
 /**
  * Begin namespace Decoded
  */

@@ -17,9 +17,9 @@
 /**
  * Kernel
  */
-#include "SIOMessageConnector.h"
-#include "SIMessageConnector.h"
-#include "SOMessageConnector.h"
+#include "SKernel/SIOMessageConnector.h"
+#include "SKernel/SIMessageConnector.h"
+#include "SKernel/SOMessageConnector.h"
 /**
  * Tools
  */

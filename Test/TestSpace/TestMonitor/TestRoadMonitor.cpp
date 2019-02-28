@@ -55,7 +55,7 @@ TEST(SRoadMonitor, Create)
     // create monitor ------------------------------------- 
     auto monitor = RoadMonitor(
         RoadMonitor::Time(10), 
-        RoadMonitor::Road(2)
+        RoadMonitor::Road(2, 0)
             .Insert("1", SEventConnector::Make(0))
             .Insert("2", SEventConnector::Make(0))
         .Detach()

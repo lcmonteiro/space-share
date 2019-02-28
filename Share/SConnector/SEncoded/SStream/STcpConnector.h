@@ -15,9 +15,9 @@
 /**
  * Kernel
  */
-#include "SIStreamConnector.h"
-#include "SOStreamConnector.h"
-#include "SIOStreamConnector.h"
+#include "SKernel/SIStreamConnector.h"
+#include "SKernel/SOStreamConnector.h"
+#include "SKernel/SIOStreamConnector.h"
 /**
  * Begin namespace Encoded
  */

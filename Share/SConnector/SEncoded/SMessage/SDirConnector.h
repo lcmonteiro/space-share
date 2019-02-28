@@ -13,8 +13,8 @@
 /**
  * Base coded streams
  */
-#include "Sbase/SIDirConnector.h"
-#include "Sbase/SODirConnector.h"
+#include "SKernel//SIDirConnector.h"
+#include "SKernel//SODirConnector.h"
 /**
  * Begin namespace Code
  */

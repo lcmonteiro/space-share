@@ -8,13 +8,13 @@
 #define SDIRSTREAMSOCKET_H
 /**
  */
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
+#include "SContainer.h"
+#include "SConnector.h"
 /**
  * Base item streams
  */
-#include "Sbase/SIDirConnector.h"
-#include "Sbase/SODirConnector.h"
+#include "SKernel/SIDirConnector.h"
+#include "SKernel/SODirConnector.h"
 /**
  * Begin namespace Item
  */

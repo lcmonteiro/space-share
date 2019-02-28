@@ -13,9 +13,9 @@
 /**
  * Base coded streams
  */
-#include "Sbase/SIIrcConnector.h"
-#include "Sbase/SOIrcConnector.h"
-#include "Sbase/SIOIrcConnector.h"
+#include "SKernel/SIIrcConnector.h"
+#include "SKernel/SOIrcConnector.h"
+#include "SKernel/SIOIrcConnector.h"
 /**
  * Begin namespace Code
  */

@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   STools.h
  * Author: Luis Monteiro
  *
  * Created on January 14, 2017, 12:03 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef STOOLS_H
 #define STOOLS_H
@@ -17,17 +19,17 @@
  */
 #include "SContainer.h"
 /**
- */
-using namespace std;
-/**
+ * ------------------------------------------------------------------------------------------------
+ * Tools
+ * ------------------------------------------------------------------------------------------------
  */
 class STools {
 public:
     /**
      * split
      */
-    static list<Container> Split(Container container, size_t max) {
-        list<Container> out;
+    static std::list<Container> Split(Container container, size_t max) {
+        std::list<Container> out;
         /**
          * process 
          */
@@ -37,19 +39,23 @@ public:
 			size += frame.Size();
 			// verify limit
 			if (size > max) {
-					out.push_back(move(chunk));
-					size = frame.Size();
+				out.push_back(chunk.Detach());
+				size = frame.Size();
 			}
 			// move frame to chunk
-			chunk.push_back(move(frame));
+			chunk.push_back(frame.Detach());
         }
-        out.push_back(move(chunk));
+        out.push_back(chunk.Detach());
         /**
-         * return  
+         * return split
          */
         return out;
     }
 };
-
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */
 #endif /* STOOLS_H */
 

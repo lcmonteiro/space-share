@@ -243,7 +243,7 @@ public:
      **
      * remove n elements
      */
-    inline SDocument Remove(int n){
+    inline SDocument Remove(int n) {
         SDocument d(Context(*this));
         d.reserve(n);
         while(n--) {
@@ -255,9 +255,17 @@ public:
     /**
      * insert elements
      */
-    inline SDocument& Insert(SDocument doc){
+    inline SDocument& Insert(SDocument doc) {
         std::move(std::begin(doc), std::end(doc), std::back_inserter(*this));
         return *this;
+    }
+    /**
+     * split context and container
+     */
+    inline std::pair<Context, Container> Split() const {
+        return {
+            std::move(*this), std::move(*this)
+        };
     }
 } Document;
 /**

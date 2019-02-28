@@ -45,22 +45,40 @@ public:
     using Super::Super;
     using Super::operator=;
     /**
+     * ----------------------------------------------------
      * constructors
+     * ----------------------------------------------------
      */
     SContainer(size_t capacity) : Super() {
         reserve(capacity);
     }
     /**
+     * ----------------------------------------------------
      * append list buffer
+     * ---------------------------------------------------
      */
     inline SContainer& Append(const SContainer& buffer){
         insert(end(), buffer.begin(), buffer.end());
         return *this;
     }
     /**
+     * ----------------------------------------------------
+     *  check size
+     * ----------------------------------------------------
      */
+    inline size_t Size() {
+        return size();
+    }
     inline bool Full() {
         return (size() == capacity());
+    }
+    /**
+     * ----------------------------------------------------
+     * detach  
+     * ----------------------------------------------------
+     */
+    inline SContainer&& Detach() {
+        return std::move(*this);
     }
 } Container;
 /**

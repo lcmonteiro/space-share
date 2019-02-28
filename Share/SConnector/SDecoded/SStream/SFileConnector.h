@@ -24,8 +24,8 @@
 /**
  * Stream Kernel
  */
-#include "Sbase/SIFileConnector.h"
-#include "Sbase/SOFileConnector.h"
+#include "SKernel/SIFileConnector.h"
+#include "SKernel/SOFileConnector.h"
 /**
  * Begin namespace Data
  */

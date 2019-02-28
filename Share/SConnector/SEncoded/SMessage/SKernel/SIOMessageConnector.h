@@ -1,25 +1,31 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SIOMessageConnector.h
  * Author: Luis Monteiro
  *
  * Created on December 11, 2016, 1:25 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SIOMESSAGECONNECTORCODED_H
 #define SIOMESSAGECONNECTORCODED_H
 /**
- * Space
+ * Space Kernel
  */
-#include "SKernel/SContainer.h"
-#include "SKernel/SAddress.h"
-#include "SKernel/SConnector.h"
-#include "SKernel/STask.h"
+#include "SContainer.h"
+#include "SAddress.h"
+#include "STools.h"
+#include "STask.h"
+#include "SText.h"
 /**
- * Begin namespace Encoded
+ * Share Kernel
+ */
+#include "SConnector.h"
+/**
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
-/**
- * Begin namespace Message
- */
 namespace Message {
 /**
  * ------------------------------------------------------------------------------------------------
@@ -33,7 +39,7 @@ public:
      * constructor
      */
     SIOMessageConnector(
-        const string address,   // connection address
+        const SText  address,   // connection address
         const size_t maxsmsg    // max size message 
     ) : SInOutputConnector(address), __buffer(maxsmsg), __res() {}
     /**
@@ -57,12 +63,14 @@ protected:
     Document _Read() override { 
         // fill buffer ------------------------------------
         __res.Fill(__buffer.Expand());
+        
         // read context -----------------------------------
-        OFrame frame(move(__buffer));
+        OFrame frame(__buffer.Detach());
         auto position = frame.Read(sizeof (reference_t)).Number<reference_t>();
         auto nframest = frame.Read(sizeof (numframes_t)).Number<numframes_t>();
         auto nframesp = frame.Read(sizeof (numframes_t)).Number<numframes_t>();
         auto framelen = frame.Read(sizeof (framesize_t)).Number<framesize_t>();
+
         // log info ---------------------------------------
         INFO("CODE::IN::" 
             << "pos=" << position << " " 
@@ -71,22 +79,23 @@ protected:
             << "len=" << framelen
         );
         // read nframes -----------------------------------
-        Document container(Context(position, nframest, framelen));
-        container.reserve(nframesp);
-        while(!container.Full()){
-            container.push_back(frame.Read(framelen));
+        Document doc(Context(position, nframest, framelen));
+        doc.reserve(nframesp);
+        while(!doc.Full()) {
+            doc.push_back(frame.Read(framelen));
         }
         // resuse buffer ----------------------------------
-        __buffer = move(frame);
-        // return container -------------------------------
-        return container;
+        __buffer = frame.Detach();
+        
+        // return document --------------------------------
+        return doc;
     }
     /**
      * ------------------------------------------------------------------------
      * write
      * ------------------------------------------------------------------------
      */
-    void _Write(const Document& container) override {
+    void _Write(const Document& doc) override {
         const size_t HEADER_SIZE = 
                 sizeof (reference_t)      + 
                 sizeof (numframes_t) * 2  + 
@@ -94,28 +103,31 @@ protected:
         ;
         // log info ---------------------------------------
         INFO("CODE::OUT::"
-            << "pos=" << container.GetPosition()  << " " 
-            << "n="   << container.GetNumFrames() << " "
-            << "sz="  << container.GetFrameSize() << " " 
-            << "len=" << container.size()
+            << "pos=" << doc.GetPosition()  << " " 
+            << "n="   << doc.GetNumFrames() << " "
+            << "sz="  << doc.GetFrameSize() << " " 
+            << "len=" << doc.Size()
         );
-        // process container ------------------------------ 
-        __buffer.Expand();
-        for (auto& c : STools::Split(move(container), __buffer.Size() - HEADER_SIZE)) {
-            IFrame msg(move(__buffer));
+        // process document -------------------------------
+        auto split = doc.Split();
+        for (auto& c : STools::Split(
+            split.second.Detach(), __buffer.Expand().Reset().Size() - HEADER_SIZE)
+        ) {
             // write context ------------------------------
-            msg.Write(Frame().Number<reference_t>(container.GetPosition()));
-            msg.Write(Frame().Number<numframes_t>(container.GetNumFrames()));
-            msg.Write(Frame().Number<numframes_t>(c.size()));
-            msg.Write(Frame().Number<framesize_t>(container.GetFrameSize()));
-            // write container ----------------------------
-            for (auto& f : container) {    
-                msg.Write(f);
+            __buffer.Write(Frame().Number<reference_t>(split.first.GetPosition()));
+            __buffer.Write(Frame().Number<numframes_t>(split.first.GetNumFrames()));
+            __buffer.Write(Frame().Number<numframes_t>(c.Size()));
+            __buffer.Write(Frame().Number<framesize_t>(split.first.GetFrameSize()));
+            
+            // write document -----------------------------
+            for (auto& f : c) {
+                __buffer.Write(f);
             }
             // write message ------------------------------
-            __res.Drain(msg);
+            __res.Drain(__buffer);
+
             //reuse buffer --------------------------------
-            __buffer = msg.Expand().Detach();
+            __buffer.Reset();
         }
     }
     /**
@@ -126,26 +138,26 @@ protected:
      * ------------------------------------------------------------------------
      */
     inline void _Open() override {
-        default_random_engine eng{random_device{}()};
-        // sleep distribution ----------------------------- 
-        uniform_int_distribution<> dist{1000, 5000};
+        std::default_random_engine eng{std::random_device{}()};
+        // sleep distribution -----------------------------
+        std::uniform_int_distribution<> dist{100, 1000};
         // main loop --------------------------------------
         int i = 0;
         do {
             try {
-                __res.Connect(__uri);
+                __res.Wait(__uri);
                 break;
-            } catch (system_error& ex) {
+            } catch (std::system_error& ex) {
                 WARNING(ex.what());
             }
-        } while (STask::Sleep(chrono::milliseconds{dist(eng) + (1000 * i++)}));
-     }
+        } while (STask::Sleep(std::chrono::milliseconds{dist(eng) * ++i}));
+    }
     /**
      * ------------------------------------------------------------------------
      * good
      * ------------------------------------------------------------------------
      */
-    inline bool _Good() override{
+    inline bool _Good() override {
         return __res.Good();
     }
     /**
@@ -158,6 +170,10 @@ protected:
     }
 private:
     /**
+     * --------------------------------------------------------------------------------------------
+     * variables
+     * --------------------------------------------------------------------------------------------
+     **
      * buffer
      */
     IFrame __buffer;
@@ -166,13 +182,10 @@ private:
      */
     RESOURCE __res;
 };
+}}
 /**
- * End namespace Message
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- * End namespace Encoded
- */
-}
 #endif /* SIOMESSAGECONNECTORCODED_H */
-
