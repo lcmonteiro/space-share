@@ -66,10 +66,10 @@ public:
      *  check size
      * ----------------------------------------------------
      */
-    inline size_t Size() {
+    inline size_t Size() const {
         return size();
     }
-    inline bool Full() {
+    inline bool Full() const {
         return (size() == capacity());
     }
     /**
