@@ -61,8 +61,8 @@ protected:
      * ------------------------------------------------------------------------
      */
     Document _Read() override { 
-        // fill buffer ------------------------------------
-        __res.Fill(__buffer.Expand());
+        // read buffer ------------------------------------
+        __res.Read(__buffer.Expand());
         
         // read context -----------------------------------
         OFrame frame(__buffer.Detach());

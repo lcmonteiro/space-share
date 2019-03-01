@@ -62,54 +62,54 @@ public:
         *this = Super();
     }
 };    
-// /**
-//  * ------------------------------------------------------------------------------------------------
-//  * Input Local Connector
-//  * ------------------------------------------------------------------------------------------------
-//  * template
-//  */
-// template<class R>
-// class SILocConnectorT : public SIMessageConnector<R> {
-// public:
-//     using SIMessageConnector<R>::SIMessageConnector;
-//     /**
-//      */
-//     SILocConnectorT() = delete;
-//     /**
-//      * make
-//      */
-//     template<typename...Args>
-//     static IConnector Make(Args &&...args) {
-//         return std::make_shared<SILocConnectorT>(std::forward<Args>(args)...);
-//     }
-// };
-// /**
-//  * ------------------------------------------------------------------------------------------------
-//  * Output Local Connector
-//  * ------------------------------------------------------------------------------------------------
-//  * template
-//  */
-// template<class R>
-// class SOLocConnectorT : public SOMessageConnector<R> {
-// public:
-//     using SOMessageConnector<R>::SOMessageConnector;
-//     /**
-//      */
-//     SOLocConnectorT() = delete;
-//     /**
-//      * make
-//      */
-//     template<typename...Args>
-//     static OConnector Make(Args &&...args) {
-//         return std::make_shared<SOLocConnectorT>(std::forward<Args>(args)...);
-//     }
-// };
-// /**
-//  * ------------------------------------------------------------------------------------------------
-//  * IO Local Connector
-//  * ------------------------------------------------------------------------------------------------
-//  * template
-//  */
+/**
+ * ------------------------------------------------------------------------------------------------
+ * Input Local Connector
+ * ------------------------------------------------------------------------------------------------
+ * template
+ */
+template<class R>
+class SILocConnectorT : public SIMessageConnector<R> {
+public:
+    using SIMessageConnector<R>::SIMessageConnector;
+    /**
+     */
+    SILocConnectorT() = delete;
+    /**
+     * make
+     */
+    template<typename...Args>
+    static IConnector Make(Args &&...args) {
+        return std::make_shared<SILocConnectorT>(std::forward<Args>(args)...);
+    }
+};
+/**
+ * ------------------------------------------------------------------------------------------------
+ * Output Local Connector
+ * ------------------------------------------------------------------------------------------------
+ * template
+ */
+template<class R>
+class SOLocConnectorT : public SOMessageConnector<R> {
+public:
+    using SOMessageConnector<R>::SOMessageConnector;
+    /**
+     */
+    SOLocConnectorT() = delete;
+    /**
+     * make
+     */
+    template<typename...Args>
+    static OConnector Make(Args &&...args) {
+        return std::make_shared<SOLocConnectorT>(std::forward<Args>(args)...);
+    }
+};
+/**
+ * ------------------------------------------------------------------------------------------------
+ * IO Local Connector
+ * ------------------------------------------------------------------------------------------------
+ * template
+ */
 template<class R>
 class SIOLocConnectorT : public SIOMessageConnector<R> {
 public:
@@ -125,14 +125,14 @@ public:
         return std::make_shared<SIOLocConnectorT>(std::forward<Args>(args)...);
     }
 };
-// /**
-//  * ------------------------------------------------------------------------------------------------
-//  * Definition
-//  * ------------------------------------------------------------------------------------------------
-//  */
-// typedef SIOLocConnectorT<ResourceAdapterLoc> IOLocConnector;
-// typedef SILocConnectorT<ResourceAdapterLoc>  ILocConnector;
-// typedef SOLocConnectorT<ResourceAdapterLoc>  OLocConnector;
+/**
+ * ------------------------------------------------------------------------------------------------
+ * Definition
+ * ------------------------------------------------------------------------------------------------
+ */
+typedef SIOLocConnectorT<ResourceAdapterLoc> IOLocConnector;
+typedef SILocConnectorT<ResourceAdapterLoc>  ILocConnector;
+typedef SOLocConnectorT<ResourceAdapterLoc>  OLocConnector;
 }}
 /**
  * ------------------------------------------------------------------------------------------------

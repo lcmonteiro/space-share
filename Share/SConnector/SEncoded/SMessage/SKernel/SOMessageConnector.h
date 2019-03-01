@@ -33,7 +33,7 @@ namespace Message {
  * ------------------------------------------------------------------------------------------------
  */
 template<class RESOURCE>
-class SOMessageConnector : public SInOutputConnector {
+class SOMessageConnector : public SOutputConnector {
 public:
     /**
      * constructor
@@ -41,17 +41,11 @@ public:
     SOMessageConnector(
         const SText  address,   // connection address
         const size_t maxsmsg    // max size message 
-    ) : SInOutputConnector(address), __buffer(maxsmsg), __res() {}
+    ) : SOutputConnector(address), __buffer(maxsmsg), __res() {}
     /**
      * destructor
      */
     virtual ~SOMessageConnector() = default;
-    /**
-     * inline overrides
-     */
-    inline Resource& GetResource() override {
-        return __res.Base();
-    }
 protected:
     /**
      * ----------------------------------------------------------------------------------------

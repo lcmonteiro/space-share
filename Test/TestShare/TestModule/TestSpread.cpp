@@ -254,9 +254,7 @@ TEST(Spread, Code)
 
     // build a test frame ----------------------------------------------------- 
     auto frame_i = SRandom::Frame(size);
-    auto frame_1 = IFrame(size);
-    auto frame_2 = IFrame(size);
-    auto frame_3 = IFrame(size);
+    auto frame_o = IFrame(size);
 
     // out interface resource --------------------------------------------------
     auto interface_o = Message::SLocalResource()
@@ -286,14 +284,10 @@ TEST(Spread, Code)
     Monitor(Monitor::Time(3000), &interface_o).Wait();
 
     // receive ----------------------------------------------------------------
-    EXPECT_EQ(interface_o.Read(frame_1).Good(), true);
-    EXPECT_EQ(interface_o.Read(frame_2).Good(), true);
-    EXPECT_EQ(interface_o.Read(frame_3).Good(), true);
+    EXPECT_EQ(interface_o.Read(frame_o).Good(), true);
 
     // test data --------------------------------------------------------------
-    EXPECT_EQ(frame_i, frame_1);
-    EXPECT_EQ(frame_i, frame_2);
-    EXPECT_EQ(frame_i, frame_3);
+    EXPECT_EQ(frame_i, frame_o);
 
 }
 /**

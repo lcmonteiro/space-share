@@ -124,6 +124,20 @@ namespace Input {
             static std::map<SConnector::Key, std::function <Encoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
                 /**
                  * --------------------------------------------------------------------------------
+                 * message local 
+                 * --------------------------------------------------------------------------------
+                 */
+                {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
+                    auto in = Encoded::Message::ILocConnector::Make(
+                        o.Get(IO::URI),
+                        o.Get(IO::SFRAMES, 1550)
+                    );
+                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    in->SetEnergy(o.Get(IO::ENERGY,   1));
+                    return in;
+                }},
+                /**
+                 * --------------------------------------------------------------------------------
                  * message file 
                  * --------------------------------------------------------------------------------
                  */
@@ -228,6 +242,20 @@ namespace Output {
     struct Builder<Encoded::OConnector> {
         static inline Encoded::OConnector Build(const SModule::Command::Group& o){
             static std::map<SConnector::Key, std::function <Encoded::OConnector(const SModule::Command::Group&)>> GENERATOR {
+                /**
+                 * --------------------------------------------------------------------------------
+                 * message local 
+                 * --------------------------------------------------------------------------------
+                 */
+                {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
+                    auto out = Encoded::Message::OLocConnector::Make(
+                        o.Get(IO::URI),
+                        o.Get(IO::SFRAMES, 1550)
+                    );
+                    out->SetVerbose(o.Get(IO::VERBOSE, 0));
+                    out->SetEnergy(o.Get(IO::ENERGY,   1));
+                    return out;
+                }},
                 // {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                 //     auto out = Encoded::Message::OFileConnector::Make(
                 //         o.Get(IO::URI)

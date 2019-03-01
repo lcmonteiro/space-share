@@ -41,7 +41,7 @@ public:
     SIMessageConnector(
         const SText  address,    // connection address
         const size_t maxsmsg     // max size message 
-    ) : SInOutputConnector(address), __buffer(maxsmsg), __res() {}
+    ) : SInputConnector(address), __buffer(maxsmsg), __res() {}
     /**
      * destructor
      */
@@ -61,8 +61,8 @@ protected:
      * ------------------------------------------------------------------------
      */
     Document _Read() override { 
-        // fill buffer ------------------------------------
-        __res.Fill(__buffer.Expand());
+        // read buffer ------------------------------------
+        __res.Read(__buffer.Expand());
         
         // read context -----------------------------------
         OFrame frame(__buffer.Detach());
