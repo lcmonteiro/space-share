@@ -100,10 +100,10 @@ protected:
         }
         // fill container ---------------------------------
         std::list<Document> out;
-        for (auto& p : Shape(tmp.Length(), __container.capacity())) {
+        for (auto& p : Shape(tmp.Length(), __container.Capacity())) {
             auto container = Document(p.first);
             while (!container.Full()) {
-                container.push_back(move(tmp.Read(p.second)));
+                container.emplace_back(tmp.Read(p.second));
             }
             out.push_back(move(container));
         }

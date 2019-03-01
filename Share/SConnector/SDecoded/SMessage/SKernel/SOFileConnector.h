@@ -14,6 +14,7 @@
  * Space Kernel
  */
 #include "SContainer.h"
+#include "SBuffer.h"
 /**
  * Share Kernel
  */

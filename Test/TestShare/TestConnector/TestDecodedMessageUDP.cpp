@@ -16,6 +16,7 @@
  */
 #include "SCompare.h"
 #include "SRandom.h"
+#include "SBuffer.h"
 /**
  */
 TEST(DecodedMessageUDP, Link)

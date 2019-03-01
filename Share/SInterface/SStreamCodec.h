@@ -16,6 +16,7 @@
  * Share Kernel
  */
 #include "SCodec.h"
+#include "SBuffer.h"
 #include "SDocument.h"
 /**
  * ------------------------------------------------------------------------------------------------
@@ -46,7 +47,7 @@ public:
         size_t sz = Split(len, chunks);
         /**
          * insert length
-         */        
+         */   
         Buffer buff(Frame().Number(filesize_t(len)));
         //
         auto frame = IFrame(sz);

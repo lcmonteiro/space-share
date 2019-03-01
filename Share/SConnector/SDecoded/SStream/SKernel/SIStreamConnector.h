@@ -11,6 +11,7 @@
  */
 #include "SContainer.h"
 #include "SAddress.h"
+#include "SBuffer.h"
 #include "STask.h"
 #include "SText.h"
 /**
@@ -89,7 +90,7 @@ protected:
         Buffer tmp;
         // check if container is full ---------------------
         if (!__container.empty()) {
-            auto container = Document(__container.capacity());
+            auto container = Document(__container.Capacity());
             std::swap(__container, container);
             tmp.Write(std::move(container));
         }
@@ -101,7 +102,7 @@ protected:
         }
         // fill container ---------------------------------
         std::list<Document> out;
-        for (auto& p : Shape(tmp.Length(), __container.capacity())) {
+        for (auto& p : Shape(tmp.Length(), __container.Capacity())) {
             auto container = Document(p.first);
             while (!container.Full()) {
                 container.emplace_back(tmp.Read(p.second));

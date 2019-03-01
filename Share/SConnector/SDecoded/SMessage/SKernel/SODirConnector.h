@@ -14,6 +14,7 @@
 /**
  * Share Kernel
  */
+#include "SBuffer.h"
 #include "SDocument.h"
 #include "SConnector.h"
 /**
