@@ -65,6 +65,7 @@ public:
  **/
 class SIFrame;
 class SOFrame;
+class SIOFrame;
 typedef class SFrame : public std::vector<uint8_t> {
 public:
     /**
@@ -122,9 +123,11 @@ public:
     SFrame(SFrame&&)       = default;
     SFrame(SIFrame&&);
     SFrame(SOFrame&&);
+    SFrame(SIOFrame&&);
     SFrame(const SFrame&)  = default;
     SFrame(const SIFrame&);
     SFrame(const SOFrame&);
+    SFrame(const SIOFrame&);
     /**
      * ----------------------------------------------------
      * operations
@@ -137,11 +140,17 @@ public:
     inline SFrame& operator=(SOFrame&& f) {
         return __Consume(SFrame(std::move(f)));
     } 
+    inline SFrame& operator=(SIOFrame&& f) {
+        return __Consume(SFrame(std::move(f)));
+    } 
     inline SFrame& operator=(const SFrame&  f) = default;
     inline SFrame& operator=(const SIFrame& f) {
         return __Consume(SFrame(f));
     }
     inline SFrame& operator=(const SOFrame& f) {
+        return __Consume(SFrame(f));
+    }
+    inline SFrame& operator=(const SIOFrame& f) {
         return __Consume(SFrame(f));
     }
     /**
@@ -262,7 +271,9 @@ public:
      */
     inline SFrame& Shrink(size_t size = 0) {
         if (Size() < size) {
-            throw FrameException(SText("Shrink=(", Size(), "<", size, ")"));
+            throw FrameException(
+                SText("Shrink=(", Size(), "<", size, ")")
+            );
         }
         resize(size);
         return *this;
@@ -323,7 +334,7 @@ public:
      * ----------------------------------------------------
      */
     SIFrame(size_t capacity) 
-    : SFrame(capacity), __it(begin()) { Expand(); }
+    : SFrame(capacity), __end(begin()) { Expand(); }
     /**
      * ------------------------------------------------------------------------
      * conversions
@@ -332,12 +343,14 @@ public:
      * ----------------------------------------------------
      */
     SIFrame();
-    SIFrame(SFrame&&  f);
-    SIFrame(SIFrame&& f);
-    SIFrame(SOFrame&& f);
-    SIFrame(const SFrame& f);
-    SIFrame(const SIFrame& f);
-    SIFrame(const SOFrame& f);
+    SIFrame(SFrame&&);
+    SIFrame(SIFrame&&);
+    SIFrame(SOFrame&&);
+    SIFrame(SIOFrame&&);
+    SIFrame(const SFrame&);
+    SIFrame(const SIFrame&);
+    SIFrame(const SOFrame&);
+    SIFrame(const SIOFrame&);
     /**
      * ----------------------------------------------------
      * operators
@@ -350,6 +363,17 @@ public:
     template<typename T> 
     SIFrame& operator=(const T& f) {
         return __Consume(SIFrame(f));
+    }
+    /**
+     * ----------------------------------------------------
+     * operators
+     * ----------------------------------------------------
+     */
+    const_iterator end() const {
+        return __end;
+    }
+    iterator end() {
+        return __end;
     }
     /**
      * ------------------------------------------------------------------------
@@ -367,7 +391,7 @@ public:
      * ----------------------------------------------------
      */
     inline SIFrame& Reset() {
-        __it = begin();
+        __end = begin();
         return *this;
     }
     /**
@@ -376,7 +400,7 @@ public:
      * ----------------------------------------------------
      */
     inline SIFrame& Insert(size_t n) {
-        __it = std::next(__it, n);
+        __end = std::next(__end, n);
         return *this;
     }
     /**
@@ -385,7 +409,7 @@ public:
      * ----------------------------------------------------
      */
     inline SIFrame& Seek(size_t p) {
-        __it = std::next(begin(), p);
+        __end = std::next(begin(), p);
         return *this;
     }
     /**
@@ -394,7 +418,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline pointer Data() {
-        return __it.base();
+        return __end.base();
     }
     /**
      * ------------------------------------------------------------------------
@@ -402,7 +426,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline size_t Size() const {
-        return distance(SFrame::const_iterator(__it), end());
+        return std::distance(const_iterator(__end), Super::end());
     }
     /**
      * ------------------------------------------------------------------------
@@ -410,7 +434,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SIFrame& Shrink() {
-        resize(std::distance(begin(), __it));
+        resize(std::distance(begin(), __end));
         return *this;
     }
     /**
@@ -435,7 +459,7 @@ public:
             // resize vector ------------------------------    
             resize(sz_cur + sz - sz_rem);
             // reset pointer ------------------------------
-            __it = begin() + sz_cur;
+            __end = begin() + sz_cur;
         }
         return *this;
     }
@@ -445,7 +469,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SIFrame& Write(const SFrame& frame) {
-        __it = std::copy(frame.begin(), frame.end(), __it);
+        __end = std::copy(frame.begin(), frame.end(), __end);
         return *this;
     }
     /**
@@ -454,8 +478,8 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SIFrame& Shift(size_t offset) {
-        __it = __rotate(
-            begin(), std::next(begin(), offset), __it
+        __end = __rotate(
+            begin(), std::next(begin(), offset), __end
         );
         return *this;
     }
@@ -465,10 +489,10 @@ public:
      * ------------------------------------------------------------------------
      */
     inline bool Empty() const {
-        return (__it <= begin());
+        return (__end <= begin());
     }
     inline bool Full() const {
-        return (__it >= end());
+        return (__end >= end());
     }
     /**
      * ------------------------------------------------------------------------
@@ -488,12 +512,13 @@ protected:
         // consume super ----------------------------------
         Super::operator=(std::move(f));
         // consume itrator --------------------------------
-        __it = std::move(f.__it);
+        __end = std::move(f.__end);
         // return this frame ------------------------------
         return *this;
     }
 private:
     friend class SOFrame;
+    friend class SIOFrame;
     /**
      * ------------------------------------------------------------------------
      * variable
@@ -501,7 +526,7 @@ private:
      **
      * iterator
      */
-    iterator __it;
+    iterator __end;
 } IFrame;
 /**
  * ------------------------------------------------------------------------------------------------
@@ -518,12 +543,14 @@ public:
      * ----------------------------------------------------
      */
     SOFrame();
-    SOFrame(SFrame&&  f);
-    SOFrame(SIFrame&& f);
-    SOFrame(SOFrame&& f);
-    SOFrame(const SFrame& f);
-    SOFrame(const SIFrame& f);
-    SOFrame(const SOFrame& f);
+    SOFrame(SFrame&&);
+    SOFrame(SIFrame&&);
+    SOFrame(SOFrame&&);
+    SOFrame(SIOFrame&&);
+    SOFrame(const SFrame&);
+    SOFrame(const SIFrame&);
+    SOFrame(const SOFrame&);
+    SOFrame(const SIOFrame&);
     /**
      * ----------------------------------------------------
      * operators
@@ -537,6 +564,17 @@ public:
     SOFrame& operator=(const T& f) {
         return __Consume(SOFrame(f));
     }
+    /**
+     * ----------------------------------------------------
+     * operators
+     * ----------------------------------------------------
+     */
+    const_iterator begin() const {
+        return __beg;
+    }
+    iterator begin() {
+        return __beg;
+    }
      /**
      * ------------------------------------------------------------------------
      * position
@@ -545,7 +583,7 @@ public:
      * ----------------------------------------------------
      */
     inline SOFrame& Reset() {
-        __it = begin();
+        __beg = begin();
         return *this;
     }
     /**
@@ -554,15 +592,15 @@ public:
      * ----------------------------------------------------
      */
     inline SOFrame& Remove(size_t n) {
-        __it = next(__it, n);
+        __beg = next(__beg, n);
         return *this;
     }
     /**
      * ----------------------------------------------------
-     * transfer data to iframe
+     * fill data into iframe
      * ----------------------------------------------------
      */
-    inline SOFrame& Transfer(IFrame& frame) {
+    inline SOFrame& Fill(IFrame& frame) {
         auto sz = std::min(Size(), frame.Size());
         std::memcpy(frame.Data(), Data(), sz);
         frame.Insert(sz);
@@ -574,7 +612,7 @@ public:
      * ----------------------------------------------------
      */
     inline SOFrame& Seek(size_t p) {
-        __it = next(begin(), p);
+        __beg = next(begin(), p);
         return *this;
     }
     /**
@@ -583,7 +621,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline pointer Data() {
-        return __it.base();
+        return __beg.base();
     }
     /**
      * ------------------------------------------------------------------------
@@ -591,7 +629,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline size_t Size() const {
-        return distance(SFrame::const_iterator(__it), end());
+        return distance(SFrame::const_iterator(__beg), end());
     }
     /**
      * ------------------------------------------------------------------------
@@ -602,7 +640,7 @@ public:
         // current size -----------------------------------  
         auto sz = Size();
         // rotate ----------------------------------------- 
-        std::rotate(begin(), __it, end()); 
+        std::rotate(begin(), __beg, end()); 
         // reset ------------------------------------------
         Reset();
         // resize -----------------------------------------
@@ -622,9 +660,9 @@ public:
             );
         }
         // move reference ---------------------------------
-        iterator prev = __it; __it = std::next(__it, size);
+        iterator prev = __beg; __beg = std::next(__beg, size);
         // copy to new frame ------------------------------
-        return SFrame(prev, __it);
+        return SFrame(prev, __beg);
     }
     /**
      * ------------------------------------------------------------------------
@@ -632,10 +670,10 @@ public:
      * ------------------------------------------------------------------------
      */
     inline bool Empty() const {
-        return (__it >= end());
+        return (__beg >= end());
     }
     inline bool Full() const {
-        return (__it <= begin());
+        return (__beg <= begin());
     }
     /**
      * ------------------------------------------------------------------------
@@ -655,19 +693,20 @@ protected:
         // consume super ----------------------------------
         Super::operator=(std::move(f));
         // consume itrator --------------------------------
-        __it = std::move(f.__it);
+        __beg = std::move(f.__beg);
         // return this frame ------------------------------
         return *this;
     }
 private:
     friend class SIFrame;
+    friend class SIOFrame;
     /**
      * ------------------------------------------------------------------------
      * variable
      * ------------------------------------------------------------------------
      * iterator 
      */
-    iterator __it;
+    iterator __beg;
 } OFrame;
 /**
  * ------------------------------------------------------------------------------------------------
@@ -684,7 +723,7 @@ public:
      * ----------------------------------------------------
      */
     SIOFrame(size_t capacity) 
-    : SFrame(capacity), __it_i(begin()) { Expand(); }
+    : SFrame(capacity), __beg(begin()), __end(begin()) { Expand(); }
     /**
      * ------------------------------------------------------------------------
      * conversions
@@ -693,24 +732,43 @@ public:
      * ----------------------------------------------------
      */
     SIOFrame();
-    SIOFrame(SFrame&&  f);
-    SIOFrame(SIFrame&& f);
-    SIOFrame(SOFrame&& f);
-    SIOFrame(const SFrame& f);
-    SIOFrame(const SIFrame& f);
-    SIOFrame(const SOFrame& f);
+    SIOFrame(SFrame&&);
+    SIOFrame(SIFrame&&);
+    SIOFrame(SOFrame&&);
+    SIOFrame(SIOFrame&&);
+    SIOFrame(const SFrame&);
+    SIOFrame(const SIFrame&);
+    SIOFrame(const SOFrame&);
+    SIOFrame(const SIOFrame&);
     /**
      * ----------------------------------------------------
      * operators
      * ----------------------------------------------------
      */
     template<typename T> 
-    SIFrame& operator=(T&& f) {
+    SIOFrame& operator=(T&& f) {
         return __Consume(SIOFrame(std::move(f)));
     } 
     template<typename T> 
-    SIFrame& operator=(const T& f) {
+    SIOFrame& operator=(const T& f) {
         return __Consume(SIOFrame(f));
+    }
+    /**
+     * ----------------------------------------------------
+     * operators
+     * ----------------------------------------------------
+     */
+    const_iterator begin() const {
+        return __beg;
+    }
+    const_iterator end() const {
+        return __end;
+    }
+    iterator begin() {
+        return __beg;
+    }
+    iterator end() {
+        return __end;
     }
     /**
      * ------------------------------------------------------------------------
@@ -718,7 +776,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline size_t Capacity() const {
-        return size();
+        return Size();
     }
     /**
      * ------------------------------------------------------------------------
@@ -728,8 +786,8 @@ public:
      * ----------------------------------------------------
      */
     inline SIOFrame& Reset() {
-        __it_i = begin();
-        __it_o = begin();
+        __end = begin();
+        __beg = begin();
         return *this;
     }
     /**
@@ -738,11 +796,11 @@ public:
      * ----------------------------------------------------
      */
     inline SIOFrame& Insert(size_t n) {
-        __it_i = std::next(__it_i, n);
+        __end = std::next(__end, n);
         return *this;
     }
     inline SIOFrame& Remove(size_t n) {
-        __it_o = std::next(__it_o, n);
+        __beg = std::next(__beg, n);
         return *this;
     }
     /**
@@ -751,11 +809,11 @@ public:
      * ----------------------------------------------------
      */
     inline SIOFrame& ISeek(size_t p) {
-        __it_i = std::max(std::next(begin(), p), __it_o);
+        __end = std::max(std::next(begin(), p), __beg);
         return *this;
     }
     inline SIOFrame& OSeek(size_t p) {
-        __it_o = std::min(std::next(begin(), p), __it_i);
+        __beg = std::min(std::next(begin(), p), __end);
         return *this;
     }
     /**
@@ -764,10 +822,10 @@ public:
      * ------------------------------------------------------------------------
      */
     inline pointer IData() {
-        return __it_i.base();
+        return __end.base();
     }
     inline pointer OData() {
-        return __it_o.base();
+        return __beg.base();
     }
     /**
      * ------------------------------------------------------------------------
@@ -775,10 +833,10 @@ public:
      * ------------------------------------------------------------------------
      */
     inline size_t ISize() const {
-        return std::distance(const_iterator(__it_i), end());
+        return std::distance(const_iterator(__end), end());
     }
     inline size_t OSize() const {
-        return distance(const_iterator(__it_o), const_iterator(__it_i));
+        return distance(const_iterator(__beg), const_iterator(__end));
     }
     /**
      * ------------------------------------------------------------------------
@@ -787,9 +845,22 @@ public:
      */
     inline SIOFrame& Shift(size_t n) {
         // rotate -----------------------------------------
-        std::rotate(__it_o, std::next(__it_o, n), __it_i);
+        std::rotate(__beg, std::next(__beg, n), __end);
         // reset ------------------------------------------
-        __it_i = std::prev(__it_i, n);
+        __end = std::prev(__end, n);
+        // ------------------------------------------------
+        return *this;
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * Ishrink frame
+     * ------------------------------------------------------------------------
+     */
+    inline SIOFrame& IShrink() { 
+        // resize -----------------------------------------
+        resize(std::distance(begin(), __end));
+        // reset ------------------------------------------
+        __end = end();
         // ------------------------------------------------
         return *this;
     }
@@ -800,12 +871,12 @@ public:
      */
     inline SIOFrame& Shrink() {
         // rotate ----------------------------------------- 
-        std::rotate(begin(), __it_o, __it_i); 
+        std::rotate(begin(), __beg, end()); 
         // resize -----------------------------------------
-        resize(std::distance(__it_o, __it_i));
+        resize(std::distance(__beg, __end));
         // reset ------------------------------------------
-        __it_o = begin();
-        __it_i = end();
+        __beg = begin();
+        __end = end();
         // ------------------------------------------------
         return *this;
     }
@@ -824,14 +895,15 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SIOFrame& Reserve(size_t sz) {
-        auto sz_rem = ISize();
+        auto sz_i = ISize();
         // verify current size ----------------------------
-        if (sz > sz_rem) {
-            auto sz_cur = size();
+        if (sz > sz_i) {
+            auto sz_o = OSize();
             // resize -------------------------------------    
-            resize(sz_cur + sz - sz_rem);
+            resize(size() + sz - sz_i);
             // reset --------------------------------------
-            __it_i = std::next(begin(), sz_cur);
+            __end = std::prev(end(),  sz);
+            __beg = std::prev(__end, sz_o);
         }
         return *this;
     }
@@ -841,12 +913,31 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SIOFrame& Write(const SFrame& f) {
-        // reserve (safety) -------------------------------
-        Reserve(f.Size());
+        // size check -------------------------------------
+        if (ISize() < f.Size()) {
+            throw FrameException(
+                SText("Write=(", ISize(), "<", f.Size(), ")")
+            );
+        }
         // copy -------------------------------------------
-        __it_i = std::copy(f.begin(), f.end(), __it_i);
+        __end = std::copy(f.begin(), f.end(), __end);
         // ------------------------------------------------
         return *this;
+    }
+    /**
+     * ----------------------------------------------------
+     * transfer data to frame
+     * ----------------------------------------------------
+     */
+    inline SIOFrame& Fill(SIOFrame& in) {
+        // check size -----------------
+        auto sz = std::min(Size(), in.ISize());
+        // copy data ------------------
+        std::memcpy(in.IData(), OData(), sz);
+        // update in ------------------
+        in.Insert(sz);
+        // update out -----------------
+        return Remove(sz);
     }
     /**
      * ------------------------------------------------------------------------
@@ -861,11 +952,11 @@ public:
             );
         }
         //reference ---------------------------------------
-        auto ref = __it_o;
+        auto ref = __beg;
         // reset ------------------------------------------ 
-        __it_o = std::next(__it_o, size);
+        __beg = std::next(__beg, size);
         // frame ------------------------------------------
-        return SFrame(ref, __it_o);
+        return SFrame(ref, __beg);
     }
     /**
      * ------------------------------------------------------------------------
@@ -873,10 +964,10 @@ public:
      * ------------------------------------------------------------------------
      */
     inline bool Empty() const {
-        return (__it_i <= __it_o);
+        return (__end <= __beg);
     }
     inline bool Full() const {
-        return (__it_i >= end());
+        return (__end >= end());
     }
     /**
      * ------------------------------------------------------------------------
@@ -896,12 +987,13 @@ protected:
         // consume super ----------------------------------
         Super::operator=(std::move(f));
         // consume itrators -------------------------------
-        __it_o = std::move(f.__it_o);
-        __it_i = std::move(f.__it_i);
+        __beg = std::move(f.__beg);
+        __end = std::move(f.__end);
         // return this frame ------------------------------
         return *this;
     }
 private:
+    friend class SIFrame;
     friend class SOFrame;
     /**
      * ------------------------------------------------------------------------
@@ -910,8 +1002,8 @@ private:
      **
      * iterators
      */
-    iterator __it_i;
-    iterator __it_o;
+    iterator __end;
+    iterator __beg;
 } IOFrame;
 /**
  * ------------------------------------------------------------------------------------------------
