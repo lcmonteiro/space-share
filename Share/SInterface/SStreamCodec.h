@@ -130,7 +130,7 @@ public:
             auto oframe = OFrame();
             for (; (it != end) && (!iframe.Full()); ++it) {
                 oframe = OFrame(std::move(*it));
-                oframe.Transfer(iframe);
+                oframe.Fill(iframe);
             }
             size_t len = iframe.Number<filesize_t>();
             /**
