@@ -99,7 +99,7 @@ template<>
 SFileResource& SFileResource::Read(IFrame& f) {
     while (!f.Full()) {
         f.Insert(__Read(
-            GetHandler<SResourceHandler>()->FD(), f.data(), f.size()
+            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
         ));
     }
     return *this;

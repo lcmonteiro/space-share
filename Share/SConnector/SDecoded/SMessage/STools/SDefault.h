@@ -48,12 +48,12 @@ public:
         ).Number<framesize_t>(buf.Size());
 
         // container fill up ------------------------------
-        OFrame out = std::move(buf);
+        OFrame out = buf.Detach();
         while(!chunks.Full()) {
             chunks.emplace_back(out.Read(size));
         }
         // save buffer ------------------------------------
-        buf = std::move(out);
+        buf = out.Frame().Detach();
 
         // return a split container -----------------------
         return chunks;

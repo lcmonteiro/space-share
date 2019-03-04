@@ -62,7 +62,7 @@ SOFrame::SOFrame(const SIFrame& f)
 : SIFrame(SFrame(f.Capacity(), f.begin(), f.end())), __beg(Super::begin()) {   
 }
 SOFrame::SOFrame(const SOFrame& f)
-: SIFrame(Frame(f.Capacity(), f.begin(), f.end())), __beg(Super::begin()) {   
+: SIFrame(SFrame(f.Capacity(), f.begin(), f.end())), __beg(Super::begin()) {   
 }
 /**
  * ------------------------------------------------------------------------------------------------
