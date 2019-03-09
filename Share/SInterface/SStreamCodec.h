@@ -132,11 +132,11 @@ public:
                 oframe = OFrame(std::move(*it));
                 oframe.Fill(iframe);
             }
-            size_t len = iframe.Number<filesize_t>();
+            size_t len = iframe.Frame().Number<filesize_t>();
             /**
              * drain oframe
              */
-            out.write(opointer(oframe.Data()), oframe.Size());
+            out.write(opointer(oframe.data()), oframe.size());
             /**
              * write 
              */
@@ -183,7 +183,7 @@ private:
     static void Fill(IS& s, IFrame& f){
         typedef typename IS::char_type* ipointer;
         do{ 
-            f.Insert(s.readsome(ipointer(f.Data()), f.Size())); 
+            f.Insert(s.readsome(ipointer(f.IData()), f.ISize())); 
         } while (s.gcount());
     }
     /**

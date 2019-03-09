@@ -96,10 +96,10 @@ std::string SFileResource::BaseName(const std::string& path) {
  * ----------------------------------------------------------------------------
  */
 template<>
-SFileResource& SFileResource::Read(IFrame& f) {
+SFileResource& SFileResource::Read(IOFrame& f) {
     while (!f.Full()) {
         f.Insert(__Read(
-            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
+            GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize()
         ));
     }
     return *this;
@@ -110,10 +110,10 @@ SFileResource& SFileResource::Read(IFrame& f) {
  * ----------------------------------------------------------------------------
  */
 template<>
-SFileResource& SFileResource::Drain(OFrame& f) {
+SFileResource& SFileResource::Drain(IOFrame& f) {
     while (!f.Empty()) {
         f.Remove(__Write(
-            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
+            GetHandler<SResourceHandler>()->FD(), f.OData(), f.OSize()
         ));
     }
     return *this;

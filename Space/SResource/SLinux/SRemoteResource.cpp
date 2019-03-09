@@ -115,10 +115,10 @@ SRemoteResource& SRemoteResource::SetNoDelay(bool flag) {
  * fill
  */
 template<>
-SRemoteResource& SRemoteResource::Fill(IFrame& f) {
+SRemoteResource& SRemoteResource::Fill(IOFrame& f) {
     while (!f.Full()) {
         f.Insert(__Recv(
-            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
+            GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize()
         ));
     }
     return *this;
@@ -136,9 +136,9 @@ SRemoteResource& SRemoteResource::Fill(Frame& f) {
  * read
  */
 template<>
-SRemoteResource& SRemoteResource::Read(IFrame& f) {
+SRemoteResource& SRemoteResource::Read(IOFrame& f) {
     f.Insert(__Recv(
-        GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+        GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize())
     );
     return *this;
 }
@@ -156,11 +156,11 @@ SRemoteResource& SRemoteResource::Read(Frame& f) {
  * drain
  */
 template<>
-SRemoteResource& SRemoteResource::Drain(OFrame& f) {
+SRemoteResource& SRemoteResource::Drain(IOFrame& f) {
     // send loop ----------------------
     while (!f.Empty()) {
         f.Remove(__Send(
-            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
+            GetHandler<SResourceHandler>()->FD(), f.OData(), f.OSize()
         ));
     }
     return *this;
@@ -175,23 +175,23 @@ SRemoteResource& SRemoteResource::Drain(const Frame& f) {
     }
     return *this;
 }
-template<>
-SRemoteResource& SRemoteResource::Drain(Frame& f) {
-    // send loop ----------------------
-    for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, __Send(
-            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
-        ));
-    }
-    return *this;
-}
+// template<>
+// SRemoteResource& SRemoteResource::Drain(Frame& f) {
+//     // send loop ----------------------
+//     for (auto it = f.begin(), end = f.end(); it != end;) {
+//         it = next(it, __Send(
+//             GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
+//         ));
+//     }
+//     return *this;
+// }
 /**
  * write
  */
 template<>
 SRemoteResource& SRemoteResource::Write(OFrame& f) {
     f.Remove(
-        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+        __Send(GetHandler<SResourceHandler>()->FD(), f.OData(), f.OSize())
     );
     return *this;
 }

@@ -46,9 +46,9 @@ void SOIrcConnector::_Write(const Document& container) {
     // write nframes --------------------------------------
     for (auto& f : container) {
         __res.Write(
-            in.Seek(
+            in.ISeek(
                 sizeof (reference_t) + sizeof (numframes_t) + sizeof (framesize_t)
-            ).Write(f).Frame()
+            ).Write(f)
         );
     }
 }

@@ -48,12 +48,12 @@ public:
         ).Number<framesize_t>(buf.Size());
 
         // container fill up ------------------------------
-        OFrame out = buf.Detach();
+        IOFrame out = buf.Detach();
         while(!chunks.Full()) {
             chunks.emplace_back(out.Read(size));
         }
         // save buffer ------------------------------------
-        buf = out.Frame().Detach();
+        buf = out.Detach();
 
         // return a split container -----------------------
         return chunks;
@@ -65,12 +65,12 @@ public:
      */
     static inline Frame& Join(const Document& chunks, Frame& buf) {
         // fill up tmp frame ------------------------------
-        IFrame tmp = std::move(buf);
+        IOFrame tmp = buf.Detach();
         for(auto& c: chunks) {
             tmp.Reserve(c.Size()).Write(c);
         }
         // move tmp to buffer -----------------------------
-        buf = std::move(tmp.Shrink());
+        buf = tmp.Detach();
         
         // resize buffer (read size from end ) ------------ 
         buf.Shrink(buf.Number<framesize_t>());

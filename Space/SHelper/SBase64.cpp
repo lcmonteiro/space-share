@@ -1,17 +1,18 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SBase64.cpp
  * Author: Luis Monteiro
  * 
  * Created on November 15, 2016, 11:23 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #include "SBase64.h"
 /**
+ * ----------------------------------------------------------------------------
  * Encode
- * @param begin
- * @param end
- * @return 
+ * ---------------------------------------------------------------------------
  */
-string SBase64::Encode(Frame::const_iterator begin, Frame::const_iterator end) {
+SText SBase64::Encode(Frame::const_iterator begin, Frame::const_iterator end) {
 	/**
 	 * basis
 	 */
@@ -19,7 +20,7 @@ string SBase64::Encode(Frame::const_iterator begin, Frame::const_iterator end) {
 	/**
 	 * output
 	 */
-	string out;
+	SText out;
 	/**
 	 * reserve size
 	 */
@@ -46,12 +47,11 @@ string SBase64::Encode(Frame::const_iterator begin, Frame::const_iterator end) {
 	return out;
 }
 /**
+ * ----------------------------------------------------------------------------
  * Decode
- * @param begin
- * @param end
- * @return 
+ * ----------------------------------------------------------------------------
  */
-Frame SBase64::Decode(string::const_iterator begin, string::const_iterator end) {
+Frame SBase64::Decode(SText::const_iterator begin, SText::const_iterator end) {
 	/**
 	 * ASCII table 
 	 */
@@ -101,3 +101,8 @@ Frame SBase64::Decode(string::const_iterator begin, string::const_iterator end) 
 	}
 	return out;
 }
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */

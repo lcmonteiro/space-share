@@ -54,10 +54,19 @@ public:
     }
     /**
      * ----------------------------------------------------
+     * reset
+     * ----------------------------------------------------
+     */
+    inline SContainer& Reset() {
+        clear(); 
+        return *this;
+    }
+    /**
+     * ----------------------------------------------------
      * append list buffer
      * ---------------------------------------------------
      */
-    inline SContainer& Append(const SContainer& buffer){
+    inline SContainer& Append(const SContainer& buffer) {
         insert(end(), buffer.begin(), buffer.end());
         return *this;
     }

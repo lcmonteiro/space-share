@@ -46,22 +46,17 @@ public:
      * write frame
      * ------------------------------------------------------------------------
      */
-    inline SBuffer& Write(const Frame& frame) {
-        write(frame.data(), frame.size()); return *this;
-    }
-    inline SBuffer& Write(Frame&& frame) {
-        write(frame.data(), frame.size()); return *this;
+    template<typename T>
+    SBuffer& Write(const T& f) {
+        write(f.data(), f.size()); return *this;
     }
     /**
      * ------------------------------------------------------------------------
      * write container
      * ------------------------------------------------------------------------
      */
-    inline SBuffer& Write(Container&& container) {
-        for (auto& frame : container) {
-            Write(frame);
-        }
-        return *this;
+    SBuffer& Write(const Container& c) {
+        for (auto& f : c) { Write(f); } return *this;
     }
     /**
      * ------------------------------------------------------------------------
@@ -91,9 +86,9 @@ public:
      * read Read until fill frame or end of buffer
      * ------------------------------------------------------------------------
      */
-    inline SBuffer& Fill(IFrame& f) {
+    inline SBuffer& Fill(IOFrame& f) {
         do { 
-            f.Insert(readsome(f.Data(), f.Size())); 
+            f.Insert(readsome(f.IData(), f.ISize())); 
         } while (gcount());
         return *this;
     }

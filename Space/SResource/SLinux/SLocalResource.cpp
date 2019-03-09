@@ -93,10 +93,10 @@ SLocalResource& SLocalResource::SetRxTimeout(int timeout) {
  * fill
  */
 template<>
-SLocalResource& SLocalResource::Fill(IFrame& f) {
+SLocalResource& SLocalResource::Fill(IOFrame& f) {
     while (!f.Full()) {
         f.Insert(__Recv(
-            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
+            GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize()
         ));
     }
     return *this;
@@ -114,9 +114,9 @@ SLocalResource& SLocalResource::Fill(Frame& f) {
  * read
  */
 template<>
-SLocalResource& SLocalResource::Read(IFrame& f) {
+SLocalResource& SLocalResource::Read(IOFrame& f) {
     f.Insert(__Recv(
-        GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+        GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize())
     );
     return *this;
 }
@@ -134,11 +134,11 @@ SLocalResource& SLocalResource::Read(Frame& f) {
  * drain
  */
 template<>
-SLocalResource& SLocalResource::Drain(OFrame& f) {
+SLocalResource& SLocalResource::Drain(IOFrame& f) {
     // send loop ----------------------
     while (!f.Empty()) {
         f.Remove(__Send(
-            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
+            GetHandler<SResourceHandler>()->FD(), f.OData(), f.OSize()
         ));
     }
     return *this;
@@ -153,23 +153,13 @@ SLocalResource& SLocalResource::Drain(const Frame& f) {
     }
     return *this;
 }
-template<>
-SLocalResource& SLocalResource::Drain(Frame& f) {
-    // send loop ----------------------
-    for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, __Send(
-            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
-        ));
-    }
-    return *this;
-}
 /**
  * write
  */
 template<>
-SLocalResource& SLocalResource::Write(OFrame& f) {
+SLocalResource& SLocalResource::Write(IOFrame& f) {
     f.Remove(
-        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+        __Send(GetHandler<SResourceHandler>()->FD(), f.OData(), f.OSize())
     );
     return *this;
 }

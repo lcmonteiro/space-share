@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   SIStreamConnector.h
  * Author: Luis Monteiro
  *
  * Created on June 6, 2018, 11:47 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SISTREAMCONNECTOR_H
 #define SISTREAMCONNECTOR_H
@@ -57,7 +59,7 @@ protected:
      * ------------------------------------------------------------------------
      */
     Document _Read() override {
-        IFrame buffer;
+        IOFrame buffer;
         // fill container ---------------------------------
         while (!__container.Full()) {
             
@@ -65,11 +67,11 @@ protected:
             __res.Fill(__buffer); 
 
             // reset buffers ------------------------------
-            buffer = IFrame(__buffer.Capacity());
+            buffer = IOFrame(__buffer.Capacity());
             std::swap(__buffer, buffer);
 
             // save buffer --------------------------------
-            __container.emplace_back(std::move(buffer));
+            __container.emplace_back(buffer.Detach());
         }
         // reset container --------------------------------
         Document container(__container.capacity());
@@ -90,15 +92,13 @@ protected:
         Buffer tmp;
         // check if container is full ---------------------
         if (!__container.empty()) {
-            auto container = Document(__container.Capacity());
-            std::swap(__container, container);
-            tmp.Write(std::move(container));
+            tmp.Write(static_cast<Container&>(__container));
+            __container.Reset();
         }
         // check if frame is full -------------------------
         if (!__buffer.Empty()) {
-            auto buffer = IFrame(__buffer.Capacity());
-            std::swap(__buffer, buffer);
-            tmp.Write(std::move(buffer.Shrink()));
+            tmp.Write(__buffer.Shrink());
+            __buffer.Reset();
         }
         // fill container ---------------------------------
         std::list<Document> out;
@@ -107,9 +107,8 @@ protected:
             while (!container.Full()) {
                 container.emplace_back(tmp.Read(p.second));
             }
-            out.emplace_back(std::move(container));
+            out.emplace_back(container.Detach());
         }
-
         // info -------------------------------------------
         INFO("DATA(drain)::IN::n=" << out.size());
         
@@ -166,7 +165,7 @@ private:
     /**
      * buffer
      */
-    IFrame __buffer;
+    IOFrame __buffer;
     /**
      * resource 
      */

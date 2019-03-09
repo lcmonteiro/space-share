@@ -70,20 +70,21 @@ public:
      * ----------------------------------------------------
      */
     void Connect(
-        const std::string& host, uint16_t port, int tx_timeout = 5, int rx_timeout = 5
+        const SText& host, uint16_t port, int tx_timeout = 5, int rx_timeout = 5
     );
     /**
      * ----------------------------------------------------
      * join
      * ----------------------------------------------------
      */
-    void Join(std::string user, std::string channel, int timeout = 100);
+    void Join(SText user, SText channel, int timeout = 100);
     /**
      * ----------------------------------------------------
      * send frame
      * ----------------------------------------------------
      */
-    SIRCResource& Write(const Frame& frame);
+    template<typename T>
+    SIRCResource& Write(const T& frame);
     /**
      * ----------------------------------------------------
      * receive frame
@@ -113,7 +114,7 @@ protected:
      * wait for message type 
      * ----------------------------------------------------
      */
-    std::string WaitFor(
+    SText WaitFor(
         TYPE type, const std::chrono::system_clock::time_point& end
     );
 private:
@@ -122,9 +123,9 @@ private:
      * Variables
      * ------------------------------------------------------------------------
      */
-    std::string __name;
-    std::string __nick;
-    std::string __channel;
+    SText __name;
+    SText __nick;
+    SText __channel;
 };
 /**
  * ------------------------------------------------------------------------------------------------

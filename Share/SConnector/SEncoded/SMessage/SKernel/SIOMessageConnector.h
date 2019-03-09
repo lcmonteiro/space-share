@@ -111,7 +111,7 @@ protected:
         // process document -------------------------------
         auto split = doc.Split();
         for (auto& c : STools::Split(
-            split.second.Detach(), __buffer.Expand().Reset().Size() - HEADER_SIZE)
+            split.second.Detach(), __buffer.Expand().Reset().ISize() - HEADER_SIZE)
         ) {
             // write context ------------------------------
             __buffer.Write(Frame().Number<reference_t>(split.first.GetPosition()));
@@ -176,7 +176,7 @@ private:
      **
      * buffer
      */
-    IFrame __buffer;
+    IOFrame __buffer;
     /**
      * resource 
      */

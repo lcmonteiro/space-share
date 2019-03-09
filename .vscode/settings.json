@@ -50,6 +50,18 @@
         "typeinfo": "cpp",
         "utility": "cpp",
         "future": "cpp",
-        "csignal": "cpp"
+        "csignal": "cpp",
+        "iterator": "cpp",
+        "map": "cpp",
+        "set": "cpp",
+        "xhash": "cpp",
+        "xmemory0": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp",
+        "xutility": "cpp",
+        "filesystem": "cpp",
+        "regex": "cpp",
+        "scoped_allocator": "cpp",
+        "random": "cpp"
     }
 }

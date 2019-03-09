@@ -27,7 +27,7 @@
  * ----------------------------------------------------------------------------
  **/
 void SIRCResource::Connect(
-    const std::string& host, uint16_t port, int tx_timeout, int rx_timeout) {
+    const SText& host, uint16_t port, int tx_timeout, int rx_timeout) {
     /**
      * connect
      */
@@ -44,7 +44,7 @@ void SIRCResource::Connect(
  * Join
  * ----------------------------------------------------------------------------
  */
-void SIRCResource::Join(std::string user, std::string channel, int timeout) {
+void SIRCResource::Join(SText user, SText channel, int timeout) {
     auto end = std::chrono::system_clock::now() + std::chrono::seconds{timeout};
     /**
      * ----------------------------------------------------
@@ -59,7 +59,7 @@ void SIRCResource::Join(std::string user, std::string channel, int timeout) {
      * functions
      * -----------------------------------------------------
      */
-    auto register_func = [&](const std::string& user) {
+    auto register_func = [&](const SText& user) {
         /**
          * set user and channel
          */
@@ -86,7 +86,7 @@ void SIRCResource::Join(std::string user, std::string channel, int timeout) {
     };
     /**
      */
-    auto join_func = [&](const std::string& channel) {
+    auto join_func = [&](const SText& channel) {
         /**
          * set channel
          */
@@ -168,7 +168,8 @@ SIRCResource& SIRCResource::Read(Frame& frame, const std::chrono::seconds& time)
  * Send
  * ----------------------------------------------------------------------------
  */
-SIRCResource& SIRCResource::Write(const Frame& frame) {
+template<>
+SIRCResource& SIRCResource::Write(const IOFrame& frame) {
     /**
      * write
      */
@@ -202,21 +203,21 @@ SIRCResource::TYPE SIRCResource::Process(SText& line) {
     /**
      * commands
      */
-    static const string WELCOME_TAG(" 001 ");
-    static const string PING_TAG("PING ");
-    static const string JOIN_TAG(" JOIN ");
-    static const string MSG_TAG(" PRIVMSG ");
-    static const string TOPIC_TAG(" 332 ");
-    static const string NOTICE_TAG(" NOTICE ");
+    static const SText WELCOME_TAG(" 001 ");
+    static const SText PING_TAG("PING ");
+    static const SText JOIN_TAG(" JOIN ");
+    static const SText MSG_TAG(" PRIVMSG ");
+    static const SText TOPIC_TAG(" 332 ");
+    static const SText NOTICE_TAG(" NOTICE ");
     /**
      * errors
      */
-    static const string USER_ERROR_TAG(" 433 ");
-    static const string JOIN_ERROR_TAG(" 477 ");
-    static const string ERROR_TAG("ERROR ");
+    static const SText USER_ERROR_TAG(" 433 ");
+    static const SText JOIN_ERROR_TAG(" 477 ");
+    static const SText ERROR_TAG("ERROR ");
     /**
      */
-    static const string VERSION_TAG(": VERSION");
+    static const SText VERSION_TAG(": VERSION");
     /**
      * try to read line
      */
@@ -232,12 +233,12 @@ SIRCResource::TYPE SIRCResource::Process(SText& line) {
      * is MGS;
      */
     auto n = line.find(MSG_TAG);
-    if (n != string::npos) {
+    if (n != SText::npos) {
         /**
          * verify channel
          */
         auto nn = line.find(__channel, n);
-        if (nn != string::npos) {
+        if (nn != SText::npos) {
             /**
              * erase header "PRIVMSG #channel :"
              */
@@ -251,7 +252,7 @@ SIRCResource::TYPE SIRCResource::Process(SText& line) {
          * is version query 
          */
         n = line.find(VERSION_TAG, n);
-        if (n != string::npos) {
+        if (n != SText::npos) {
             /**
              * version response
              */
@@ -267,7 +268,7 @@ SIRCResource::TYPE SIRCResource::Process(SText& line) {
      * is ping
      */
     n = line.find(PING_TAG);
-    if (n != string::npos) {
+    if (n != SText::npos) {
         /**
          * pong
          */
@@ -285,12 +286,12 @@ SIRCResource::TYPE SIRCResource::Process(SText& line) {
      * is JOIN
      */
     n = line.find(JOIN_TAG);
-    if (n != string::npos) {
+    if (n != SText::npos) {
         /**
          * verify user
          */
         n = line.find(__channel, n);
-        if (n != string::npos) {
+        if (n != SText::npos) {
             /**
              * Welcome
              */
@@ -301,12 +302,12 @@ SIRCResource::TYPE SIRCResource::Process(SText& line) {
      * is Welcome
      */
     n = line.find(WELCOME_TAG);
-    if (n != string::npos) {
+    if (n != SText::npos) {
         /**
          * verify user
          */
         n = line.find(__nick, n);
-        if (n != string::npos) {
+        if (n != SText::npos) {
             /**
              * Welcome
              */
@@ -317,12 +318,12 @@ SIRCResource::TYPE SIRCResource::Process(SText& line) {
      * is Topic 
      */
     n = line.find(TOPIC_TAG);
-    if (n != string::npos) {
+    if (n != SText::npos) {
         /**
          * verify channel
          */
         n = line.find(__channel, n);
-        if (n != string::npos) {
+        if (n != SText::npos) {
             /**
              * erase header "TOPIC #channel :"
              */
@@ -337,17 +338,17 @@ SIRCResource::TYPE SIRCResource::Process(SText& line) {
      * is NOTICE;
      */
     n = line.find(NOTICE_TAG);
-    if (n != string::npos) {
+    if (n != SText::npos) {
         /**
          * verify user
          */
         auto nn = line.find(__nick, n);
-        if (nn != string::npos) {
+        if (nn != SText::npos) {
             /**
              * ping
              */
             auto nnn = line.find("PONG", nn);
-            if (nnn != string::npos) {
+            if (nnn != SText::npos) {
                 /**
                  * 
                  */
@@ -366,10 +367,10 @@ SIRCResource::TYPE SIRCResource::Process(SText& line) {
         /**
          * banned
          */
-        if (line.find("*** You're banned", n) != string::npos) {
+        if (line.find("*** You're banned", n) != SText::npos) {
             throw IRCExceptionBANNED(line);
         }
-        if (line.find("*** You're not welcome", n) != string::npos) {
+        if (line.find("*** You're not welcome", n) != SText::npos) {
             throw IRCExceptionBANNED(line);
         }
     }
@@ -377,22 +378,22 @@ SIRCResource::TYPE SIRCResource::Process(SText& line) {
      * is USER ERROR
      */
     n = line.find(USER_ERROR_TAG);
-    if (n != string::npos) {
+    if (n != SText::npos) {
         throw IRCExceptionUSER(line);
     }
     /**
      * is JOIN ERROR
      */
     n = line.find(JOIN_ERROR_TAG);
-    if (n != string::npos) {
+    if (n != SText::npos) {
         throw IRCExceptionJOIN(line);
     }
     /**
      * is ERROR 
      */
     n = line.find(ERROR_TAG);
-    if (n != string::npos) {
-        if (line.find("banned") != string::npos) {
+    if (n != SText::npos) {
+        if (line.find("banned") != SText::npos) {
             throw IRCExceptionBANNED(line);
         }
         throw ResourceExceptionABORT(line);
@@ -406,8 +407,8 @@ SIRCResource::TYPE SIRCResource::Process(SText& line) {
  * wait for message type 
  * ----------------------------------------------------------------------------
  */
-std::string SIRCResource::WaitFor(TYPE type, const std::chrono::system_clock::time_point& end) {
-    while(chrono::system_clock::now() < end) {
+SText SIRCResource::WaitFor(TYPE type, const std::chrono::system_clock::time_point& end) {
+    while(std::chrono::system_clock::now() < end) {
         SText line(MAX_LINE_SZ, ' ');
         /**
          * wait for next message
@@ -416,5 +417,10 @@ std::string SIRCResource::WaitFor(TYPE type, const std::chrono::system_clock::ti
             return line;
         }
     }
-    throw ResourceExceptionTIMEOUT(string("WaitFor::msg::type=") + to_string(type));
+    throw ResourceExceptionTIMEOUT(SText("WaitFor::msg::type=", type));
 }
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */

@@ -53,15 +53,15 @@ Document SIOIrcConnector::_Read() {
  * ----------------------------------------------------------------------------
  */
 void SIOIrcConnector::_Write(const Document& container) {
-    IFrame in = Frame(
+    IOFrame io = Frame(
         sizeof (reference_t) + 
         sizeof (numframes_t) + 
         sizeof (framesize_t) + container.GetFrameSize()
     );
     // write context --------------------------------------
-    in.Write(Frame().Number<reference_t>(container.GetPosition()));
-    in.Write(Frame().Number<numframes_t>(container.GetNumFrames()));
-    in.Write(Frame().Number<framesize_t>(container.GetFrameSize()));
+    io.Write(Frame().Number<reference_t>(container.GetPosition()));
+    io.Write(Frame().Number<numframes_t>(container.GetNumFrames()));
+    io.Write(Frame().Number<framesize_t>(container.GetFrameSize()));
     
     // log ------------------------------------------------
     INFO("CODE::OUT::"
@@ -73,9 +73,9 @@ void SIOIrcConnector::_Write(const Document& container) {
     // write nframes --------------------------------------
     for (auto& f : container) {
         __res.Write(
-            in.Seek(
+            io.ISeek(
                 sizeof (reference_t) + sizeof (numframes_t) + sizeof (framesize_t)
-            ).Write(f).Frame()
+            ).Write(f)
         );
     }
 }
