@@ -29,6 +29,9 @@ public:
     SBuffer(): Super() {
         exceptions(std::ios::failbit);
     }
+    SBuffer(SBuffer&& b): Super(std::forward<Super>(b)) {
+        exceptions(std::ios::failbit);
+    }
     SBuffer(const Frame& frame): Super() {
         exceptions(std::ios::failbit);
         Write(frame);
@@ -46,8 +49,11 @@ public:
      * write frame
      * ------------------------------------------------------------------------
      */
-    template<typename T>
-    SBuffer& Write(const T& f) {
+    template <
+        typename FRAME, 
+        typename = std::enable_if_t<std::is_base_of<SFrame, FRAME>::value>
+    >
+    SBuffer& Write(const FRAME& f) {
         write(f.data(), f.size()); return *this;
     }
     /**

@@ -12,6 +12,7 @@ SOURCES
     TestKernel/TestAddress.cpp
     TestKernel/TestContainer.cpp
     TestKernel/TestFrame.cpp
+    TestKernel/TestBuffer.cpp
 DEPENDS
     SpaceKernel
     SpaceHelper

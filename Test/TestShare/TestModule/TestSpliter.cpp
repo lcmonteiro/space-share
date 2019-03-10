@@ -87,7 +87,7 @@ TEST(SModule, EchoSpliter)
     EXPECT_EQ(s.WaitState(Spliter::Time(3000), Spliter::PLAY), true);
 
     // send ------------------------------------------------------------------- 
-    EXPECT_EQ(interface.Drain(in).Good(), true);
+    EXPECT_EQ(interface.Write(in).Good(), true);
 
     // wait ------------------------------------------------------------------- 
     Monitor(Monitor::Time(3000), &interface).Wait();

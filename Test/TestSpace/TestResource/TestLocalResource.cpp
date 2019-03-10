@@ -54,7 +54,7 @@ TEST(SLocalResource, OneWay)
     rem_s.Bind(addr);
 
     // link & send ------------------------------------------------------------ 
-    rem_c.Link(addr).Drain(in);
+    rem_c.Link(addr).Write(in);
 
     // wait -------------------------------------------------------------------
     ResourceMonitor(&rem_s).Wait(std::chrono::milliseconds(100));

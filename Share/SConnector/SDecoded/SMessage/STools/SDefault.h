@@ -33,10 +33,10 @@ public:
      * Split buffer
      * ------------------------------------------------------------------------
      */
-    static inline Container& Split(Frame& buf, Document& chunks) {
+    static inline Container& Split(IOFrame& buf, Document& chunks) {
         // process chunk size -----------------------------
         auto res = div(
-            static_cast<int>(buf.Size() + sizeof (framesize_t)), 
+            static_cast<int>(buf.size() + sizeof (framesize_t)), 
             static_cast<int>(chunks.capacity())
         );
         // normalize chunks size --------------------------
@@ -45,16 +45,12 @@ public:
         // resize frame and add buffer size ---------------
         buf.Insert(
             size * chunks.capacity()
-        ).Number<framesize_t>(buf.Size());
+        ).Number<framesize_t>(buf.size());
 
         // container fill up ------------------------------
-        IOFrame out = buf.Detach();
         while(!chunks.Full()) {
-            chunks.emplace_back(out.Read(size));
+            chunks.emplace_back(buf.Read(size));
         }
-        // save buffer ------------------------------------
-        buf = out.Detach();
-
         // return a split container -----------------------
         return chunks;
     }
@@ -63,17 +59,14 @@ public:
      * Join buffer
      * ------------------------------------------------------------------------
      */
-    static inline Frame& Join(const Document& chunks, Frame& buf) {
-        // fill up tmp frame ------------------------------
-        IOFrame tmp = buf.Detach();
+    static inline IOFrame& Join(const Document& chunks, IOFrame& buf) {
+        buf.Reset();
+        // fill up buffer ---------------------------------
         for(auto& c: chunks) {
-            tmp.Reserve(c.Size()).Write(c);
+            buf.Reserve(c.Size()).Write(c);
         }
-        // move tmp to buffer -----------------------------
-        buf = tmp.Detach();
-        
         // resize buffer (read size from end ) ------------ 
-        buf.Shrink(buf.Number<framesize_t>());
+        buf.Shrink(buf.IShrink().Number<framesize_t>());
 
         // return a joined buffer -------------------------
         return buf;

@@ -144,7 +144,7 @@ TEST(Spread, Data)
     .Detach();
 
     // send ------------------------------------------------------------------- 
-    EXPECT_EQ(interface_i.Drain(frame_i).Good(), true);
+    EXPECT_EQ(interface_i.Write(frame_i).Good(), true);
 
         // wait ------------------------------------------------------------------- 
     Monitor(Monitor::Time(3000), &interface_o).Wait();

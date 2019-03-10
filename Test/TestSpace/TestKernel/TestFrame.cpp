@@ -59,16 +59,16 @@ TEST(SFrame, Number)
 TEST(SFrame, DownConversion)
 {
     // use case 1 --------------------
-    OFrame f = SFrame(10, 1).Detach();
+    IOFrame f = SFrame(10, 1).Detach();
 
     // write --------------------------
-    f.IFrame().Expand().Write({1, 2, 3}).Write({9, 8, 7});
+    f.Expand().Write({1, 2, 3}).Write({9, 8, 7});
 
     //test 1 --------------------------
     EXPECT_EQ(f.Read(5), SFrame({0, 1, 2, 3, 9}));
 
     //test 2 --------------------------
-    EXPECT_EQ(f.IFrame(), SFrame({0, 1, 2, 3, 9, 8, 7}));
+    EXPECT_EQ(f.Frame(), SFrame({0, 1, 2, 3, 9, 8, 7}));
 }
 /**
  * ------------------------------------------------------------------------------------------------

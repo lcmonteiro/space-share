@@ -59,8 +59,8 @@ TEST(DecodedMessageUDP, Link)
 
     // test data ----------------------
     EXPECT_EQ(
-        SBuffer().Write(move(idata)).Read(size), 
-        SBuffer().Write(move(odata)).Read(size)
+        SBuffer().Write(idata).Read(size), 
+        SBuffer().Write(odata).Read(size)
     );
 }
 /**

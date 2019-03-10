@@ -317,18 +317,10 @@ public:
      * operators
      * ----------------------------------------------------
      */
-    inline const_iterator begin() const {
-        return __beg;
-    }
-    inline const_iterator end() const {
-        return __end;
-    }
-    inline iterator begin() {
-        return __beg;
-    }
-    inline iterator end() {
-        return __end;
-    }
+    inline const_iterator begin()  const { return __beg; }
+    inline const_iterator end()    const { return __end; }
+    inline iterator       begin()        { return __beg; }
+    inline iterator       end()          { return __end; }
     /**
      * ------------------------------------------------------------------------
      * get capacity
@@ -450,6 +442,18 @@ public:
         // ------------------------------------------------
         return *this;
     }
+    inline SIOFrame& Shrink(size_t sz) {
+        // check ------------------------------------------  
+        if (size() < sz) {
+            throw FrameException(
+                SText("Shrink=(", size(), "<", sz, ")")
+            );
+        }
+        // reset ------------------------------------------
+        __end = std::next(begin(), sz);
+        // return -----------------------------------------
+        return *this;
+    }
     /**
      * ------------------------------------------------------------------------
      * expand
@@ -473,6 +477,45 @@ public:
             // reset --------------------------------------
             __end = std::prev(Super::end(),  n);
         }
+        return *this;
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * unserialize number
+     * ------------------------------------------------------------------------
+     */
+    template <class T>
+    T Number() const {
+        auto rit  = std::make_reverse_iterator(end());
+        auto rend = std::make_reverse_iterator(begin());
+        // set iterator position --------------------------
+        for (auto i = 0; (i < sizeof(T)) && (rit != rend);) {
+            ++i, ++rit;
+        } 
+        // decode number ----------------------------------
+        T result = 0;
+        for (auto it = rit.base(); it != end(); ++it) {
+            result <<= 8;
+            result |= T(*it);
+        }
+        // return number ----------------------------------
+        return result;
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * serialize number
+     * ------------------------------------------------------------------------
+     */
+    template <class T>
+    SIOFrame& Number(T val) {
+        auto rit = std::make_reverse_iterator(end());
+        // encode number ----------------------------------
+        size_t i = 0;
+        for (auto i = 0; i < sizeof (T); ++rit, ++i) {
+            *rit = value_type(val);
+            val >>= 8;
+        }
+        // return frame -----------------------------------
         return *this;
     }
     /**

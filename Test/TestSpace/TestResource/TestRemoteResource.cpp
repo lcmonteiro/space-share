@@ -60,7 +60,7 @@ TEST(SRemoteResource, Link)
     STask::Sleep(std::chrono::milliseconds(10));
 
     // link & send ------------------------------------------------------------ 
-    rem_c.Link(addr, port).Drain(in);
+    rem_c.Link(addr, port).Write(in);
 
     // test connection --------------------------------------------------------
     EXPECT_EQ(future.get(), true);
@@ -78,7 +78,7 @@ TEST(SRemoteResource, Link)
     out = IFrame(size);  
     
     // send -------------------------------------------------------------------
-    EXPECT_EQ(rem_s.Drain(in).Good(), true);
+    EXPECT_EQ(rem_s.Write(in).Good(), true);
     
     // wait -------------------------------------------------------------------
     ResourceMonitor(&rem_c).Wait(std::chrono::milliseconds(100));

@@ -92,7 +92,7 @@ protected:
         Buffer tmp;
         // check if container is full ---------------------
         if (!__container.empty()) {
-            tmp.Write(static_cast<Container&>(__container));
+            tmp.Write(__container);
             __container.Reset();
         }
         // check if frame is full -------------------------

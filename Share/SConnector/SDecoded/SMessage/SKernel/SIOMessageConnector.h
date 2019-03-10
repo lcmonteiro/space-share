@@ -140,7 +140,7 @@ private:
     /**
      * buffer
      */
-    Frame __buffer;
+    IOFrame __buffer;
     /**
      * resource 
      */
