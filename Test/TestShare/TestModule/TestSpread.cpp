@@ -53,7 +53,7 @@ TEST(Spread, Data)
         {Emitter::Command::MODULE,   {{
             {Module::IO::URI, "Encode"},
             {Module::TIMEOUT, "1000"},
-            {Module::IO::VERBOSE, "4"}
+            {Module::IO::VERBOSE, "0"}
         }}},
         {Emitter::Command::FUNCTION, {{
             {Module::Function::TYPE, Module::Function::Type::MESSAGE},
@@ -87,7 +87,7 @@ TEST(Spread, Data)
         {Receptor::Command::MODULE,   {{
             {Module::IO::URI, "Decode"},
             {Module::TIMEOUT, "1000"},
-            {Module::IO::VERBOSE, "4"}
+            {Module::IO::VERBOSE, "0"}
         }}},
         {Receptor::Command::FUNCTION, {{
             {Module::Function::TYPE, Module::Function::Type::MESSAGE},
@@ -117,10 +117,10 @@ TEST(Spread, Data)
     });
 
     // build a test frame ----------------------------------------------------- 
-    auto frame_i = SRandom::Frame(size);
-    auto frame_1 = IFrame(size);
-    auto frame_2 = IFrame(size);
-    auto frame_3 = IFrame(size);
+    auto const frame_i = SRandom::Frame(size);
+    auto       frame_1 = IFrame(size);
+    auto       frame_2 = IFrame(size);
+    auto       frame_3 = IFrame(size);
 
     // out interface resource --------------------------------------------------
     auto interface_o = Message::SLocalResource()
