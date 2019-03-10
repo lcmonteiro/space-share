@@ -40,7 +40,7 @@ __beg(Super::begin()), __end(Super::begin()) {}
 
 SIOFrame::SIOFrame(SIOFrame&& f) 
 : SFrame(forward<SFrame>(f)), 
-__beg(f.begin()), __end(f.end()) {}
+__beg(f.begin()), __end(f.end()) { f.Reset(); }
 
 SIOFrame::SIOFrame(SFrame&& f)
 : SFrame(forward<SFrame>(f)), 

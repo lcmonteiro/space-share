@@ -72,6 +72,66 @@ TEST(SFrame, DownConversion)
 }
 /**
  * ------------------------------------------------------------------------------------------------
+ * frame sizes
+ * ------------------------------------------------------------------------------------------------
+ */
+TEST(SFrame, Sizes)
+{
+    // settings ----------------------
+    auto const SIZE = 100;
+
+    // use case 1 --------------------
+    auto f = SIOFrame(SIZE);
+
+    // test 1
+    EXPECT_EQ(f.size(), 0);
+    EXPECT_EQ(f.Size(), 0);
+    EXPECT_EQ(f.OSize(), 0);
+    EXPECT_EQ(f.ISize(), SIZE);
+
+    // insert
+    f.Write(SFrame(SIZE>>1, SIZE>>1));
+
+    // test 2
+    EXPECT_EQ(f.size(), SIZE>>1);
+    EXPECT_EQ(f.Size(), SIZE>>1);
+    EXPECT_EQ(f.OSize(), 0);
+    EXPECT_EQ(f.ISize(), SIZE>>1);
+    
+    // remove -------------------------
+    f.Read(SIZE>>2);
+
+    // test 3 -------------------------
+    EXPECT_EQ(f.size(), SIZE>>2);
+    EXPECT_EQ(f.Size(), SIZE>>2);
+    EXPECT_EQ(f.OSize(), SIZE>>2);
+    EXPECT_EQ(f.ISize(), SIZE>>1);
+
+    // const --------------------------
+    auto const cf = f;
+    // test 4 -------------------------
+    EXPECT_EQ(cf.size(), SIZE>>2);
+    EXPECT_EQ(cf.Size(), SIZE>>2);
+    EXPECT_EQ(cf.OSize(), SIZE>>2);
+    EXPECT_EQ(cf.ISize(), SIZE>>1);
+
+    // const --------------------------
+    auto const cmf = move(f);
+    // test 5 -------------------------
+    EXPECT_EQ(cmf.size(), SIZE>>2);
+    EXPECT_EQ(cmf.Size(), SIZE>>2);
+    EXPECT_EQ(cmf.OSize(), SIZE>>2);
+    EXPECT_EQ(cmf.ISize(), SIZE>>1);
+
+    // test 6 -------------------------
+    EXPECT_EQ(f.size(), 0);
+    EXPECT_EQ(f.Size(), 0);
+    EXPECT_EQ(f.OSize(), 0);
+    EXPECT_EQ(f.ISize(), 0);
+
+}
+/**
+ * ------------------------------------------------------------------------------------------------
  * end
  * ------------------------------------------------------------------------------------------------
  */
