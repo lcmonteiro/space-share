@@ -398,7 +398,7 @@ public:
         return *this;
     }
     inline SIOFrame& OSeek(size_t p) {
-        __beg = std::min(std::next(Super::begin(), p), end());
+         __beg = std::min(std::next(Super::begin(), p), end());
         return *this;
     }
     /**
@@ -437,23 +437,6 @@ public:
      * Shrink
      * ------------------------------------------------------------------------
      */
-    inline SIOFrame& IShrink() { 
-        // resize -----------------------------------------
-        resize(Super::size() - ISize());
-        // return -----------------------------------------
-        return *this;
-    }
-    inline SIOFrame& OShrink() {
-        // rotate ----------------------------------------- 
-        std::rotate(Super::begin(), begin(), Super::end()); 
-        // reset end --------------------------------------
-        __end = std::next(
-            Super::begin(), std::distance(begin(), end()));
-        // reset beg --------------------------------------
-        __beg = Super::begin();
-        // return -----------------------------------------
-        return *this;
-    }
     inline SIOFrame& Shrink() {
         // rotate ----------------------------------------- 
         std::rotate(Super::begin(), begin(), Super::end()); 
@@ -462,20 +445,18 @@ public:
         // reset ------------------------------------------
         __beg = Super::begin();
         __end = Super::end();
-        // ------------------------------------------------
+        // return -----------------------------------------
         return *this;
     }
     inline SIOFrame& Shrink(size_t sz) {
         // check ------------------------------------------  
-        if (size() < sz) {
+        if (Size() < sz) {
             throw FrameException(
                 SText("Shrink=(", size(), "<", sz, ")")
             );
         }
-        // reset ------------------------------------------
-        __end = std::next(begin(), sz);
-        // return -----------------------------------------
-        return *this;
+        // shrink -----------------------------------------
+        return ISeek(sz);
     }
     /**
      * ------------------------------------------------------------------------
@@ -483,8 +464,21 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SIOFrame& Expand() {
+        // resize -----------------------------------------
         Super::resize(Super::capacity());
+        // return -----------------------------------------
         return *this;
+    }
+    inline SIOFrame& Expand(size_t sz) {
+        // delta ------------------------------------------
+        auto delta = (sz - Size());
+        // check ------------------------------------------  
+        if (0 > delta) {
+            throw FrameException(
+                SText("Expand=(", delta, ")"));
+        }
+        // expand -----------------------------------------
+        return Reserve(delta).Insert(delta);
     }
     /**
      * ------------------------------------------------------------------------
@@ -493,16 +487,16 @@ public:
      */
     inline SIOFrame& Reserve(size_t n) {
         auto isz = ISize();
-        // --- verify 
+        // verify ----------------------------------------- 
         if (n > isz) {
             auto osz = OSize();
-            // --- resize    
+            // resize -------------------------------------    
             resize(Super::size() + n - isz);
-            // --- reset 
+            // reset -------------------------------------- 
             __beg = std::next(Super::begin(), osz);
             __end = std::prev(Super::end(), n);
         }
-        // --- return
+        // return -----------------------------------------
         return *this;
     }
     /**
@@ -567,15 +561,15 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SFrame Read(size_t n) {
-        // --- size check
+        // size check -------------------------------------
         if (size() < n) {
             throw FrameException(
                 SText("Read=(", size(), "<", n, ")")
             );
         }
-        // --- reference 
+        // reference --------------------------------------
         auto beg = begin();
-        // --- return new frame
+        // return new frame -------------------------------
         return SFrame(beg, Remove(n).begin());
     }
     /**
@@ -612,8 +606,8 @@ private:
      * ------------------------------------------------------------------------
      * iterator 
      */
-    iterator __end;
     iterator __beg;
+    iterator __end;
 } IOFrame, IFrame, OFrame;
 /**
  * ------------------------------------------------------------------------------------------------

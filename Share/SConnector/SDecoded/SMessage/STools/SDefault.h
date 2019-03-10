@@ -1,28 +1,28 @@
-/*
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   Default.h
  * Author: Luis Monteiro
  *
  * Created on 6 de August de 2018, 22:46
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SMSGTOOLDEFAULT_H
 #define SMSGTOOLDEFAULT_H
 /**
  * std
  */
-#include <stddef.h>
 #include <vector>
-#include <math.h>
+#include <cmath>
 /**
  * space
  */
 #include "SContainer.h"
 /**
- * Begin namespace Decoded
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Decoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Decoded {
-/**
- * Begin namespace Message
- */
 namespace Message {
 /**
  */
@@ -43,7 +43,7 @@ public:
         size_t size = res.rem > 0 ? res.quot + 1 : res.quot;
         
         // resize frame and add buffer size ---------------
-        buf.Insert(
+        buf.Expand(
             size * chunks.capacity()
         ).Number<framesize_t>(buf.size());
 
@@ -60,6 +60,7 @@ public:
      * ------------------------------------------------------------------------
      */
     static inline IOFrame& Join(const Document& chunks, IOFrame& buf) {
+        // reset buffer -----------------------------------
         buf.Reset();
 
         // fill up buffer ---------------------------------
@@ -73,13 +74,11 @@ public:
         return buf;
     }
 };
+}}
 /**
- * End namespace Message
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Decoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- * End namespace Decoded
- */
-}
 #endif /* SMSGTOOLDEFAULT_H */
 
