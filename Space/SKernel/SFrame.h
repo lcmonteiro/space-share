@@ -186,6 +186,9 @@ public:
      * get data
      * ------------------------------------------------------------------------
      */
+    inline const_pointer Data() const {
+        return data();
+    }
     inline pointer Data() {
         return data();
     }
@@ -257,6 +260,17 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
+     * check size 
+     * ------------------------------------------------------------------------
+     */
+    inline bool Empty() const {
+        return (size() == 0);
+    }
+    inline bool Full() const {
+        return (size() == capacity());
+    }
+    /**
+     * ------------------------------------------------------------------------
      * detach  
      * ------------------------------------------------------------------------
      */
@@ -278,8 +292,8 @@ public:
  * ------------------------------------------------------------------------------------------------
  */
 typedef class SIOFrame: protected SFrame {
-public:
-    friend class SFrame; 
+friend class SFrame;
+public:  
     /**
      * ------------------------------------------------------------------------
      * conversions
@@ -287,7 +301,7 @@ public:
      * constructors
      * ----------------------------------------------------
      */
-    SIOFrame();
+    SIOFrame(size_t sz = 0);
     SIOFrame(SFrame&&);
     SIOFrame(SIOFrame&&);
     SIOFrame(const SFrame&);
@@ -298,7 +312,7 @@ public:
      * ----------------------------------------------------
      */ 
     SIOFrame& operator=(SFrame&& f); 
-    SIOFrame& operator=(SIOFrame&& f); 
+    SIOFrame& operator=(SIOFrame&& f) = default; 
     SIOFrame& operator=(const SFrame& f);
     SIOFrame& operator=(const SIOFrame& f);
     /**
@@ -392,8 +406,11 @@ public:
      * get data pointer
      * ------------------------------------------------------------------------
      */
-    inline pointer OData() {
+    inline const_pointer OData() const {
         return Super::data();
+    }
+    inline const_pointer Data() const {
+        return begin().base();
     }
     inline pointer Data() {
         return begin().base();
@@ -570,7 +587,7 @@ public:
         return (begin() >= end());
     }
     inline bool Full() const {
-        return (begin() <= Super::begin());
+        return (end() >= Super::end());
     }
     /**
      * ------------------------------------------------------------------------

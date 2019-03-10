@@ -133,8 +133,8 @@ SLocalResource& SLocalResource::Read(Frame& f) {
  * ----------------------------------------------------------------------------
  * drain
  */
-template<>
-SLocalResource& SLocalResource::Drain(IOFrame& f) {
+template<typename T>
+SLocalResource& SLocalResource::Drain(T& f) {
     // send loop ----------------------
     while (!f.Empty()) {
         f.Remove(__Send(
@@ -143,8 +143,8 @@ SLocalResource& SLocalResource::Drain(IOFrame& f) {
     }
     return *this;
 }
-template<>
-SLocalResource& SLocalResource::Drain(const Frame& f) {
+template<typename T>
+SLocalResource& SLocalResource::Drain(const T& f) {
     // send loop ----------------------
     for (auto it = f.begin(), end = f.end(); it != end;) {
         it = next(it, __Send(
@@ -153,23 +153,29 @@ SLocalResource& SLocalResource::Drain(const Frame& f) {
     }
     return *this;
 }
+template SLocalResource& SLocalResource::Drain(Frame&);
+template SLocalResource& SLocalResource::Drain(IOFrame&);
+template SLocalResource& SLocalResource::Drain(const Frame&);
+template SLocalResource& SLocalResource::Drain(const IOFrame&);
 /**
  * write
  */
-template<>
-SLocalResource& SLocalResource::Write(IOFrame& f) {
+template<typename T>
+SLocalResource& SLocalResource::Write(T& f) {
     f.Remove(
         __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
     );
     return *this;
 }
-template<>
-SLocalResource& SLocalResource::Write(Frame& f) {
-    f.Remove(
-        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
-    );
+template<typename T>
+SLocalResource& SLocalResource::Write(const T& f) {
+    __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size());
     return *this;
 }
+template SLocalResource& SLocalResource::Write(Frame&);
+template SLocalResource& SLocalResource::Write(IOFrame&);
+template SLocalResource& SLocalResource::Write(const Frame&);
+template SLocalResource& SLocalResource::Write(const IOFrame&);
 /**
  * ------------------------------------------------------------------------------------------------
  * MESSAGE general interfaces

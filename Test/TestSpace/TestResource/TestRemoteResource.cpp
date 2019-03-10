@@ -48,8 +48,8 @@ TEST(SRemoteResource, Link)
     auto port   = 9999;
 
     // prepare ----------------------------------------------------------------
-    auto in     = SRandom::Frame(size);
-    auto out    = IFrame(size);
+    auto const in  = SRandom::Frame(size);
+    auto       out = IFrame(size);
     
     // wait -------------------------------------------------------------------
     auto future = async(std::launch::async, [&] {
@@ -76,10 +76,10 @@ TEST(SRemoteResource, Link)
 
     // test reverse send & reset frame ----------------------------------------
     out = IFrame(size);  
-    
+
     // send -------------------------------------------------------------------
     EXPECT_EQ(rem_s.Write(in).Good(), true);
-    
+
     // wait -------------------------------------------------------------------
     ResourceMonitor(&rem_c).Wait(std::chrono::milliseconds(100));
 

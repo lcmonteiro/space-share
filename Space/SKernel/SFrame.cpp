@@ -34,9 +34,9 @@ SFrame& SFrame::operator=(const SIOFrame& f) {
  * constructors
  * ----------------------------------------------------
  */
-SIOFrame::SIOFrame()
-: SFrame(), 
-__beg(Super::begin()), __end(Super::end()) {}
+SIOFrame::SIOFrame(size_t sz)
+: SFrame(sz, sz), 
+__beg(Super::begin()), __end(Super::begin()) {}
 
 SIOFrame::SIOFrame(SIOFrame&& f) 
 : SFrame(forward<SFrame>(f)), 
@@ -60,16 +60,13 @@ __end(prev(Super::end(),   f.ISize())) {}
  * --------------------------------------------------------
  **/
 SIOFrame& SIOFrame::operator=(SFrame&& f) {
-    return (*this = forward<SFrame>(f.Shrink()));
-} 
-SIOFrame& SIOFrame::operator=(SIOFrame&& f) {
-    return (*this = forward<SFrame>(f.Shrink()));
-} 
+    return (*this = SIOFrame(move(f)));
+}  
 SIOFrame& SIOFrame::operator=(const SFrame& f) {
-    return (*this = forward<SFrame>(SIOFrame(f).Shrink()));
+    return (*this = SIOFrame(f));
 }
 SIOFrame& SIOFrame::operator=(const SIOFrame& f) {
-    return (*this = forward<SFrame>(SIOFrame(f).Shrink()));
+    return (*this = SIOFrame(f));
 }
 /**
  * ------------------------------------------------------------------------------------------------

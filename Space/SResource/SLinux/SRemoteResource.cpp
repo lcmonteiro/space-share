@@ -155,8 +155,8 @@ SRemoteResource& SRemoteResource::Read(Frame& f) {
  * ----------------------------------------------------------------------------
  * drain
  */
-template<>
-SRemoteResource& SRemoteResource::Drain(IOFrame& f) {
+template<typename T>
+SRemoteResource& SRemoteResource::Drain(T& f) {
     // send loop ----------------------
     while (!f.Empty()) {
         f.Remove(__Send(
@@ -165,8 +165,8 @@ SRemoteResource& SRemoteResource::Drain(IOFrame& f) {
     }
     return *this;
 }
-template<>
-SRemoteResource& SRemoteResource::Drain(const Frame& f) {
+template<typename T>
+SRemoteResource& SRemoteResource::Drain(const T& f) {
     // send loop ----------------------
     for (auto it = f.begin(), end = f.end(); it != end;) {
         it = next(it, __Send(
@@ -175,33 +175,29 @@ SRemoteResource& SRemoteResource::Drain(const Frame& f) {
     }
     return *this;
 }
-// template<>
-// SRemoteResource& SRemoteResource::Drain(Frame& f) {
-//     // send loop ----------------------
-//     for (auto it = f.begin(), end = f.end(); it != end;) {
-//         it = next(it, __Send(
-//             GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
-//         ));
-//     }
-//     return *this;
-// }
+template SRemoteResource& SRemoteResource::Drain(Frame&);
+template SRemoteResource& SRemoteResource::Drain(IOFrame&);
+template SRemoteResource& SRemoteResource::Drain(const Frame&);
+template SRemoteResource& SRemoteResource::Drain(const IOFrame&);
 /**
  * write
  */
-template<>
-SRemoteResource& SRemoteResource::Write(OFrame& f) {
+template<typename T>
+SRemoteResource& SRemoteResource::Write(T& f) {
     f.Remove(
         __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
     );
     return *this;
 }
-template<>
-SRemoteResource& SRemoteResource::Write(Frame& f) {
-    f.Remove(
-        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
-    );
+template<typename T>
+SRemoteResource& SRemoteResource::Write(const T& f) {
+    __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size());
     return *this;
 }
+template SRemoteResource& SRemoteResource::Write(Frame&);
+template SRemoteResource& SRemoteResource::Write(IOFrame&);
+template SRemoteResource& SRemoteResource::Write(const Frame&);
+template SRemoteResource& SRemoteResource::Write(const IOFrame&);
 /**
  * ------------------------------------------------------------------------------------------------
  * MESSAGE general interfaces
