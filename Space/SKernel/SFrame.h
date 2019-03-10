@@ -311,7 +311,7 @@ public:
     inline value_type    front() const { return *begin();       }
     inline value_type    back()  const { return *end();         }
     inline const_pointer data()  const { return begin().base(); }
-    inline size_t        size()  const { return OSize();        }
+    inline size_t        size()  const { return Size();         }
     /**
      * ----------------------------------------------------
      * operators
@@ -366,9 +366,9 @@ public:
      */
     inline SIOFrame& Fill(SIOFrame& in) {
         // check size -----------------
-        auto sz = std::min(OSize(), in.ISize());
+        auto sz = std::min(Size(), in.ISize());
         // copy data ------------------
-        std::memcpy(in.IData(), OData(), sz);
+        std::memcpy(in.IData(), Data(), sz);
         // update in ------------------
         in.Insert(sz);
         // update out -----------------
@@ -392,22 +392,28 @@ public:
      * get data pointer
      * ------------------------------------------------------------------------
      */
-    inline pointer IData() {
-        return __end.base();
-    }
     inline pointer OData() {
-        return __beg.base();
+        return Super::data();
+    }
+    inline pointer Data() {
+        return begin().base();
+    }
+    inline pointer IData() {
+        return end().base();
     }
     /**
      * ------------------------------------------------------------------------
      * get size
      * ------------------------------------------------------------------------
      */
+    inline size_t OSize() const {
+        return std::distance(Super::begin(), begin());
+    }
+    inline size_t Size() const {
+        return std::distance(begin(), end());
+    }
     inline size_t ISize() const {
         return std::distance(end(), Super::end());
-    }
-    inline size_t OSize() const {
-        return std::distance(begin(), end());
     }
     /**
      * ------------------------------------------------------------------------
@@ -469,14 +475,17 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SIOFrame& Reserve(size_t n) {
-        auto sz = ISize();
-        // verify -----------------------------------------
-        if (n > sz) {
-            // resize -------------------------------------    
-            resize(Super::size() + n - sz);
-            // reset --------------------------------------
-            __end = std::prev(Super::end(),  n);
+        auto isz = ISize();
+        // --- verify 
+        if (n > isz) {
+            auto osz = OSize();
+            // --- resize    
+            resize(Super::size() + n - isz);
+            // --- reset 
+            __beg = std::next(Super::begin(), osz);
+            __end = std::prev(Super::end(), n);
         }
+        // --- return
         return *this;
     }
     /**
@@ -541,15 +550,15 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SFrame Read(size_t n) {
-        // size check -------------------------------------
-        if (OSize() < n) {
+        // --- size check
+        if (size() < n) {
             throw FrameException(
-                SText("Read=(", Size(), "<", n, ")")
+                SText("Read=(", size(), "<", n, ")")
             );
         }
-        //reference ---------------------------------------
+        // --- reference 
         auto beg = begin();
-        // frame ------------------------------------------
+        // --- return new frame
         return SFrame(beg, Remove(n).begin());
     }
     /**

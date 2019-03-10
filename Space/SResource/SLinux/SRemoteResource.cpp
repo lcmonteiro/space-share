@@ -160,7 +160,7 @@ SRemoteResource& SRemoteResource::Drain(IOFrame& f) {
     // send loop ----------------------
     while (!f.Empty()) {
         f.Remove(__Send(
-            GetHandler<SResourceHandler>()->FD(), f.OData(), f.OSize()
+            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
         ));
     }
     return *this;
@@ -191,7 +191,7 @@ SRemoteResource& SRemoteResource::Drain(const Frame& f) {
 template<>
 SRemoteResource& SRemoteResource::Write(OFrame& f) {
     f.Remove(
-        __Send(GetHandler<SResourceHandler>()->FD(), f.OData(), f.OSize())
+        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
     );
     return *this;
 }

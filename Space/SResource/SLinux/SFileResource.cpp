@@ -113,7 +113,7 @@ template<>
 SFileResource& SFileResource::Drain(IOFrame& f) {
     while (!f.Empty()) {
         f.Remove(__Write(
-            GetHandler<SResourceHandler>()->FD(), f.OData(), f.OSize()
+            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
         ));
     }
     return *this;

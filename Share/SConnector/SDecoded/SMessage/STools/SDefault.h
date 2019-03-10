@@ -61,12 +61,13 @@ public:
      */
     static inline IOFrame& Join(const Document& chunks, IOFrame& buf) {
         buf.Reset();
+
         // fill up buffer ---------------------------------
         for(auto& c: chunks) {
             buf.Reserve(c.Size()).Write(c);
         }
-        // resize buffer (read size from end ) ------------ 
-        buf.Shrink(buf.IShrink().Number<framesize_t>());
+        // resize buffer (read size from end) ------------ 
+        buf.Shrink(buf.Number<framesize_t>());
 
         // return a joined buffer -------------------------
         return buf;

@@ -138,7 +138,7 @@ SLocalResource& SLocalResource::Drain(IOFrame& f) {
     // send loop ----------------------
     while (!f.Empty()) {
         f.Remove(__Send(
-            GetHandler<SResourceHandler>()->FD(), f.OData(), f.OSize()
+            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
         ));
     }
     return *this;
@@ -159,7 +159,7 @@ SLocalResource& SLocalResource::Drain(const Frame& f) {
 template<>
 SLocalResource& SLocalResource::Write(IOFrame& f) {
     f.Remove(
-        __Send(GetHandler<SResourceHandler>()->FD(), f.OData(), f.OSize())
+        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
     );
     return *this;
 }

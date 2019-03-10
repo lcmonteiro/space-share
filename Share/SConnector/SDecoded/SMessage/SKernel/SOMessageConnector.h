@@ -52,12 +52,9 @@ protected:
     void _Write(const Document& container) override {
         // log info ---------------------------------------
         INFO("DATA::OUT::n=" << container.size());
-        
-        // compress and remove buffer size ----------------
-        TOOL::Join(container, __buffer);
-        
-        // write buffer -----------------------------------
-        __res.Drain(__buffer);
+    
+        // compress and write buffer ----------------------
+        __res.Drain(TOOL::Join(container, __buffer));
     }
     /**
      * --------------------------------------------------------------------------------------------

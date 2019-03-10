@@ -9,6 +9,10 @@
  */
 #include "SFrame.h"
 /**
+ * namespaces
+ */
+using namespace std;
+/**
  * ------------------------------------------------------------------------------------------------
  * convertions
  * ------------------------------------------------------------------------------------------------
@@ -18,10 +22,10 @@
  * --------------------------------------------------------
  **/
 SFrame& SFrame::operator=(SIOFrame&& f) {
-    return (*this = std::forward<SFrame>(f.Shrink()));
+    return (*this = forward<SFrame>(f.Shrink()));
 } 
 SFrame& SFrame::operator=(const SIOFrame& f) {
-    return (*this = std::forward<SFrame>(SIOFrame(f).Shrink()));
+    return (*this = forward<SFrame>(SIOFrame(f).Shrink()));
 }
 /**
  * ------------------------------------------------------------------------
@@ -32,39 +36,40 @@ SFrame& SFrame::operator=(const SIOFrame& f) {
  */
 SIOFrame::SIOFrame()
 : SFrame(), 
-__end(Super::end()), __beg(Super::begin()) {}
+__beg(Super::begin()), __end(Super::end()) {}
 
 SIOFrame::SIOFrame(SIOFrame&& f) 
-: SFrame(std::forward<SFrame>(f)), 
-__end(f.end()), __beg(f.begin()) {}
+: SFrame(forward<SFrame>(f)), 
+__beg(f.begin()), __end(f.end()) {}
 
 SIOFrame::SIOFrame(SFrame&& f)
-: SFrame(std::forward<SFrame>(f)), 
-__end(Super::end()), __beg(Super::begin()) {}
+: SFrame(forward<SFrame>(f)), 
+__beg(Super::begin()), __end(Super::end()) {}
 
 SIOFrame::SIOFrame(const SFrame& f) 
 : SFrame(f.begin(), f.end()), 
-__end(Super::end()), __beg(Super::begin()) {}
+__beg(Super::begin()), __end(Super::end()) {}
 
 SIOFrame::SIOFrame(const SIOFrame& f) 
 : SFrame(f.SFrame::begin(), f.Frame::end()), 
-__end(std::prev(Super::end(), f.ISize())), __beg(std::prev(__end, f.OSize())) {}
+__beg(next(Super::begin(), f.OSize())), 
+__end(prev(Super::end(),   f.ISize())) {}
 /*
  * --------------------------------------------------------
  * operatores
  * --------------------------------------------------------
  **/
 SIOFrame& SIOFrame::operator=(SFrame&& f) {
-    return (*this = std::forward<SFrame>(f.Shrink()));
+    return (*this = forward<SFrame>(f.Shrink()));
 } 
 SIOFrame& SIOFrame::operator=(SIOFrame&& f) {
-    return (*this = std::forward<SFrame>(f.Shrink()));
+    return (*this = forward<SFrame>(f.Shrink()));
 } 
 SIOFrame& SIOFrame::operator=(const SFrame& f) {
-    return (*this = std::forward<SFrame>(SIOFrame(f).Shrink()));
+    return (*this = forward<SFrame>(SIOFrame(f).Shrink()));
 }
 SIOFrame& SIOFrame::operator=(const SIOFrame& f) {
-    return (*this = std::forward<SFrame>(SIOFrame(f).Shrink()));
+    return (*this = forward<SFrame>(SIOFrame(f).Shrink()));
 }
 /**
  * ------------------------------------------------------------------------------------------------
