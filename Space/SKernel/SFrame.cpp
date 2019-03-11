@@ -17,10 +17,20 @@ using namespace std;
  * convertions
  * ------------------------------------------------------------------------------------------------
  * SFrame
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
+ * constructors
+ * ----------------------------------------------------
+ */
+SFrame::SFrame(SIOFrame&& f) 
+: SFrame(forward<SFrame>(f.Shrink())) { f.Reset(); }
+
+SFrame::SFrame(const SIOFrame& f)
+: SFrame(f.begin(), f.end()) {}
+/**
+ * --------------------------------------------------------
  * operatores
  * --------------------------------------------------------
- **/
+ */
 SFrame& SFrame::operator=(SIOFrame&& f) {
     return (*this = forward<SFrame>(f.Shrink()));
 } 
@@ -54,11 +64,11 @@ SIOFrame::SIOFrame(const SIOFrame& f)
 : SFrame(f.SFrame::begin(), f.Frame::end()), 
 __beg(next(Super::begin(), f.OSize())), 
 __end(prev(Super::end(),   f.ISize())) {}
-/*
+/**
  * --------------------------------------------------------
  * operatores
  * --------------------------------------------------------
- **/
+ */
 SIOFrame& SIOFrame::operator=(SFrame&& f) {
     return (*this = SIOFrame(move(f)));
 }  
@@ -67,6 +77,14 @@ SIOFrame& SIOFrame::operator=(const SFrame& f) {
 }
 SIOFrame& SIOFrame::operator=(const SIOFrame& f) {
     return (*this = SIOFrame(f));
+}
+/**
+ * ---------------------------------------------------------
+ * change context
+ * ---------------------------------------------------------
+ */
+SIOFrame SFrame::IOFrame(){
+    return Detach();
 }
 /**
  * ------------------------------------------------------------------------------------------------

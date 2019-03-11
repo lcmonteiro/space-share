@@ -91,8 +91,8 @@ public:
     SFrame()                  = default;
     SFrame(SFrame&&)          = default;
     SFrame(const SFrame&)     = default;
-    SFrame(SIOFrame&& f)      { *this = std::move(f); }
-    SFrame(const SIOFrame& f) { *this = f;            }
+    SFrame(SIOFrame&& f);
+    SFrame(const SIOFrame& f);
     /**
      * ----------------------------------------------------
      * operation=
@@ -282,9 +282,7 @@ public:
      * change context
      * ------------------------------------------------------------------------
      */
-    // inline SIOFrame IOFrame() {
-    //     return Detach();
-    // }
+    SIOFrame IOFrame();
 } Frame;
 /**
  * ------------------------------------------------------------------------------------------------
@@ -292,7 +290,6 @@ public:
  * ------------------------------------------------------------------------------------------------
  */
 typedef class SIOFrame: protected SFrame {
-friend class SFrame;
 public:  
     /**
      * ------------------------------------------------------------------------
@@ -506,6 +503,7 @@ public:
      */
     template <class T>
     T Number() const {
+        // referencies ------------------------------------
         auto rit  = std::make_reverse_iterator(end());
         auto rend = std::make_reverse_iterator(begin());
         // set iterator position --------------------------
@@ -528,10 +526,12 @@ public:
      */
     template <class T>
     SIOFrame& Number(T val) {
+        // referencies ------------------------------------
         auto rit = std::make_reverse_iterator(end());
+        auto rend = std::make_reverse_iterator(begin());
         // encode number ----------------------------------
         size_t i = 0;
-        for (auto i = 0; i < sizeof (T); ++rit, ++i) {
+        for (auto i = 0; (i < sizeof(T)) && (rit != rend); ++rit, ++i) {
             *rit = value_type(val);
             val >>= 8;
         }
@@ -600,6 +600,7 @@ public:
         return Detach();
     }
 private:
+    friend class SFrame;
     /**
      * ------------------------------------------------------------------------
      * variable
