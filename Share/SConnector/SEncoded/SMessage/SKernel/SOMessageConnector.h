@@ -21,78 +21,33 @@
  */
 #include "SConnector.h"
 /**
- * ------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------------
  * Begin namespace Encoded & Message
- * ------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
 namespace Message {
 /**
- * ------------------------------------------------------------------------------------------------
- * SOMessageConnector
- * ------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------------
+ * Base - SOMessageConnector
+ * --------------------------------------------------------------------------------------------------------------------
  */
-template<class RESOURCE>
+namespace Base {
+/**
+ */
+template<typename RESOURCE, typename SUPER>
 class SOMessageConnector : public SOutputConnector {
-public:
-    /**
-     * constructor
-     */
-    SOMessageConnector(
-        const SText  address,   // connection address
-        const size_t maxsmsg    // max size message 
-    ) : SOutputConnector(address), __buffer(maxsmsg), __res() {}
-    /**
-     * destructor
-     */
-    virtual ~SOMessageConnector() = default;
 protected:
     /**
-     * ----------------------------------------------------------------------------------------
-     * IO functions
-     * ----------------------------------------------------------------------------------------
-     * write
+     * ------------------------------------------------------------------------
+     * constructor
      * ------------------------------------------------------------------------
      */
-    void _Write(const Document& doc) override {
-        const size_t HEADER_SIZE = 
-                sizeof (reference_t)      + 
-                sizeof (numframes_t) * 2  + 
-                sizeof (framesize_t)
-        ;
-        // log info ---------------------------------------
-        INFO("CODE::OUT::"
-            << "pos=" << doc.GetPosition()  << " " 
-            << "n="   << doc.GetNumFrames() << " "
-            << "sz="  << doc.GetFrameSize() << " " 
-            << "len=" << doc.Size()
-        );
-        // process document -------------------------------
-        auto split = doc.Split();
-        for (auto& c : STools::Split(
-            split.second.Detach(), __buffer.Expand().Reset().ISize() - HEADER_SIZE)
-        ) {
-            // write context ------------------------------
-            __buffer.Write(Frame().Number<reference_t>(split.first.GetPosition()));
-            __buffer.Write(Frame().Number<numframes_t>(split.first.GetNumFrames()));
-            __buffer.Write(Frame().Number<numframes_t>(c.Size()));
-            __buffer.Write(Frame().Number<framesize_t>(split.first.GetFrameSize()));
-            
-            // write document -----------------------------
-            for (auto& f : c) {
-                __buffer.Write(f);
-            }
-            // write message ------------------------------
-            __res.Drain(__buffer);
-
-            //reuse buffer --------------------------------
-            __buffer.Reset();
-        }
-    }
+    SOMessageConnector(
+        const SText  address, const size_t maxsmsg 
+    ) : SUPER(address), __buffer(maxsmsg), __res() {}
     /**
-     * --------------------------------------------------------------------------------------------
-     * control functions
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * open
      * ------------------------------------------------------------------------
      */
@@ -116,7 +71,7 @@ protected:
      * good
      * ------------------------------------------------------------------------
      */
-    inline bool _Good() override{
+    inline bool _Good() override {
         return __res.Good();
     }
     /**
@@ -127,11 +82,11 @@ protected:
     inline void _Close() override {
         __res.Reset();
     }
-private:
+protected:
     /**
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * variables
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      **
      * buffer
      */
@@ -141,10 +96,91 @@ private:
      */
     RESOURCE __res;
 };
+}
+/**
+ * --------------------------------------------------------------------------------------------------------------------
+ * Layer - SOMessageConnector
+ * --------------------------------------------------------------------------------------------------------------------
+ */
+namespace Layer {
+/**
+ */
+template<typename SUPER>
+class SOMessageConnector : public SUPER {
+protected:
+    /**
+     * ------------------------------------------------------------------------
+     * constructor
+     * ------------------------------------------------------------------------
+     */
+    using SUPER::SUPER;
+    /**
+     * ------------------------------------------------------------------------
+     * write
+     * ------------------------------------------------------------------------
+     */
+    void _Write(const Document& doc) override {
+        const size_t HEADER_SIZE = 
+            sizeof (reference_t)      + 
+            sizeof (numframes_t) * 2  + 
+            sizeof (framesize_t)
+        ;
+        // log info ---------------------------------------
+        INFO("CODE::OUT::"
+            << "pos=" << doc.GetPosition()  << " " 
+            << "n="   << doc.GetNumFrames() << " "
+            << "sz="  << doc.GetFrameSize() << " " 
+            << "len=" << doc.Size()
+        );
+        // process document -------------------------------
+        auto split = doc.Split();
+        for (auto& c : STools::Split(split.second.Detach(), 
+            this->__buffer.Reset().Expand().ISize() - HEADER_SIZE)) {
+
+            // write context ------------------------------
+            this->__buffer.Write(Frame().Number<reference_t>(
+                split.first.GetPosition()));
+            this->__buffer.Write(Frame().Number<numframes_t>(
+                split.first.GetNumFrames()));
+            this->__buffer.Write(Frame().Number<numframes_t>(
+                c.Size()));
+            this->__buffer.Write(Frame().Number<framesize_t>(
+                split.first.GetFrameSize()));
+            
+            // write document -----------------------------
+            for (auto& f : c) { this->__buffer.Write(f); }
+            
+            // write message ------------------------------
+            this->__res.Drain(this->__buffer);
+
+            //reuse buffer --------------------------------
+            this->__buffer.Reset();
+        }
+    }
+};
+}
+/**
+ * --------------------------------------------------------------------------------------------------------------------
+ * Main - SOMessageConnector
+ * --------------------------------------------------------------------------------------------------------------------
+ */
+template<class RESOURCE>
+class SOMessageConnector : public Layer::SOMessageConnector<Base::SOMessageConnector<RESOURCE, SOutputConnector>> {
+public:
+    /**
+     * ------------------------------------------------------------------------
+     * constructor
+     * ------------------------------------------------------------------------
+     */
+    SOMessageConnector(
+        const SText  address,   // connection address
+        const size_t maxsmsg    // max size message 
+    ) : Layer::SOMessageConnector<Base::SOMessageConnector<RESOURCE, SOutputConnector>>(address, maxsmsg) {}
+};
 }}
 /**
- * ------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------------
  * End namespace Encoded & Message
- * ------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------------
  */
 #endif /* SOMESSAGECONNECTORCODED_H */

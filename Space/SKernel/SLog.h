@@ -36,27 +36,27 @@
  * ----------------------------------------------------------------------------
  **/
 #if __LOG_DEBUG__
-#define DEBUG(__x__)    do{ std::ostringstream o; o << __x__; __DEBUG(o.str());    }while(0)
+#define DEBUG(__x__)    do{ std::ostringstream o; o << __x__; this->__DEBUG(o.str());    }while(0)
 #else
 #define DEBUG(__x__)
 #endif
 #if __LOG_INFO__
-#define INFO(__x__)     do{ std::ostringstream o; o << __x__; __INFO(o.str());     }while(0)
+#define INFO(__x__)     do{ std::ostringstream o; o << __x__; this->__INFO(o.str());     }while(0)
 #else
 #define INFO(__x__)
 #endif
 #if __LOG_WARNING__
-#define WARNING(__x__)  do{ std::ostringstream o; o << __x__; __WARNING(o.str());  }while(0)
+#define WARNING(__x__)  do{ std::ostringstream o; o << __x__; this->__WARNING(o.str());  }while(0)
 #else
 #define WARNING(__x__)
 #endif
 #if __LOG_ERROR__
-#define ERROR(__x__)    do{ std::ostringstream o; o << __x__; __ERROR(o.str());    }while(0)
+#define ERROR(__x__)    do{ std::ostringstream o; o << __x__; this->__ERROR(o.str());    }while(0)
 #else
 #define ERROR(__x__)
 #endif
 #if __LOG_CRITICAL__
-#define CRITITAL(__x__) do{ std::ostringstream o; o << __x__; __CRITITAL(o.str()); }while(0)
+#define CRITITAL(__x__) do{ std::ostringstream o; o << __x__; this->__CRITITAL(o.str()); }while(0)
 #else
 #define CRITITAL(__x__)
 #endif
