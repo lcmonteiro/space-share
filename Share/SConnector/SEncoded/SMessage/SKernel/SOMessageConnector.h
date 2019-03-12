@@ -1,10 +1,10 @@
 /**
- * ------------------------------------------------------------------------------------------------ 
+ * -------------------------------------------------------------------------------------------------------------------- 
  * File:   SOMessageConnector.h
  * Author: Luis Monteiro
  *
  * Created on December 11, 2016, 1:25 AM
- * ------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------------
  */
 #ifndef SOMESSAGECONNECTORCODED_H
 #define SOMESSAGECONNECTORCODED_H
@@ -36,8 +36,8 @@ namespace Base {
 /**
  */
 template<typename RESOURCE, typename SUPER>
-class SOMessageConnector : public SOutputConnector {
-protected:
+class SOMessageConnector : public SUPER {
+public:
     /**
      * ------------------------------------------------------------------------
      * constructor
@@ -45,7 +45,8 @@ protected:
      */
     SOMessageConnector(
         const SText  address, const size_t maxsmsg 
-    ) : SUPER(address), __buffer(maxsmsg), __res() {}
+    ) : SUPER(address), __res() {}
+protected:
     /**
      * ------------------------------------------------------------------------
      * open
@@ -59,7 +60,7 @@ protected:
         int i = 0;
         do {
             try {
-                __res.Link(__uri);
+                __res.Link(this->__uri);
                 break;
             } catch (std::system_error& ex) {
                 WARNING(ex.what());
@@ -82,16 +83,10 @@ protected:
     inline void _Close() override {
         __res.Reset();
     }
-protected:
     /**
      * ------------------------------------------------------------------------
      * variables
      * ------------------------------------------------------------------------
-     **
-     * buffer
-     */
-    IFrame __buffer;
-    /**
      * resource 
      */
     RESOURCE __res;
@@ -107,13 +102,16 @@ namespace Layer {
  */
 template<typename SUPER>
 class SOMessageConnector : public SUPER {
-protected:
+public:
     /**
      * ------------------------------------------------------------------------
      * constructor
      * ------------------------------------------------------------------------
      */
-    using SUPER::SUPER;
+    SOMessageConnector(
+        const SText  address, const size_t maxsmsg 
+    ) : SUPER(address, maxsmsg), __buffer(maxsmsg) {}
+protected:
     /**
      * ------------------------------------------------------------------------
      * write
@@ -135,52 +133,41 @@ protected:
         // process document -------------------------------
         auto split = doc.Split();
         for (auto& c : STools::Split(split.second.Detach(), 
-            this->__buffer.Reset().Expand().ISize() - HEADER_SIZE)) {
+            __buffer.Reset().Expand().ISize() - HEADER_SIZE)) {
 
             // write context ------------------------------
-            this->__buffer.Write(Frame().Number<reference_t>(
+            __buffer.Write(Frame().Number<reference_t>(
                 split.first.GetPosition()));
-            this->__buffer.Write(Frame().Number<numframes_t>(
+            __buffer.Write(Frame().Number<numframes_t>(
                 split.first.GetNumFrames()));
-            this->__buffer.Write(Frame().Number<numframes_t>(
+            __buffer.Write(Frame().Number<numframes_t>(
                 c.Size()));
-            this->__buffer.Write(Frame().Number<framesize_t>(
+            __buffer.Write(Frame().Number<framesize_t>(
                 split.first.GetFrameSize()));
             
             // write document -----------------------------
-            for (auto& f : c) { this->__buffer.Write(f); }
+            for (auto& f : c) { __buffer.Write(f); }
             
             // write message ------------------------------
-            this->__res.Drain(this->__buffer);
+            this->__res.Drain(__buffer);
 
             //reuse buffer --------------------------------
-            this->__buffer.Reset();
+            __buffer.Reset();
         }
     }
-};
-}
-/**
- * --------------------------------------------------------------------------------------------------------------------
- * Main - SOMessageConnector
- * --------------------------------------------------------------------------------------------------------------------
- */
-template<class RESOURCE>
-class SOMessageConnector : public Layer::SOMessageConnector<Base::SOMessageConnector<RESOURCE, SOutputConnector>> {
-public:
     /**
      * ------------------------------------------------------------------------
-     * constructor
+     * variables
      * ------------------------------------------------------------------------
+     * buffer
      */
-    SOMessageConnector(
-        const SText  address,   // connection address
-        const size_t maxsmsg    // max size message 
-    ) : Layer::SOMessageConnector<Base::SOMessageConnector<RESOURCE, SOutputConnector>>(address, maxsmsg) {}
+    IOFrame __buffer;
 };
-}}
+}
 /**
  * --------------------------------------------------------------------------------------------------------------------
  * End namespace Encoded & Message
  * --------------------------------------------------------------------------------------------------------------------
  */
+}}
 #endif /* SOMESSAGECONNECTORCODED_H */

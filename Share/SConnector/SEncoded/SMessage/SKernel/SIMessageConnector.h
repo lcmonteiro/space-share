@@ -1,10 +1,10 @@
 /**
- * ------------------------------------------------------------------------------------------------ 
+ * -------------------------------------------------------------------------------------------------------------------- 
  * File:   SIMessageConnector.h
  * Author: Luis Monteiro
  *
  * Created on December 11, 2016, 1:25 AM
- * ------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------------
  */
 #ifndef SIMESSAGECONNECTORCODED_H
 #define SIMESSAGECONNECTORCODED_H
@@ -21,79 +21,42 @@
  */
 #include "SConnector.h"
 /**
- * ------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------------
  * Begin namespace Encoded & Message
- * ------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
 namespace Message {
 /**
- * ------------------------------------------------------------------------------------------------
- * SIMessageConnector
- * ------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------------
+ * Base - SOMessageConnector
+ * --------------------------------------------------------------------------------------------------------------------
  */
-template<class RESOURCE>
-class SIMessageConnector : public SInputConnector {
+namespace Base {
+/**
+ */
+template<typename RESOURCE, typename SUPER>
+class SIMessageConnector : public SUPER {
 public:
     /**
+     * ------------------------------------------------------------------------
      * constructor
+     * ------------------------------------------------------------------------
      */
     SIMessageConnector(
-        const SText  address,    // connection address
-        const size_t maxsmsg     // max size message 
-    ) : SInputConnector(address), __buffer(maxsmsg), __res() {}
+        const SText  address, const size_t maxsmsg 
+    ) : SUPER(address), __res() {}
     /**
-     * destructor
-     */
-    virtual ~SIMessageConnector() = default;
-    /**
-     * inline overrides
+     * ------------------------------------------------------------------------
+     * get resource
+     * ------------------------------------------------------------------------
      */
     inline Resource& GetResource() override {
         return __res.Base();
     }
 protected:
     /**
-     * --------------------------------------------------------------------------------------------
-     * IO functions
-     * --------------------------------------------------------------------------------------------
-     * read
      * ------------------------------------------------------------------------
-     */
-    Document _Read() override { 
-        // read buffer ------------------------------------
-        __res.Read(__buffer.Expand());
-        
-        // read context -----------------------------------
-        OFrame frame(__buffer.Detach());
-        auto position = frame.Read(sizeof (reference_t)).Number<reference_t>();
-        auto nframest = frame.Read(sizeof (numframes_t)).Number<numframes_t>();
-        auto nframesp = frame.Read(sizeof (numframes_t)).Number<numframes_t>();
-        auto framelen = frame.Read(sizeof (framesize_t)).Number<framesize_t>();
-
-        // log info ---------------------------------------
-        INFO("CODE::IN::" 
-            << "pos=" << position << " " 
-            << "n="   << nframest << " " 
-            << "sz="  << nframesp << " " 
-            << "len=" << framelen
-        );
-        // read nframes -----------------------------------
-        Document doc(Context(position, nframest, framelen));
-        doc.reserve(nframesp);
-        while(!doc.Full()) {
-            doc.push_back(frame.Read(framelen));
-        }
-        // resuse buffer ----------------------------------
-        __buffer = frame.Detach();
-        
-        // return document --------------------------------
-        return doc;
-    }
-    /**
-     * --------------------------------------------------------------------------------------------
-     * control functions
-     * --------------------------------------------------------------------------------------------
      * open
      * ------------------------------------------------------------------------
      */
@@ -105,7 +68,7 @@ protected:
         int i = 0;
         do {
             try {
-                __res.Bind(__uri);
+                __res.Bind(this->__uri);
                 break;
             } catch (std::system_error& ex) {
                 WARNING(ex.what());
@@ -128,24 +91,83 @@ protected:
     inline void _Close() override {
         __res.Reset();
     }
-private:
     /**
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * variables
-     * --------------------------------------------------------------------------------------------
-     **
-     * buffer
-     */
-    IFrame __buffer;
-    /**
+     * ------------------------------------------------------------------------
      * resource 
      */
     RESOURCE __res;
 };
-}}
+}
 /**
- * ------------------------------------------------------------------------------------------------
- * End namespace Encoded & Message
- * ------------------------------------------------------------------------------------------------
+ * --------------------------------------------------------------------------------------------------------------------
+ * Layer - SOMessageConnector
+ * --------------------------------------------------------------------------------------------------------------------
  */
+namespace Layer {
+/**
+ */
+template<typename SUPER>
+class SIMessageConnector : public SUPER {
+public:
+    /**
+     * ------------------------------------------------------------------------
+     * constructor
+     * ------------------------------------------------------------------------
+     */
+    SIMessageConnector(
+        const SText address, const size_t maxsmsg 
+    ) : SUPER(address, maxsmsg), __buffer(maxsmsg) {}
+protected:
+    /**
+     * ------------------------------------------------------------------------
+     * read
+     * ------------------------------------------------------------------------
+     */
+    Document _Read() override { 
+        // read buffer ------------------------------------
+        this->__res.Read(__buffer.Reset().Expand());
+        
+        // read context -----------------------------------
+        auto position = __buffer.Read(
+            sizeof (reference_t)).Number<reference_t>();
+        auto nframest = __buffer.Read(
+            sizeof (numframes_t)).Number<numframes_t>();
+        auto nframesp = __buffer.Read(
+            sizeof (numframes_t)).Number<numframes_t>();
+        auto framelen = __buffer.Read(
+            sizeof (framesize_t)).Number<framesize_t>();
+
+        // log info ---------------------------------------
+        INFO("CODE::IN::" 
+            << "pos=" << position << " " 
+            << "n="   << nframest << " " 
+            << "sz="  << nframesp << " " 
+            << "len=" << framelen
+        );
+        // read nframes -----------------------------------
+        Document doc(Context(position, nframest, framelen));
+        doc.reserve(nframesp);
+        while(!doc.Full()) {
+            doc.push_back(__buffer.Read(framelen));
+        }
+        // return document --------------------------------
+        return doc;
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * variables
+     * ------------------------------------------------------------------------
+     * buffer
+     */
+    IOFrame __buffer;
+};
+}
+/**
+ * --------------------------------------------------------------------------------------------------------------------
+ * End namespace Encoded & Message
+ * --------------------------------------------------------------------------------------------------------------------
+ */
+}}
 #endif /* SIMESSAGECONNECTORCODED_H */

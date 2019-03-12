@@ -17,7 +17,6 @@
 /**
  * Kernel
  */
-#include "SKernel/SIOMessageConnector.h"
 #include "SKernel/SIMessageConnector.h"
 #include "SKernel/SOMessageConnector.h"
 /**
@@ -68,6 +67,11 @@ public:
  * ------------------------------------------------------------------------------------------------
  * template
  */
+template <typename R> 
+using SIMessageConnector = 
+Layer::SIMessageConnector<
+    Base::SIMessageConnector<R, SInputConnector>
+>;
 template<class R>
 class SILocConnectorT : public SIMessageConnector<R> {
 public:
@@ -89,7 +93,12 @@ public:
  * ------------------------------------------------------------------------------------------------
  * template
  */
-template<class R>
+template <typename R> 
+using SOMessageConnector = 
+Layer::SOMessageConnector<
+    Base::SOMessageConnector<R, SOutputConnector>
+>;
+template<typename R>
 class SOLocConnectorT : public SOMessageConnector<R> {
 public:
     using SOMessageConnector<R>::SOMessageConnector;
@@ -110,7 +119,14 @@ public:
  * ------------------------------------------------------------------------------------------------
  * template
  */
-template<class R>
+template <typename R> 
+using SIOMessageConnector = 
+Layer::SIMessageConnector<
+    Layer::SOMessageConnector<
+        Base::SIMessageConnector<R, SInOutputConnector>
+    >
+>;
+template<typename R>
 class SIOLocConnectorT : public SIOMessageConnector<R> {
 public:
     using SIOMessageConnector<R>::SIOMessageConnector;
