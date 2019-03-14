@@ -30,7 +30,7 @@ Document SIOIrcConnector::_Read() {
     // receive --------------------------------------------
     __res.Read(tmp);
     // parse ----------------------------------------------
-    OFrame out    = std::move(tmp);
+    IOFrame out    = std::move(tmp);
     auto position = out.Read(sizeof (reference_t)).Number<reference_t>();
     auto nframest = out.Read(sizeof (numframes_t)).Number<numframes_t>();
     auto framelen = out.Read(sizeof (framesize_t)).Number<framesize_t>();

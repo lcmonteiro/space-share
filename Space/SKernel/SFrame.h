@@ -609,7 +609,7 @@ private:
      */
     iterator __beg;
     iterator __end;
-} IOFrame, IFrame, OFrame;
+} IOFrame;
 /**
  * ------------------------------------------------------------------------------------------------
  * Uilities

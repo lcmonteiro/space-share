@@ -50,12 +50,12 @@ public:
          */   
         Buffer buff(Frame().Number(filesize_t(len)));
         //
-        auto frame = IFrame(sz);
+        auto frame = IOFrame(sz);
         //
         for (Fill(buff, frame); frame.Full(); Fill(buff, frame)){
             //
             box.emplace_back(move(frame));
-            frame = IFrame(sz);
+            frame = IOFrame(sz);
         }
         /**
          * insert data
@@ -63,7 +63,7 @@ public:
         for (Fill(in, frame); !box.Full(); Fill(in, frame)){
             //
             box.emplace_back(std::move(frame));
-            frame = IFrame(sz);
+            frame = IOFrame(sz);
         }
         /**
          * create stamp
@@ -103,12 +103,12 @@ public:
                 /** 
                  * fill box
                  */
-                auto frame = IFrame(s.first);
+                auto frame = IOFrame(s.first);
                 //
                 for (Fill(ss, frame); frame.Full(); Fill(ss, frame)) {
                     //
                     box.emplace_back(std::move(frame));
-                    frame = IFrame(s.first);
+                    frame = IOFrame(s.first);
                 }
             }
             /**
@@ -126,10 +126,10 @@ public:
             /**
              * remove length length
              */
-            auto iframe = IFrame(sizeof(filesize_t));
-            auto oframe = OFrame();
+            auto iframe = IOFrame(sizeof(filesize_t));
+            auto oframe = IOFrame();
             for (; (it != end) && (!iframe.Full()); ++it) {
-                oframe = OFrame(std::move(*it));
+                oframe = IOFrame(std::move(*it));
                 oframe.Fill(iframe);
             }
             size_t len = iframe.Frame().Number<filesize_t>();
@@ -180,7 +180,7 @@ private:
      * Fill 
      */
     template<class IS>
-    static void Fill(IS& s, IFrame& f){
+    static void Fill(IS& s, IOFrame& f){
         typedef typename IS::char_type* ipointer;
         do{ 
             f.Insert(s.readsome(ipointer(f.IData()), f.ISize())); 

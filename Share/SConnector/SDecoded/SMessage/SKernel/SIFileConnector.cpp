@@ -26,39 +26,39 @@ SIFileConnector::SIFileConnector(const SText address, const size_t nframesize)
 /**
  */
 Document SIFileConnector::_Read() {
-//	IFrame out(__sframes);
+//	IOFrame out(__sframes);
 //	/**
 //	 * states 
 //	 */
-//	vector < function < size_t(IFrame&) >> machine {
+//	vector < function < size_t(IOFrame&) >> machine {
 //		/**----------------------------------------------------------------------------------------------------*
 //		 * add start sequence 
 //		 *-----------------------------------------------------------------------------------------------------*/
-//		[this](IFrame& frame){
+//		[this](IOFrame& frame){
 //			frame = Frame{1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233};			return 1;
 //		},
 //		/**----------------------------------------------------------------------------------------------------*
 //		 * add address size
 //		 *-----------------------------------------------------------------------------------------------------*/
-//		[this](IFrame& frame){
+//		[this](IOFrame& frame){
 //			frame = Frame(sizeof(uint32_t)).Number(SFileResource::Basename(__uri).size());	return 2;
 //		},
 //		/**----------------------------------------------------------------------------------------------------*
 //		 * add address
 //		 *-----------------------------------------------------------------------------------------------------*/
-//		[this](IFrame& frame){
+//		[this](IOFrame& frame){
 //			frame = Frame(SFileResource::Basename(__uri));					return 3;
 //		},
 //		/**----------------------------------------------------------------------------------------------------*
 //		 * add file size
 //		 *-----------------------------------------------------------------------------------------------------*/
-//		[this](IFrame& frame){
+//		[this](IOFrame& frame){
 //			frame = Frame(sizeof(filesize_t)).Number(__res.Size());				return 4;
 //		},
 //		/**----------------------------------------------------------------------------------------------------*
 //		 * read frame
 //		 *-----------------------------------------------------------------------------------------------------*/
-//		[this](IFrame& frame){
+//		[this](IOFrame& frame){
 //			__res.Fill(frame); frame.Shrink();						return 4;
 //		}
 //	};

@@ -26,7 +26,7 @@ SOIrcConnector::SOIrcConnector(const string address): SOutputConnector(address){
  * ----------------------------------------------------------------------------
  */
 void SOIrcConnector::_Write(const Document& container) {
-    IFrame in = Frame(
+    IOFrame in = Frame(
         sizeof (reference_t) + 
         sizeof (numframes_t) + 
         sizeof (framesize_t) + container.GetFrameSize()

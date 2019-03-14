@@ -29,7 +29,7 @@ SIFileConnector::SIFileConnector(
  */
 Document SIFileConnector::_Read() {
 	Document container;
-	IFrame buffer;
+	IOFrame buffer;
 	/**------------------------------------------------------------------------------------------------------------*
 	 * Fill container
 	 *----------------------------------------------------------------------------------------*/
@@ -43,7 +43,7 @@ Document SIFileConnector::_Read() {
 		/*-----------------------------------------------------------------------------------------------------*
 		 * swap buffers
 		 *-----------------------------------------------------------------------------------------------------*/
-		buffer = IFrame(__buffer.size());
+		buffer = IOFrame(__buffer.size());
 		swap(__buffer, buffer);
 	}
 	/*----------------------------------------------------------------------------------------*
@@ -75,7 +75,7 @@ list<Document> SIFileConnector::_Drain() {
 	 * check if frame is full 
 	 *----------------------------------------------------------------------------------------*/
 	if (!__buffer.Empty()) {
-		auto buffer = IFrame(__buffer.size());
+		auto buffer = IOFrame(__buffer.size());
 		swap(__buffer, buffer);
 		out.push_back(Document{move(buffer.Shrink())});
 	}

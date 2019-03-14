@@ -49,7 +49,7 @@ TEST(SRemoteResource, Link)
 
     // prepare ----------------------------------------------------------------
     auto const in  = SRandom::Frame(size);
-    auto       out = IFrame(size);
+    auto       out = IOFrame(size);
     
     // wait -------------------------------------------------------------------
     auto future = async(std::launch::async, [&] {
@@ -75,7 +75,7 @@ TEST(SRemoteResource, Link)
     EXPECT_EQ(in, out);
 
     // test reverse send & reset frame ----------------------------------------
-    out = IFrame(size);  
+    out = IOFrame(size);  
 
     // send -------------------------------------------------------------------
     EXPECT_EQ(rem_s.Write(in).Good(), true);

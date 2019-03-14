@@ -48,7 +48,7 @@ TEST(SLocalResource, OneWay)
 
     // prepare ----------------------------------------------------------------
     auto const in  = SRandom::Frame(size);
-    auto       out = IFrame(size);
+    auto       out = IOFrame(size);
     
     // bind -------------------------------------------------------------------
     rem_s.Bind(addr);

@@ -76,7 +76,7 @@ TEST(SModule, EchoSpliter)
     s.Detach();
     // build a test frames ---------------------------------------------------- 
     auto const in  = SRandom::Frame(size);
-    auto       out = IFrame(size);
+    auto       out = IOFrame(size);
 
     // interface resource -----------------------------------------------------
     auto interface = Message::SRemoteResource()

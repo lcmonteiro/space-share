@@ -118,9 +118,9 @@ TEST(Spread, Data)
 
     // build a test frame ----------------------------------------------------- 
     auto const frame_i = SRandom::Frame(size);
-    auto       frame_1 = IFrame(size);
-    auto       frame_2 = IFrame(size);
-    auto       frame_3 = IFrame(size);
+    auto       frame_1 = IOFrame(size);
+    auto       frame_2 = IOFrame(size);
+    auto       frame_3 = IOFrame(size);
 
     // out interface resource --------------------------------------------------
     auto interface_o = Message::SLocalResource()
@@ -254,7 +254,7 @@ TEST(Spread, Data)
 
 //     // build a test frame ----------------------------------------------------- 
 //     auto frame_i = SRandom::Frame(size);
-//     auto frame_o = IFrame(size);
+//     auto frame_o = IOFrame(size);
 
 //     // out interface resource --------------------------------------------------
 //     auto interface_o = Message::SLocalResource()

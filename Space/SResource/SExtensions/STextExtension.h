@@ -37,7 +37,7 @@ public:
      * ----------------------------------------------------
      */
     STextExtension& operator >>(SText& txt) {
-        IFrame in(1);
+        IOFrame in(1);
         // fill text --------------------------------------
         for (auto it = txt.begin(); txt.end() != it; ++it) {
 
@@ -67,7 +67,7 @@ public:
      */
     STextExtension& operator<<(const SText& txt) {
         Super::Drain(
-            OFrame(Frame(txt.begin(), txt.end()))
+            IOFrame(Frame(txt.begin(), txt.end()))
         );
         return *this;
     }

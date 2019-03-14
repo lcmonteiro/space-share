@@ -56,7 +56,7 @@ protected:
      * ------------------------------------------------------------------------
      */
     Document _Read() override {
-        IFrame buffer;
+        IOFrame buffer;
         // fill container ---------------------------------
         for (;!__container.Full(); __container.push_back(move(buffer))) {
             
@@ -65,7 +65,7 @@ protected:
                 __res.Fill(__buffer);
             }
             // reset buffers ------------------------------
-            buffer = IFrame(__buffer.Capacity());
+            buffer = IOFrame(__buffer.Capacity());
             swap(__buffer, buffer);
         }
         // reset container --------------------------------
@@ -94,7 +94,7 @@ protected:
         }
         // check if frame is full -------------------------
         if (!__buffer.Empty()) {
-            auto buffer = IFrame(__buffer.Capacity());
+            auto buffer = IOFrame(__buffer.Capacity());
             swap(__buffer, buffer);
             tmp.Write(move(buffer.Shrink()));
         }
@@ -179,7 +179,7 @@ private:
     /**
      * buffer
      */
-    IFrame __buffer;
+    IOFrame __buffer;
     /**
      * resource 
      */

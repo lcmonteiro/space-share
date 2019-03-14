@@ -20,13 +20,13 @@
 TEST(SFrame, Conversion)
 {
     // use case 1 --------------------
-    IFrame in = SFrame(10, 1).Detach();
+    IOFrame in = SFrame(10, 1).Detach();
 
     // write --------------------------
     in.Expand().Write({1, 2, 3}).Write({9, 8, 7});
 
     //test case 
-    EXPECT_EQ(OFrame(in).Read(5), Frame({0, 1, 2, 3, 9}));
+    EXPECT_EQ(IOFrame(in).Read(5), Frame({0, 1, 2, 3, 9}));
 }
 /**
  * ------------------------------------------------------------------------------------------------

@@ -70,7 +70,7 @@ private:
 	 */
 	Document __container;
 	/**/
-	IFrame __buffer;
+	IOFrame __buffer;
 	/**
 	 * resource 
 	 */
