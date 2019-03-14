@@ -72,13 +72,27 @@ public:
  * ------------------------------------------------------------------------------------------------
  * template
  */
-template<class R, class T>
+template <typename R, typename T> 
+using SIMessageConnector = 
+Layer::SIMessageConnector<
+    T, Base::SIMessageConnector<R, SInputConnector>
+>;
+template<typename R, typename T>
 class SIUdpConnectorT : public SIMessageConnector<R, T> {
 public:
-    using SIMessageConnector<R, T>::SIMessageConnector;
     /**
+     * properties
      */
-    SIUdpConnectorT() = delete;
+    typedef struct {
+        const SText&  address; 
+        const size_t& nframes; 
+        const size_t& maxsmsg;
+    } Properties;
+    /**
+     * constructor
+     */
+    SIUdpConnectorT(const SText a, const size_t b, const size_t c)
+    : SIMessageConnector<R, T>(Properties{a, b, c}) {}
     /**
      * make
      */
@@ -93,13 +107,25 @@ public:
  * ------------------------------------------------------------------------------------------------
  * template
  */
-template<class R, class T>
+template <typename R, typename T> 
+using SOMessageConnector = 
+Layer::SOMessageConnector<
+    T, Base::SOMessageConnector<R, SOutputConnector>
+>;
+template<typename R, typename T>
 class SOUdpConnectorT : public SOMessageConnector<R, T> {
 public:
-    using SOMessageConnector<R, T>::SOMessageConnector;
     /**
+     * properties
      */
-    SOUdpConnectorT() = delete;
+    typedef struct {
+        const SText& address; 
+    } Properties;
+    /**
+     * constructor
+     */
+    SOUdpConnectorT(const SText a)
+    : SOMessageConnector<R, T>(Properties{a}) {}
     /**
      * make
      */
@@ -114,13 +140,29 @@ public:
  * ------------------------------------------------------------------------------------------------
  * template
  */
-template<class R, class T>
+template <typename R, typename T> 
+using SIOMessageConnector = 
+Layer::SIMessageConnector<
+    T, Layer::SOMessageConnector<
+        T, Base::SIOMessageConnector<R, SInOutputConnector>
+    >
+>;
+template<typename R, typename T>
 class SIOUdpConnectorT : public SIOMessageConnector<R, T> {
 public:
-    using SIOMessageConnector<R, T>::SIOMessageConnector;
     /**
+     * properties
      */
-    SIOUdpConnectorT() = delete;
+    typedef struct {
+        const SText&  address; 
+        const size_t& nframes; 
+        const size_t& maxsmsg;
+    } Properties;
+    /**
+     * constructor
+     */
+    SIOUdpConnectorT(const SText a, const size_t b, const size_t c)
+    : SIOMessageConnector<R, T>(Properties{a, b, c}) {}
     /**
      * make
      */
