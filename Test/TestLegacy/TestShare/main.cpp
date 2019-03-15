@@ -10,7 +10,7 @@
 #include <iostream>
 /**
  */
-#include "Sinterface/STestBasic.h"
+#include "SInterface/STestBasic.h"
 /**
  */
 using namespace std;
@@ -29,10 +29,7 @@ int main(int argc, char** argv) {
                 20,             //minBufferSize
                 200             //maxBufferSize        
         );
-        /**
-         */
         cout.flush();
-        sleep(4);
         return 0;
 }
 

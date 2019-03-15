@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   SBufferShare.cpp
  * Author: Luis Monteiro
  *
  * Created on September 14, 2016, 9:49 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #include <map>
 #include <set>
@@ -12,9 +14,11 @@
 /**
  */
 #include "SBufferShare.h"
-/*------------------------------------------------------------------------------------------------*
+/**
+ * ------------------------------------------------------------------------------------------------
  * Encode interface
- *------------------------------------------------------------------------------------------------*/
+ * ------------------------------------------------------------------------------------------------
+ **/
 size_t OBufferShare::Set(const Frame& data, size_t sframes, size_t redundancy) {
 #define SET_UINT32(VAL) do{                         \
         uint32_t aux = (VAL);                       \
@@ -48,7 +52,7 @@ size_t OBufferShare::Set(const Frame& data, size_t sframes, size_t redundancy) {
 	/**
 	 *  process last nframes
 	 */
-	Frame last(size, 0);
+	Frame last(size, size);
 	copy(it, data.end(), last.begin());
 	/**
 	 * check size for extra information
@@ -84,12 +88,16 @@ size_t OBufferShare::Set(const Frame& data, size_t sframes, size_t redundancy) {
 	 */
 	return __encoder.size() + redundancy;
 }
+/**
+ */
 Frame OBufferShare::Get() {
 	return move(__encoder.pop().front());
 }
-/*------------------------------------------------------------------------------------------------*
+/**
+ * ------------------------------------------------------------------------------------------------
  * Decode interface
- *------------------------------------------------------------------------------------------------*/
+ * ------------------------------------------------------------------------------------------------
+ **/
 #define GET_UINT32(VAR) do{                         \
         VAR = uint32_t(*rit);                       \
         ++rit;                                      \
@@ -126,7 +134,7 @@ bool IBufferShare::Set(Frame frame) {
 			return false;
 		}
 		GET_UINT32(aux);
-		auto n = uint32_t(aux / frame.size()); //nnframes
+		auto n = uint32_t(aux / frame.size()); //nframes
 		auto o = uint32_t(aux % frame.size()); //offset
 		/**
 		 * check data size
@@ -154,7 +162,8 @@ bool IBufferShare::Set(Frame frame) {
 	}
 	return false;
 }
-
+/**
+ */
 Frame IBufferShare::Get() {
 	uint32_t aux = 0;
 	/**
@@ -164,7 +173,7 @@ Frame IBufferShare::Get() {
 	for (auto f : __decoder) {
 		out.insert(out.end(), f.begin(), f.end());
 	}
-        __decoder.clear();
+    __decoder.clear();
 	/**
 	 * resize out to original size 
 	 */
@@ -176,4 +185,8 @@ Frame IBufferShare::Get() {
 	 */
 	return out;
 }
-
+/**
+ * ------------------------------------------------------------------------------------------------
+ *  End
+ * ------------------------------------------------------------------------------------------------
+ */

@@ -42,7 +42,11 @@ TARGET
     TestShareInterface
 SOURCES
     TestInterface/TestMachine.cpp
+    TestInterface/TestBufferShare.cpp
 DEPENDS
     ShareModule
     ShareInterface
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------
