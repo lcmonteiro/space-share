@@ -65,22 +65,25 @@ public:
      * constructors
      * ----------------------------------------------------
      */
-    SFrame(const size_t capacity, const size_t size=0, const uint8_t value=0)
-    : Super() {
-        reserve(capacity); assign(size, value);
-    }
+    SFrame(const size_t capacity, const size_t size, const uint8_t value)
+    : Super() { reserve(capacity); assign(size, value); }
+
+    SFrame(const size_t capacity, const size_t size)
+    : Super() { reserve(capacity); resize(size);        }
+    
+    SFrame(const size_t capacity)
+    : Super() { reserve(capacity);                      }
+    
     template<typename T, typename = if_iterator_t<T>>
     SFrame(const size_t capacity, T beg, T end)
-    : Super() {
-        reserve(capacity); assign(beg, end);
-    }
+    : Super() { reserve(capacity); assign(beg, end);    }
+    
     template<typename T, typename = if_iterator_t<T>>
     SFrame(T beg, T end)
-    : Super(beg, end) {
-    }
+    : Super(beg, end) {                                 }
+    
     SFrame(std::initializer_list<uint8_t> l) 
-    : Super(l) {
-    }
+    : Super(l) {                                        }
     /**
      * ------------------------------------------------------------------------
      * conversions
