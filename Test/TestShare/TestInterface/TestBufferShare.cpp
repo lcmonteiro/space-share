@@ -31,7 +31,7 @@ TEST(SBufferShare, Code)
     // settings -----------------------
     auto info = 200; // infromation size
     auto part = 10;  // messages    size
-    auto plus = 5;   // redundacy   size 
+    auto plus = 1;   // redundacy   size 
 
     // create buffers -----------------
     OBufferShare enc;
@@ -50,9 +50,7 @@ TEST(SBufferShare, Code)
 
         // next ----------------------- 
         ++i
-    ) {
-        //std::cout << i << dec.Get() << std::endl;
-    }
+    );
     // test ---------------------------
     EXPECT_EQ(in, dec.Get());
 }
