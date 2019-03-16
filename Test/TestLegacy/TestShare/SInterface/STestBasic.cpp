@@ -50,7 +50,7 @@ int STestBasic::operator()(int iterations, int frameSize, int redundancy, int mi
                         }
                 }
         }
-        cout << "[SUCCESS] " << ++s << endl;
+        cout << "[SUCCESS] " << s << endl;
         return s;
 }
 

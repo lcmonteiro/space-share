@@ -22,14 +22,12 @@ int main(int argc, char** argv) {
          * test basic interface
          */
         STestBasic test;
-        test(
+        return test(
                 100,            //iterations
                 20,             //frameSize
                 0,              //redundancy
                 20,             //minBufferSize
                 200             //maxBufferSize        
-        );
-        cout.flush();
-        return 0;
+        ) > 95 ? 0 : -1;
 }
 
