@@ -32,20 +32,27 @@ namespace v1 {
          * --------------------------------------------------------------------------------------------
          * default constructor
          */
-        SCodecEncoder() : __capacity(0), __length(0), __stamp(SCodecStamp::Get(SCodecStamp::FULL)) {
-        }
+        SCodecEncoder() :
+        __capacity(0),
+        __length(0),
+        __stamp(SCodecStamp::Get(SCodecStamp::FULL)),
+        __data(),
+        __rand() { }
         /**
          * constructor
          * @param capacity
          * @param stamp
          */
-        SCodecEncoder(uint32_t capacity, const Stamp& stamp = SCodecStamp::Get(SCodecStamp::FULL)) 
-        : __capacity(capacity), __length(capacity), __stamp(stamp) {
-            // checkup
-            if (__stamp.get().size() < UINT8_MAX) {
-                throw nullptr;
-            }
-            // update
+        SCodecEncoder(uint32_t capacity, const Stamp& stamp = SCodecStamp::Get(SCodecStamp::FULL)): 
+        __capacity(capacity),
+        __length(capacity),
+        __stamp(stamp),
+        __data(),
+        __rand() {
+            // checkup ------------------------------------
+            if (__stamp.get().size() < UINT8_MAX) { throw nullptr; }
+
+            // update -------------------------------------
             __data.reserve(__capacity);
         }
         /**
@@ -57,8 +64,9 @@ namespace v1 {
         __capacity(init.size()),
         __length(init.size()),
         __stamp(stamp),
-        __data(move(init)) {
-            // checkup
+        __data(move(init)),
+        __rand() {
+            // checkup ------------------------------------
             if (__stamp.get().size() < UINT8_MAX) { throw nullptr; }
         }
         /**
@@ -68,7 +76,8 @@ namespace v1 {
         __capacity(0),
         __length(0),
         __stamp(SCodecStamp::Get(SCodecStamp::FULL)),
-        __data() { *this = std::move(codec); }
+        __data(), 
+        __rand() { *this = std::move(codec); }
         /**
          * destructor
          */

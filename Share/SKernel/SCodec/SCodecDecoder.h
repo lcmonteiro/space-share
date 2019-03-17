@@ -33,24 +33,26 @@ namespace v1 {
          * constructor
          */
         SCodecDecoder():
-        __capacity(0),
-        __size(0),
         __data(),
         __coef(),
         __field(),
-        __stamp(SCodecStamp::Get(SCodecStamp::FULL)) {}
+        __stamp(SCodecStamp::Get(SCodecStamp::FULL)), 
+        __capacity(0),
+        __size(0),
+        __rand() {}
         /**
          * constructor
          * @param capacity
          * @param stamp
          */
         SCodecDecoder(uint32_t capacity, const Stamp& stamp = SCodecStamp::Get(SCodecStamp::FULL)): 
-        __capacity(capacity),
-        __size(0),
         __data(),
         __coef(),
         __field(),
-        __stamp(stamp) {
+        __stamp(stamp), 
+        __capacity(capacity),
+        __size(0),
+        __rand() {
             __coef.reserve(capacity << 1);
             __data.reserve(capacity << 1);
             __field.reserve(capacity << 1);
@@ -72,7 +74,7 @@ namespace v1 {
          * @return 
          */
         SCodecDecoder(SCodecDecoder&& codec) : SCodecDecoder() {
-            SCodecDecoder::operator=(std::move(codec));
+            *this = std::move(codec);
         }
         /**
          * destructor 
