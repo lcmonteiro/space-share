@@ -116,7 +116,7 @@ protected:
 	    /**
 	     * insert coded data
 	     */
-	    if(__cache.Push(move(data))){
+	    if(__cache.Push(std::move(data))){
 	        processData(out);
 	    }
     }

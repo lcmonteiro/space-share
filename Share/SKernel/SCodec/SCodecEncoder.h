@@ -53,28 +53,26 @@ namespace v1 {
          * @param init
          * @param stamp
          */
-        SCodecEncoder(Container && init, const Stamp& stamp = SCodecStamp::Get(SCodecStamp::FULL))
-        : __stamp(stamp), __data(std::move(init)) {
+        SCodecEncoder(Container && init, const Stamp& stamp = SCodecStamp::Get(SCodecStamp::FULL)): 
+        __capacity(init.size()),
+        __length(init.size()),
+        __stamp(stamp),
+        __data(move(init)) {
             // checkup
-            if (__stamp.get().size() < UINT8_MAX) {
-                throw nullptr;
-            }
-            // update
-            __capacity = __data.size();
-            __length = __data.size();
+            if (__stamp.get().size() < UINT8_MAX) { throw nullptr; }
         }
         /**
          *  move constructor
          */
-        SCodecEncoder(SCodecEncoder&& codec)
-        : __capacity(0), __length(0), __stamp(SCodecStamp::Get(SCodecStamp::FULL)) {
-            SCodecEncoder::operator=(std::move(codec));
-        }
+        SCodecEncoder(SCodecEncoder&& codec):
+        __capacity(0),
+        __length(0),
+        __stamp(SCodecStamp::Get(SCodecStamp::FULL)),
+        __data() { *this = std::move(codec); }
         /**
          * destructor
          */
-        virtual ~SCodecEncoder(){
-        }
+        virtual ~SCodecEncoder() { }
         /**
          * ----------------------------------------------------------------------------------------
          * Operators
@@ -97,12 +95,12 @@ namespace v1 {
          * push data
          */
         inline SCodecEncoder& push(Frame&& data) {
-            __data.push_back(std::move(data));
+            __data.emplace_back(std::move(data));
             return *this;
         }
         inline SCodecEncoder& push(Container&& data) {
             for (auto& d : data) {
-                __data.push_back(std::move(d));
+                __data.emplace_back(std::move(d));
             }
             return *this;
         }

@@ -97,10 +97,15 @@ namespace Spread {
                     );
                 }}
             };
-            return GENERATOR.at(
-                o.Get(Function::TYPE, Function::Type::MESSAGE)
-            )(o);
-            
+            try {
+                return GENERATOR.at(
+                    o.Get(Function::TYPE, Function::Type::MESSAGE)
+                )(o);
+            } catch(...) {
+                throw std::runtime_error(
+                    SText("invalid function: ", o.Get(Function::TYPE, Function::Type::MESSAGE))
+                );
+            }
         }
     };
     /**
@@ -128,9 +133,15 @@ namespace Spread {
                     );
                 }}
             };
-            return GENERATOR.at(
-                o.Get(Function::TYPE, Function::Type::MESSAGE)
-            )(o);
+            try {
+                return GENERATOR.at(
+                    o.Get(Function::TYPE, Function::Type::MESSAGE)
+                )(o);
+            } catch(...) {
+                throw std::runtime_error(
+                    SText("invalid function: ", o.Get(Function::TYPE, Function::Type::MESSAGE))
+                );
+            }
         }
     };
 }

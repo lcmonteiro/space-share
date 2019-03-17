@@ -32,15 +32,25 @@ namespace v1 {
          * ----------------------------------------------------------------------------------------
          * constructor
          */
-        SCodecDecoder() : __stamp(SCodecStamp::Get(SCodecStamp::FULL)), __capacity(0), __size(0) {
-        }
+        SCodecDecoder():
+        __capacity(0),
+        __size(0),
+        __data(),
+        __coef(),
+        __field(),
+        __stamp(SCodecStamp::Get(SCodecStamp::FULL)) {}
         /**
          * constructor
          * @param capacity
          * @param stamp
          */
-        SCodecDecoder(uint32_t capacity, const Stamp& stamp = SCodecStamp::Get(SCodecStamp::FULL)) 
-        : __stamp(stamp), __capacity(capacity) {
+        SCodecDecoder(uint32_t capacity, const Stamp& stamp = SCodecStamp::Get(SCodecStamp::FULL)): 
+        __capacity(capacity),
+        __size(0),
+        __data(),
+        __coef(),
+        __field(),
+        __stamp(stamp) {
             __coef.reserve(capacity << 1);
             __data.reserve(capacity << 1);
             __field.reserve(capacity << 1);

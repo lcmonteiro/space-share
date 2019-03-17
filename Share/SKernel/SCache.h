@@ -85,7 +85,7 @@ public:
                     doc, std::move(__storage[Open].Find(doc))
                 );
             }
-        } catch(std::runtime_error&) {
+        } catch(std::out_of_range&) {
             Decoder c(doc.GetNumFrames(), std::move(doc), __stamp);
             if (c.full()) {
                 __storage[Open].Insert(doc, std::move(c));
