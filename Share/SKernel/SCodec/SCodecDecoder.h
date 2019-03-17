@@ -45,7 +45,7 @@ namespace v1 {
          * @param capacity
          * @param stamp
          */
-        SCodecDecoder(uint32_t capacity, const Stamp& stamp = SCodecStamp::Get(SCodecStamp::FULL)): 
+        SCodecDecoder(uint32_t capacity, SharedStamp stamp = SCodecStamp::Get(SCodecStamp::FULL)): 
         __data(),
         __coef(),
         __field(),
@@ -64,7 +64,7 @@ namespace v1 {
          * @param stamp
          */
         SCodecDecoder(
-            uint32_t capacity, Container&& init, const Stamp& stamp = SCodecStamp::Get(SCodecStamp::FULL)
+            uint32_t capacity, Container&& init, SharedStamp stamp = SCodecStamp::Get(SCodecStamp::FULL)
         ) : SCodecDecoder(capacity, stamp) {
             push(std::move(init));
         }
@@ -101,36 +101,44 @@ namespace v1 {
          * ----------------------------------------------------------------------------------------
          * Data
          * ----------------------------------------------------------------------------------------
-         **
          * push data
+         * --------------------------------------------------------------------
          */
         SCodecDecoder& push(Frame&& data) {
-            // decode
+            // decode -------------------------------------
             __size = SCodec::Decode(
-                Container({std::move(data)}), __capacity, __data, __coef, __field, __stamp.get()
+                Container({std::move(data)}), __capacity, __data, __coef, __field, *__stamp
             );
+            // return self --------------------------------
             return *this;    
         }
         SCodecDecoder& push(Container&& data) {
-            // decode
-            __size = SCodec::Decode(std::move(data), __capacity, __data, __coef, __field, __stamp.get());
+            // decode -------------------------------------
+            __size = SCodec::Decode(
+                std::move(data), __capacity, __data, __coef, __field, *__stamp
+            );
+            // return self --------------------------------
             return *this;
         }
         /**
+         * --------------------------------------------------------------------
          * pop data
+         * --------------------------------------------------------------------
          */
         inline Container pop() {
-            Container out;
-            // move data to out container
-            out = std::move(__data);
+            // move data ----------------------------------
+            Container out = std::move(__data);
+            // update size --------------------------------
             out.resize(__size);
-            // reset
+            // reset --------------------------------------
             clear();
-            // return 
+            // return -------------------------------------
             return out;
         }
         /**
+         * --------------------------------------------------------------------
          * clear data
+         * --------------------------------------------------------------------
          */
         inline SCodecDecoder& clear() {
             __size = 0;
@@ -147,8 +155,13 @@ namespace v1 {
          * iterators 
          * ----------------------------------------------------------------------------------------
          */
-        typedef Container::const_iterator const_iterator;
+        using const_iterator         = Container::const_iterator;
+        using const_reverse_iterator = Container::const_reverse_iterator;
+        using const_reference        = Container::const_reference;
         /**
+         * --------------------------------------------------------------------
+         * forward 
+         * --------------------------------------------------------------------
          */
         const_iterator begin() const {
             return __data.begin();
@@ -156,9 +169,10 @@ namespace v1 {
         const_iterator end() const {
             return __data.begin() + __size;
         }
-        typedef Container::const_reverse_iterator const_reverse_iterator;
         /**
+         * ---------------------------------------------------------------------
          * reverse
+         * ---------------------------------------------------------------------
          */
         const_reverse_iterator rbegin() const {
             return __data.rend() - __size;
@@ -167,10 +181,9 @@ namespace v1 {
             return __data.rend();
         }
         /**
+         * --------------------------------------------------------------------
          * references 
-         */
-        typedef Container::const_reference const_reference;
-        /**
+         * --------------------------------------------------------------------
          */
         const_reference front() const {
             return __data.front();
@@ -203,7 +216,7 @@ namespace v1 {
             __coef.resize(size);
             __field.resize(size);
             if (__size > size) {
-            __size = size;
+                __size = size;
             }
         }
     private:
@@ -216,13 +229,13 @@ namespace v1 {
          */
         Container __data;
         Container __coef;
-        Frame __field;
+        Frame     __field;
         /**
          * context
          */
-        StampReference __stamp;
-        uint32_t __capacity;
-        uint32_t __size;
+        SharedStamp __stamp;
+        uint32_t    __capacity;
+        uint32_t    __size;
         /**
          * seed generator
          */

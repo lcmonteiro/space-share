@@ -22,12 +22,9 @@ namespace v1 {
 	 * definitions
 	 * ------------------------------------------------------------------------
 	 */	
-	const map<const int, const Stamp> SCodecStamp::__definitions{
-		{SCodecStamp::NONE, {
-			256, {0, 0}
-		}}, {SCodecStamp::FULL, {
-			256, {255, 255}
-		}}
+	const map<const int, const SharedStamp> SCodecStamp::__definitions {
+		{SCodecStamp::NONE, make_shared<const Stamp>(256, Density{  0,   0})},
+		{SCodecStamp::FULL, make_shared<const Stamp>(256, Density{255, 255})}
 	};
 	/**
 	 * ------------------------------------------------------------------------
@@ -52,18 +49,14 @@ namespace v1 {
 	 * Generate
 	 * ------------------------------------------------------------------------
 	 */
-	Stamp SCodecStamp::Generate(const uint64_t seed, const Density& min, const Density& max) {
-		/**
-		 * generator
-		 */
+	SharedStamp SCodecStamp::Generate(const uint64_t seed, const Density& min, const Density& max) {
+		//  generator -------------------------------------
 		mt19937_64 c(seed);
-		/**
-		 * stamp
-		 */
+		
+		// init stamp -------------------------------------
 		Stamp out(256);
-		/**
-		 * create stamp
-		 */
+		
+		// build stamp ------------------------------------
 		for (auto& v : out) {
 			v.first = uint8_t(c());
 			v.first |= min.first;
@@ -72,7 +65,8 @@ namespace v1 {
 			v.second |= min.second;
 			v.second &= max.second;
 		}
-		return out;
+		// return shared stamp ----------------------------
+		return make_shared<const Stamp>(move(out));
 	}
 };
 /**

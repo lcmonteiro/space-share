@@ -51,12 +51,12 @@ public:
      * ------------------------------------------------------------------------
      */
     SEncodeT(
-        const Stamp& stamp, const uint32_t redundancy, const uint32_t energy = 1, const uint8_t verbose = 0
+        SharedStamp stamp, uint32_t redundancy, uint32_t energy = 1, uint8_t verbose = 0
     ): Super("Encode", energy, verbose), __stamp(stamp), __redundancy(redundancy) {
         Recover();
     }
     SEncodeT(const string& id, 
-        const Stamp& stamp, const uint32_t redundancy, const uint32_t energy = 1, const uint8_t verbose = 0
+        SharedStamp stamp, uint32_t redundancy, uint32_t energy = 1, uint8_t verbose = 0
     ): Super(string("Encode(") + id + ")", energy, verbose), __stamp(stamp), __redundancy(redundancy) {
         Recover();
     }
@@ -140,7 +140,7 @@ private:
      **
      * stamp
      */
-    StampReference __stamp;
+    SharedStamp __stamp;
     /**
      * redundancy
      */

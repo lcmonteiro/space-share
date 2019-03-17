@@ -32,7 +32,7 @@ namespace Helpers {
     /**
      * create codec stamp
      */
-    inline Stamp CreateStamp(SModule::Key type, string pass) {
+    inline SharedStamp CreateStamp(SModule::Key type, string pass) {
         return CodecStamp::Generate(map<SModule::Key, CodecStamp::Type> {
             {Function::SPARSE,  CodecStamp::SPARSE},
             {Function::STREAM,  CodecStamp::STREAM},

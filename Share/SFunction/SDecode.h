@@ -51,12 +51,12 @@ public:
 	 * ------------------------------------------------------------------------
      */
     SDecode(
-		const Stamp& stamp, const uint32_t nContainers, const uint32_t energy = 3, const uint8_t verbose = 0
+		SharedStamp stamp, uint32_t nContainers, uint32_t energy = 3, uint8_t verbose = 0
 	): Super("Decode", energy, verbose), __cache(stamp, nContainers) {
     }
     SDecode(
 		const string& id, 
-    	const Stamp& stamp, const uint32_t nContainers, const uint32_t energy = 3, const uint8_t verbose = 0
+    	SharedStamp stamp, uint32_t nContainers, uint32_t energy = 3, uint8_t verbose = 0
     ): Super(string("Decode(") + id + ")", energy, verbose), __cache(stamp, nContainers) {
     }
     /**
@@ -166,13 +166,13 @@ public:
 	 * ------------------------------------------------------------------------
      */
     SDecode(
-		const Stamp& stamp, const uint32_t nContainers, const uint32_t energy = 3, const uint8_t verbose = 0
+		SharedStamp stamp, uint32_t nContainers, uint32_t energy = 3, uint8_t verbose = 0
 	): Super("Decode", energy, verbose), __cache(stamp, nContainers), __cache_aux(AUX_SIZE) {
     	for(auto&c :__cache_aux){ c = Cache(stamp, nContainers); }
     }
     SDecode(
     	const string& id, 
-    	const Stamp& stamp, const uint32_t nContainers, const uint32_t energy = 3, const uint8_t verbose = 0
+    	SharedStamp stamp, uint32_t nContainers, uint32_t energy = 3, uint8_t verbose = 0
     ): Super(string("Decode(") + id + ")", energy, verbose), __cache(stamp, nContainers), __cache_aux(AUX_SIZE) {
     	for(auto&c :__cache_aux){ c = Cache(stamp, nContainers); }
     }

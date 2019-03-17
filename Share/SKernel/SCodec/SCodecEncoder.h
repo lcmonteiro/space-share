@@ -31,6 +31,7 @@ namespace v1 {
          * Constructors & Destructor
          * --------------------------------------------------------------------------------------------
          * default constructor
+         * --------------------------------------------------------------------
          */
         SCodecEncoder() :
         __capacity(0),
@@ -39,38 +40,44 @@ namespace v1 {
         __data(),
         __rand() { }
         /**
+         * --------------------------------------------------------------------
          * constructor
          * @param capacity
          * @param stamp
+         * --------------------------------------------------------------------
          */
-        SCodecEncoder(uint32_t capacity, const Stamp& stamp = SCodecStamp::Get(SCodecStamp::FULL)): 
+        SCodecEncoder(uint32_t capacity, SharedStamp stamp = SCodecStamp::Get(SCodecStamp::FULL)): 
         __capacity(capacity),
         __length(capacity),
         __stamp(stamp),
         __data(),
         __rand() {
             // checkup ------------------------------------
-            if (__stamp.get().size() < UINT8_MAX) { throw nullptr; }
-
+            if (__stamp->size() < UINT8_MAX) { throw nullptr; }
+            
             // update -------------------------------------
             __data.reserve(__capacity);
         }
         /**
+         * --------------------------------------------------------------------
          * constructor
          * @param init
          * @param stamp
+         * --------------------------------------------------------------------
          */
-        SCodecEncoder(Container && init, const Stamp& stamp = SCodecStamp::Get(SCodecStamp::FULL)): 
+        SCodecEncoder(Container && init, SharedStamp stamp = SCodecStamp::Get(SCodecStamp::FULL)): 
         __capacity(init.size()),
         __length(init.size()),
         __stamp(stamp),
         __data(move(init)),
-        __rand() {
+        __rand() { 
             // checkup ------------------------------------
-            if (__stamp.get().size() < UINT8_MAX) { throw nullptr; }
+            if (__stamp->size() < UINT8_MAX) { throw nullptr; } 
         }
         /**
+         * --------------------------------------------------------------------
          *  move constructor
+         * --------------------------------------------------------------------
          */
         SCodecEncoder(SCodecEncoder&& codec):
         __capacity(0),
@@ -79,15 +86,11 @@ namespace v1 {
         __data(), 
         __rand() { *this = std::move(codec); }
         /**
-         * destructor
-         */
-        virtual ~SCodecEncoder() { }
-        /**
          * ----------------------------------------------------------------------------------------
          * Operators
          * ----------------------------------------------------------------------------------------
-         **
          * move 
+         * --------------------------------------------------------------------
          */
         inline SCodecEncoder& operator=(SCodecEncoder&& en) {
             __capacity = std::move(en.__capacity);
@@ -100,8 +103,8 @@ namespace v1 {
          * ----------------------------------------------------------------------------------------
          * Data
          * ----------------------------------------------------------------------------------------
-         **
          * push data
+         * --------------------------------------------------------------------
          */
         inline SCodecEncoder& push(Frame&& data) {
             __data.emplace_back(std::move(data));
@@ -114,15 +117,19 @@ namespace v1 {
             return *this;
         }
         /**
+         * --------------------------------------------------------------------
          * pop data
+         * --------------------------------------------------------------------
          */
         inline Container pop(uint32_t highDensity = 0) {
             Container out;
-            SCodec::Encode(out, __length, __data, __rand, highDensity, __stamp.get());
+            SCodec::Encode(out, __length, __data, __rand, highDensity, *__stamp);
             return out;
         }
         /**
+         * --------------------------------------------------------------------
          * clear data
+         * --------------------------------------------------------------------
          */
         inline SCodecEncoder& clear(){
             __data.clear();
@@ -133,8 +140,11 @@ namespace v1 {
          * iterators 
          * ----------------------------------------------------------------------------------------
          */
-        typedef Container::const_iterator const_iterator;
+        using const_iterator = Container::const_iterator;
         /**
+         * --------------------------------------------------------------------
+         * forward
+         * --------------------------------------------------------------------
          */
         const_iterator begin() const {
             return __data.begin();
@@ -146,6 +156,8 @@ namespace v1 {
          * ----------------------------------------------------------------------------------------
          * Quantity
          * ----------------------------------------------------------------------------------------
+         * ger properties
+         * --------------------------------------------------------------------
          */
         inline bool full() {
             return (__data.size() >= __capacity);
@@ -163,7 +175,9 @@ namespace v1 {
             return __data.at(0).size() + SCodec::HeaderSize();
         }
         /**
+         * --------------------------------------------------------------------
          * set properties
+         * --------------------------------------------------------------------
          */
         inline SCodecEncoder& length(uint32_t len) {
             __length = len;
@@ -182,8 +196,8 @@ namespace v1 {
         /**
          * data
          */
-        StampReference __stamp;
-        Container __data;
+        SharedStamp __stamp;
+        Container   __data;
         /**
          * seed generator
          */

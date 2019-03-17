@@ -61,7 +61,7 @@ public:
      * @param stamp
      * @param capacity - number max of containers
      */
-    SCache(const Stamp& stamp = CodecStamp::Get(CodecStamp::NONE), size_t capacity = 10)
+    SCache(SharedStamp stamp = CodecStamp::Get(CodecStamp::NONE), size_t capacity = 10)
     : __stamp(stamp), __storage() {
         __storage[Open] = Chain(capacity);
         __storage[Done] = Chain(capacity);
@@ -150,7 +150,7 @@ protected:
      * ------------------------------------------------------------------------
      * codec stamp 
      */
-    StampReference __stamp;
+    SharedStamp __stamp;
     /**
      * storage of documents
      */
@@ -252,7 +252,7 @@ public:
      * main
      * @param n - number of Containers
      */
-    SCache(const Stamp& stamp = CodecStamp::Get(CodecStamp::NONE), uint32_t n = 0) 
+    SCache(SharedStamp stamp = CodecStamp::Get(CodecStamp::NONE), uint32_t n = 0) 
     : __stamp(stamp), __n(n), __min(), __back(), __front(), __max() {
     }
     /**
@@ -450,14 +450,16 @@ public:
 	     * forward
 	     */
 	    auto n = __back;
-	    for (auto it=__storage.find(n); (it!=__storage.end()) && (it->second.full()); it=__storage.find(n)) {
+	    for (auto it=__storage.find(n); 
+            (it!=__storage.end()) && (it->second.full()); it=__storage.find(n)) {
 	        ++density, n.next();
 	    }
 	    /**
 	     * backward
 	     */
 	    auto p = __back; p.prev();
-	    for (auto it=__storage.find(p); (it!=__storage.end()) && (it->second.full()); it=__storage.find(p)) {
+	    for (auto it=__storage.find(p); 
+            (it!=__storage.end()) && (it->second.full()); it=__storage.find(p)) {
 	        ++density, p.prev();
 	    }
 	    return density;
@@ -483,7 +485,7 @@ protected:
      * ------------------------------------------------------------------------
      * stamp
      */
-    StampReference __stamp;
+    SharedStamp __stamp;
     /**
      * tolerance
      */
