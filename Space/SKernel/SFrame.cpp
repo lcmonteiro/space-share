@@ -83,7 +83,7 @@ SIOFrame& SIOFrame::operator=(const SIOFrame& f) {
  * change context
  * ---------------------------------------------------------
  */
-SIOFrame SFrame::IOFrame(){
+SIOFrame SFrame::IOFrame() {
     return Detach();
 }
 /**

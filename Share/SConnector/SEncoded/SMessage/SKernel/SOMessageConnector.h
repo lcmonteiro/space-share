@@ -125,9 +125,9 @@ protected:
         ;
         // log info ---------------------------------------
         INFO("CODE::OUT::"
-            << "pos=" << doc.GetPosition()  << " " 
-            << "n="   << doc.GetNumFrames() << " "
-            << "sz="  << doc.GetFrameSize() << " " 
+            << "pos=" << doc.Position()  << " " 
+            << "n="   << doc.NumFrames() << " "
+            << "sz="  << doc.FrameSize() << " " 
             << "len=" << doc.Size()
         );
         // process document -------------------------------
@@ -137,13 +137,13 @@ protected:
 
             // write context ------------------------------
             __buffer.Write(Frame().Number<reference_t>(
-                split.first.GetPosition()));
+                split.first.Position()));
             __buffer.Write(Frame().Number<numframes_t>(
-                split.first.GetNumFrames()));
+                split.first.NumFrames()));
             __buffer.Write(Frame().Number<numframes_t>(
                 c.Size()));
             __buffer.Write(Frame().Number<framesize_t>(
-                split.first.GetFrameSize()));
+                split.first.FrameSize()));
             
             // write document -----------------------------
             for (auto& f : c) { __buffer.Write(f); }

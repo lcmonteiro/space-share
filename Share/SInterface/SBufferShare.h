@@ -37,10 +37,6 @@ public:
     OBufferShare(size_t capacity = BS_CAPACITY) : __encoder(capacity) {
     }
     /**
-     * destructor 
-     */
-    virtual ~OBufferShare() = default;
-    /**
      * set buffer
      */
     size_t Set(const Frame& data, size_t sframes, size_t redundancy = 0);
@@ -67,10 +63,6 @@ public:
     IBufferShare(size_t capacity = BS_CAPACITY) : __decoder(capacity) {
     }
     /**
-     * destructor 
-     */
-    virtual ~IBufferShare() = default;
-    /**
      * set coded frame
      */
     bool Set(Frame frame);
@@ -80,6 +72,7 @@ public:
     Frame Get();
 protected:
     /**
+     * worker
      */
     CodecDecoder __decoder; 
 };

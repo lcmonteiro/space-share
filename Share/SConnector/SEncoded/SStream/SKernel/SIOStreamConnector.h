@@ -206,16 +206,16 @@ protected:
         /**-----------------------------------------------------------------------------------------------------
          * write context
          *----------------------------------------------------------------------------------------------------**/
-        __res.Drain(Frame().Number<reference_t>(container.GetPosition()));
-        __res.Drain(Frame().Number<numframes_t>(container.GetNumFrames()));
+        __res.Drain(Frame().Number<reference_t>(container.Position()));
+        __res.Drain(Frame().Number<numframes_t>(container.NumFrames()));
         __res.Drain(Frame().Number<numframes_t>(container.size()));
-        __res.Drain(Frame().Number<framesize_t>(container.GetFrameSize()));
+        __res.Drain(Frame().Number<framesize_t>(container.FrameSize()));
         /**-----------------------------------------------------------------------------------------------------
          * info
          *----------------------------------------------------------------------------------------------------**/
         INFO("CODE::OUT::"
-            << "pos=" << container.GetPosition() << " " << "n=" << container.GetNumFrames() << " "
-            << "sz=" << container.GetFrameSize() << " " << "len=" << container.size()
+            << "pos=" << container.Position() << " " << "n=" << container.NumFrames() << " "
+            << "sz=" << container.FrameSize() << " " << "len=" << container.size()
         );
         /**-----------------------------------------------------------------------------------------------------
          * write nframes

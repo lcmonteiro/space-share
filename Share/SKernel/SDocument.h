@@ -145,13 +145,13 @@ public:
      * getters 
      * --------------------------------
      */
-    inline reference_t GetPosition() const {
+    inline reference_t Position() const {
         return __pos;
     }
-    inline numframes_t GetNumFrames() const {
+    inline numframes_t NumFrames() const {
         return __n_frames;
     }
-    inline framesize_t GetFrameSize() const {
+    inline framesize_t FrameSize() const {
         return __frame_sz;
     }
     /**

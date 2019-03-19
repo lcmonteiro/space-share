@@ -90,14 +90,14 @@ protected:
 	    Encoder en(std::move(data), __stamp);
 
 	    // create context ----------------------------------------------------
-	    Encoded::Context ctxt (__position.next(), en.size(), en.nframesize());
+	    Encoded::Context ctxt (__position.next(), en.size(), en.FrameSize());
 
 	    // log ----------------------------------------------------------------
-	    DEBUG("encode::" << "pos=" << ctxt.GetPosition());
+	    DEBUG("encode::" << "pos=" << ctxt.Position());
 
 	    // init remain with num of frames -------------------------------------
 	    size_t remain = std::max(
-            size_t(ctxt.GetNumFrames()) + __redundancy, MIN);
+            size_t(ctxt.NumFrames()) + __redundancy, MIN);
 
 	    // process road until no remain load (remain > 0) ---------------------
         while (remain > 0) {
@@ -111,7 +111,7 @@ protected:
             std::discrete_distribution<> d(wgt.begin(), wgt.end());
             std::vector<size_t> qty;
             qty.resize(wgt.size());
-            for (auto i = 0; i< remain; ++i) { ++qty[d(gen)]; }
+            for (auto i = 0; i < remain; ++i) { ++qty[d(gen)]; }
 
 	        // weighted write -------------------------------------------------
             auto it_o = out.begin();
@@ -120,7 +120,7 @@ protected:
 	            try {
                     // write and update iterator and data ---------------------
                     it_o->second->Write(
-                        Encoded::Document(en.length(*it_q).pop(), ctxt)); 
+                        Encoded::Document(en.NumFrames(*it_q).pop(), ctxt)); 
                     // update references --------------------------------------
                     ++it_o; remain -= *it_q;
 		        } catch (ConnectorExceptionTIMEOUT& ex) {

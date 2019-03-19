@@ -19,7 +19,6 @@
  * Encode interface
  * ------------------------------------------------------------------------------------------------
  **/
-size_t OBufferShare::Set(const Frame& data, size_t sframes, size_t redundancy) {
 #define SET_UINT32(VAL) do{                         \
         uint32_t aux = (VAL);                       \
         *rit = uint8_t(aux);                        \
@@ -34,10 +33,17 @@ size_t OBufferShare::Set(const Frame& data, size_t sframes, size_t redundancy) {
         *rit = uint8_t(aux);                        \
         ++rit;                                      \
 }while(0)
-        /**
-         * validation
-         */
-        assert(sframes >= sizeof (uint32_t) + sizeof (uint32_t));
+/**
+ * ----------------------------------------------------------------------------
+ * Set
+ * ----------------------------------------------------------------------------
+ */
+size_t OBufferShare::Set(const Frame& data, size_t sframes, size_t redundancy) {
+
+	/**
+	 * validation
+	 */
+	assert(sframes >= sizeof (uint32_t) + sizeof (uint32_t));
 	/**
 	 * data frame size
 	 */
@@ -46,7 +52,7 @@ size_t OBufferShare::Set(const Frame& data, size_t sframes, size_t redundancy) {
 	 *  split data and add to encoder
 	 */
 	auto it = data.begin();
-	for (__encoder.clear().length(1); distance(it, data.end()) >= size; it += size) {
+	for (__encoder.clear().NumFrames(1); distance(it, data.end()) >= size; it += size) {
 		__encoder.push(Frame(it, it + size));
 	}
 	/**
@@ -89,6 +95,9 @@ size_t OBufferShare::Set(const Frame& data, size_t sframes, size_t redundancy) {
 	return __encoder.size() + redundancy;
 }
 /**
+ * ----------------------------------------------------------------------------
+ * Get
+ * ----------------------------------------------------------------------------
  */
 Frame OBufferShare::Get() {
 	return move(__encoder.pop().front());
@@ -108,9 +117,14 @@ Frame OBufferShare::Get() {
         VAR |= uint32_t(*rit)<<24;                  \
         ++rit;                                      \
 }while(0)
+/**
+ * ----------------------------------------------------------------------------
+ * Set
+ * ----------------------------------------------------------------------------
+ */
 bool IBufferShare::Set(Frame frame) {
 	uint32_t aux = 0;
-        /**
+    /**
 	 * add frame to decoder 
 	 */
 	__decoder.push(move(frame));
@@ -163,6 +177,9 @@ bool IBufferShare::Set(Frame frame) {
 	return false;
 }
 /**
+ * ----------------------------------------------------------------------------
+ * Get
+ * ----------------------------------------------------------------------------
  */
 Frame IBufferShare::Get() {
 	uint32_t aux = 0;

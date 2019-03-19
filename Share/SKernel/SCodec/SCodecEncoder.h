@@ -156,7 +156,7 @@ namespace v1 {
          * ----------------------------------------------------------------------------------------
          * Quantity
          * ----------------------------------------------------------------------------------------
-         * ger properties
+         * standard 
          * --------------------------------------------------------------------
          */
         inline bool full() {
@@ -168,10 +168,15 @@ namespace v1 {
         inline uint32_t capacity() {
             return __capacity;
         }
-        inline uint32_t length() {
+        /**
+         * --------------------------------------------------------------------
+         * get properties
+         * --------------------------------------------------------------------
+         */
+        inline uint32_t NumFrames() {
             return __length;
         }
-        inline uint32_t nframesize() {
+        inline uint32_t FrameSize() {
             return __data.at(0).size() + SCodec::HeaderSize();
         }
         /**
@@ -179,7 +184,7 @@ namespace v1 {
          * set properties
          * --------------------------------------------------------------------
          */
-        inline SCodecEncoder& length(uint32_t len) {
+        inline SCodecEncoder& NumFrames(uint32_t len) {
             __length = len;
             return *this;
         }

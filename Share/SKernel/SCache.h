@@ -86,7 +86,7 @@ public:
                 );
             }
         } catch(std::out_of_range&) {
-            Decoder c(doc.GetNumFrames(), std::move(doc), __stamp);
+            Decoder c(doc.NumFrames(), std::move(doc), __stamp);
             if (c.full()) {
                 __storage[Open].Insert(doc, std::move(c));
             } else {
@@ -206,7 +206,7 @@ class SCache {
          *  Context operators
          */
         inline SReference& operator=(const Context& s) {
-            __pos = s.GetPosition();
+            __pos = s.Position();
             return *this;
         }
         inline operator Context() const {
@@ -216,16 +216,16 @@ class SCache {
          * Context compare
          */
         inline bool gt(const Context& s) const {
-            return (__pos - s.GetPosition()) < (UINT32_MAX >> 1);
+            return (__pos - s.Position()) < (UINT32_MAX >> 1);
         }
         inline bool lt(const Context& s) const {
-            return (__pos - s.GetPosition()) > (UINT32_MAX >> 1);
+            return (__pos - s.Position()) > (UINT32_MAX >> 1);
         }
         inline bool eq(const Context& s) const {
-            return (__pos == s.GetPosition());
+            return (__pos == s.Position());
         }
         inline bool neq(const Context& s) const {
-            return (__pos != s.GetPosition());
+            return (__pos != s.Position());
         }
         private:
         uint32_t __pos;
@@ -268,16 +268,16 @@ public:
 	        if (__min.neq(__max)) {
 	        	return false;
 	        }
-	        __min = Reference(doc.GetPosition() - __n);
-	        __max = Reference(doc.GetPosition() + __n);
+	        __min = Reference(doc.Position() - __n);
+	        __max = Reference(doc.Position() + __n);
 	        __back = __front = doc;
 	    }
 	    if (__max.lt(doc)) {
 	        if (__min.neq(__max)) {
 	        	return false;
 	        }
-	        __min = Reference(doc.GetPosition() - __n);
-	        __max = Reference(doc.GetPosition() + __n);
+	        __min = Reference(doc.Position() - __n);
+	        __max = Reference(doc.Position() + __n);
 	        __back = __front = doc;
 	    }
 	    /**
@@ -293,7 +293,7 @@ public:
 	        /**
 	         * inset a new container 
 	         */
-	        __storage[doc] = CodecDecoder(doc.GetNumFrames(), std::move(doc), __stamp);
+	        __storage[doc] = CodecDecoder(doc.NumFrames(), std::move(doc), __stamp);
 	        /**
 	         * update movement
 	         */

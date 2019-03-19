@@ -44,15 +44,15 @@ void SODirConnector::_Write(const Document& container) {
     /**------------------------------------------------------------------------------------------------------------*
      * write context
      *----------------------------------------------------------------------------------------*/
-    res.Drain(Frame().Number<reference_t>(container.GetPosition()));
-    res.Drain(Frame().Number<numframes_t>(container.GetNumFrames()));
+    res.Drain(Frame().Number<reference_t>(container.Position()));
+    res.Drain(Frame().Number<numframes_t>(container.NumFrames()));
     res.Drain(Frame().Number<numframes_t>(container.size()));
-    res.Drain(Frame().Number<framesize_t>(container.GetFrameSize()));
+    res.Drain(Frame().Number<framesize_t>(container.FrameSize()));
     // log ------------------------------------------------
     INFO("CODE::OUT::"
-        << "pos=" << container.GetPosition()  << " " 
-        << "n="   << container.GetNumFrames() << " "
-        << "sz="  << container.GetFrameSize() << " " 
+        << "pos=" << container.Position()  << " " 
+        << "n="   << container.NumFrames() << " "
+        << "sz="  << container.FrameSize() << " " 
         << "len=" << container.size()
     );
     /**------------------------------------------------------------------------------------------------------------*

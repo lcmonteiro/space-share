@@ -108,8 +108,8 @@ protected:
     }
 	void processData(Data&& data, ORoad& out) override {
 	    DEBUG("receive={" 
-	        << " p=" << data.GetPosition() 
-	        << " n=" << data.GetNumFrames() 
+	        << " p=" << data.Position() 
+	        << " n=" << data.NumFrames() 
 	        << " s=" << data.size() 
 	        << " }"
 	    );
@@ -260,8 +260,8 @@ protected:
 	     * insert on cache
 	     */
 	    DEBUG("receive::" 
-			<< "pos=" << data.GetPosition()  << " " 
-			<< "n="   << data.GetNumFrames() << " "
+			<< "pos=" << data.Position()  << " " 
+			<< "n="   << data.NumFrames() << " "
 			<<"s=" << data.size()
 		);
 	    if (!__cache.Push(move(data))) {
