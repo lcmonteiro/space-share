@@ -23,11 +23,11 @@ TEST(DecodedMessageUDP, Link)
 {
     STask::Enable();
     // settings -----------------------
-    auto size = 100;
+    auto size = size_t(100);
 
     // create connectors --------------
     auto ic = Decoded::Message::IUdpConnector::Make(
-        "127.0.0.1:9999", 20, size
+        "127.0.0.1:9999", size_t(20), size
     );
     auto oc = Decoded::Message::OUdpConnector::Make(
         "127.0.0.1:9999"

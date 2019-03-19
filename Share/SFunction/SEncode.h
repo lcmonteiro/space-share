@@ -106,7 +106,7 @@ protected:
 	        std::vector<size_t> wgt;
             wgt.reserve(out.size());
 	        for (auto& o : out) { wgt.emplace_back(o.second->GetEnergy()); }
-            
+
             // quantities -----------------------------------------------------
             std::discrete_distribution<> d(wgt.begin(), wgt.end());
             std::vector<size_t> qty;
@@ -114,21 +114,20 @@ protected:
             for (auto i = 0; i < remain; ++i) { ++qty[d(gen)]; }
 
 	        // weighted write -------------------------------------------------
-            auto it_o = out.begin();
-            auto it_q = qty.begin();
-	        while (out.end() != it_o) {
+            auto o = out.begin();
+	        for (auto q = qty.begin(); qty.end() != q; ++q) {
 	            try {
                     // write and update iterator and data ---------------------
-                    it_o->second->Write(
-                        Encoded::Document(en.NumFrames(*it_q).pop(), ctxt)); 
+                    o->second->Write(
+                        Encoded::Document(en.NumFrames(*q).pop(), ctxt)); 
                     // update references --------------------------------------
-                    ++it_o; remain -= *it_q;
+                    ++o; remain -= *q;
 		        } catch (ConnectorExceptionTIMEOUT& ex) {
-                    ++it_o;
+                    ++o;
 	            } catch (ConnectorExceptionDEAD& ex) {
-		            out.Exception(it_o);
+		            out.Exception(o);
 		        }    
-            } 
+            }
 	    }
 	}
 private:

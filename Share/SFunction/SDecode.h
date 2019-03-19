@@ -9,7 +9,7 @@
 #ifndef SDECODE_FUNCTION_H
 #define SDECODE_FUNCTION_H
 /**
- * C++
+ * std
  */
 #include <vector>
 #include <cmath>
@@ -39,9 +39,9 @@ class SDecode : public SFunctionSpread<
     /**
      * helpers
      */
-    using ORoad    = typename Super::ORoad;
-    using Data     = typename Super::Data;
-    using Cache    = Message::SCache;
+    using ORoad = typename Super::ORoad;
+    using Data  = typename Super::Data;
+    using Cache = Message::SCache;
 public:
     /**
 	 * ------------------------------------------------------------------------
@@ -65,13 +65,10 @@ public:
 	 * ------------------------------------------------------------------------
      */
     void Drain(ORoad& out) {
-	    /**
-	     * move cache
-	     */
+	    // move cache -----------------
 	    __cache.Move();
-	    /**
-	     * process
-	     */
+	    
+		// process --------------------
 	    processData(out);
     }
     /**
@@ -80,12 +77,10 @@ public:
 	 * ------------------------------------------------------------------------
      */
     void Recover() override {
-	    /**
-	     * clear cache
-	     */
+	    // clear cache ----------------
 	    __cache.Clear();
-	    /** 
-	     */
+	    
+		// base recover ---------------
 	    SFunction::Recover();
     }
 protected:

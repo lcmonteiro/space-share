@@ -253,24 +253,25 @@ TEST(Spread, Code)
     });
 
     // build a test frame ----------------------------------------------------- 
-    auto frame_i = SRandom::Frame(size);
-    auto frame_o = IOFrame(size);
+    auto const  frame_i = SRandom::Frame(size);
+    auto        frame_o = IOFrame(size);
 
     // out interface resource --------------------------------------------------
     auto interface_o = Message::SLocalResource()
         .Bind(addr_o)
     .Detach();
+    
     // decode start ------------------------------------------------------------
     de.Detach();
 
     // decode wait -------------------------------------------------------------
-    EXPECT_EQ(de.WaitState(Decode::Time(300000), Decode::PLAY), true);
+    EXPECT_EQ(de.WaitState(Decode::Time(3000), Decode::PLAY), true);
     
     // encode start ------------------------------------------------------------
     en.Detach();
     
     // encode wait -------------------------------------------------------------
-    EXPECT_EQ(en.WaitState(Encode::Time(30000), Encode::PLAY), true);
+    EXPECT_EQ(en.WaitState(Encode::Time(3000), Encode::PLAY), true);
     
     // in interface resource ---------------------------------------------------
     auto interface_i = Message::SLocalResource()

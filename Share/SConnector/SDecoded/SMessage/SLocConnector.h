@@ -84,15 +84,16 @@ public:
      * properties
      */
     typedef struct {
-        const SText&  address; 
-        const size_t& nframes; 
-        const size_t& maxsmsg;
+        const SText  address; 
+        const size_t nframes; 
+        const size_t maxsmsg;
     } Properties;
     /**
      * constructor
      */
-    SILocConnectorT(const SText& a, const size_t b, const size_t c) 
-    : SIMessageConnector<R, T>(Properties{a, b, c}) {}
+    template<typename...Args>
+    SILocConnectorT(Args &&...args) 
+    : SIMessageConnector<R, T>(Properties{std::forward<Args>(args)...}) {} 
     /**
      * make
      */
@@ -119,13 +120,14 @@ public:
      * properties
      */
     typedef struct {
-        const SText& address; 
+        const SText address; 
     } Properties;
     /**
      * constructor
      */
-    SOLocConnectorT(const SText a) 
-    : SOMessageConnector<R, T>(Properties{a}) {}
+    template<typename...Args>
+    SOLocConnectorT(Args &&...args) 
+    : SOMessageConnector<R, T>(Properties{std::forward<Args>(args)...}) {}
     /**
      * make
      */
@@ -154,15 +156,16 @@ public:
      * properties
      */
     typedef struct {
-        const SText&  address; 
-        const size_t& nframes; 
-        const size_t& maxsmsg;
+        const SText  address; 
+        const size_t nframes; 
+        const size_t maxsmsg;
     } Properties;
     /**
      * constructor
      */
-    SIOLocConnectorT(const SText& a, const size_t b, const size_t c) 
-    : SIOMessageConnector<R, T>(Properties{a, b, c}) {}
+    template<typename...Args>
+    SIOLocConnectorT(Args &&...args) 
+    : SIOMessageConnector<R, T>(Properties{std::forward<Args>(args)...}) {}
     /**
      * make
      */

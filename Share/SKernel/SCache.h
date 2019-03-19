@@ -82,15 +82,16 @@ public:
         try {
             if(__storage[Open].Find(doc).push(std::move(doc)).full()) {
                 __storage[Done].Insert(
-                    doc, std::move(__storage[Open].Find(doc))
+                    doc, 
+                    std::move(__storage[Open].Find(doc))
                 );
             }
         } catch(std::out_of_range&) {
             Decoder c(doc.NumFrames(), std::move(doc), __stamp);
             if (c.full()) {
-                __storage[Open].Insert(doc, std::move(c));
-            } else {
                 __storage[Done].Insert(doc, std::move(c));
+            } else {
+                __storage[Open].Insert(doc, std::move(c));
             }
         }
         return true;
@@ -103,19 +104,16 @@ public:
     inline std::list<Decoded::Document> Pop() {
 	    auto& done  = __storage[Done];
 	    auto& close = __storage[Close];
-	    /**
-	     * get all decoded messages
-	     */
+
+	    // get all decoded messages -----------------------
 	    std::list<Decoded::Document> docs;
 	    for(auto it = done.begin(); it != done.end(); it = done.erase(it)) {
 	        auto p = *it;
-	        /**
-	         * create document 
-	         */
+
+	        // create document ---------------------------- 
 	        docs.emplace_back(std::move(p->second.pop()));
-	        /**
-	         * move context to close
-	         */
+
+	        // move context to close ----------------------
 	        close.Insert(p->first, std::move(p->second.clear()));
 	    }
         return docs;
@@ -133,15 +131,12 @@ public:
      * ------------------------------------------------------------------------
      */
     inline void Move() {
-        /**
-         * create a random context
-         */
+        // create a random context ------------------------
         Context ctxt(__rand(), 0);
-        /**
-         * insert a random context on done and close states
-         */
-        __storage[Done].Insert(Context(), Decoder());
-        __storage[Close].Insert(Context(), Decoder());
+
+        // insert a random context on done and close states
+        __storage[Done].Insert(ctxt,  Decoder());
+        __storage[Close].Insert(ctxt, Decoder());
     }
 protected:
     /**
