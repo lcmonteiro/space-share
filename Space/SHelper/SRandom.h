@@ -102,8 +102,8 @@ public:
      * --------------------------------------------------------------------------------------------
      **/
     template<size_t CHUNK=0x1000>
-    static SIFileResource File(const std::string& path, size_t n) {
-        SIFileResource out;
+    static SOFileResource File(const std::string& path, size_t n) {
+        SOFileResource out(path);
         auto d = div(int(n), int(CHUNK));
         for(size_t i=0; i<d.quot; ++i) {
             out.Drain(SRandom::Frame(CHUNK));

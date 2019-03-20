@@ -70,10 +70,6 @@ public:
      */
     SMachine(SMachine&& orig)       = default;
     /**
-     * destructor 
-     */
-    virtual ~SMachine()             = default;
-    /**
      * operators
      */
     SMachine& operator=(SMachine&&) = default;
@@ -90,7 +86,7 @@ public:
      * ------------------------------------------------------------------------
      * process
      */
-    bool Process(chrono::milliseconds timeout);
+    bool Process(std::chrono::milliseconds timeout);
     /**
      * wait for all modules join
      */

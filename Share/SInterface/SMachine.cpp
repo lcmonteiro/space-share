@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SMachine.cpp
  * Author: Luis Monteiro
  * 
  * Created on July 4, 2017, 11:51 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #include <stdbool.h>
 /**
@@ -22,42 +24,37 @@
  */
 SMachine::SMachine(const SAddress& uri, const Config& conf) 
 : __uri(uri), __monitor(uri) {    
-    /**
-     * create modules
-     */
-    for(auto& c : conf) {
-        ProcessData(c);
-    }    
+    //  create modules ------------------------------------
+    for(auto& c : conf) { ProcessData(c); }    
 }
 /**
  *-------------------------------------------------------------------------------------------------
  * interface
  *-------------------------------------------------------------------------------------------------
  * process
+ * ----------------------------------------------------------------------------
  */
 bool SMachine::Process(chrono::milliseconds timeout) {
     try {
-        /**
-         * wait data
-         */
+        // wait data --------------------------------------
         ResourceMonitor(timeout, &__monitor).Wait();
-        /**
-         * process data
-         */
+
+        // process data -----------------------------------
         ProcessData(__monitor.Read());
-        /** 
-         */
+
     } catch (ResourceExceptionTIMEOUT& ex) {
     } catch (MonitorExceptionTIMEOUT& ex) {
     }
     return true;
 }
 /**
+ * ----------------------------------------------------------------------------
  * join
+ * ----------------------------------------------------------------------------
  */
 bool SMachine::Join() {
     bool out = true;
-    for(auto& m : __modules){
+    for(auto& m : __modules) {
         out &= m.second->Join();
     }
     return out;
@@ -72,11 +69,11 @@ bool SMachine::Join() {
  * F = function
  * I = input
  * O = output
+ * ----------------------------------------------------------------------------
  */
 void SMachine::ProcessData(const Command& cmd) {
-    /**
-     * uri - resource identify
-     */
+
+    // uri - resource identify ----------------------------
     for(auto& m : cmd.GetModules()) {
         try {
             InsertModule(MakeURI(m[Module::URI]), cmd);
@@ -86,26 +83,30 @@ void SMachine::ProcessData(const Command& cmd) {
     }
 }
 /**
+ * ----------------------------------------------------------------------------
  * insert module
+ * ----------------------------------------------------------------------------
  */
 void SMachine::InsertModule(Key uri, const Command& cmd) {
-    /**
-     * install module
-     */
+
+    // install module -------------------------------------
     __modules.emplace(uri, SModule::Create(cmd));
-    /**
-     * start module
-     */
+    
+    //  start module --------------------------------------
     __modules[uri]->Detach();
 }
 /**
+ * ----------------------------------------------------------------------------
  * update module
+ * ----------------------------------------------------------------------------
  */
 void SMachine::UpdateModule(Key uri, const Command& cmd) {
 
 }
 /**
+ * ----------------------------------------------------------------------------
  * remove module
+ * ----------------------------------------------------------------------------
  */
 void SMachine::RemoveModule(Key uri) {
     __modules.erase(uri);
