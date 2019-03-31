@@ -130,8 +130,8 @@ protected:
 
         // process chunk size -------------------------------------------------
         auto res = std::div(
-            static_cast<int>(__res.size() + sizeof (framesize_t)), 
-            static_cast<int>(chunks.capacity())
+            static_cast<int>(this->__res.size() + sizeof (framesize_t)), 
+            static_cast<int>(__container.capacity())
         );
         // normalize frame size -----------------------------------------------
         auto size = ((res.rem > 0) ? (res.quot + 1) : (res.quot));
@@ -140,7 +140,7 @@ protected:
         try {
             while(!out.Full()) {
                 IOFrame aux (size);
-                __res.Read(aux.Reset());
+                this->__res.Read(aux.Reset());
                 out.emplace_back(aux.Frame());
             }
         } catch(...) {
@@ -150,13 +150,13 @@ protected:
             }
         }
         // insert size --------------------------------------------------------
-        out.Number<framesize_t>(_res.size());
+        out.Number<framesize_t>(this->__res.size());
         
         // info ---------------------------------------------------------------
         INFO("DATA::IN::"
             << "n=" << out.size() << "0=" << out.at(0));
 
-        // return filled docmunent --------------------------------------------
+        // return filled document --------------------------------------------
         return out.Detach();
     }
     /**
