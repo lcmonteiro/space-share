@@ -7,6 +7,7 @@ TARGET
     TestShareConnector
 SOURCES
     TestConnector/TestDecodedMessageUDP.cpp
+    TestConnector/TestDecodedMessageFile.cpp
 DEPENDS
     ShareConnector
     SpaceHelper

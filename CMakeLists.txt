@@ -2,6 +2,8 @@ cmake_minimum_required (VERSION 3.10)
 enable_testing()
 # project name
 project (SpaceShare)
+# properties
+set(CMAKE_CXX_STANDARD 14)
 # definitions
 add_definitions(-D__LOG__)
 # folder for Applications

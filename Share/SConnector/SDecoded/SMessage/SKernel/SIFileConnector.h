@@ -1,89 +1,179 @@
-/* 
+/**
+ * --------------------------------------------------------------------------------------------------------------------
  * File:   SIFileConnector.h
- * Author:      Luis Monteiro
+ * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * --------------------------------------------------------------------------------------------------------------------
  */
-#ifndef SIFILECONNECTORSOCKET_H
-#define SIFILECONNECTORSOCKET_H
-/**
- * Space Resource
- */
-#include "SFileResource.h"
+#ifndef SIFILECONNECTOR_H
+#define SIFILECONNECTOR_H
 /**
  * Space Kernel
  */
 #include "SContainer.h"
+#include "SAddress.h"
+#include "STask.h"
+#include "SText.h"
 /**
  * Share Kernel
  */
 #include "SConnector.h"
 /**
+ * --------------------------------------------------------------------------------------------------------------------
  * Begin namespace Decoded
+ * --------------------------------------------------------------------------------------------------------------------
  */
 namespace Decoded {
-/**
- * Begin namespace Message
- */
 namespace Message {
 /**
+ * --------------------------------------------------------------------------------------------------------------------
+ * Base - SIFileConnector
+ * --------------------------------------------------------------------------------------------------------------------
  */
-class SIFileConnector : public SInputConnector {
+namespace Base {
+/**
+ * @Adpter - file resource adapter
+ */
+template<typename Adapter, typename Super>
+class SIFileConnector : public Super {
 public:
     /**
+     * ------------------------------------------------------------------------
      * constructor
+     * ------------------------------------------------------------------------
      */
-    SIFileConnector(const SText address, const size_t nframesize);
+    template<typename V>
+    SIFileConnector(const V& v): Super(v.address), __res() {}
     /**
-     * destructor
+     * ------------------------------------------------------------------------
+     * get resource
+     * ------------------------------------------------------------------------
      */
-    virtual ~SIFileConnector() = default;
-    /**
-     * inline overrides
-     */
-    inline Resource& GetResource() override{
-        return __res;
+    inline Resource& GetResource() override {
+        return __res.Base();
     }
 protected:
     /**
-	 * -----------------------------------------------------
-	 * IO functions
-	 * -----------------------------------------------------
-	 * read
-	 */
-    Document _Read() override;
-    /**
-	 * ----------------------------------------------------
-	 * control functions
-	 * ----------------------------------------------------
-	 * open, good and close
-	 */
+     * ------------------------------------------------------------------------
+     * open
+     * ------------------------------------------------------------------------
+     */
     inline void _Open() override {
-        __res = SIFileResource(__uri);
+        std::default_random_engine eng{std::random_device{}()};
+        // sleep distribution -----------------------------
+        std::uniform_int_distribution<> dist{100, 1000};
+        // main loop --------------------------------------
+        int i = 0;
+        do {
+            try {
+                __res.Bind(this->__uri);
+                break;
+            } catch (std::system_error& ex) {
+                WARNING(ex.what());
+            }
+        } while (STask::Sleep(std::chrono::milliseconds{dist(eng) * ++i}));
     }
-    inline bool _Good() override{
+    /**
+     * ------------------------------------------------------------------------
+     * good
+     * ------------------------------------------------------------------------
+     */
+    inline bool _Good() override {
         return __res.Good();
     }
+    /**
+     * ------------------------------------------------------------------------
+     * close
+     * ------------------------------------------------------------------------
+     */
     inline void _Close() override {
-        __res = SIFileResource();
+        __res.Reset();
     }
-private:
     /**
-     * resource 
+     * ------------------------------------------------------------------------
+     * variables
+     * ------------------------------------------------------------------------
+     * resource adapter 
      */
-    SIFileResource __res;
-    /**
-     * frame size
-     */
-    size_t __sframes;
+    Adapter __res;
 };
-/**
- * End namespace Message
- */
 }
 /**
- * End namespace Decoded
+ * --------------------------------------------------------------------------------------------------------------------
+ * Layer - SIFileConnector
+ * --------------------------------------------------------------------------------------------------------------------
  */
+namespace Layer {
+/**
+ */
+template<typename Super>
+class SIFileConnector : public Super {
+public:
+    /**
+     * ------------------------------------------------------------------------
+     * constructor
+     * ------------------------------------------------------------------------
+     */
+    template<typename V>
+    SIFileConnector(const V& v)
+    : Super(v), __container(v.nframes) {}
+protected:
+    /**
+     * --------------------------------------------------------------------------------------------
+     * read
+     * --------------------------------------------------------------------------------------------
+     */
+    Document _Read() override {
+        // output container ---------------------------------------------------
+        auto out = Document(__container.capacity());
+
+        // process chunk size -------------------------------------------------
+        auto res = std::div(
+            static_cast<int>(__res.size() + sizeof (framesize_t)), 
+            static_cast<int>(chunks.capacity())
+        );
+        // normalize frame size -----------------------------------------------
+        auto size = ((res.rem > 0) ? (res.quot + 1) : (res.quot));
+        
+        // container fill up --------------------------------------------------
+        try {
+            while(!out.Full()) {
+                IOFrame aux (size);
+                __res.Read(aux.Reset());
+                out.emplace_back(aux.Frame());
+            }
+        } catch(...) {
+            while(!out.Full()) {
+                IOFrame aux (size);
+                out.emplace_back(aux.Frame());
+            }
+        }
+        // insert size --------------------------------------------------------
+        out.Number<framesize_t>(_res.size());
+        
+        // info ---------------------------------------------------------------
+        INFO("DATA::IN::"
+            << "n=" << out.size() << "0=" << out.at(0));
+
+        // return filled docmunent --------------------------------------------
+        return out.Detach();
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * variables
+     * ------------------------------------------------------------------------
+     **
+     * container
+     */
+    Document __container;
+};
 }
+/**
+ * --------------------------------------------------------------------------------------------------------------------
+ * End namespace Decoded & Message
+ * --------------------------------------------------------------------------------------------------------------------
+ */
+}}
 #endif /* SIFILECONNECTORSOCKET_H */
 

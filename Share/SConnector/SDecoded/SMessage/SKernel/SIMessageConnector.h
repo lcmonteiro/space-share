@@ -136,7 +136,9 @@ protected:
         std::swap(__container, container);    
 
         // info -------------------------------------------
-        INFO("DATA::IN::n=" << container.size() << "=" << container.at(0));
+        INFO("DATA::IN::"
+            << "n=" << container.size() 
+            << "0=" << container.at(0));
         
         // return filled container ------------------------
         return std::move(container);

@@ -63,6 +63,8 @@
         "regex": "cpp",
         "scoped_allocator": "cpp",
         "random": "cpp",
-        "string": "cpp"
+        "string": "cpp",
+        "cstddef": "cpp",
+        "memory_resource": "cpp"
     }
 }

@@ -64,7 +64,7 @@ public:
     /**
      * ----------------------------------------------------
      * append list buffer
-     * ---------------------------------------------------
+     * ----------------------------------------------------
      */
     inline SContainer& Append(const SContainer& buffer) {
         insert(end(), buffer.begin(), buffer.end());
@@ -84,6 +84,9 @@ public:
     inline bool Full() const {
         return (size() == capacity());
     }
+    inline bool full() const {
+        return (size() == capacity());
+    }
     /**
      * ----------------------------------------------------
      * detach  
@@ -98,9 +101,9 @@ public:
  * utilities
  * ------------------------------------------------------------------------------------------------
  **/
-inline std::ostream& operator<<(std::ostream& os, const Container& l) {
+inline std::ostream& operator<<(std::ostream& os, const SContainer& c) {
     os << "[" << std::endl;
-    for (auto v : l) {
+    for (auto v : c) {
         os << " " << v << std::endl;
     }
     return os << "]";

@@ -34,6 +34,9 @@ public:
      * get size
      */
     size_t Size(); 
+    inline size_t size() {
+        return Size();
+    } 
     /**
      * get position
      */
