@@ -1,8 +1,10 @@
 /**
+ * ------------------------------------------------------------------------------------------------
  * File:   SMonitorHandler.h
  * Author: Luis Monteiro
  *
  * Created on January, 2019, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SMONITORHANDLER_H
 #define SMONITORHANDLER_H
@@ -25,14 +27,14 @@
  */
 #include "SMonitor.h"
 /**
- * -------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * monitor handler
- * -------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 class SMonitorHandler: public SMonitor::SHandler {
 public:
     using Handler  = SResource::pHandler<SResourceHandler>;
-    using Handlers = vector<Handler>;
+    using Handlers = std::vector<Handler>;
     /**
      * ------------------------------------------------------------------------
      * constructors & destructor
@@ -56,9 +58,9 @@ protected:
     Handlers __handlers;
 };
 /**
- * -------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * static monitor handler
- * -------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 class SStaticMonitorHandler: public SMonitorHandler {
 public:
@@ -68,7 +70,7 @@ public:
      * ------------------------------------------------------------------------
      * main
      */
-    SStaticMonitorHandler(initializer_list<Handler> handlers);
+    SStaticMonitorHandler(std::initializer_list<Handler> handlers);
     /**
      */
     SStaticMonitorHandler() : SStaticMonitorHandler({}) {}
@@ -85,12 +87,12 @@ public:
     /**
      * wait
      */
-    std::list<size_t> Wait(const chrono::milliseconds& timeout);
+    std::list<size_t> Wait(const std::chrono::milliseconds& timeout);
     /**
      */
 protected:
     using Location  = pollfd;
-    using Locations = vector<Location>;
+    using Locations = std::vector<Location>;
     /**
      * ------------------------------------------------------------------------
      * native processes
@@ -98,7 +100,7 @@ protected:
      **
      * check a group of locations
      */
-    std::list<size_t> __Check(const chrono::milliseconds& timeout);
+    std::list<size_t> __Check(const std::chrono::milliseconds& timeout);
     /**
      * helpers
      */
@@ -113,9 +115,9 @@ protected:
     Locations __locations;
 };
 /**
- * -------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * dynamic monitor handler
- * -------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 class SDynamicMonitorHandler: public SMonitorHandler, public SResourceHandler {
 public:
@@ -125,7 +127,7 @@ public:
      * ------------------------------------------------------------------------
      * main
      */
-    SDynamicMonitorHandler(initializer_list<Handler> handlers);
+    SDynamicMonitorHandler(std::initializer_list<Handler> handlers);
     /**
      */
     SDynamicMonitorHandler() : SDynamicMonitorHandler({}) {}
@@ -142,9 +144,9 @@ public:
     /**
      * wait
      */
-    std::list<size_t> Wait(const chrono::milliseconds& timeout);
+    std::list<size_t> Wait(const std::chrono::milliseconds& timeout);
 protected:
-    using Handlers  = vector<Handler>;
+    using Handlers  = std::vector<Handler>;
     /**
      * ------------------------------------------------------------------------
      * native processes
@@ -152,7 +154,7 @@ protected:
      **
      * check a group of locations
      */
-    std::list<size_t> __Check(const chrono::milliseconds& timeout);
+    std::list<size_t> __Check(const std::chrono::milliseconds& timeout);
     /**
      * helpers
      */
@@ -161,9 +163,9 @@ protected:
     inline void __Remove(Handler h);
 };
 /**
- * -------------------------------------------------------------------------------------------------
- * end 
- * -------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
+ * End 
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* SMONITORHANDLER_H */
 

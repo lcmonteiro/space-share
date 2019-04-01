@@ -27,6 +27,10 @@
 #include "SFileResource.h"
 #include "SFrame.h"
 /**
+ * namespaces 
+ */
+using namespace std;
+/**
  * ------------------------------------------------------------------------------------------------
  * linux interface
  * ------------------------------------------------------------------------------------------------
@@ -65,7 +69,7 @@ size_t SFileResource::Size() {
 size_t SFileResource::Position() {
     auto cur = ::lseek(GetHandler<SResourceHandler>()->FD(), 0, SEEK_CUR);
     if (cur < 0) {
-        throw ResourceException(std::make_error_code(std::errc(errno)));
+        throw ResourceException(make_error_code(errc(errno)));
     }
     return size_t(cur);
 }
@@ -73,7 +77,7 @@ size_t SFileResource::Position() {
  * get file path
  */
 SText SFileResource::Path() const {
-	std::vector<char> out;
+	vector<char> out;
 	//read real path
 	int len = 0;
 	do {
@@ -81,7 +85,7 @@ SText SFileResource::Path() const {
 		if((len = ::readlink(__Path(
             GetHandler<SResourceHandler>()->FD()
         ).data(), out.data(), out.size())) < 0) {
-			throw ResourceException(std::make_error_code(std::errc(errno)));	
+			throw ResourceException(make_error_code(errc(errno)));	
 		}
 	} while(out.size()==len);
 	// return path as string
@@ -92,8 +96,8 @@ SText SFileResource::Path() const {
  * get base name
  * ----------------------------------------------------------------------------
  */
-std::string SFileResource::BaseName(const std::string& path) {
-    return {std::find_if(path.rbegin(), path.rend(),
+string SFileResource::BaseName(const string& path) {
+    return {find_if(path.rbegin(), path.rend(),
         [](char c) {return c == '/'; }
     ).base(), path.end()};
 }
@@ -130,8 +134,8 @@ SFileResource& SFileResource::Drain(IOFrame& f) {
 template<>
 SFileResource& SFileResource::Drain(const Frame& f) {
     for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = std::next(it, __Write(
-            GetHandler<SResourceHandler>()->FD(), it.base(), std::distance(it, end)
+        it = next(it, __Write(
+            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
         ));
     }
     return *this;
@@ -150,10 +154,10 @@ SFileResource& SFileResource::Flush() {
  * link file
  * ----------------------------------------------------------------------------
  */
-const std::string& SFileResource::Link(const std::string& from, const std::string& to) {
+const string& SFileResource::Link(const string& from, const string& to) {
     ::unlink(from.c_str());
     if (::link(to.c_str(), from.c_str()) < 0) {
-         throw ResourceException(std::make_error_code(std::errc(errno)));
+         throw ResourceException(make_error_code(errc(errno)));
     }
     return from;
 }
@@ -169,12 +173,12 @@ string SFileResource::TmpPath() {
     const char* default_tmp = "/tmp";
 #endif
     const char* ptr = 0;
-    (ptr = std::getenv("TMPDIR" )) ||
-    (ptr = std::getenv("TMP"    )) ||
-    (ptr = std::getenv("TEMP"   )) ||
-    (ptr = std::getenv("TEMPDIR")) ||
+    (ptr = getenv("TMPDIR" )) ||
+    (ptr = getenv("TMP"    )) ||
+    (ptr = getenv("TEMP"   )) ||
+    (ptr = getenv("TEMPDIR")) ||
     (ptr = default_tmp);
-    return std::string(ptr);
+    return string(ptr);
 }
 /**
  * ------------------------------------------------------------------------------------------------
@@ -183,13 +187,13 @@ string SFileResource::TmpPath() {
  * create IFileResource
  * ----------------------------------------------------------------------------
  */
-SIFileResource::SIFileResource(const std::string& path) 
+SIFileResource::SIFileResource(const string& path) 
 : SFileResource() {
-    SetHandler(std::make_shared<SResourceHandler>(
+    SetHandler(make_shared<SResourceHandler>(
         ::open(path.data(), O_RDONLY)
     ));
 }
-SIFileResource::SIFileResource(const std::string& path, const SFileResource& link) 
+SIFileResource::SIFileResource(const string& path, const SFileResource& link) 
 : SIFileResource(
     Link(path, link.Path())
 ) {}
@@ -212,7 +216,7 @@ bool SIFileResource::Good() {
  */
 SOFileResource::SOFileResource(const string& path) 
 : SFileResource() {
-    SetHandler(std::make_shared<SResourceHandler>(
+    SetHandler(make_shared<SResourceHandler>(
         ::open(
             path.data(), 
             O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
@@ -255,7 +259,7 @@ size_t __Read(int fd, Frame::pointer p, Frame::size_type s) {
 /**
  */
 SText __Path(int fd) {
-    std::ostringstream os;
+    ostringstream os;
     os << "/proc/self/fd/" << fd;
     return os.str();
 }

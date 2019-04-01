@@ -1,9 +1,11 @@
 /**
+ * ------------------------------------------------------------------------------------------------
  * File:   SMonitorHandler.cpp
  * Author: Luis Monteiro
  *
  * Created on January, 2019, 12:37 PM
- ***
+ * ------------------------------------------------------------------------------------------------
+ **
  * linux
  */
 #include <sys/epoll.h>
@@ -18,13 +20,17 @@
 #include "SMonitorHandler.h"
 #include "SResourceHandler.h"
 /**
+ * namespace
+ */
+using namespace std;
+/**
  * -------------------------------------------------------------------------------------------------
  * static monitor handler
  * -------------------------------------------------------------------------------------------------
  * constructor
  * ----------------------------------------------------------------------------
  */
-SStaticMonitorHandler::SStaticMonitorHandler(std::initializer_list<Handler> handlers)
+SStaticMonitorHandler::SStaticMonitorHandler(initializer_list<Handler> handlers)
 : SMonitorHandler() {
     for(auto& h :handlers) { Insert(h); }
 }
@@ -63,9 +69,9 @@ size_t SStaticMonitorHandler::Insert(Handler h) {
  *  Wait for active handlers
  * ----------------------------------------------------------------------------
  */
-std::list<size_t> SStaticMonitorHandler::Wait(const chrono::milliseconds& timeout) {
+list<size_t> SStaticMonitorHandler::Wait(const chrono::milliseconds& timeout) {
     auto handler = STask::Instance().GetResource().GetHandler<SResourceHandler>();
-    std::list<size_t> res;
+    list<size_t> res;
     try {
         // insert this task -------------------------------
         __locations.emplace_back(__Create(handler));
@@ -95,7 +101,7 @@ std::list<size_t> SStaticMonitorHandler::Wait(const chrono::milliseconds& timeou
  * check
  * ----------------------------------------------------------------------------
  */
-std::list<size_t> SStaticMonitorHandler::__Check(const chrono::milliseconds& timeout) {
+list<size_t> SStaticMonitorHandler::__Check(const chrono::milliseconds& timeout) {
     
     // wait -----------------------------------------------
     int r = 0;
@@ -103,7 +109,7 @@ std::list<size_t> SStaticMonitorHandler::__Check(const chrono::milliseconds& tim
         throw MonitorException(make_error_code(errc(errno)));
     }
     // check ----------------------------------------------
-    std::list<size_t> res;
+    list<size_t> res;
     for (size_t i = 0, n = r; (i < __locations.size()) && (res.size() < n); ++i) {
         if (__locations[i].revents & __locations[i].events) {
             res.emplace_back(i);
@@ -120,7 +126,7 @@ std::list<size_t> SStaticMonitorHandler::__Check(const chrono::milliseconds& tim
  * constructor
  * ----------------------------------------------------------------------------
  */
-SDynamicMonitorHandler::SDynamicMonitorHandler(std::initializer_list<Handler> handlers)
+SDynamicMonitorHandler::SDynamicMonitorHandler(initializer_list<Handler> handlers)
 : SMonitorHandler(), SResourceHandler(::epoll_create1(0)) {
     for(auto& h :handlers) { Insert(h); }
 }
@@ -173,9 +179,9 @@ size_t SDynamicMonitorHandler::Insert(Handler h) {
  *  Wait for active handlers
  * ----------------------------------------------------------------------------
  */
-std::list<size_t> SDynamicMonitorHandler::Wait(const chrono::milliseconds& timeout) {
+list<size_t> SDynamicMonitorHandler::Wait(const chrono::milliseconds& timeout) {
     auto handler = STask::Instance().GetResource().GetHandler<SResourceHandler>();
-    std::list<size_t> res;
+    list<size_t> res;
     try {
         // insert this task -------------------------------
         __Insert(handler, __handlers.size());
@@ -225,6 +231,6 @@ list<size_t> SDynamicMonitorHandler::__Check(const chrono::milliseconds& timeout
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */

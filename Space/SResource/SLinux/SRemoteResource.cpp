@@ -38,6 +38,10 @@
  */
 #define INIT_IO_TIMEOUT   10000 // us
 /**
+ * namespaces 
+ */
+using namespace std;
+/**
  * ------------------------------------------------------------------------------------------------
  * linux interface
  * ------------------------------------------------------------------------------------------------
@@ -287,7 +291,7 @@ Message::SRemoteResource& Message::SRemoteResource::Bind(
  * wait
  */
 Message::SRemoteResource& Message::SRemoteResource::Wait(
-    const string& host, uint16_t port, std::chrono::seconds timeout
+    const string& host, uint16_t port, chrono::seconds timeout
 ) {
     /**
      * bind parameters
@@ -371,7 +375,7 @@ Message::SRemoteResource& Message::SRemoteResource::Wait(
             sbuf, sizeof (sbuf),
             NI_NUMERICHOST | NI_NUMERICSERV) == 0
             ) {
-            std::cout << "connected: " << "host=" << hbuf << ", serv=" << sbuf << endl;
+            cout << "connected: " << "host=" << hbuf << ", serv=" << sbuf << endl;
         }
 #endif
         if (::connect(h->FD(), (struct sockaddr *)&addr, len) < 0) {

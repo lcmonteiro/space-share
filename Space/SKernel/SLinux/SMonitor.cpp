@@ -1,9 +1,11 @@
 /**
+ * ------------------------------------------------------------------------------------------------
  * File:   SMonitorHandler.cpp
  * Author: Luis Monteiro
  *
  * Created on January, 2019, 12:37 PM
- ***
+ * ------------------------------------------------------------------------------------------------
+ **
  * linux
  */
 #include <sys/epoll.h>
@@ -16,6 +18,10 @@
  */
 #include "SMonitorHandler.h"
 #include "SResourceHandler.h"
+/**
+ * namespaces 
+ */
+using namespace std;
 /**
  * ------------------------------------------------------------------------------------------------
  * static monitor
@@ -41,7 +47,7 @@ size_t Monitor::SStatic::Size() {
  */
 size_t Monitor::SStatic::Insert(Handler h) {
     return SMonitor::GetHandler<SStaticMonitorHandler>()->Insert(
-        std::static_pointer_cast<SResourceHandler>(h)
+        static_pointer_cast<SResourceHandler>(h)
     );
 }
 /**
@@ -49,7 +55,7 @@ size_t Monitor::SStatic::Insert(Handler h) {
  *  wait for active handlers
  * ----------------------------------------------------------------------------
  */
-std::list<size_t> Monitor::SStatic::Wait(const Time& timeout) {
+list<size_t> Monitor::SStatic::Wait(const Time& timeout) {
     return SMonitor::GetHandler<SStaticMonitorHandler>()->Wait(timeout);
 }
 /**
@@ -79,7 +85,7 @@ size_t Monitor::SDynamic::Size() {
  */
 size_t Monitor::SDynamic::Insert(Handler h) {
     return SMonitor::GetHandler<SDynamicMonitorHandler>()->Insert(
-        std::static_pointer_cast<SResourceHandler>(h)
+        static_pointer_cast<SResourceHandler>(h)
     );
 }
 /**
@@ -87,11 +93,11 @@ size_t Monitor::SDynamic::Insert(Handler h) {
  *  wait for active handlers
  * ----------------------------------------------------------------------------
  */
-std::list<size_t> Monitor::SDynamic::Wait(const chrono::milliseconds& timeout) {
+list<size_t> Monitor::SDynamic::Wait(const chrono::milliseconds& timeout) {
     return SMonitor::GetHandler<SDynamicMonitorHandler>()->Wait(timeout);
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */

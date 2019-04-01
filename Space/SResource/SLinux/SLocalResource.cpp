@@ -28,6 +28,10 @@
  */
 #define INIT_IO_TIMEOUT   10000     // us
 /**
+ * namespaces 
+ */
+using namespace std;
+/**
  * ------------------------------------------------------------------------------------------------
  * linux interface 
  * ------------------------------------------------------------------------------------------------
@@ -183,7 +187,7 @@ template SLocalResource& SLocalResource::Write(const IOFrame&);
  * Bind
  * ----------------------------------------------------------------------------
  */
-Message::SLocalResource& Message::SLocalResource::Bind(const std::string& local) {
+Message::SLocalResource& Message::SLocalResource::Bind(const string& local) {
     /**
      * bind parameters
      */
@@ -229,7 +233,7 @@ Message::SLocalResource& Message::SLocalResource::Bind(const std::string& local)
  * ----------------------------------------------------------------------------
  */
 Message::SLocalResource& Message::SLocalResource::Wait(
-    const std::string& local, std::chrono::seconds timeout
+    const string& local, chrono::seconds timeout
 ) {
     /**
      * bind parameters
@@ -293,7 +297,7 @@ Message::SLocalResource& Message::SLocalResource::Wait(
  * Link
  * ----------------------------------------------------------------------------
  */
-Message::SLocalResource& Message::SLocalResource::Link(const std::string& local) {
+Message::SLocalResource& Message::SLocalResource::Link(const string& local) {
     /**
      * connect parameters
      */
@@ -405,7 +409,7 @@ Stream::SLocalResource& Stream::SLocalResource::Wait(
  * link
  * ----------------------------------------------------------------------------
  */
-Stream::SLocalResource& Stream::SLocalResource::Link(const std::string& local) {
+Stream::SLocalResource& Stream::SLocalResource::Link(const string& local) {
     /**
      * connect parameters
      */
