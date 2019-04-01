@@ -22,15 +22,20 @@
 TEST(DecodedMessageFile, Link)
 {
     STask::Enable();
-    // settings -----------------------
-    auto size = size_t(100);
+    // settings ----------------------- 
+    auto size  = size_t(100);
+    auto ipath = SRandom::FileName();
+    auto opath = SRandom::FileName();
+
+    // create file --------------------
+    SRandom::File(ipath, size);
 
     // create connectors --------------
     auto ic = Decoded::Message::IFileConnector::Make(
-        "127.0.0.1:9999", size_t(20), size
+        ipath, size_t(20), size
     );
-    // auto oc = Decoded::Message::OUdpConnector::Make(
-    //     "127.0.0.1:9999"
+    // auto oc = Decoded::Message::OFileConnector::Make(
+    //     opath
     // );
 
     // // connect ------------------------
