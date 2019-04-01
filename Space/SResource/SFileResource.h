@@ -26,8 +26,7 @@ public:
      * ------------------------------------------------------------------------
      * check resource
      */
-    bool Valid() const;
-    inline bool Good() const { return Valid(); }
+    bool Good() const;
     /**
      * ------------------------------------------------------------------------
      * Properties
@@ -99,10 +98,6 @@ public:
     SIFileResource() = default;
     SIFileResource(const std::string& path);
     SIFileResource(const std::string& path, const SFileResource& link);
-    /**
-     * status
-     */
-    bool Good();
 };
 /**
  * ------------------------------------------------------------------------------------------------

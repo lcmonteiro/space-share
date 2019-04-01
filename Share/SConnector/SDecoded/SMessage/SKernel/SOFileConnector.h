@@ -58,8 +58,8 @@ protected:
     inline void _Open() override {
         __res = SOFileResource(__uri);
     }
-    inline bool _Good() override{
-        return __res.Valid();
+    inline bool _Good() override {
+        return __res.Good();
     }
     inline void _Close() override {
         __res = SOFileResource();

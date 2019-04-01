@@ -21,6 +21,7 @@
  * space linux
  */
 #include "SResourceHandler.h"
+#include "SResourceMediator.h"
 /**
  * space
  */
@@ -32,34 +33,23 @@
 using namespace std;
 /**
  * ------------------------------------------------------------------------------------------------
- * linux interface
- * ------------------------------------------------------------------------------------------------
- */
-static size_t __Write(int fd, Frame::const_pointer p, Frame::size_type s);
-static size_t __Read (int fd, Frame::pointer       p, Frame::size_type s);
-static SText  __Path (int fd);
-/**
- * ------------------------------------------------------------------------------------------------
  * Base
  * ------------------------------------------------------------------------------------------------
- * ------------------------------------------------------------------------
  * check resource
- * ------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
-bool SFileResource::Valid() const {
-	return (::fcntl(GetHandler<SResourceHandler>()->FD(), F_GETFL) != -1) 
-    || (errno != EBADF);
+bool SFileResource::Good() const {
+	return SResourceMediator::IsFile(
+        GetHandler<SResourceHandler>()->FD());
 }
- /*
+/**
+ * ----------------------------------------------------------------------------
  * get file size
  * ----------------------------------------------------------------------------
  */
 size_t SFileResource::Size() {
-    struct stat st;
-    if (::fstat(GetHandler<SResourceHandler>()->FD(), &st) < 0) {
-        throw ResourceException(make_error_code(errc(errno)));
-    }
-    return st.st_size;
+    return SResourceMediator::Length(
+        GetHandler<SResourceHandler>()->FD());
 }
 /**
  * ----------------------------------------------------------------------------
@@ -74,22 +64,13 @@ size_t SFileResource::Position() {
     return size_t(cur);
 }
 /**
+ * ----------------------------------------------------------------------------
  * get file path
+ * ----------------------------------------------------------------------------
  */
 SText SFileResource::Path() const {
-	vector<char> out;
-	//read real path
-	int len = 0;
-	do {
-		out.resize(out.size() + 0x100);
-		if((len = ::readlink(__Path(
-            GetHandler<SResourceHandler>()->FD()
-        ).data(), out.data(), out.size())) < 0) {
-			throw ResourceException(make_error_code(errc(errno)));	
-		}
-	} while(out.size()==len);
-	// return path as string
-	return SText(out.data());
+	return SResourceMediator::Path(
+        GetHandler<SResourceHandler>()->FD());
 }
 /**
  * ----------------------------------------------------------------------------
@@ -111,7 +92,7 @@ string SFileResource::BaseName(const string& path) {
 template<>
 SFileResource& SFileResource::Read(IOFrame& f) {
     while (!f.Full()) {
-        f.Insert(__Read(
+        f.Insert(SResourceMediator::Read(
             GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize()
         ));
     }
@@ -125,7 +106,7 @@ SFileResource& SFileResource::Read(IOFrame& f) {
 template<>
 SFileResource& SFileResource::Drain(IOFrame& f) {
     while (!f.Empty()) {
-        f.Remove(__Write(
+        f.Remove(SResourceMediator::Write(
             GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
         ));
     }
@@ -134,7 +115,7 @@ SFileResource& SFileResource::Drain(IOFrame& f) {
 template<>
 SFileResource& SFileResource::Drain(const Frame& f) {
     for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, __Write(
+        it = next(it, SResourceMediator::Write(
             GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
         ));
     }
@@ -198,16 +179,6 @@ SIFileResource::SIFileResource(const string& path, const SFileResource& link)
     Link(path, link.Path())
 ) {}
 /**
- * ----------------------------------------------------------------------------
- * status
- * ----------------------------------------------------------------------------
- */
-bool SIFileResource::Good() {
-    auto cur = ::lseek(GetHandler<SResourceHandler>()->FD(), 0, SEEK_CUR);
-    auto end = ::lseek(GetHandler<SResourceHandler>()->FD(), 0, SEEK_END);
-    return ::lseek(GetHandler<SResourceHandler>()->FD(), cur, SEEK_SET) != end;
-}
-/**
  * ------------------------------------------------------------------------------------------------
  * Output FileResource
  * ------------------------------------------------------------------------------------------------
@@ -227,42 +198,6 @@ SOFileResource::SOFileResource(const string& path, const SFileResource& link)
 : SOFileResource(
     Link(path, link.Path())
 ) {}
-
-
-/**
- * ------------------------------------------------------------------------------------------------
- * linux functions
- * ------------------------------------------------------------------------------------------------
- */
-size_t __Write(int fd, Frame::const_pointer p, Frame::size_type s) {
-    auto n = ::write(fd, p, s);
-    if (n <= 0) {
-        if (n < 0) {
-            throw OResourceExceptionABORT(strerror(errno));
-        }
-        throw OResourceExceptionABORT();
-    }
-    return n;
-}
-/**
- */
-size_t __Read(int fd, Frame::pointer p, Frame::size_type s) {
-    auto n = ::read(fd, p, s);
-    if (n <= 0) {
-        if (n < 0) {
-            throw IResourceExceptionABORT(strerror(errno));
-        }
-        throw IResourceExceptionABORT();
-    }
-    return n;
-}
-/**
- */
-SText __Path(int fd) {
-    ostringstream os;
-    os << "/proc/self/fd/" << fd;
-    return os.str();
-}
 /**
  * ------------------------------------------------------------------------------------------------
  * End
