@@ -4,11 +4,11 @@ project (Space)
 # folder for core objects
 add_subdirectory(SKernel)
 # folder for Monitor objects
-add_subdirectory(SMonitor)
+add_subdirectory(SMonitors)
 # folder for Resources
-add_subdirectory(SResource)
+add_subdirectory(SResources)
 # folder for Resources
-add_subdirectory(SHelper)
+add_subdirectory(SHelpers)
 # target
 add_library(Space INTERFACE)
 # dependencies

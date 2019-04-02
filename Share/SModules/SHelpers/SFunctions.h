@@ -1,13 +1,13 @@
 /**
- * ------------------------------------------------------------------------------------------------ 
+ * ------------------------------------------------------------------------------------------------
  * File:   MFunctions.h
  * Author: Luis Monteiro
  *
  * Created on January 26, 2017, 5:59 PM
  * ------------------------------------------------------------------------------------------------
  */
-#ifndef SMODULE_FUNCTIONS_H
-#define SMODULE_FUNCTIONS_H
+#ifndef SMODULEFUNCTIONS_H
+#define SMODULEFUNCTIONS_H
 /**
  * Space Kernel
  */
@@ -15,8 +15,8 @@
 /**
  * Share Functions
  */
-#include "SEncode.h"
-#include "SDecode.h"
+#include "SEncodeFunction.h"
+#include "SDecodeFunction.h"
 /**
  * ------------------------------------------------------------------------------------------------
  * Module name space
@@ -87,7 +87,7 @@ namespace Spread {
                     /** 
                      * create function
                      */
-                    return make_shared<Message::SEncode>(Helpers::CreateStamp(
+                    return make_shared<Message::SEncodeFunction>(Helpers::CreateStamp(
                             o.Get(Function::TYPE,   Function::Type::MESSAGE),
                             o.Get(Function::SECRET, string())
                         ), 
@@ -123,7 +123,7 @@ namespace Spread {
                     /** 
                      * create function
                      */
-                    return make_shared<Message::SDecode>(Helpers::CreateStamp(
+                    return make_shared<Message::SDecodeFunction>(Helpers::CreateStamp(
                             o.Get(Function::TYPE,   Function::Type::MESSAGE),
                             o.Get(Function::SECRET, SConnector::Key())
                         ), 
@@ -180,4 +180,4 @@ namespace Spliter {
  * End
  *-------------------------------------------------------------------------------------------------
  */
-#endif /* SMODULE_FUNCTIONS_H */
+#endif /* SMODULEFUNCTIONS_H */

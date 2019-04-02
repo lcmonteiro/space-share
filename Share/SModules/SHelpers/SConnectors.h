@@ -6,14 +6,15 @@
  * Created on January 26, 2017, 5:59 PM
  * --------------------------------------------------------------------------------------------------------------------
  */
-#ifndef SMODULE_CONNECTORS_H
-#define SMODULE_CONNECTORS_H
+#ifndef SMODULECONNECTORS_H
+#define SMODULECONNECTORS_H
 /**
  * --------------------------------------------------------------------------------------------------------------------
  * Includes
  * --------------------------------------------------------------------------------------------------------------------
  */
-#include "MProperties.h"
+#include "SProperties.h"
+#include "SModule.h"
 /**
  * connectors
  */
@@ -358,4 +359,4 @@ namespace IOput {
  * End
  *---------------------------------------------------------------------------------------------------------------------
  */
-#endif /* SMODULE_CONNECTORS_H */
+#endif /* SMODULECONNECTORS_H */

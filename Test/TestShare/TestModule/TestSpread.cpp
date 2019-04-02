@@ -21,7 +21,7 @@
 /**
  * share
  */
-#include "MSpread.h"
+#include "SSpreadModule.h"
 /**
  * -------------------------------------------------------------------------------------------------
  * Spread Data
@@ -31,10 +31,10 @@ TEST(Spread, Data)
 {
     STask::Enable();
     // define types -----------------------------------------------------------
-    using Emitter  = Module::MSpread<
+    using Emitter  = SSpreadModule<
         Decoded::IConnector, Decoded::Document, Decoded::OConnector
     >;
-    using Receptor = Module::MSpread<
+    using Receptor = SSpreadModule<
         Decoded::IConnector, Decoded::Document, Decoded::OConnector
     >;
     using Monitor = SResourceMonitor<
@@ -168,10 +168,10 @@ TEST(Spread, Code)
 {
     STask::Enable();
     // define types -----------------------------------------------------------
-    using Encode  = Module::MSpread<
+    using Encode  = SSpreadModule<
         Decoded::IConnector, Decoded::Document, Encoded::OConnector
     >;
-    using Decode  = Module::MSpread<
+    using Decode  = SSpreadModule<
         Encoded::IConnector, Encoded::Document, Decoded::OConnector
     >;
     using Monitor = SResourceMonitor<

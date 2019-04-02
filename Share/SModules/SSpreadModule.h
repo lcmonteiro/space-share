@@ -1,27 +1,24 @@
 /**
  * --------------------------------------------------------------------------------------------------------------------
- * File:   MSpread.h
+ * File:   SSpreadModule.h
  * Author: Luis Monteiro
  *
  * Created on November 16, 2018, 5:59 PM
  * --------------------------------------------------------------------------------------------------------------------
  */
-#ifndef MSPREAD_H
-#define MSPREAD_H
+#ifndef SSPREADMODULE_H
+#define SSPREADMODULE_H
 /**
  * Module
  */
-#include "MBase.h" 
+#include "SBaseModule.h" 
 /**
  *---------------------------------------------------------------------------------------------------------------------
- * Module name space
+ * SSpreadModule
  *---------------------------------------------------------------------------------------------------------------------
- */
-namespace Module {
-/**
  */
 template<class I_CON, class DOC, class O_CON>
-class MSpread : public MBase {
+class SSpreadModule : public SBaseModule {
     /**
      * --------------------------------------------------------------------------------------------
      * Helpers
@@ -36,9 +33,9 @@ class MSpread : public MBase {
      * builders
      * ------------------------------------------------------------------------
      */
-    using IBuilder = Input::Builder<I_CON>;
-    using FBuilder = Spread::Builder<I_CON, DOC, O_CON>;
-    using OBuilder = Output::Builder<O_CON>; 
+    using IBuilder = Module::Input::Builder<I_CON>;
+    using FBuilder = Module::Spread::Builder<I_CON, DOC, O_CON>;
+    using OBuilder = Module::Output::Builder<O_CON>; 
     /** 
      * ------------------------------------------------------------------------
      * connector types
@@ -60,14 +57,14 @@ public:
      * defaults
      * ------------------------------------------------------------------------
      */
-    MSpread(MSpread&&)            = default;
-    MSpread& operator=(MSpread&&) = default;
+    SSpreadModule(SSpreadModule&&)            = default;
+    SSpreadModule& operator=(SSpreadModule&&) = default;
     /**
      * ------------------------------------------------------------------------
      * constructor
      * ------------------------------------------------------------------------
      */
-    MSpread(const Command& cmd): MBase(cmd[Command::MODULE].Head(), {
+    SSpreadModule(const Command& cmd): SBaseModule(cmd[Command::MODULE].Head(), {
         {Command::FUNCTION, cmd[Command::FUNCTION]},
         {Command::INPUT,    cmd[Command::INPUT]   },
         {Command::OUTPUT,   cmd[Command::OUTPUT]  },
@@ -77,7 +74,7 @@ public:
      * destructor
      * ------------------------------------------------------------------------
      */
-    virtual ~MSpread() { Attach(); }
+    virtual ~SSpreadModule() { Attach(); }
 protected:
     /**
      * ------------------------------------------------------------------------
@@ -104,7 +101,7 @@ protected:
         // create and insert inputs -----------------------
         for(auto& o: cmd[Command::INPUT]) {
             try {
-                __in.Insert(o[IO::URI], IBuilder::Build(o));
+                __in.Insert(o[Module::IO::URI], IBuilder::Build(o));
             } catch (std::out_of_range&) {
                 __UpdateRoad(__in, o);
             }
@@ -112,7 +109,7 @@ protected:
         // create and insert outputs ----------------------
         for(auto o: cmd[Command::OUTPUT]) {
             try {
-                __out.Insert(o[IO::URI], OBuilder::Build(o));
+                __out.Insert(o[Module::IO::URI], OBuilder::Build(o));
             } catch (std::out_of_range&) {
                 __UpdateRoad(__out, o);
             }
@@ -235,11 +232,10 @@ protected:
         return UPDATE;
     }
 };
-}
 /**
  *---------------------------------------------------------------------------------------------------------------------
  * End
  *---------------------------------------------------------------------------------------------------------------------
  */
-#endif /* MSPREAD_H */
+#endif /* SSPREADMODULE_H */
 

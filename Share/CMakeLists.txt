@@ -2,13 +2,13 @@ cmake_minimum_required (VERSION 3.8)
 # project
 project (Share)
 # folder for connectors
-add_subdirectory(SConnector)
+add_subdirectory(SConnectors)
 # folder for functions
-add_subdirectory(SFunction)
+add_subdirectory(SFunctions)
 # folder for interfaces
-add_subdirectory(SInterface)
+add_subdirectory(SInterfaces)
 # folder for Modules
-add_subdirectory(SModule)
+add_subdirectory(SModules)
 # folder for kernel
 add_subdirectory(SKernel)
 # target

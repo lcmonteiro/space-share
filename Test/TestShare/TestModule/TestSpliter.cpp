@@ -20,7 +20,7 @@
 /**
  * share
  */
-#include "MSpliter.h"
+#include "SSpliterModule.h"
 /**
  * -------------------------------------------------------------------------------------------------
  * echo Spliter
@@ -30,7 +30,7 @@ TEST(SModule, EchoSpliter)
 {
     STask::Enable();
     // define types -----------------------------------------------------------
-    using Spliter  = Module::MSpliter<
+    using Spliter  = Module::SSpliterModule<
         Decoded::IOConnector, Decoded::IConnector, Decoded::OConnector
     >;
     using Monitor = SResourceMonitor<

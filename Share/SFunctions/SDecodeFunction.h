@@ -1,6 +1,6 @@
 /**
  * ------------------------------------------------------------------------------------------------
- * File:   SDecode.h
+ * File:   SDecodeFunction.h
  * Author: Luis Monteiro
  *
  * Created on November 11, 2015, 9:49 AM
@@ -28,7 +28,7 @@ namespace Message {
 /**
  * decode
  */
-class SDecode : public SFunctionSpread<
+class SDecodeFunction : public SFunctionSpread<
 	SConnector::Key, Encoded::IConnector, Encoded::Document, Decoded::OConnector> {
     /**
      * super class
@@ -45,16 +45,16 @@ class SDecode : public SFunctionSpread<
 public:
     /**
 	 * ------------------------------------------------------------------------
-     * SDecode 
+     * SDecodeFunction 
      * @param stamp
      * @param nContainers
 	 * ------------------------------------------------------------------------
      */
-    SDecode(
+    SDecodeFunction(
 		SharedStamp stamp, uint32_t nContainers, uint32_t energy = 3, uint8_t verbose = 0
 	): Super("Decode", energy, verbose), __cache(stamp, nContainers) {
     }
-    SDecode(
+    SDecodeFunction(
 		const string& id, 
     	SharedStamp stamp, uint32_t nContainers, uint32_t energy = 3, uint8_t verbose = 0
     ): Super(string("Decode(") + id + ")", energy, verbose), __cache(stamp, nContainers) {
@@ -135,7 +135,7 @@ namespace Stream {
 /**
  * Decode
  */
-class SDecode : public SFunctionSpread<
+class SDecodeFunction : public SFunctionSpread<
 	SConnector::Key, Encoded::IConnector, Encoded::Document, Decoded::OConnector> {
     /**
      * settings
@@ -156,16 +156,16 @@ class SDecode : public SFunctionSpread<
 public:
     /**
 	 * ------------------------------------------------------------------------
-     * SDecode Connector
+     * SDecodeFunction Connector
      * @param nContainers
 	 * ------------------------------------------------------------------------
      */
-    SDecode(
+    SDecodeFunction(
 		SharedStamp stamp, uint32_t nContainers, uint32_t energy = 3, uint8_t verbose = 0
 	): Super("Decode", energy, verbose), __cache(stamp, nContainers), __cache_aux(AUX_SIZE) {
     	for(auto&c :__cache_aux){ c = Cache(stamp, nContainers); }
     }
-    SDecode(
+    SDecodeFunction(
     	const string& id, 
     	SharedStamp stamp, uint32_t nContainers, uint32_t energy = 3, uint8_t verbose = 0
     ): Super(string("Decode(") + id + ")", energy, verbose), __cache(stamp, nContainers), __cache_aux(AUX_SIZE) {

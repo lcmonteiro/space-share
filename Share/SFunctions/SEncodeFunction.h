@@ -1,6 +1,6 @@
 /**
  * --------------------------------------------------------------------------------------------------------------------
- * File:   SEncode.h
+ * File:   SEncodeFunction.h
  * Author: Luis Monteiro
  *
  * Created on November 11, 2015, 9:49 AM
@@ -26,7 +26,7 @@
  * --------------------------------------------------------------------------------------------------------------------
  */
 template <class WALKER, size_t MIN = 10>
-class SEncodeT : public SFunctionSpread<
+class SEncodeFunctionT : public SFunctionSpread<
     SConnector::Key, Decoded::IConnector, Decoded::Document, Encoded::OConnector> {
     /**
      * super class
@@ -52,12 +52,12 @@ public:
      * @param redundancy
      * --------------------------------------------------------------------------------------------
      */
-    SEncodeT(
+    SEncodeFunctionT(
         SharedStamp stamp, uint32_t redundancy, uint32_t energy = 1, uint8_t verbose = 0
     ): Super("Encode", energy, verbose), __stamp(stamp), __redundancy(redundancy) {
         Recover();
     }
-    SEncodeT(const string& id, 
+    SEncodeFunctionT(const string& id, 
         SharedStamp stamp, uint32_t redundancy, uint32_t energy = 1, uint8_t verbose = 0
     ): Super(string("Encode(") + id + ")", energy, verbose), __stamp(stamp), __redundancy(redundancy) {
         Recover();
@@ -198,9 +198,9 @@ private:
  * Encoder
  * ------------------------------------------------------------------------------------------------
  */
-class SEncode : public SEncodeT<SWalker> {
+class SEncodeFunction : public SEncodeFunctionT<SWalker> {
 public:
-    using SEncodeT<SWalker>::SEncodeT;
+    using SEncodeFunctionT<SWalker>::SEncodeFunctionT;
 };
 }
 /**
@@ -251,9 +251,9 @@ private:
  * Encoder
  * ------------------------------------------------------------------------------------------------
  */
-class SEncode : public SEncodeT<SWalker> {
+class SEncodeFunction : public SEncodeFunctionT<SWalker> {
 public:
-    using SEncodeT<SWalker>::SEncodeT;
+    using SEncodeFunctionT<SWalker>::SEncodeFunctionT;
 };
 }
 /**

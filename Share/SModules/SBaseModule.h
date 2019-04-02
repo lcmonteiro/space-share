@@ -1,46 +1,42 @@
 /**
  * -------------------------------------------------------------------------------------------------------------------- 
- * File:   MBase.h
+ * File:   SBaseModule.h
  * Author: Luis Monteiro
  *
  * Created on November 16, 2017, 5:59 PM
  * --------------------------------------------------------------------------------------------------------------------
  */
-#ifndef MBASE_H
-#define MBASE_H
+#ifndef SBASEMODULE_H
+#define SBASEMODULE_H
 /**
  * module 
  */
-#include "MConnectors.h"
-#include "MFunctions.h"
+#include "SHelpers/SConnectors.h"
+#include "SHelpers/SFunctions.h"
 /**
  * space
  */
 #include "SClock.h"
 #include "SRoadMonitor.h" 
 /**
- *---------------------------------------------------------------------------------------------------------------------
- * module namespace
- *---------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
+ * Extend module properties
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Module {
 using Property = const SText;
-/**
- * ------------------------------------------------------------------------------------------------
- * properties
- * ------------------------------------------------------------------------------------------------
- */
 Property URI     = "uri";
 Property ENERGY  = "energy";
 Property VERBOSE = "verbose";
 Property DELAY   = "delay";
 Property TIMEOUT = "timeout";
+}
 /**
  * --------------------------------------------------------------------------------------------------------------------
- *  module base
+ *  Base Module
  * --------------------------------------------------------------------------------------------------------------------
  */
-class MBase : public SModule {  
+class SBaseModule : public SModule {  
 protected:
     using Clock            = SClock<>;
     using Timer            = Clock::Alarm;
@@ -50,24 +46,24 @@ protected:
      * defaults
      * --------------------------------------------------------------------------------------------
      */
-    MBase(MBase&&)            = default;
-    MBase& operator=(MBase&&) = default;
+    SBaseModule(SBaseModule&&)            = default;
+    SBaseModule& operator=(SBaseModule&&) = default;
     /**
      * --------------------------------------------------------------------------------------------
      * Constructors
      * --------------------------------------------------------------------------------------------
      * main constructor
      */
-    MBase(const Command::Group& conf, const Command& cmd) 
+    SBaseModule(const Command::Group& conf, const Command& cmd) 
     // configure --------------------------------------------------------------
     : SModule (
-        conf.Get(URI, Val{}),   // default uri       -> {}
-        conf.Get(ENERGY,  1),   // default energy    -> 1
-        conf.Get(VERBOSE, 0)    // default verbosity -> 0
+        conf.Get(Module::URI, Val{}),   // default uri       -> {}
+        conf.Get(Module::ENERGY,  1),   // default energy    -> 1
+        conf.Get(Module::VERBOSE, 0)    // default verbosity -> 0
     ), __delay(
-        conf.Get(DELAY,   0)    // default delay     -> 0
+        conf.Get(Module::DELAY,   0)    // default delay     -> 0
     ), __timeout(
-        conf.Get(TIMEOUT, 1000) // default delay     -> 1s
+        conf.Get(Module::TIMEOUT, 1000) // default delay     -> 1s
     ) {  
         // added first cmd ----------------------------------------------------
         Insert(cmd);            
@@ -148,8 +144,8 @@ protected:
      */
     template<typename ROAD>
     void __UpdateRoad(ROAD& r, const Command::Group& o) {
-         try { r.SetNominal(o.Get<size_t>(IO::NOMINAL)); } catch(...) {}
-         try { r.SetMinimum(o.Get<size_t>(IO::MINIMUM)); } catch(...) {}
+         try { r.SetNominal(o.Get<size_t>(Module::IO::NOMINAL)); } catch(...) {}
+         try { r.SetMinimum(o.Get<size_t>(Module::IO::MINIMUM)); } catch(...) {}
     }
     private:
     /**
@@ -167,11 +163,10 @@ protected:
      */
     Clock::Distance __timeout;
 };
-}
 /**
  *---------------------------------------------------------------------------------------------------------------------
  * End
  *---------------------------------------------------------------------------------------------------------------------
  */
-#endif /* MBASE_H */
+#endif /* SBASEMODULE_H */
 

@@ -1,17 +1,17 @@
 /**
  * -------------------------------------------------------------------------------------------------------------------- 
- * File:   MSpliter.h
+ * File:   SSpliterModule.h
  * Author: Luis Monteiro
  *
  * Created on January 26, 2017, 5:59 PM
  * --------------------------------------------------------------------------------------------------------------------
  */
-#ifndef MSPLITER_H
-#define MSPLITER_H
+#ifndef SSPLITERMODULE_H
+#define SSPLITERMODULE_H
 /**
  * Module
  */
-#include "MBase.h"
+#include "SBaseModule.h"
 /**
  *---------------------------------------------------------------------------------------------------------------------
  * Module name space
@@ -21,7 +21,7 @@ namespace Module {
 /**
  */
 template<class IO_CON, class I_CON, class O_CON>
-class MSpliter : public MBase {
+class SSpliterModule : public SBaseModule {
     /**
      * --------------------------------------------------------------------------------------------
      * Helpers
@@ -37,10 +37,10 @@ class MSpliter : public MBase {
      * builders 
      * ------------------------------------------------------------------------
      */
-    using IOBuilder = IOput::Builder<IO_CON>;
-    using IBuilder  = Input::Builder<I_CON>;
-    using OBuilder  = Output::Builder<O_CON>;
-    using FBuilder  = Spliter::Builder<IO_CON, I_CON, O_CON>; 
+    using IOBuilder = Module::IOput::Builder<IO_CON>;
+    using IBuilder  = Module::Input::Builder<I_CON>;
+    using OBuilder  = Module::Output::Builder<O_CON>;
+    using FBuilder  = Module::Spliter::Builder<IO_CON, I_CON, O_CON>; 
     /** 
      * ------------------------------------------------------------------------
      * connector types
@@ -63,14 +63,14 @@ public:
      * defaults
      * ------------------------------------------------------------------------
      */
-    MSpliter(MSpliter&&)            = default;
-    MSpliter& operator=(MSpliter&&) = default;
+    SSpliterModule(SSpliterModule&&)            = default;
+    SSpliterModule& operator=(SSpliterModule&&) = default;
     /**
      * ------------------------------------------------------------------------
      * constructor
      * ------------------------------------------------------------------------
      */
-    MSpliter(const Command& cmd): MBase(cmd[Command::MODULE].Head(), {
+    SSpliterModule(const Command& cmd): SBaseModule(cmd[Command::MODULE].Head(), {
         {Command::FUNCTION, cmd[Command::FUNCTION]},
         {Command::INOUT,    cmd[Command::INOUT]   },
         {Command::INPUT,    cmd[Command::INPUT]   },
@@ -81,7 +81,7 @@ public:
      * destructor
      * ------------------------------------------------------------------------
      */
-    virtual ~MSpliter() { Attach(); }
+    virtual ~SSpliterModule() { Attach(); }
 protected:
     /**
      * --------------------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ protected:
         // create and insert input/outputs ----------------
         for(auto& o: cmd[Command::INOUT]) {
             try {
-                __io.Insert(o[IO::URI], IOBuilder::Build(o));
+                __io.Insert(o[Module::IO::URI], IOBuilder::Build(o));
             } catch (std::out_of_range&) {
                 __UpdateRoad(__io, o);
             }
@@ -128,7 +128,7 @@ protected:
         // create and insert inputs -----------------------
         for(auto& o: cmd[Command::INPUT]) {
             try {
-                __in.Insert(o[IO::URI], IBuilder::Build(o));
+                __in.Insert(o[Module::IO::URI], IBuilder::Build(o));
             } catch (std::out_of_range&) {
                 __UpdateRoad(__in, o);
             }
@@ -136,7 +136,7 @@ protected:
         // create and insert outputs ----------------------
         for(auto o: cmd[Command::OUTPUT]) {
             try {
-                __out.Insert(o[IO::URI], OBuilder::Build(o));
+                __out.Insert(o[Module::IO::URI], OBuilder::Build(o));
             } catch (std::out_of_range&) {
                 __UpdateRoad(__out, o);
             }
@@ -289,5 +289,5 @@ protected:
  * End
  *---------------------------------------------------------------------------------------------------------------------
  */
-#endif /* MSPLITER_H */
+#endif /* SSPLITERMODULE_H */
 

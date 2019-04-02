@@ -20,8 +20,8 @@
 /**
  * share
  */
-#include "MSpliter.h"
-#include "MSpread.h"
+#include "SSpliterModule.h"
+#include "SSpreadModule.h"
 /**
  * -------------------------------------------------------------------------------------------------
  * Codec
