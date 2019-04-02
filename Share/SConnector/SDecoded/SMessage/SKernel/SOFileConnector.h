@@ -1,91 +1,150 @@
-/* 
- * File:   SOFileConnector.h
- * Author:      Luis Monteiro
- *
- * Created on November 26, 2015, 12:37 PM
- */
-#ifndef SOFILESTREAMSOCKET_H
-#define SOFILESTREAMSOCKET_H
 /**
- * Space Resource
+ * -------------------------------------------------------------------------------------------------------------------- 
+ * File:   SOFileConnector.h
+ * Author: Luis Monteiro
+ *
+ * Created on June 6, 2018, 11:47 PM
+ * --------------------------------------------------------------------------------------------------------------------
  */
-#include "SFileResource.h"
+#ifndef SOFILECONNECTOR_H
+#define SOFILECONNECTOR_H
 /**
  * Space Kernel
  */
 #include "SContainer.h"
-#include "SBuffer.h"
+#include "SAddress.h"
+#include "STask.h"
+#include "SText.h"
 /**
  * Share Kernel
  */
 #include "SConnector.h"
 /**
+ * --------------------------------------------------------------------------------------------------------------------
  * Begin namespace Decoded
+ * --------------------------------------------------------------------------------------------------------------------
  */
 namespace Decoded {
-/**
- * Begin namespace Message
- */
 namespace Message {
 /**
+ * --------------------------------------------------------------------------------------------------------------------
+ * Base - SOFileConnector
+ * --------------------------------------------------------------------------------------------------------------------
  */
-class SOFileConnector : public SOutputConnector {
+namespace Base {
+/**
+ */
+template<typename RESOURCE, typename Super>
+class SOFileConnector : public Super {
 public:
     /**
+     * ------------------------------------------------------------------------
      * constructor
+     * ------------------------------------------------------------------------
      */
-    SOFileConnector(const SText address);
-    /**
-     * destructor
-     */
-    virtual ~SOFileConnector() = default;
-    /**
-     */
+    template<typename V>
+    SOFileConnector(const V& v): Super(v.address), __res() {}
 protected:
     /**
-	 * -----------------------------------------------------
-	 * IO functions
-	 * -----------------------------------------------------
-	 * read
-	 */
-    void _Write(const Document& container) override;
-    /**
-	 * ----------------------------------------------------
-	 * control functions
-	 * ----------------------------------------------------
-	 * open, good and close
-	 */
+     * ------------------------------------------------------------------------
+     * open
+     * ------------------------------------------------------------------------
+     */
     inline void _Open() override {
-        __res = SOFileResource(__uri);
+        std::default_random_engine eng{std::random_device{}()};
+        // sleep distribution -----------------------------
+        std::uniform_int_distribution<> dist{100, 1000};
+        // main loop --------------------------------------
+        int i = 0;
+        do {
+            try {
+                __res.Link(this->__uri);
+                break;
+            } catch (std::system_error& ex) {
+                WARNING(ex.what());
+            }
+        } while (STask::Sleep(std::chrono::milliseconds{dist(eng) * ++i}));
     }
+    /**
+     * ------------------------------------------------------------------------
+     * good
+     * ------------------------------------------------------------------------
+     */
     inline bool _Good() override {
         return __res.Good();
     }
-    inline void _Close() override {
-        __res = SOFileResource();
-    }
-private:
     /**
+     * ------------------------------------------------------------------------
+     * close
+     * ------------------------------------------------------------------------
+     */
+    inline void _Close() override {
+        __res.Reset();
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * variables
+     * ------------------------------------------------------------------------
      * resource 
      */
-    SOFileResource __res;
-    /**
-     */
-    Buffer __buffer;
-    /**
-     */
-    Frame __path;
-    /**
-     */
-    filesize_t __size;
+    RESOURCE __res;
 };
-/**
- * End namespace Message
- */
 }
 /**
- * End namespace Decoded
+ * --------------------------------------------------------------------------------------------------------------------
+ * Layer - SOFileConnector
+ * --------------------------------------------------------------------------------------------------------------------
  */
-}
-#endif /* SOFILESTREAMSOCKET_H */
+namespace Layer {
+/**
+ */
+template<typename Super>
+class SOFileConnector : public Super {
+public:
+    /**
+     * ------------------------------------------------------------------------
+     * constructor
+     * ------------------------------------------------------------------------
+     */
+    template<typename V>
+    SOFileConnector(const V& v): Super(v), __buffer() {}
+protected:
+    /**
+     * ------------------------------------------------------------------------
+     * write
+     * ------------------------------------------------------------------------
+     */
+    void _Write(const Document& container) override {
+       
+        // log info ---------------------------------------
+        INFO("DATA::OUT::n=" << container.size());
 
+        // reset buffer -----------------------------------
+        __buffer.Reset();
+
+        // fill up buffer ---------------------------------
+        for(auto& c: container) {
+            __buffer.Reserve(c.Size()).Write(c);
+        }
+        // resize buffer (read size from end) ------------- 
+        __buffer.Shrink(__buffer.Number<framesize_t>());
+    
+        // compress and write buffer ----------------------
+        this->__res.Drain(__buffer);
+    }   
+    /**
+     * ------------------------------------------------------------------------
+     * variables
+     * ------------------------------------------------------------------------
+     * buffer
+     */
+    IOFrame __buffer;
+};
+}
+/**
+ * --------------------------------------------------------------------------------------------------------------------
+ * End namespace Decoded & Message
+ * --------------------------------------------------------------------------------------------------------------------
+ */
+}}
+#endif /* SOFILECONNECTOR_H */

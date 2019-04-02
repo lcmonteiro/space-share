@@ -18,55 +18,65 @@
 #include "SRandom.h"
 #include "SBuffer.h"
 /**
+ * ----------------------------------------------------------------------------
+ * Base
+ * ----------------------------------------------------------------------------
  */
-TEST(DecodedMessageFile, Link)
+TEST(DecodedMessageFile, Base)
 {
     STask::Enable();
     // settings ----------------------- 
-    auto size  = size_t(100);
-    auto ipath = SRandom::FileName();
-    auto opath = SRandom::FileName();
+    auto size = size_t(100);
+    auto path = SRandom::FileName();
 
-    // create file --------------------
-    SRandom::File(ipath, size);
-
-    // create connectors --------------
-    auto ic = Decoded::Message::IFileConnector::Make(
-        ipath, size_t(20), size
+    // OUT --------------------------------------------------------------------
+    
+    // create connector ---------------
+    auto oc = Decoded::Message::OFileConnector::Make(
+        path
     );
-    // auto oc = Decoded::Message::OFileConnector::Make(
-    //     opath
-    // );
 
-    // // connect ------------------------
-    // ic->Repair();
-    // oc->Repair();
+    // connect ------------------------
+    oc->Repair();
     
-    // // sleep --------------------------
-    // STask::Sleep(chrono::milliseconds(10));
+    // sleep --------------------------
+    STask::Sleep(chrono::milliseconds(10));
 
-    // // create data --------------------
-    // Container idata {
-    //     SRandom::Frame(size), SFrame().Number(size)
-    // }; 
+    // create data --------------------
+    Container idata {
+        SRandom::Frame(size), SFrame().Number(size)
+    }; 
     
-    // // test oconnection ---------------
-    // EXPECT_EQ(oc->Wait(chrono::milliseconds(100)).Good(), true);
+    // test connection ---------------
+    EXPECT_EQ(oc->Wait(chrono::milliseconds(100)).Good(), true);
     
-    // // send ---------------------------
-    // oc->Write(idata);
-    
-    // // test iconnection ---------------
-    // EXPECT_EQ(ic->Wait(chrono::milliseconds(100)).Good(), true);
-    
-    // // receive ------------------------
-    // auto odata = ic->Read();
+    // send ---------------------------
+    oc->Write(idata);
 
-    // // test data ----------------------
-    // EXPECT_EQ(
-    //     SBuffer().Write(idata).Read(size), 
-    //     SBuffer().Write(odata).Read(size)
-    // );
+    // IN ---------------------------------------------------------------------
+    
+    // create connector ----------------
+    auto ic = Decoded::Message::IFileConnector::Make(
+        path, size_t(20)
+    );
+
+    // connect ------------------------
+    ic->Repair();
+    
+    // sleep --------------------------
+    STask::Sleep(chrono::milliseconds(10));
+
+    // test connection ----------------
+    EXPECT_EQ(ic->Wait(chrono::milliseconds(100)).Good(), true);
+    
+    // receive ------------------------
+    auto odata = ic->Read();
+
+    // COMPARE data -----------------------------------------------------------
+    EXPECT_EQ(
+        SBuffer().Write(idata).Read(size), 
+        SBuffer().Write(odata).Read(size)
+    );
 }
 /**
  * ------------------------------------------------------------------------------------------------

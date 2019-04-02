@@ -4,7 +4,6 @@ add_library(ShareConnectorDecodedMessageKernel
 STATIC
 	SIDirConnector.cpp
 	SODirConnector.cpp
-	SOFileConnector.cpp
 )
 # includes
 target_include_directories(ShareConnectorDecodedMessageKernel 

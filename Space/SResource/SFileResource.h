@@ -22,6 +22,14 @@ class SFileResource : public SResource {
 public:
     /**
      * ------------------------------------------------------------------------
+     * Defaults
+     * ------------------------------------------------------------------------
+     */
+    SFileResource()                           = default;
+    SFileResource(SFileResource&&)            = default;
+    SFileResource& operator=(SFileResource&&) = default;
+    /**
+     * ------------------------------------------------------------------------
      * Interfaces
      * ------------------------------------------------------------------------
      * check resource

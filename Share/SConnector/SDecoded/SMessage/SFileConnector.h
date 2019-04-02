@@ -17,9 +17,8 @@
 /**
  * Kernel
  */
-//#include "SKernel/SIOMessageConnector.h"
 #include "SKernel/SIFileConnector.h"
-//#include "SKernel/SOMessageConnector.h"
+#include "SKernel/SOFileConnector.h"
 /**
  * ------------------------------------------------------------------------------------------------
  * Begin namespace Decoded & Message
@@ -51,13 +50,10 @@ public:
         return *this;
     }
     inline void Bind(const SAddress& uri) {
-        //Super::Bind(uri.File());
-    }
-    inline void Wait(const SAddress& uri) {
-        //Super::Bind(uri.File());
+        *this = SIFileResource(uri.File());
     }
     inline void Link(const SAddress& uri) {
-        //Super::Link(uri.File());
+        *this = SOFileResource(uri.File());
     }
     inline void Reset() {
         *this = Super();
@@ -82,8 +78,7 @@ public:
      */
     typedef struct {
         const SText  address; 
-        const size_t nframes; 
-        const size_t maxsmsg;
+        const size_t nframes;
     } Properties;
     /**
      * constructor
@@ -105,7 +100,34 @@ public:
  * ------------------------------------------------------------------------------------------------
  * template
  */
-
+template <typename R> 
+using SOFileConnector = 
+Layer::SOFileConnector<
+    Base::SOFileConnector<R, SOutputConnector>
+>;
+template<typename R>
+class SOFileConnectorT : public SOFileConnector<R> {
+public:
+    /**
+     * properties
+     */
+    typedef struct {
+        const SText address; 
+    } Properties;
+    /**
+     * constructor
+     */
+    template<typename...Args>
+    SOFileConnectorT(Args &&...args) 
+    : SOFileConnector<R>(Properties{std::forward<Args>(args)...}) {}
+    /**
+     * make
+     */
+    template<typename...Args>
+    static OConnector Make(Args &&...args) {
+        return std::make_shared<SOFileConnectorT>(std::forward<Args>(args)...);
+    }
+};
 /**
  * ------------------------------------------------------------------------------------------------
  * IO LOC Connector
@@ -119,6 +141,7 @@ public:
  * ------------------------------------------------------------------------------------------------
  */
 typedef SIFileConnectorT<ResourceAdapterFile>  IFileConnector;
+typedef SOFileConnectorT<ResourceAdapterFile>  OFileConnector;
 }}
 /**
  * ------------------------------------------------------------------------------------------------
