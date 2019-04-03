@@ -50,10 +50,10 @@ public:
         return *this;
     }
     inline void Bind(const SAddress& uri) {
-        *this = SIFileResource(uri.File());
+        *this = SIFileResource(uri);
     }
     inline void Link(const SAddress& uri) {
-        *this = SOFileResource(uri.File());
+        *this = SOFileResource(uri);
     }
     inline void Reset() {
         *this = Super();

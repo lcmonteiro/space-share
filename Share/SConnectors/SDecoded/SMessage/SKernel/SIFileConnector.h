@@ -140,13 +140,13 @@ protected:
         try {
             while(!out.Full()) {
                 IOFrame aux (size);
-                this->__res.Read(aux.Reset());
-                out.emplace_back(aux.Frame());
+                this->__res.Read(aux);
+                out.emplace_back(aux.Frame().Detach());
             }
         } catch(...) {
             while(!out.Full()) {
-                IOFrame aux (size);
-                out.emplace_back(aux.Frame());
+                Frame aux (size, size);
+                out.emplace_back(aux.Detach());
             }
         }
         // insert size --------------------------------------------------------

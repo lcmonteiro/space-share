@@ -86,11 +86,12 @@ string SFileResource::BaseName(const string& path) {
  * ------------------------------------------------------------------------------------------------
  * IO functions
  * ------------------------------------------------------------------------------------------------
- * fill and read frame
+ * Input
  * ----------------------------------------------------------------------------
+ * fill
  */
 template<>
-SFileResource& SFileResource::Read(IOFrame& f) {
+SFileResource& SFileResource::Fill(IOFrame& f) {
     while (!f.Full()) {
         f.Insert(SResourceMediator::Read(
             GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize()
@@ -98,13 +99,41 @@ SFileResource& SFileResource::Read(IOFrame& f) {
     }
     return *this;
 }
+template<>
+SFileResource& SFileResource::Fill(Frame& f) {
+    for (auto it = f.begin(), end = f.end(); it != end;) {
+        it = next(it, SResourceMediator::Read(
+            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
+        ));
+    }
+    return *this;
+}
 /**
- * ----------------------------------------------------------------------------
- * drain and write frame
- * ----------------------------------------------------------------------------
+ * read
  */
 template<>
-SFileResource& SFileResource::Drain(IOFrame& f) {
+SFileResource& SFileResource::Read(IOFrame& f) {
+    f.Insert(SResourceMediator::Read(
+        GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize())
+    );
+    return *this;
+}
+template<>
+SFileResource& SFileResource::Read(Frame& f) {
+    f.Insert(SResourceMediator::Read(
+        GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+    );
+    return *this;
+}
+/**
+ * ----------------------------------------------------------------------------
+ * Output
+ * ----------------------------------------------------------------------------
+ * drain
+ */
+template<typename T>
+SFileResource& SFileResource::Drain(T& f) {
+    // send loop ----------------------
     while (!f.Empty()) {
         f.Remove(SResourceMediator::Write(
             GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
@@ -112,8 +141,9 @@ SFileResource& SFileResource::Drain(IOFrame& f) {
     }
     return *this;
 }
-template<>
-SFileResource& SFileResource::Drain(const Frame& f) {
+template<typename T>
+SFileResource& SFileResource::Drain(const T& f) {
+    // send loop ----------------------
     for (auto it = f.begin(), end = f.end(); it != end;) {
         it = next(it, SResourceMediator::Write(
             GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
@@ -121,6 +151,30 @@ SFileResource& SFileResource::Drain(const Frame& f) {
     }
     return *this;
 }
+template SFileResource& SFileResource::Drain(Frame&);
+template SFileResource& SFileResource::Drain(IOFrame&);
+template SFileResource& SFileResource::Drain(const Frame&);
+template SFileResource& SFileResource::Drain(const IOFrame&);
+/**
+ * write
+ */
+template<typename T>
+SFileResource& SFileResource::Write(T& f) {
+    f.Remove(
+        SResourceMediator::Write(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+    );
+    return *this;
+}
+template<typename T>
+SFileResource& SFileResource::Write(const T& f) {
+    SResourceMediator::Write(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size());
+    return *this;
+}
+template SFileResource& SFileResource::Write(Frame&);
+template SFileResource& SFileResource::Write(IOFrame&);
+template SFileResource& SFileResource::Write(const Frame&);
+template SFileResource& SFileResource::Write(const IOFrame&);
+
 /**
  * ----------------------------------------------------------------------------
  * flush
