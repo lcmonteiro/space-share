@@ -65,6 +65,18 @@
         "random": "cpp",
         "string": "cpp",
         "cstddef": "cpp",
-        "memory_resource": "cpp"
+        "memory_resource": "cpp",
+        "any": "cpp",
+        "strstream": "cpp",
+        "cfenv": "cpp",
+        "cinttypes": "cpp",
+        "codecvt": "cpp",
+        "complex": "cpp",
+        "csetjmp": "cpp",
+        "cuchar": "cpp",
+        "shared_mutex": "cpp",
+        "typeindex": "cpp",
+        "valarray": "cpp",
+        "variant": "cpp"
     }
 }

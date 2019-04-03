@@ -75,9 +75,11 @@ public:
          * --------------------------------------------------------------------
          */
 		Iterator& operator++() {
-			if(next(__it2) == end(__it1))
-                if(next(__it1) != __end) 
-                    __it2 = begin(__it1); 
+            for(next(__it2); __it2 == end(__it1); __it2 = begin(__it1)) {
+                if(next(__it1) == __end) {
+                    break;
+                }
+            }
             return *this;
 		}
 		reference operator*() {
