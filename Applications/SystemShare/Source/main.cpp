@@ -161,8 +161,8 @@ int main(int argc, char** argv) {
     /**
      * run machine
      */
-    while (m.Process(chrono::seconds(10))) {
-        cout << m.Good() << endl;
+    while (m.process(chrono::seconds(10))) {
+        cout << m.good() << endl;
     }
     /**
      */

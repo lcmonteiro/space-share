@@ -26,31 +26,56 @@ TEST(SMachine, File)
     // create test data -------------------------------------------------------
     SRandom::File(in, 1000);
 
-    // configure machine ------------------------------------------------------
-    auto conf = SMachine::Config().Add(
-        SModuleCommand().AddModule({
-            {"uri",  "encoder"}, {"type", "encode"}, {"verbose", "4"}
-        }).AddFunction({
-            {"type", "message"}, { "verbose", "4"}
-        }).AddInput({
-            { "uri", in}, {"type", "message.file"}, { "verbose", "4"}
-        }).AddOutput({
-            { "uri",  SRandom::FileName()}, { "type", "message.file"}, {"verbose", "4"}
-        }).AddOutput({
-            { "uri",  SRandom::FileName()}, { "type", "message.file"}, {"verbose", "4"}
-        }).AddOutput({
-            { "uri",  SRandom::FileName()}, { "type", "message.file"}, {"verbose", "4"}
-        })
-    );
     // encoder machine --------------------------------------------------------
-    SMachine("system.share", conf).Join();
+    auto conf = SMachine::Config();
+    conf.add({
+        {SModule::Command::MODULE,   {{
+            {Module::URI,     "encoder"},
+            {Module::TYPE,    "encode"},
+            {Module::TIMEOUT, "1000"},
+            {Module::VERBOSE, "0"}
+        }}},
+        {SModule::Command::FUNCTION, {{
+            {Module::Function::TYPE, Module::Function::Type::MESSAGE},
+            {Module::IO::VERBOSE, "4"}
+        }}},
+        {SModule::Command::INPUT,   {{
+            {Module::IO::TYPE, Module::IO::Type::MESSAGE_FILE},
+            {Module::IO::URI, in},
+            {Module::IO::VERBOSE, "4"}
+        }}},
+        {SModule::Command::OUTPUT,    {{
+            {Module::IO::MINIMUM, "3"},
+            {Module::IO::NOMINAL, "3"}
+        }, {
+            {Module::IO::TYPE, Module::IO::Type::MESSAGE_FILE},
+            {Module::IO::URI, SRandom::FileName()},
+            {Module::IO::VERBOSE, "0"}
+        }, {
+            {Module::IO::TYPE, Module::IO::Type::MESSAGE_FILE},
+            {Module::IO::URI, SRandom::FileName()},
+            {Module::IO::VERBOSE, "0"} 
+        }, {
+            {Module::IO::TYPE, Module::IO::Type::MESSAGE_FILE},
+            {Module::IO::URI, SRandom::FileName()},
+            {Module::IO::VERBOSE, "0"}
+        }}}
+    });
+    SMachine("system.share", conf).wait();
 
     // decoder machine --------------------------------------------------------
-    SMachine("system.share", 
-        conf.Swap("I", "O")
-            .Update("M", "type", "decoder")
-            .Update("O", "uri", out)
-    ).Join();
+    conf.swap(
+        SModule::Command::INPUT, 
+        SModule::Command::OUTPUT
+    ).update(
+        SModule::Command::MODULE, Module::TYPE,
+        "decoder"
+    ).update(
+        SModule::Command::OUTPUT,
+        Module::IO::URI,
+        out
+    );
+    SMachine("system.share", conf).wait();
     
     // check data -------------------------------------------------------------
     EXPECT_TRUE(SCompare::Files(SIFileResource(in), SIFileResource(out)));

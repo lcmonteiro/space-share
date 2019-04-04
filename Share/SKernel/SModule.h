@@ -69,12 +69,12 @@ public:
     /**
      * add
      */
-    #define ADD(Key_, Name_)                        \
-    SModuleCommand& Add##Name_(const Group& conf) { \
+    #define ADD(key_, name_)                        \
+    SModuleCommand& add_##name_(const Group& conf) {\
         try {                                       \
-            __opts.at(Key_).emplace_back(conf);     \
+            __opts.at(key_).emplace_back(conf);     \
         } catch(...){                               \
-            __opts.emplace(Key_, Groups({conf}));   \
+            __opts.emplace(key_, Groups({conf}));   \
         }                                           \
         return *this;                               \
     }
@@ -86,44 +86,44 @@ public:
     /**
      * set
      */
-    #define SET(Key_, Name_)                        \
-    SModuleCommand& Set##Name_(const Group& conf) { \
-        __opts.emplace(Key_, Groups({conf}));       \
+    #define SET(key_, name_)                        \
+    SModuleCommand& set_##name_(const Group& conf) {\
+        __opts.emplace(key_, Groups({conf}));       \
         return *this;                               \
     }
-    SET(MODULE,   Module  );
-    SET(FUNCTION, Function);
+    SET(MODULE,   module  );
+    SET(FUNCTION, function);
     /**
      * gets
      */
-    #define GETS(Key_, Name_)               \
-    const Groups& Get##Name_##s() const {   \
+    #define GETS(key_, name_)               \
+    const Groups& get_##name_##s() const {   \
         static const Groups empty{};        \
         try {                               \
-            return (*this)[Key_];           \
+            return (*this)[key_];           \
         } catch(...) {                      \
             return empty;                   \
         }                                   \
     }
-    GETS(MODULE,   Module  );
-    GETS(FUNCTION, Function);
-    GETS(INOUT,    Input   );
-    GETS(OUTPUT,   Output  );
-    GETS(INOUT,    InOutput);
+    GETS(MODULE,   module  );
+    GETS(FUNCTION, function);
+    GETS(INOUT,    input   );
+    GETS(OUTPUT,   output  );
+    GETS(INOUT,    inoutput);
     /**
      * get
      */
-    #define GET(Key_, Name_)                \
-    const Group& Get##Name_() const {       \
+    #define GET(key_, name_)                \
+    const Group& get_##name_() const {      \
         static const Group empty{};         \
         try {                               \
-            return (*this)[Key_][0];        \
+            return (*this)[key_][0];        \
         } catch(...) {                      \
             return empty;                   \
         }                                   \
     }
-    GET(MODULE,   Module  );
-    GET(FUNCTION, Function);
+    GET(MODULE,   module  );
+    GET(FUNCTION, function);
 };
 /**
  * ------------------------------------------------------------------------------------------------
@@ -151,12 +151,6 @@ public:
     using Group   = Command::Group;
     using Groups  = Command::Groups;
     using Link    = std::shared_ptr<SModule>;
-    /**
-     * --------------------------------------------------------------------------------------------
-     * Fabric - create modules
-     * --------------------------------------------------------------------------------------------
-     */
-    static Link Create(const Command& cmd);
     /**
      * --------------------------------------------------------------------------------------------
      * Check state

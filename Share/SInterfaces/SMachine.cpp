@@ -18,29 +18,28 @@
 #include "SResourceMonitor.h"
 /**
  *-------------------------------------------------------------------------------------------------
- * constructors 
+ * Constructors 
  *-------------------------------------------------------------------------------------------------
  * main constructor
  */
 SMachine::SMachine(const SAddress& uri, const Config& conf) 
 : __uri(uri), __monitor(uri) {    
-    //  create modules ------------------------------------
-    for(auto& c : conf) { ProcessData(c); }    
+    for(auto& c : conf) { _process_cmd(c); }    
 }
 /**
  *-------------------------------------------------------------------------------------------------
- * interface
+ * Interface
  *-------------------------------------------------------------------------------------------------
  * process
  * ----------------------------------------------------------------------------
  */
-bool SMachine::Process(chrono::milliseconds timeout) {
+bool SMachine::process(Time timeout) {
     try {
         // wait data --------------------------------------
         ResourceMonitor(timeout, &__monitor).Wait();
 
-        // process data -----------------------------------
-        ProcessData(__monitor.Read());
+        // process command --------------------------------
+        _process_cmd(__monitor.Read());
 
     } catch (ResourceExceptionTIMEOUT& ex) {
     } catch (MonitorExceptionTIMEOUT& ex) {
@@ -52,7 +51,7 @@ bool SMachine::Process(chrono::milliseconds timeout) {
  * join
  * ----------------------------------------------------------------------------
  */
-bool SMachine::Join() {
+bool SMachine::wait() {
     bool out = true;
     for(auto& m : __modules) {
         out &= m.second->Join();
@@ -61,24 +60,17 @@ bool SMachine::Join() {
 }
 /**
  *-------------------------------------------------------------------------------------------------
- * protected functions
+ * Protected functions
  *-------------------------------------------------------------------------------------------------
- * process data
- * 
- * M = module
- * F = function
- * I = input
- * O = output
+ * process command
  * ----------------------------------------------------------------------------
  */
-void SMachine::ProcessData(const Command& cmd) {
-
-    // uri - resource identify ----------------------------
-    for(auto& m : cmd.GetModules()) {
+void SMachine::_process_cmd(const Command& cmd) {
+    for(auto& m : cmd.get_modules()) {
         try {
-            InsertModule(MakeURI(m[Module::URI]), cmd);
+            _insert_module(__make_uri(m[Module::URI]), cmd);
         } catch(...){
-            UpdateModule(MakeURI(m[Module::URI]), cmd);
+            _update_module(__make_uri(m[Module::URI]), cmd);
         }
     }
 }
@@ -87,10 +79,10 @@ void SMachine::ProcessData(const Command& cmd) {
  * insert module
  * ----------------------------------------------------------------------------
  */
-void SMachine::InsertModule(Key uri, const Command& cmd) {
+void SMachine::_insert_module(Key uri, const Command& cmd) {
 
     // install module -------------------------------------
-    __modules.emplace(uri, SModule::Create(cmd));
+    __modules.emplace(uri, CreateModule(cmd));
     
     //  start module --------------------------------------
     __modules[uri]->Detach();
@@ -100,7 +92,7 @@ void SMachine::InsertModule(Key uri, const Command& cmd) {
  * update module
  * ----------------------------------------------------------------------------
  */
-void SMachine::UpdateModule(Key uri, const Command& cmd) {
+void SMachine::_update_module(Key uri, const Command& cmd) {
 
 }
 /**
@@ -108,16 +100,17 @@ void SMachine::UpdateModule(Key uri, const Command& cmd) {
  * remove module
  * ----------------------------------------------------------------------------
  */
-void SMachine::RemoveModule(Key uri) {
+void SMachine::_remove_module(Key uri) {
     __modules.erase(uri);
 }
 /**
  *-------------------------------------------------------------------------------------------------
- * utilities
+ * Utilities
  *-------------------------------------------------------------------------------------------------
  * print configuration
+ * ----------------------------------------------------------------------------
  */
-//void SMachine::Print(const Config& conf) {
+void SMachine::Print(const Config& conf) {
 //    for(auto& t : conf) {
 //        cout << t.first << ":" << "[ "; 
 //    for (auto& a : get<0>(t.second)) {
@@ -142,4 +135,27 @@ void SMachine::RemoveModule(Key uri) {
 //    }
 //    cout << "]" << endl;
 //    }
-//}
+}
+/**
+ * ----------------------------------------------------------------------------
+ * create module
+ * ----------------------------------------------------------------------------
+ */
+SMachine::Link SMachine::CreateModule(const Command& cmd) {
+    static std::map<Key, std::function <Link(const Command& cmd)>> GENERATOR {
+        {"encode", [](const Command& cmd) {
+            auto in = nullptr;
+            return in;
+        }}
+    };
+    try {
+        return GENERATOR[""](cmd);
+    } catch(...) {
+        throw std::runtime_error("invalid input");
+    }
+}
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */
