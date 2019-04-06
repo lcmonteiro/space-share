@@ -25,6 +25,10 @@
 namespace Module {
 using Property = const SText;
 Property TYPE    = "type";
+namespace Type {
+    Properties ENCODE = "encode";
+    Properties DECODE = "decode";
+}
 }
 /**
  * ------------------------------------------------------------------------------------------------

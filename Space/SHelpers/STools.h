@@ -26,29 +26,30 @@
 class STools {
 public:
     /**
-     * split
+     * ------------------------------------------------------------------------
+     * Split
+     * ------------------------------------------------------------------------
      */
     static std::list<Container> Split(Container container, size_t max) {
         std::list<Container> out;
-        /**
-         * process 
-         */
+        
+        // process ----------------------------------------
         size_t size = 0;
         Container chunk;
         for(auto& frame : container) {
 			size += frame.Size();
-			// verify limit
+		
+        	// verify limit -------------------------------
 			if (size > max) {
-				out.push_back(chunk.Detach());
+				out.emplace_back(chunk.Detach());
 				size = frame.Size();
 			}
-			// move frame to chunk
-			chunk.push_back(frame.Detach());
+			// move frame to chunk ------------------------
+			chunk.emplace_back(frame.Detach());
         }
-        out.push_back(chunk.Detach());
-        /**
-         * return split
-         */
+        out.emplace_back(chunk.Detach());
+
+        // return split -----------------------------------
         return out;
     }
 };

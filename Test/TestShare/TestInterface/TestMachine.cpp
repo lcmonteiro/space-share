@@ -30,10 +30,10 @@ TEST(SMachine, File)
     auto conf = SMachine::Config();
     conf.add({
         {SModule::Command::MODULE,   {{
-            {Module::URI,     "encoder"},
-            {Module::TYPE,    "encode"},
+            {Module::URI, "encoder"},
+            {Module::TYPE, Module::Type::ENCODE},
             {Module::TIMEOUT, "1000"},
-            {Module::VERBOSE, "0"}
+            {Module::VERBOSE, "4"}
         }}},
         {SModule::Command::FUNCTION, {{
             {Module::Function::TYPE, Module::Function::Type::MESSAGE},
@@ -50,15 +50,15 @@ TEST(SMachine, File)
         }, {
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_FILE},
             {Module::IO::URI, SRandom::FileName()},
-            {Module::IO::VERBOSE, "0"}
+            {Module::IO::VERBOSE, "4"}
         }, {
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_FILE},
             {Module::IO::URI, SRandom::FileName()},
-            {Module::IO::VERBOSE, "0"} 
+            {Module::IO::VERBOSE, "4"} 
         }, {
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_FILE},
             {Module::IO::URI, SRandom::FileName()},
-            {Module::IO::VERBOSE, "0"}
+            {Module::IO::VERBOSE, "4"}
         }}}
     });
     SMachine("system.share", conf).wait();
@@ -68,8 +68,9 @@ TEST(SMachine, File)
         SModule::Command::INPUT, 
         SModule::Command::OUTPUT
     ).update(
-        SModule::Command::MODULE, Module::TYPE,
-        "decoder"
+        SModule::Command::MODULE, 
+        Module::TYPE,
+        Module::Type::DECODE
     ).update(
         SModule::Command::OUTPUT,
         Module::IO::URI,
