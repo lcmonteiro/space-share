@@ -18,12 +18,17 @@
 #include "SRandom.h"
 #include "SBuffer.h"
 /**
+ * namespace
+ */
+using namespace std::chrono;
+/**
  * ------------------------------------------------------------------------------------------------
  * UDP - link
  * ------------------------------------------------------------------------------------------------
  */
 TEST(DecodedMessageUDP, Link)
 {
+    
     STask::Enable();
     // settings -----------------------
     auto size = size_t(100);
@@ -41,7 +46,7 @@ TEST(DecodedMessageUDP, Link)
     oc->Repair();
     
     // sleep --------------------------
-    STask::Sleep(chrono::milliseconds(10));
+    STask::Sleep(milliseconds(10));
 
     // create data --------------------
     Container idata {
@@ -49,13 +54,13 @@ TEST(DecodedMessageUDP, Link)
     }; 
     
     // test oconnection ---------------
-    EXPECT_EQ(oc->Wait(chrono::milliseconds(100)).Good(), true);
+    EXPECT_EQ(oc->Wait(milliseconds(100)).Good(), true);
     
     // send ---------------------------
     oc->Write(idata);
     
     // test iconnection ---------------
-    EXPECT_EQ(ic->Wait(chrono::milliseconds(100)).Good(), true);
+    EXPECT_EQ(ic->Wait(milliseconds(100)).Good(), true);
     
     // receive ------------------------
     auto odata = ic->Read();
@@ -63,8 +68,7 @@ TEST(DecodedMessageUDP, Link)
     // test data ----------------------
     EXPECT_EQ(
         SBuffer().Write(idata).Read(size), 
-        SBuffer().Write(odata).Read(size)
-    );
+        SBuffer().Write(odata).Read(size));
 }
 /**
  * ------------------------------------------------------------------------------------------------

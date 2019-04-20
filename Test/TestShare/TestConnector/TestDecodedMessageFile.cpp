@@ -18,6 +18,10 @@
 #include "SRandom.h"
 #include "SBuffer.h"
 /**
+ * namespace
+ */
+using namespace std::chrono;
+/**
  * ----------------------------------------------------------------------------
  * File - Base
  * ----------------------------------------------------------------------------
@@ -40,7 +44,7 @@ TEST(DecodedMessageFile, Base)
     oc->Repair();
     
     // sleep --------------------------
-    STask::Sleep(chrono::milliseconds(10));
+    STask::Sleep(milliseconds(10));
 
     // create data --------------------
     Container idata {
@@ -48,7 +52,7 @@ TEST(DecodedMessageFile, Base)
     }; 
     
     // test connection ---------------
-    EXPECT_EQ(oc->Wait(chrono::milliseconds(100)).Good(), true);
+    EXPECT_EQ(oc->Wait(milliseconds(100)).Good(), true);
     
     // send ---------------------------
     oc->Write(idata);
@@ -64,10 +68,10 @@ TEST(DecodedMessageFile, Base)
     ic->Repair();
     
     // sleep --------------------------
-    STask::Sleep(chrono::milliseconds(10));
+    STask::Sleep(milliseconds(10));
 
     // test connection ----------------
-    EXPECT_EQ(ic->Wait(chrono::milliseconds(100)).Good(), true);
+    EXPECT_EQ(ic->Wait(milliseconds(100)).Good(), true);
     
     // receive ------------------------
     auto odata = ic->Read();
@@ -75,8 +79,7 @@ TEST(DecodedMessageFile, Base)
     // COMPARE data -----------------------------------------------------------
     EXPECT_EQ(
         SBuffer().Write(idata).Read(size), 
-        SBuffer().Write(odata).Read(size)
-    );
+        SBuffer().Write(odata).Read(size));
 }
 /**
  * ------------------------------------------------------------------------------------------------

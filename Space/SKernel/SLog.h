@@ -56,9 +56,9 @@
 #define ERROR(__x__)
 #endif
 #if __LOG_CRITICAL__
-#define CRITITAL(__x__) do{ std::ostringstream o; o << __x__; this->__CRITITAL(o.str()); }while(0)
+#define CRITICAL(__x__) do{ std::ostringstream o; o << __x__; this->__CRITICAL(o.str()); }while(0)
 #else
-#define CRITITAL(__x__)
+#define CRITICAL(__x__)
 #endif
 /**
  * ----------------------------------------------------------------------------
@@ -96,7 +96,7 @@ protected:
     void __INFO    (const std::string& id, const std::string& msg);
     void __WARNING (const std::string& id, const std::string& msg);
     void __ERROR   (const std::string& id, const std::string& msg);
-    void __CRITITAL(const std::string& id, const std::string& msg);
+    void __CRITICAL(const std::string& id, const std::string& msg);
 };
 /**
  * ------------------------------------------------------------------------------------------------

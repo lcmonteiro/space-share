@@ -224,7 +224,8 @@ protected:
             do {
                 for(auto& i : m.Wait(Clock::Remaining(end))) {
                     __func->Process(__in, __out);
-                }                
+                }    
+                DEBUG(Clock::Remaining(end).count());            
             } while(Clock::Remaining(end) > Clock::Distance::zero());
         } catch (MonitorExceptionTIMEOUT & ex) { }
 

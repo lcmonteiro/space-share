@@ -149,7 +149,7 @@ void SLog::__ERROR(const std::string& id, const std::string& msg) {
     << std::endl << std::flush;
     }
 }
-void SLog::__CRITITAL(const std::string& id, const std::string& msg) {
+void SLog::__CRITICAL(const std::string& id, const std::string& msg) {
     if (__verbose >= 0) {
     auto t = time(nullptr);
     CERR << "\e[31m"

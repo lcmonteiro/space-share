@@ -328,13 +328,24 @@ public:
     inline size_t        size()  const { return Size();         }
     /**
      * ----------------------------------------------------
-     * operators
+     * iterators
      * ----------------------------------------------------
      */
     inline const_iterator begin()  const { return __beg; }
     inline const_iterator end()    const { return __end; }
     inline iterator       begin()        { return __beg; }
     inline iterator       end()          { return __end; }
+    /**
+     * ----------------------------------------------------
+     * operators
+     * ----------------------------------------------------
+     */
+    inline bool operator == (const SIOFrame& f) const {
+        return std::equal(begin(), end(), f.begin(), f.end());
+    }
+    inline bool operator != (const SIOFrame& f) const {
+        return !std::equal(begin(), end(), f.begin(), f.end());
+    }
     /**
      * ------------------------------------------------------------------------
      * get capacity
@@ -560,7 +571,7 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * Read frame witn (n) bytes
+     * Read frame with (n) bytes
      * ------------------------------------------------------------------------
      */
     inline SFrame Read(size_t n) {

@@ -69,6 +69,10 @@ TEST(SMachine, File)
         SModule::Command::OUTPUT
     ).update(
         SModule::Command::MODULE, 
+        Module::URI,
+        "Decoder"
+    ).update(
+        SModule::Command::MODULE, 
         Module::TYPE,
         Module::Type::DECODE
     ).update(

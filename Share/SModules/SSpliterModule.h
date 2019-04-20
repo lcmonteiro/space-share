@@ -267,7 +267,7 @@ protected:
             __func->Decay();
             return UPDATE;
         }
-        // reamaining -------------------------------------
+        // remaining --------------------------------------
         try { 
             do {
                 for(auto& i : m.Wait(Clock::Remaining(end))) {

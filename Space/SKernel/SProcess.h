@@ -149,8 +149,8 @@ protected:
     inline void __ERROR(const std::string& msg) {
         SLog::__ERROR(__uri, msg);
     }
-    inline void __CRITITAL(const std::string& msg) {
-        SLog::__CRITITAL(__uri, msg);
+    inline void __CRITICAL(const std::string& msg) {
+        SLog::__CRITICAL(__uri, msg);
     }
 private:
     /**

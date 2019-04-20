@@ -53,50 +53,50 @@ public:
 class SFunction: public SLog, public SEnergy<FunctionExceptionDEAD> {
 public:
     /**
+     * ------------------------------------------------------------------------
      * constructor
+     * ------------------------------------------------------------------------
      */
     SFunction(string id, size_t energy = UINT32_MAX, uint8_t verbose = 0)
         : SLog(verbose), SEnergy(energy), __id(id) {
         Recover();
     }
     /**
+     * ------------------------------------------------------------------------
      * destructor
+     * ------------------------------------------------------------------------
      */
     virtual ~SFunction() = default;
     /**
+     * ------------------------------------------------------------------------
      * recover function
+     * ------------------------------------------------------------------------
      */
-    virtual void Recover() {
-        SEnergy::Restore();
-    }
+    virtual void Recover() { SEnergy::Restore(); }
 protected:
     /**
+     * ------------------------------------------------------------------------
+     * variables
+     * ------------------------------------------------------------------------
      * function id
+     * ----------------------------------------------------
      */
     string __id;
-    /*---------------------------------------------------------------------------------
+    /**
+     * ------------------------------------------------------------------------
      * logging
-     *-------------------------------------------------------------------------------**/
-    inline void __DEBUG(const string& msg) {
-        SLog::__DEBUG(__id, msg);
-    }
-    inline void __INFO(const string& msg) {
-        SLog::__INFO(__id, msg);
-    }
-    inline void __WARNING(const string& msg) {
-        SLog::__WARNING(__id, msg);
-    }
-    inline void __ERROR(const string& msg) {
-        SLog::__ERROR(__id, msg);
-    }
-    inline void __CRITITAL(const string& msg) {
-        SLog::__CRITITAL(__id, msg);
-    }
+     * ------------------------------------------------------------------------
+     **/
+    inline void __DEBUG(   const string& msg) { SLog::__DEBUG(   __id, msg); }
+    inline void __INFO(    const string& msg) { SLog::__INFO(    __id, msg); }
+    inline void __WARNING( const string& msg) { SLog::__WARNING( __id, msg); }
+    inline void __ERROR(   const string& msg) { SLog::__ERROR(   __id, msg); }
+    inline void __CRITICAL(const string& msg) { SLog::__CRITICAL(__id, msg); }
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * spread template 
- *-------------------------------------------------------------------------------------------------
+ * Spread template 
+ * ------------------------------------------------------------------------------------------------
  **/
 template<class K, class IN, class DOC, class OUT>
 class SFunctionSpread : public SFunction {
@@ -131,10 +131,12 @@ public:
                     processData(it->second->Read(), out);
                 } catch (ConnectorExceptionDEAD& ex) {
                     try {
-                        for(auto& d: it->second->Drain()){ processData(move(d), out); }
+                        for(auto& d: it->second->Drain()) { 
+                            processData(move(d), out);
+                        }
                     } catch (...) {}
                     in.Exception(it);
-                } catch (ConnectorExceptionTIMEOUT& ex){}
+                } catch (ConnectorExceptionTIMEOUT& ex) {}
             }
         } catch (MonitorException& ex) {
             /**
@@ -142,7 +144,9 @@ public:
              **/
             for (auto s : in) {
                 try {
-                    for(auto& d: s.second->Drain()){ processData(move(d), out); }
+                    for(auto& d: s.second->Drain()) { 
+                        processData(move(d), out);
+                    }
                 } catch (...) {}
             }
             /**
@@ -158,9 +162,9 @@ public:
      * ------------------------------------------------------------------------
      */
     void Drain(IRoad& in, ORoad& out) {
-        // drain road
+        // drain ----------------------
         drainRoad(in, out);
-        // process 
+        // process --------------------
         processData(out);
     }
 protected:
@@ -172,7 +176,9 @@ protected:
     inline void drainRoad(IRoad& in, ORoad& out) {
         for (auto it = in.begin(), end = in.end(); it != end;) {
             try {
-                for (auto& d : it->second->Drain()) { processData(move(d), out); } ++it;
+                for (auto& d : it->second->Drain()) { 
+                    processData(move(d), out); 
+                } ++it;
             } catch (IConnectorExceptionDEAD& ex) {
                 in.Exception(it);
             }
@@ -270,7 +276,9 @@ protected:
                 processData(it->second->Read(), out);
             } catch (ConnectorExceptionDEAD& ex) {
                 try {
-                    for(auto& d: it->second->Drain()){ processData(move(d), out); }
+                    for(auto& d: it->second->Drain()) {
+                        processData(move(d), out); 
+                    }
                 } catch (...) {}
                 in.Exception(it);
             } catch (ConnectorExceptionTIMEOUT& ex) {}
@@ -285,7 +293,9 @@ protected:
     void drainRoad(I& in, O& out) {
         for (auto it = in.begin(), end = in.end(); it != end;) {
             try {
-                for (auto& d : it->second->Drain()) { processData(move(d), out); } ++it;
+                for (auto& d : it->second->Drain()) { 
+                    processData(move(d), out); 
+                } ++it;
             } catch (IConnectorExceptionDEAD& ex) {
                 in.Exception(it);
             }

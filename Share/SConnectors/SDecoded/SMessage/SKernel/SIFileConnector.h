@@ -138,12 +138,15 @@ protected:
         
         // container fill up --------------------------------------------------
         try {
-            while(!out.Full()) {
+            while(!out.full()) {
                 IOFrame aux (size);
                 this->__res.Read(aux);
                 out.emplace_back(aux.Frame().Detach());
             }
         } catch(...) {
+            if(out.empty()) {
+                throw;
+            }
             while(!out.Full()) {
                 Frame aux (size, size);
                 out.emplace_back(aux.Detach());
