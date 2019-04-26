@@ -24,7 +24,7 @@ namespace Itertool {
  * Stretch - container dimension reduction
  * --------------------------------------------------------------------------------------------------------------------
  */
-template<typename C>
+template<typename Container>
 class Stretch { 
 public:
     /**
@@ -32,25 +32,25 @@ public:
      * constructor
      * --------------------------------------------------------------------------------------------
      **/
-    Stretch(C& c) : __ref(c) {}
+    Stretch(Container& c) : __ref(c) {}
     /**
      * --------------------------------------------------------------------------------------------
      * iterator - class
      * --------------------------------------------------------------------------------------------
      **/
     struct Forward: public std::iterator<
-        std::forward_iterator_tag, typename C::value_type::value_type> {
-        using iterator1 = typename C::iterator; 
-        using iterator2 = typename C::value_type::iterator;
+        std::forward_iterator_tag, typename Container::value_type::value_type> {
+        using iterator1 = decltype(Container().begin());
+        using iterator2 = decltype(Container().begin()->begin());
         template <typename T>
         auto end(T& i)   { return i->end();   }
         template <typename T>
         auto begin(T& i) { return i->begin(); }
     };
     struct Backward: public std::iterator<
-        std::forward_iterator_tag, typename C::value_type::value_type> {
-        using iterator1 = typename C::reverse_iterator; 
-        using iterator2 = typename C::value_type::reverse_iterator;
+        std::forward_iterator_tag, typename Container::value_type::value_type> {
+        using iterator1 = decltype(Container().rbegin());
+        using iterator2 = decltype(Container().rbegin()->rbegin());
         template <typename T>
         auto end(T& i)   { return i->rend();   }
         template <typename T>
@@ -59,7 +59,6 @@ public:
     template<typename Super>
     class Iterator: public Super {
     public:  
-        using reference = typename Super::reference;
         using iterator1 = typename Super::iterator1;
         using iterator2 = typename Super::iterator2;
         /**
@@ -74,15 +73,23 @@ public:
          * operators
          * --------------------------------------------------------------------
          */
-		Iterator& operator++() {
+		auto& operator++() {
             for(next(__it2); __it2 == end(__it1); __it2 = begin(__it1)) {
                 if(next(__it1) == __end) {
-                    break;
+                    return *this;
                 }
             }
             return *this;
 		}
-		reference operator*() {
+        auto& operator--() {
+            for(; __it2 == begin(__it1); __it2 = end(__it1)) {
+                if(__it1 == __beg) {
+                    return *this;
+                } prev(__it1);
+            } prev(__it2);
+            return *this;
+		}
+		auto& operator*() {
 			return *__it2;
 		}
 		bool operator==(const Iterator& it) {
@@ -100,12 +107,11 @@ public:
          * constructor
          * --------------------------------------------------------------------
          */
-        Iterator(iterator1 end, iterator1 beg):
-        __end(end), __it1(beg), 
-        __it2(equal(end, beg)?iterator2():begin(beg)) {}
-
-        Iterator(iterator1 end):
-        __end(end), __it1(end), __it2() {}
+        Iterator(iterator1 beg, iterator1 it, iterator1 end):
+        __beg(beg), 
+        __end(end), 
+        __it1(it), 
+        __it2(equal(it, end) ? iterator2() : begin(beg)) {}
         /**
          * --------------------------------------------------------------------
          * helpers
@@ -113,6 +119,8 @@ public:
          */
         template <typename T>
         T& next(T& i) { return ++i; }
+        template <typename T>
+        T& prev(T& i) { return --i; }
         template <typename T>
         bool equal(const T& t1, const T& t2) { return t1==t2; }
     private:
@@ -122,6 +130,7 @@ public:
          * --------------------------------------------------------------------
          */
         iterator1 __end;
+        iterator1 __beg;
         iterator1 __it1;
         iterator2 __it2;
     };
@@ -130,17 +139,17 @@ public:
      * iterator - functions
      * --------------------------------------------------------------------------------------------
      **/
-    Iterator<Forward> begin() {
-        return Iterator<Forward>(__ref.end(), __ref.begin());
+    auto begin()  const {
+        return Iterator<Forward>(__ref.begin(),   __ref.begin(),  __ref.end());
     }
-    Iterator<Backward> rbegin() {
-        return Iterator<Backward>(__ref.rend(), __ref.rbegin());
+    auto rbegin() const {
+        return Iterator<Backward>(__ref.rbegin(), __ref.rbegin(), __ref.rend());
     }
-    Iterator<Forward> end() {
-        return Iterator<Forward>(__ref.end());
+    auto end()  const {
+        return Iterator<Forward>(__ref.begin(),   __ref.end(),    __ref.end());
     }
-    Iterator<Backward> rend() {
-        return Iterator<Backward>(__ref.rend());
+    auto rend() const {
+        return Iterator<Backward>(__ref.rbegin(), __ref.rend(),   __ref.rend());
     }
     /**
      * --------------------------------------------------------------------------------------------
@@ -156,8 +165,17 @@ private:
      * Variables
      * --------------------------------------------------------------------------------------------
      **/
-    C& __ref;
+    Container& __ref;
 };
+/**
+ * --------------------------------------------------------------------------------------------------------------------
+ * build
+ * --------------------------------------------------------------------------------------------------------------------
+ **/
+template<typename Container>
+static inline auto BuildStretch(Container& c) {
+    return Stretch<Container>(c); 
+} 
 /**
  * --------------------------------------------------------------------------------------------------------------------
  * Functional
@@ -184,7 +202,8 @@ Iterator SetNumber(Iterator it, Iterator end, Number val) {
  * get
  * ----------------------------------------------------------------------------
  */
-template <typename Iterator, class Number>
+
+template <class Number, typename Iterator>
 Number GetNumber(Iterator it, Iterator end) {
     auto i = 0;
     // set iterator position --------------------------
@@ -192,7 +211,7 @@ Number GetNumber(Iterator it, Iterator end) {
 
     // decode number ----------------------------------
     Number num = 0;
-    for (; (i > 0); --i, --it) {
+    for (--it; i > 0; --i, --it) {
         num <<= 8;
         num |= Number(*it);
     }
