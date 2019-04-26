@@ -30,7 +30,7 @@ TEST(SMachine, File)
     auto conf = SMachine::Config();
     conf.add({
         {SModule::Command::MODULE,   {{
-            {Module::URI, "encoder"},
+            {Module::URI, "Encoder"},
             {Module::TYPE, Module::Type::ENCODE},
             {Module::TIMEOUT, "1000"},
             {Module::VERBOSE, "4"}

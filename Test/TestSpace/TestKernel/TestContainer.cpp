@@ -33,7 +33,7 @@ TEST(SContainer, Serialize)
             length, length, SRandom::Number<int>()));
     }
     // serialize container --------------------------------
-    auto s = Itertool::Stretch<SContainer>(c);
+    auto s = Itertool::BuildStretch(c);
 
     // create frame ---------------------------------------
     auto f = SFrame(s.size());
