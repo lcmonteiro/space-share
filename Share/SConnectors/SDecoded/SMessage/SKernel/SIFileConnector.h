@@ -141,23 +141,23 @@ protected:
             while(!out.full()) {
                 IOFrame aux (size);
                 this->__res.Read(aux);
-                out.emplace_back(aux.Frame().Detach());
+                out.emplace_back(aux.Expand(size));
             }
         } catch(...) {
             if(out.empty()) {
                 throw;
             }
-            while(!out.Full()) {
+            while(!out.full()) {
                 Frame aux (size, size);
                 out.emplace_back(aux.Detach());
             }
         }
         // insert size --------------------------------------------------------
         out.Number<framesize_t>(this->__res.size());
-        
-        // info ---------------------------------------------------------------
+
+        // log info -----------------------------------------------------------
         INFO("DATA::IN::"
-            << "n=" << out.size() << "0=" << out.at(0));
+            << "(n)=" << out.size() << " " << "[0]=" << out.at(0));
 
         // return filled document --------------------------------------------
         return out.Detach();

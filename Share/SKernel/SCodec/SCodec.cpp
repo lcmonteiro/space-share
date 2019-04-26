@@ -388,7 +388,7 @@ static uint32_t Combine(
     register uint8_t factor = 0;
     register uint32_t n = 0;
     
-    // combine looop --------------------------------------
+    // combine loop ---------------------------------------
     for (auto it = data.begin(), end = data.end(); it != end; ++it) {
         // Y += Xn*Cn -------
         factor = c();
@@ -429,8 +429,8 @@ static void Organize(Frame& field, Container& coef, Container& data) {
         } else {
             if (field[ii] == 1) {
                 std::swap(field[i], field[ii]);
-                std::swap(coef[i], coef[ii]);
-                std::swap(data[i], data[ii]);
+                std::swap(coef[i],  coef[ii]);
+                std::swap(data[i],  data[ii]);
                 i++;
             }
             ii--;

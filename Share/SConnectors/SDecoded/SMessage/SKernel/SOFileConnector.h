@@ -115,21 +115,25 @@ protected:
      * ------------------------------------------------------------------------
      */
     void _Write(const Document& container) override {
-       
         // log info ---------------------------------------
-        INFO("DATA::OUT::n=" << container.size());
+        INFO("DATA::OUT::"
+            << "(n)=" << container.size() << " " 
+            << "[0]=" << container.at(0));
 
+        // get size --------------------------------------- 
+        auto size = container.Number<framesize_t>();
+        
         // reset buffer -----------------------------------
         __buffer.Reset();
 
         // fill up buffer ---------------------------------
         for(auto& c: container) {
             __buffer.Reserve(c.Size()).Write(c);
-        }
-        // resize buffer (read size from end) ------------- 
-        __buffer.Shrink(__buffer.Number<framesize_t>());
+        }    
+        // resize buffer ---------------------------------- 
+        __buffer.Shrink(size);
     
-        // compress and write buffer ----------------------
+        // write buffer -----------------------------------
         this->__res.Drain(__buffer);
     }   
     /**
