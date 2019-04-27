@@ -98,9 +98,9 @@ SLocalResource& SLocalResource::SetRxTimeout(int timeout) {
  */
 template<>
 SLocalResource& SLocalResource::Fill(IOFrame& f) {
-    while (!f.Full()) {
+    while (!f.full()) {
         f.Insert(__Recv(
-            GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize()
+            GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize()
         ));
     }
     return *this;
@@ -120,14 +120,14 @@ SLocalResource& SLocalResource::Fill(Frame& f) {
 template<>
 SLocalResource& SLocalResource::Read(IOFrame& f) {
     f.Insert(__Recv(
-        GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize())
+        GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize())
     );
     return *this;
 }
 template<>
 SLocalResource& SLocalResource::Read(Frame& f) {
     f.Insert(__Recv(
-        GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+        GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
     );
     return *this;
 }
@@ -140,9 +140,9 @@ SLocalResource& SLocalResource::Read(Frame& f) {
 template<typename T>
 SLocalResource& SLocalResource::Drain(T& f) {
     // send loop ----------------------
-    while (!f.Empty()) {
+    while (!f.empty()) {
         f.Remove(__Send(
-            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
+            GetHandler<SResourceHandler>()->FD(), f.Data(), f.size()
         ));
     }
     return *this;
@@ -167,13 +167,13 @@ template SLocalResource& SLocalResource::Drain(const IOFrame&);
 template<typename T>
 SLocalResource& SLocalResource::Write(T& f) {
     f.Remove(
-        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
     );
     return *this;
 }
 template<typename T>
 SLocalResource& SLocalResource::Write(const T& f) {
-    __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size());
+    __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size());
     return *this;
 }
 template SLocalResource& SLocalResource::Write(Frame&);

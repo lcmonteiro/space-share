@@ -78,15 +78,6 @@ public:
      *  check size
      * ------------------------------------------------------------------------
      */
-    inline size_t Capacity() const {
-        return capacity();
-    }
-    inline size_t Size() const {
-        return size();
-    }
-    inline bool Full() const {
-        return (size() == capacity());
-    }
     inline bool full() const {
         return (size() == capacity());
     }
@@ -124,7 +115,7 @@ public:
      * detach  
      * ------------------------------------------------------------------------
      */
-    inline SContainer&& Detach() {
+    inline SContainer&& detach() {
         return std::move(*this);
     }
 } Container;

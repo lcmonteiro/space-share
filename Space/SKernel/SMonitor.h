@@ -99,7 +99,7 @@ public:
      * ------------------------------------------------------------------------
      * size 
      */
-    virtual size_t Size() = 0;
+    virtual size_t size() = 0;
 	/**
 	 * insert 
      */
@@ -163,7 +163,7 @@ protected:
      * ------------------------------------------------------------------------
      * size 
      */
-    size_t Size() override;
+    size_t size() override;
 	/**
 	 * insert 
      */
@@ -199,7 +199,7 @@ protected:
      * ------------------------------------------------------------------------
      * size 
      */
-    size_t Size() override;
+    size_t size() override;
 	/**
 	 * insert 
      */

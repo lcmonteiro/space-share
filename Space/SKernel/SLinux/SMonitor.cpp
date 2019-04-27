@@ -37,8 +37,8 @@ Monitor::SStatic::SStatic(): SMonitor() {
  * size
  * ----------------------------------------------------------------------------
  */
-size_t Monitor::SStatic::Size() {
-    return SMonitor::GetHandler<SStaticMonitorHandler>()->Size();
+size_t Monitor::SStatic::size() {
+    return SMonitor::GetHandler<SStaticMonitorHandler>()->size();
 }
 /**
  * ----------------------------------------------------------------------------
@@ -75,8 +75,8 @@ Monitor::SDynamic::SDynamic(): SMonitor(), SResource() {
  * size
  * ----------------------------------------------------------------------------
  */
-size_t Monitor::SDynamic::Size() {
-    return SMonitor::GetHandler<SDynamicMonitorHandler>()->Size();
+size_t Monitor::SDynamic::size() {
+    return SMonitor::GetHandler<SDynamicMonitorHandler>()->size();
 }
 /**
  * ----------------------------------------------------------------------------

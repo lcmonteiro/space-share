@@ -58,10 +58,10 @@ protected:
     Document _Read() override {
         IOFrame buffer;
         // fill container ---------------------------------
-        for (;!__container.Full(); __container.push_back(move(buffer))) {
+        for (;!__container.full(); __container.push_back(move(buffer))) {
             
             // fill buffer --------------------------------
-            while (!__buffer.Full()) {
+            while (!__buffer.full()) {
                 __res.Fill(__buffer);
             }
             // reset buffers ------------------------------
@@ -93,16 +93,16 @@ protected:
             tmp.Write(move(container));
         }
         // check if frame is full -------------------------
-        if (!__buffer.Empty()) {
+        if (!__buffer.empty()) {
             auto buffer = IOFrame(__buffer.Capacity());
             swap(__buffer, buffer);
             tmp.Write(move(buffer.Shrink()));
         }
         // fill container ---------------------------------
         std::list<Document> out;
-        for (auto& p : Shape(tmp.Length(), __container.Capacity())) {
+        for (auto& p : Shape(tmp.Length(), __container.capacity())) {
             auto container = Document(p.first);
-            while (!container.Full()) {
+            while (!container.full()) {
                 container.emplace_back(tmp.Read(p.second));
             }
             out.push_back(move(container));

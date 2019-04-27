@@ -90,7 +90,7 @@ protected:
 	    Encoder en(std::move(data), __stamp);
 
 	    // create context ----------------------------------------------------
-	    Encoded::Context ctxt (__position.next(), en.size(), en.FrameSize());
+	    Encoded::Context ctxt (__position.next(), en.size(), en.Framesize());
 
 	    // log ----------------------------------------------------------------
 	    DEBUG("encode::" << "pos=" << ctxt.Position());

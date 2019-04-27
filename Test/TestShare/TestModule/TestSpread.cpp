@@ -125,7 +125,7 @@ TEST(Spread, Data)
     // out interface resource --------------------------------------------------
     auto interface_o = Message::SLocalResource()
         .Bind(addr_o)
-    .Detach();
+    .detach();
     // decode start ------------------------------------------------------------
     re.Detach();
 
@@ -141,12 +141,12 @@ TEST(Spread, Data)
     // in interface resource ---------------------------------------------------
     auto interface_i = Message::SLocalResource()
         .Link(addr_i)
-    .Detach();
+    .detach();
 
     // send ------------------------------------------------------------------- 
     EXPECT_EQ(interface_i.Write(frame_i).Good(), true);
 
-        // wait ------------------------------------------------------------------- 
+    // wait ------------------------------------------------------------------- 
     Monitor(Monitor::Time(3000), &interface_o).Wait();
 
     // receive ----------------------------------------------------------------
@@ -259,7 +259,7 @@ TEST(Spread, Code)
     // out interface resource --------------------------------------------------
     auto interface_o = Message::SLocalResource()
         .Bind(addr_o)
-    .Detach();
+    .detach();
     
     // decode start ------------------------------------------------------------
     de.Detach();
@@ -276,7 +276,7 @@ TEST(Spread, Code)
     // in interface resource ---------------------------------------------------
     auto interface_i = Message::SLocalResource()
         .Link(addr_i)
-    .Detach();
+    .detach();
 
     // send ------------------------------------------------------------------- 
     EXPECT_EQ(interface_i.Drain(frame_i).Good(), true);

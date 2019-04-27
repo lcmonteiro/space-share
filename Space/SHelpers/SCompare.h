@@ -35,7 +35,7 @@ public:
             if(aux1 != aux2) {
                 return false;
             }
-        } while(aux1.Full());
+        } while(aux1.full());
         // both files are equals --------------------------
         return true;
     }

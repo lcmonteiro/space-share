@@ -20,7 +20,7 @@
 TEST(SFrame, Conversion)
 {
     // use case 1 --------------------
-    IOFrame in = SFrame(10, 1).Detach();
+    IOFrame in = SFrame(10, 1).detach();
 
     // write --------------------------
     in.Expand().Write({1, 2, 3}).Write({9, 8, 7});
@@ -59,7 +59,7 @@ TEST(SFrame, Number)
 TEST(SFrame, DownConversion)
 {
     // use case 1 --------------------
-    IOFrame f = SFrame(10, 1).Detach();
+    IOFrame f = SFrame(10, 1).detach();
 
     // write --------------------------
     f.Expand().Write({1, 2, 3}).Write({9, 8, 7});
@@ -68,7 +68,7 @@ TEST(SFrame, DownConversion)
     EXPECT_EQ(f.Read(5), SFrame({0, 1, 2, 3, 9}));
 
     //test 2 --------------------------
-    EXPECT_EQ(f.Frame(), SFrame({8, 7}));
+    EXPECT_EQ(SFrame({8, 7}), f);
 }
 /**
  * ------------------------------------------------------------------------------------------------
@@ -85,53 +85,53 @@ TEST(SFrame, Sizes)
 
     // test 1
     EXPECT_EQ(f.size(), 0);
-    EXPECT_EQ(f.Size(), 0);
-    EXPECT_EQ(f.OSize(), 0);
-    EXPECT_EQ(f.ISize(), SIZE);
+    EXPECT_EQ(f.size(), 0);
+    EXPECT_EQ(f.osize(), 0);
+    EXPECT_EQ(f.isize(), SIZE);
 
     // insert
     f.Write(SFrame(SIZE>>1, SIZE>>1));
 
     // test 2
     EXPECT_EQ(f.size(), SIZE>>1);
-    EXPECT_EQ(f.Size(), SIZE>>1);
-    EXPECT_EQ(f.OSize(), 0);
-    EXPECT_EQ(f.ISize(), SIZE>>1);
+    EXPECT_EQ(f.size(), SIZE>>1);
+    EXPECT_EQ(f.osize(), 0);
+    EXPECT_EQ(f.isize(), SIZE>>1);
     
     // remove -------------------------
     f.Read(SIZE>>2);
 
     // test 3 -------------------------
     EXPECT_EQ(f.size(), SIZE>>2);
-    EXPECT_EQ(f.Size(), SIZE>>2);
-    EXPECT_EQ(f.OSize(), SIZE>>2);
-    EXPECT_EQ(f.ISize(), SIZE>>1);
+    EXPECT_EQ(f.size(), SIZE>>2);
+    EXPECT_EQ(f.osize(), SIZE>>2);
+    EXPECT_EQ(f.isize(), SIZE>>1);
 
     // const --------------------------
     auto const cf = f;
     // test 4 -------------------------
     EXPECT_EQ(cf.size(), SIZE>>2);
-    EXPECT_EQ(cf.Size(), SIZE>>2);
-    EXPECT_EQ(cf.OSize(), SIZE>>2);
-    EXPECT_EQ(cf.ISize(), SIZE>>1);
+    EXPECT_EQ(cf.size(), SIZE>>2);
+    EXPECT_EQ(cf.osize(), SIZE>>2);
+    EXPECT_EQ(cf.isize(), SIZE>>1);
 
     // const --------------------------
     auto const cmf = move(f);
     // test 5 -------------------------
     EXPECT_EQ(cmf.size(), SIZE>>2);
-    EXPECT_EQ(cmf.Size(), SIZE>>2);
-    EXPECT_EQ(cmf.OSize(), SIZE>>2);
-    EXPECT_EQ(cmf.ISize(), SIZE>>1);
+    EXPECT_EQ(cmf.size(), SIZE>>2);
+    EXPECT_EQ(cmf.osize(), SIZE>>2);
+    EXPECT_EQ(cmf.isize(), SIZE>>1);
 
     // test 6 -------------------------
     EXPECT_EQ(f.size(), 0);
-    EXPECT_EQ(f.Size(), 0);
-    EXPECT_EQ(f.OSize(), 0);
-    EXPECT_EQ(f.ISize(), 0);
+    EXPECT_EQ(f.size(), 0);
+    EXPECT_EQ(f.osize(), 0);
+    EXPECT_EQ(f.isize(), 0);
 
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */

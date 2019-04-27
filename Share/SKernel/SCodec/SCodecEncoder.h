@@ -176,7 +176,7 @@ namespace v1 {
         inline uint32_t NumFrames() {
             return __length;
         }
-        inline uint32_t FrameSize() {
+        inline uint32_t Framesize() {
             return __data.at(0).size() + SCodec::HeaderSize();
         }
         /**

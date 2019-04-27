@@ -128,7 +128,7 @@ protected:
 
         // fill up buffer ---------------------------------
         for(auto& c: container) {
-            __buffer.Reserve(c.Size()).Write(c);
+            __buffer.Reserve(c.size()).Write(c);
         }    
         // resize buffer ---------------------------------- 
         __buffer.Shrink(size);

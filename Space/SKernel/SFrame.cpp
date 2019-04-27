@@ -62,8 +62,8 @@ __beg(Super::begin()), __end(Super::end()) {}
 
 SIOFrame::SIOFrame(const SIOFrame& f) 
 : SFrame(f.SFrame::begin(), f.Frame::end()), 
-__beg(next(Super::begin(), f.OSize())), 
-__end(prev(Super::end(),   f.ISize())) {}
+__beg(next(Super::begin(), f.osize())), 
+__end(prev(Super::end(),   f.isize())) {}
 /**
  * --------------------------------------------------------
  * operatores
@@ -84,7 +84,7 @@ SIOFrame& SIOFrame::operator=(const SIOFrame& f) {
  * ---------------------------------------------------------
  */
 SIOFrame SFrame::IOFrame() {
-    return Detach();
+    return detach();
 }
 /**
  * ------------------------------------------------------------------------------------------------

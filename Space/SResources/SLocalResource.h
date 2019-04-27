@@ -90,7 +90,7 @@ namespace Message {
         /**
          * detach
          */
-        inline SLocalResource Detach() {
+        inline SLocalResource detach() {
             return std::move(*this);
         }
     };
@@ -122,7 +122,7 @@ namespace Stream {
         /**
          * detach
          */
-        inline SLocalResource Detach() {
+        inline SLocalResource detach() {
             return std::move(*this);
         }
     };

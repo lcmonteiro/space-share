@@ -127,13 +127,13 @@ protected:
         INFO("CODE::OUT::"
             << "pos=" << doc.Position()  << " " 
             << "n="   << doc.NumFrames() << " "
-            << "sz="  << doc.FrameSize() << " " 
-            << "len=" << doc.Size()
+            << "sz="  << doc.Framesize() << " " 
+            << "len=" << doc.size()
         );
         // process document -------------------------------
         auto split = doc.Split();
-        for (auto& c : STools::Split(split.second.Detach(), 
-            __buffer.Reset().Expand().ISize() - HEADER_SIZE)) {
+        for (auto& c : STools::Split(split.second.detach(), 
+            __buffer.Reset().Expand().isize() - HEADER_SIZE)) {
 
             // write context ------------------------------
             __buffer.Write(Frame().Number<reference_t>(
@@ -141,9 +141,9 @@ protected:
             __buffer.Write(Frame().Number<numframes_t>(
                 split.first.NumFrames()));
             __buffer.Write(Frame().Number<numframes_t>(
-                c.Size()));
+                c.size()));
             __buffer.Write(Frame().Number<framesize_t>(
-                split.first.FrameSize()));
+                split.first.Framesize()));
             
             // write document -----------------------------
             for (auto& f : c) { __buffer.Write(f); }

@@ -29,18 +29,18 @@ void SOIrcConnector::_Write(const Document& container) {
     IOFrame in = Frame(
         sizeof (reference_t) + 
         sizeof (numframes_t) + 
-        sizeof (framesize_t) + container.FrameSize()
+        sizeof (framesize_t) + container.Framesize()
     );
     // write context --------------------------------------
     in.Write(Frame().Number<reference_t>(container.Position()));
     in.Write(Frame().Number<numframes_t>(container.NumFrames()));
-    in.Write(Frame().Number<framesize_t>(container.FrameSize()));
+    in.Write(Frame().Number<framesize_t>(container.Framesize()));
     
     // log ------------------------------------------------
     INFO("CODE::OUT::"
         << "pos=" << container.Position()  << " " 
         << "n="   << container.NumFrames() << " "
-        << "sz="  << container.FrameSize() << " " 
+        << "sz="  << container.Framesize() << " " 
         << "len=" << container.size()
     );
     // write nframes --------------------------------------

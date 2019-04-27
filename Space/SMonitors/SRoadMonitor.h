@@ -65,7 +65,7 @@ public:
     /**
      * detach
      */
-    inline SRoadMonitor Detach() {
+    inline SRoadMonitor detach() {
         return std::move(*this);
     }
 };

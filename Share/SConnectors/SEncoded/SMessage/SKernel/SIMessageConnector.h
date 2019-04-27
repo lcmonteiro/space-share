@@ -149,7 +149,7 @@ protected:
         // read nframes -----------------------------------
         Document doc(Context(position, nframest, framelen));
         doc.reserve(nframesp);
-        while(!doc.Full()) {
+        while(!doc.full()) {
             doc.push_back(__buffer.Read(framelen));
         }
         // return document --------------------------------

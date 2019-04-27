@@ -151,7 +151,7 @@ public:
     inline numframes_t NumFrames() const {
         return __n_frames;
     }
-    inline framesize_t FrameSize() const {
+    inline framesize_t Framesize() const {
         return __frame_sz;
     }
     /**
@@ -303,7 +303,7 @@ public:
     /**
      * check container
      */
-    inline bool Full() {
+    inline bool full() {
         return (__init > 3) && (size() >= __capacity);
     }
 protected:

@@ -61,7 +61,7 @@ protected:
     Document _Read() override {
         IOFrame buffer;
         // fill container ---------------------------------
-        while (!__container.Full()) {
+        while (!__container.full()) {
             
             // fill buffer --------------------------------
             __res.Fill(__buffer); 
@@ -71,7 +71,7 @@ protected:
             std::swap(__buffer, buffer);
 
             // save buffer --------------------------------
-            __container.emplace_back(buffer.Detach());
+            __container.emplace_back(buffer.detach());
         }
         // reset container --------------------------------
         Document container(__container.capacity());
@@ -96,18 +96,18 @@ protected:
             __container.Reset();
         }
         // check if frame is full -------------------------
-        if (!__buffer.Empty()) {
+        if (!__buffer.empty()) {
             tmp.Write(__buffer.Shrink());
             __buffer.Reset();
         }
         // fill container ---------------------------------
         std::list<Document> out;
-        for (auto& p : Shape(tmp.Length(), __container.Capacity())) {
+        for (auto& p : Shape(tmp.Length(), __container.capacity())) {
             auto container = Document(p.first);
-            while (!container.Full()) {
+            while (!container.full()) {
                 container.emplace_back(tmp.Read(p.second));
             }
-            out.emplace_back(container.Detach());
+            out.emplace_back(container.detach());
         }
         // info -------------------------------------------
         INFO("DATA(drain)::IN::n=" << out.size());

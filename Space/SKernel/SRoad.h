@@ -157,7 +157,7 @@ public:
      * detach
      * ------------------------------------------------------------------------
      */
-    inline SRoad Detach() {
+    inline SRoad detach() {
         return move(*this);
     }
     /**

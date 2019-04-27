@@ -123,8 +123,8 @@ protected:
         INFO("CODE::OUT::"
             << "pos=" << doc.Position()  << " " 
             << "n="   << doc.NumFrames() << " "
-            << "sz="  << doc.FrameSize() << " " 
-            << "len=" << doc.Size()
+            << "sz="  << doc.Framesize() << " " 
+            << "len=" << doc.size()
         );
 
         // write context ------------------------------
@@ -133,9 +133,9 @@ protected:
         this->__res.Drain(Frame().Number<numframes_t>(
             doc.NumFrames()));
         this->__res.Drain(Frame().Number<numframes_t>(
-            doc.Size()));
+            doc.size()));
         this->__res.Drain(Frame().Number<framesize_t>(
-            doc.FrameSize()));
+            doc.Framesize()));
 
         // write frames -----------------------------
         for (auto& f : doc) { this->__res.Drain(f); }

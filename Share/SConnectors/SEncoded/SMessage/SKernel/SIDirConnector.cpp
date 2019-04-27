@@ -60,7 +60,7 @@ Document SIDirConnector::_Read() {
 	// // read nframes ---------------------------------------
 	// Document container(Context(position, nframest, framelen));
 	// container.reserve(nframesp);
-	// while(!container.Full()){
+	// while(!container.full()){
 	// 	container.push_back(res.Read(framelen));
 	// }
 	// // return full container ------------------------------

@@ -140,7 +140,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SFrame& Reserve(size_t sz) {
-        if (sz > Size()) {  
+        if (sz > size()) {  
             resize(sz);
         }
         return *this;
@@ -163,7 +163,7 @@ public:
             result <<= 8;
             result |= T(*it);
         }
-        // return nunber -----------------------------------
+        // return number -----------------------------------
         return result;
     }
     /**
@@ -197,19 +197,11 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * get size
-     * ------------------------------------------------------------------------
-     */
-    inline size_t Size() const {
-        return size();
-    }
-    /**
-     * ------------------------------------------------------------------------
      * insert size -> resize
      * ------------------------------------------------------------------------
      */
-    inline SFrame& Insert(size_t size) {
-        resize(size);
+    inline SFrame& Insert(size_t sz) {
+        resize(sz);
         return *this;
     }
     /**
@@ -217,10 +209,10 @@ public:
      * Remove size -> resize(-size)
      * ------------------------------------------------------------------------
      */
-    inline SFrame& Remove(size_t size) {
-        if(Size() != size){
-            std::rotate(begin(), std::next(begin(), size), end());
-            resize(Size() - size);
+    inline SFrame& Remove(size_t sz) {
+        if(size() != sz){
+            std::rotate(begin(), std::next(begin(), sz), end());
+            resize(size() - sz);
         } else {
             resize(0);
         } 
@@ -229,16 +221,15 @@ public:
     /**
      * ------------------------------------------------------------------------
      * Shrink to size -> resize 
-     *  - throw exception when size > Size()
+     *  - throw exception when size > size()
      * ------------------------------------------------------------------------
      */
-    inline SFrame& Shrink(size_t size = 0) {
-        if (Size() < size) {
+    inline SFrame& Shrink(size_t sz = 0) {
+        if (size() < sz) {
             throw FrameException(
-                SText("Shrink=(", Size(), "<", size, ")")
-            );
+                SText("Shrink=(", size(), "<", sz, ")"));
         }
-        resize(size);
+        resize(sz);
         return *this;
     }
     /**
@@ -266,10 +257,10 @@ public:
      * check size 
      * ------------------------------------------------------------------------
      */
-    inline bool Empty() const {
+    inline bool empty() const {
         return (size() == 0);
     }
-    inline bool Full() const {
+    inline bool full() const {
         return (size() == capacity());
     }
     /**
@@ -277,7 +268,7 @@ public:
      * detach  
      * ------------------------------------------------------------------------
      */
-    inline SFrame&& Detach() {
+    inline SFrame&& detach() {
         return std::move(*this);
     }
     /**
@@ -325,7 +316,6 @@ public:
     inline value_type    front() const { return *begin();       }
     inline value_type    back()  const { return *end();         }
     inline const_pointer data()  const { return begin().base(); }
-    inline size_t        size()  const { return Size();         }
     /**
      * ----------------------------------------------------
      * iterators
@@ -391,7 +381,7 @@ public:
      */
     inline SIOFrame& Fill(SIOFrame& in) {
         // check size -----------------
-        auto sz = std::min(Size(), in.ISize());
+        auto sz = std::min(size(), in.isize());
         // copy data ------------------
         std::memcpy(in.IData(), Data(), sz);
         // update in ------------------
@@ -431,16 +421,16 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * get size
+     * Size
      * ------------------------------------------------------------------------
      */
-    inline size_t OSize() const {
+    inline size_t osize() const {
         return std::distance(Super::begin(), begin());
     }
-    inline size_t Size() const {
+    inline size_t size() const {
         return std::distance(begin(), end());
     }
-    inline size_t ISize() const {
+    inline size_t isize() const {
         return std::distance(end(), Super::end());
     }
     /**
@@ -461,10 +451,9 @@ public:
     }
     inline SIOFrame& Shrink(size_t sz) {
         // check ------------------------------------------  
-        if (Size() < sz) {
+        if (size() < sz) {
             throw FrameException(
-                SText("Shrink=(", size(), "<", sz, ")")
-            );
+                SText("Shrink=(", size(), "<", sz, ")"));
         }
         // shrink -----------------------------------------
         return ISeek(sz);
@@ -482,7 +471,7 @@ public:
     }
     inline SIOFrame& Expand(size_t sz) {
         // delta ------------------------------------------
-        auto delta = (sz - Size());
+        auto delta = (sz - size());
         // check ------------------------------------------  
         if (0 > delta) {
             throw FrameException(
@@ -497,10 +486,10 @@ public:
      * ------------------------------------------------------------------------
      */
     inline SIOFrame& Reserve(size_t n) {
-        auto isz = ISize();
+        auto isz = isize();
         // verify ----------------------------------------- 
         if (n > isz) {
-            auto osz = OSize();
+            auto osz = osize();
             // resize -------------------------------------    
             resize(Super::size() + n - isz);
             // reset -------------------------------------- 
@@ -559,10 +548,9 @@ public:
      */
     inline SIOFrame& Write(const SFrame& f) {
         // size check -------------------------------------
-        if (ISize() < f.Size()) {
+        if (isize() < f.size()) {
             throw FrameException(
-                SText("Write=(", Size(), "<", f.Size(), ")")
-            );
+                SText("Write=(", size(), "<", f.size(), ")"));
         }
         // copy -------------------------------------------
         __end = std::copy(f.begin(), f.end(), end());
@@ -578,8 +566,7 @@ public:
         // size check -------------------------------------
         if (size() < n) {
             throw FrameException(
-                SText("Read=(", size(), "<", n, ")")
-            );
+                SText("Read=(", size(), "<", n, ")"));
         }
         // reference --------------------------------------
         auto beg = begin();
@@ -591,10 +578,10 @@ public:
      * check size 
      * ------------------------------------------------------------------------
      */
-    inline bool Empty() const {
+    inline bool empty() const {
         return (begin() >= end());
     }
-    inline bool Full() const {
+    inline bool full() const {
         return (end() >= Super::end());
     }
     /**
@@ -602,16 +589,8 @@ public:
      * detach  
      * ------------------------------------------------------------------------
      */
-    inline SIOFrame&& Detach() {
+    inline SIOFrame&& detach() {
         return std::move(*this);
-    }
-    /**
-     * ------------------------------------------------------------------------
-     * change context
-     * ------------------------------------------------------------------------
-     */
-    inline SFrame Frame() {
-        return Detach();
     }
 private:
     friend class SFrame;

@@ -40,11 +40,11 @@ public:
     /**
      * quantity
      */
-    bool Empty() {
+    bool empty() {
         return _1.empty(); 
     }
     
-    size_t Size() {
+    size_t size() {
         return _1.size(); 
     }
     

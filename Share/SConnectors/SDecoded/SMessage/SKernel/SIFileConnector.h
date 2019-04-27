@@ -149,7 +149,7 @@ protected:
             }
             while(!out.full()) {
                 Frame aux (size, size);
-                out.emplace_back(aux.Detach());
+                out.emplace_back(aux.detach());
             }
         }
         // insert size --------------------------------------------------------
@@ -160,7 +160,7 @@ protected:
             << "(n)=" << out.size() << " " << "[0]=" << out.at(0));
 
         // return filled document --------------------------------------------
-        return out.Detach();
+        return out.detach();
     }
     /**
      * ------------------------------------------------------------------------

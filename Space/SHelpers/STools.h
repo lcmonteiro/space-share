@@ -37,17 +37,17 @@ public:
         size_t size = 0;
         Container chunk;
         for(auto& frame : container) {
-			size += frame.Size();
+			size += frame.size();
 		
         	// verify limit -------------------------------
 			if (size > max) {
-				out.emplace_back(chunk.Detach());
-				size = frame.Size();
+				out.emplace_back(chunk.detach());
+				size = frame.size();
 			}
 			// move frame to chunk ------------------------
-			chunk.emplace_back(frame.Detach());
+			chunk.emplace_back(frame.detach());
         }
-        out.emplace_back(chunk.Detach());
+        out.emplace_back(chunk.detach());
 
         // return split -----------------------------------
         return out;

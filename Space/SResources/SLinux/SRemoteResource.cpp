@@ -120,9 +120,9 @@ SRemoteResource& SRemoteResource::SetNoDelay(bool flag) {
  */
 template<>
 SRemoteResource& SRemoteResource::Fill(IOFrame& f) {
-    while (!f.Full()) {
+    while (!f.full()) {
         f.Insert(__Recv(
-            GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize()
+            GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize()
         ));
     }
     return *this;
@@ -142,14 +142,14 @@ SRemoteResource& SRemoteResource::Fill(Frame& f) {
 template<>
 SRemoteResource& SRemoteResource::Read(IOFrame& f) {
     f.Insert(__Recv(
-        GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize())
+        GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize())
     );
     return *this;
 }
 template<>
 SRemoteResource& SRemoteResource::Read(Frame& f) {
     f.Insert(__Recv(
-        GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+        GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
     );
     return *this;
 }
@@ -162,9 +162,9 @@ SRemoteResource& SRemoteResource::Read(Frame& f) {
 template<typename T>
 SRemoteResource& SRemoteResource::Drain(T& f) {
     // send loop ----------------------
-    while (!f.Empty()) {
+    while (!f.empty()) {
         f.Remove(__Send(
-            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
+            GetHandler<SResourceHandler>()->FD(), f.Data(), f.size()
         ));
     }
     return *this;
@@ -189,13 +189,12 @@ template SRemoteResource& SRemoteResource::Drain(const IOFrame&);
 template<typename T>
 SRemoteResource& SRemoteResource::Write(T& f) {
     f.Remove(
-        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
-    );
+        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size()));
     return *this;
 }
 template<typename T>
 SRemoteResource& SRemoteResource::Write(const T& f) {
-    __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size());
+    __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size());
     return *this;
 }
 template SRemoteResource& SRemoteResource::Write(Frame&);

@@ -47,12 +47,12 @@ void SODirConnector::_Write(const Document& container) {
     res.Drain(Frame().Number<reference_t>(container.Position()));
     res.Drain(Frame().Number<numframes_t>(container.NumFrames()));
     res.Drain(Frame().Number<numframes_t>(container.size()));
-    res.Drain(Frame().Number<framesize_t>(container.FrameSize()));
+    res.Drain(Frame().Number<framesize_t>(container.Framesize()));
     // log ------------------------------------------------
     INFO("CODE::OUT::"
         << "pos=" << container.Position()  << " " 
         << "n="   << container.NumFrames() << " "
-        << "sz="  << container.FrameSize() << " " 
+        << "sz="  << container.Framesize() << " " 
         << "len=" << container.size()
     );
     /**------------------------------------------------------------------------------------------------------------*

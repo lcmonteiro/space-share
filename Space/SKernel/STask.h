@@ -85,12 +85,6 @@ public:
         std::thread::join();
     }
     /**
-     * detach from object
-     */
-    inline void Detach() {
-        std::thread::detach();
-    }
-    /**
      * interrupt thread
      */
     inline void Interrupt() {

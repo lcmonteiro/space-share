@@ -58,13 +58,13 @@ protected:
         __res.Drain(Frame().Number<reference_t>(container.Position()));
         __res.Drain(Frame().Number<numframes_t>(container.NumFrames()));
         __res.Drain(Frame().Number<numframes_t>(container.size()));
-        __res.Drain(Frame().Number<framesize_t>(container.FrameSize()));
+        __res.Drain(Frame().Number<framesize_t>(container.Framesize()));
         /**-----------------------------------------------------------------------------------------------------
          * info
          *----------------------------------------------------------------------------------------------------**/
         INFO("CODE::OUT::"
             << "pos=" << container.Position() << " " << "n=" << container.NumFrames() << " "
-            << "sz=" << container.FrameSize() << " " << "len=" << container.size()
+            << "sz=" << container.Framesize() << " " << "len=" << container.size()
         );
         /**-----------------------------------------------------------------------------------------------------
          * write nframes

@@ -153,10 +153,10 @@ protected:
         // read nframes -----------------------------------
         Document doc(Context(position, nframest, framelen));
         doc.reserve(nframesp);
-        while(!doc.Full()) {
+        while(!doc.full()) {
             IOFrame buf(framelen);
             this->__res.Fill(buf);
-            doc.emplace_back(buf.Detach());
+            doc.emplace_back(buf.detach());
         }
         // return document --------------------------------
         return doc;

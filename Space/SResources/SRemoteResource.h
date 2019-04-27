@@ -100,7 +100,7 @@ namespace Message {
         /**
          * detach
          */
-        inline SRemoteResource Detach() {
+        inline SRemoteResource detach() {
             return std::move(*this);
         }
     };
@@ -134,7 +134,7 @@ namespace Stream {
         /**
          * detach
          */
-        inline SRemoteResource Detach() {
+        inline SRemoteResource detach() {
             return std::move(*this);
         }
     };

@@ -45,7 +45,7 @@ void STask::__End(std::thread::id  id) {
                  << __LINE__ << "::detach(" << get_id() << ")" 
             << endl;
         #endif
-            Detach();
+            detach();
         }
         __Remove(id);
     }

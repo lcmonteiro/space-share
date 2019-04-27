@@ -48,7 +48,7 @@ public:
      * ------------------------------------------------------------------------
      * size 
      */
-    inline size_t Size() {
+    inline size_t size() {
         return __handlers.size();
     }
 protected:

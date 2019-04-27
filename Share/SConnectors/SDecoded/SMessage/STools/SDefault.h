@@ -48,7 +48,7 @@ public:
         ).Number<framesize_t>(buf.size());
 
         // container fill up ------------------------------
-        while(!chunks.Full()) {
+        while(!chunks.full()) {
             chunks.emplace_back(buf.Read(size));
         }
         // return a split container -----------------------
@@ -65,7 +65,7 @@ public:
 
         // fill up buffer ---------------------------------
         for(auto& c: chunks) {
-            buf.Reserve(c.Size()).Write(c);
+            buf.Reserve(c.size()).Write(c);
         }
         // resize buffer (read size from end) ------------ 
         buf.Shrink(buf.Number<framesize_t>());

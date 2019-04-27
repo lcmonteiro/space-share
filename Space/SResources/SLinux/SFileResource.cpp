@@ -47,7 +47,7 @@ bool SFileResource::Good() const {
  * get file size
  * ----------------------------------------------------------------------------
  */
-size_t SFileResource::Size() {
+size_t SFileResource::size() {
     return SResourceMediator::Length(
         GetHandler<SResourceHandler>()->FD());
 }
@@ -92,9 +92,9 @@ string SFileResource::BaseName(const string& path) {
  */
 template<>
 SFileResource& SFileResource::Fill(IOFrame& f) {
-    while (!f.Full()) {
+    while (!f.full()) {
         f.Insert(SResourceMediator::Read(
-            GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize()
+            GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize()
         ));
     }
     return *this;
@@ -114,14 +114,14 @@ SFileResource& SFileResource::Fill(Frame& f) {
 template<>
 SFileResource& SFileResource::Read(IOFrame& f) {
     f.Insert(SResourceMediator::Read(
-        GetHandler<SResourceHandler>()->FD(), f.IData(), f.ISize())
+        GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize())
     );
     return *this;
 }
 template<>
 SFileResource& SFileResource::Read(Frame& f) {
     f.Insert(SResourceMediator::Read(
-        GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+        GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
     );
     return *this;
 }
@@ -134,9 +134,9 @@ SFileResource& SFileResource::Read(Frame& f) {
 template<typename T>
 SFileResource& SFileResource::Drain(T& f) {
     // send loop ----------------------
-    while (!f.Empty()) {
+    while (!f.empty()) {
         f.Remove(SResourceMediator::Write(
-            GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size()
+            GetHandler<SResourceHandler>()->FD(), f.Data(), f.size()
         ));
     }
     return *this;
@@ -161,13 +161,13 @@ template SFileResource& SFileResource::Drain(const IOFrame&);
 template<typename T>
 SFileResource& SFileResource::Write(T& f) {
     f.Remove(
-        SResourceMediator::Write(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size())
+        SResourceMediator::Write(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
     );
     return *this;
 }
 template<typename T>
 SFileResource& SFileResource::Write(const T& f) {
-    SResourceMediator::Write(GetHandler<SResourceHandler>()->FD(), f.Data(), f.Size());
+    SResourceMediator::Write(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size());
     return *this;
 }
 template SFileResource& SFileResource::Write(Frame&);

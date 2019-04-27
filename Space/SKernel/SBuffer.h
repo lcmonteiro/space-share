@@ -73,8 +73,8 @@ public:
         if (Length() < len) {
             throw ContainerException(SText("len=", len));
         }
-        auto frame = Frame(len).Expand().Detach();
-        read(frame.Data(), frame.Size());
+        auto frame = Frame(len).Expand().detach();
+        read(frame.Data(), frame.size());
         return std::move(frame);
     }
     /**
@@ -94,7 +94,7 @@ public:
      */
     inline SBuffer& Fill(IOFrame& f) {
         do { 
-            f.Insert(readsome(f.IData(), f.ISize())); 
+            f.Insert(readsome(f.IData(), f.isize())); 
         } while (gcount());
         return *this;
     }

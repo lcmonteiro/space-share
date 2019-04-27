@@ -48,13 +48,13 @@ public:
         
         // insert length buffer -----------------------------------------------
         auto frame = IOFrame(sz);
-        for (Fill(buff, frame); frame.Full(); Fill(buff, frame)) {
-            box.emplace_back(frame.Frame().Detach());
+        for (Fill(buff, frame); frame.full(); Fill(buff, frame)) {
+            box.emplace_back(frame.detach());
             frame = IOFrame(sz);
         }
         // insert data --------------------------------------------------------
-        for (Fill(in, frame); !box.Full(); Fill(in, frame)){
-            box.emplace_back(frame.Frame().Detach());
+        for (Fill(in, frame); !box.full(); Fill(in, frame)){
+            box.emplace_back(frame.detach());
             frame = IOFrame(sz);
         }
         // create stamp -------------------------------------------------------
@@ -89,8 +89,8 @@ public:
             for (auto& ss : s.second) {
                 // fill box ---------------------------------------------------
                 auto frame = IOFrame(s.first);
-                for (Fill(ss, frame); frame.Full(); Fill(ss, frame)) {
-                    box.emplace_back(frame.Frame().Detach());
+                for (Fill(ss, frame); frame.full(); Fill(ss, frame)) {
+                    box.emplace_back(frame.detach());
                     frame = IOFrame(s.first);
                 }
             }
@@ -106,7 +106,7 @@ public:
             // remove length --------------------------------------------------
             auto iframe = IOFrame(sizeof(filesize_t));
             auto oframe = IOFrame();
-            for (; (it != end) && (!iframe.Full()); ++it) {
+            for (; (it != end) && (!iframe.full()); ++it) {
                 oframe = IOFrame(std::move(*it));
                 oframe.Fill(iframe);
             }
@@ -161,7 +161,7 @@ private:
     static void Fill(IS& s, IOFrame& f){
         typedef typename IS::char_type* ipointer;
         do{ 
-            f.Insert(s.readsome(ipointer(f.IData()), f.ISize())); 
+            f.Insert(s.readsome(ipointer(f.IData()), f.isize())); 
         } while (s.gcount());
     }
     /**

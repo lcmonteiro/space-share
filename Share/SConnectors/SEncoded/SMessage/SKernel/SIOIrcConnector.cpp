@@ -56,18 +56,18 @@ void SIOIrcConnector::_Write(const Document& container) {
     IOFrame io = Frame(
         sizeof (reference_t) + 
         sizeof (numframes_t) + 
-        sizeof (framesize_t) + container.FrameSize()
+        sizeof (framesize_t) + container.Framesize()
     );
     // write context --------------------------------------
     io.Write(Frame().Number<reference_t>(container.Position()));
     io.Write(Frame().Number<numframes_t>(container.NumFrames()));
-    io.Write(Frame().Number<framesize_t>(container.FrameSize()));
+    io.Write(Frame().Number<framesize_t>(container.Framesize()));
     
     // log ------------------------------------------------
     INFO("CODE::OUT::"
         << "pos=" << container.Position()  << " " 
         << "n="   << container.NumFrames() << " "
-        << "sz="  << container.FrameSize() << " " 
+        << "sz="  << container.Framesize() << " " 
         << "len=" << container.size()
     );
     // write nframes --------------------------------------
