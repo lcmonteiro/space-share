@@ -81,7 +81,7 @@ TEST(SModule, EchoSpliter)
     // interface resource -----------------------------------------------------
     auto interface = Message::SRemoteResource()
         .Link(addr, port1)
-    .Detach();
+    .detach();
 
     // wait -------------------------------------------------------------------
     EXPECT_EQ(s.WaitState(Spliter::Time(3000), Spliter::PLAY), true);
