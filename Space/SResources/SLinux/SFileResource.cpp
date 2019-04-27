@@ -21,7 +21,7 @@
  * space linux
  */
 #include "SResourceHandler.h"
-#include "SResourceMediator.h"
+#include "SNativeResource.h"
 /**
  * space
  */
@@ -39,7 +39,7 @@ using namespace std;
  * ----------------------------------------------------------------------------
  */
 bool SFileResource::Good() const {
-	return SResourceMediator::IsFile(
+	return SNativeResource::IsFile(
         GetHandler<SResourceHandler>()->FD());
 }
 /**
@@ -48,7 +48,7 @@ bool SFileResource::Good() const {
  * ----------------------------------------------------------------------------
  */
 size_t SFileResource::size() {
-    return SResourceMediator::Length(
+    return SNativeResource::Length(
         GetHandler<SResourceHandler>()->FD());
 }
 /**
@@ -69,7 +69,7 @@ size_t SFileResource::Position() {
  * ----------------------------------------------------------------------------
  */
 SText SFileResource::Path() const {
-	return SResourceMediator::Path(
+	return SNativeResource::Path(
         GetHandler<SResourceHandler>()->FD());
 }
 /**
@@ -93,7 +93,7 @@ string SFileResource::BaseName(const string& path) {
 template<>
 SFileResource& SFileResource::Fill(IOFrame& f) {
     while (!f.full()) {
-        f.Insert(SResourceMediator::Read(
+        f.Insert(SNativeResource::Read(
             GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize()
         ));
     }
@@ -102,7 +102,7 @@ SFileResource& SFileResource::Fill(IOFrame& f) {
 template<>
 SFileResource& SFileResource::Fill(Frame& f) {
     for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, SResourceMediator::Read(
+        it = next(it, SNativeResource::Read(
             GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
         ));
     }
@@ -113,14 +113,14 @@ SFileResource& SFileResource::Fill(Frame& f) {
  */
 template<>
 SFileResource& SFileResource::Read(IOFrame& f) {
-    f.Insert(SResourceMediator::Read(
+    f.Insert(SNativeResource::Read(
         GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize())
     );
     return *this;
 }
 template<>
 SFileResource& SFileResource::Read(Frame& f) {
-    f.Insert(SResourceMediator::Read(
+    f.Insert(SNativeResource::Read(
         GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
     );
     return *this;
@@ -135,7 +135,7 @@ template<typename T>
 SFileResource& SFileResource::Drain(T& f) {
     // send loop ----------------------
     while (!f.empty()) {
-        f.Remove(SResourceMediator::Write(
+        f.Remove(SNativeResource::Write(
             GetHandler<SResourceHandler>()->FD(), f.Data(), f.size()
         ));
     }
@@ -145,7 +145,7 @@ template<typename T>
 SFileResource& SFileResource::Drain(const T& f) {
     // send loop ----------------------
     for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, SResourceMediator::Write(
+        it = next(it, SNativeResource::Write(
             GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
         ));
     }
@@ -161,13 +161,13 @@ template SFileResource& SFileResource::Drain(const IOFrame&);
 template<typename T>
 SFileResource& SFileResource::Write(T& f) {
     f.Remove(
-        SResourceMediator::Write(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
+        SNativeResource::Write(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
     );
     return *this;
 }
 template<typename T>
 SFileResource& SFileResource::Write(const T& f) {
-    SResourceMediator::Write(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size());
+    SNativeResource::Write(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size());
     return *this;
 }
 template SFileResource& SFileResource::Write(Frame&);

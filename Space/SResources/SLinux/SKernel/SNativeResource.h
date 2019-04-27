@@ -1,13 +1,13 @@
 /**
  * ------------------------------------------------------------------------------------------------ 
- * File:   SResourceMediator.h
+ * File:   SNativeResource.h
  * Author: Luis Monteiro
  *
  * Created on January  2, 2019, 22:00 PM
  * ------------------------------------------------------------------------------------------------
  */
-#ifndef SRESOURCEMEDIATOR_H
-#define SRESOURCEMEDIATOR_H
+#ifndef SNATIVERESOURCE_H
+#define SNATIVERESOURCE_H
 /**
  * linux
  */
@@ -21,10 +21,10 @@
 #include "SText.h"
 /**
  * ------------------------------------------------------------------------------------------------
- * Linux Resource Mediator
+ * Linux Resource
  * ------------------------------------------------------------------------------------------------
  */
-class SResourceMediator {
+class SNativeResource {
 public:
     /**
      * ------------------------------------------------------------------------
