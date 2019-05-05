@@ -1,4 +1,4 @@
-*private*/
-*.xml
-*Build*/
-*ipch*/
+# generated
+Bin/*
+# vscode
+.vscode/ipch
