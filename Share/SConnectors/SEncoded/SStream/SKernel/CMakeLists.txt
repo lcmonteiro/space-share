@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
-# target
+# ---------------------------------------------------------
+# ShareConnectorEncodedStreamKernel target
+# ---------------------------------------------------------
 add_library(ShareConnectorEncodedStreamKernel 
 INTERFACE
 )
@@ -8,3 +10,6 @@ target_include_directories(ShareConnectorEncodedStreamKernel
 INTERFACE
 	.
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

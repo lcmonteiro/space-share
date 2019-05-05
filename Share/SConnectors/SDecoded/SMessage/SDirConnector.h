@@ -1,22 +1,27 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SDirConnector.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2016, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SDIRSTREAMSOCKET_H
 #define SDIRSTREAMSOCKET_H
 /**
+ * space
  */
 #include "SContainer.h"
 #include "SConnector.h"
 /**
- * Base item streams
+ * share - connectors
  */
 #include "SKernel/SIDirConnector.h"
 #include "SKernel/SODirConnector.h"
 /**
+ * ------------------------------------------------------------------------------------------------
  * Begin namespace Item
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Item {
 /**
@@ -65,7 +70,9 @@ public:
 typedef SIDirConnectorT<SIDirConnector> IDirConnector;
 typedef SODirConnectorT<SODirConnector> ODirConnector;
 /**
+ * ------------------------------------------------------------------------------------------------
  * End namespace Item
+ * ------------------------------------------------------------------------------------------------
  */
 }
 /**

@@ -1,8 +1,10 @@
 /**
+ * ------------------------------------------------------------------------------------------------
  * File:   SAddress.h
  * Author: Luis Monteiro
  *
  * Created on November 21, 2016, 12:10 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SADDRESS_H
 #define SADDRESS_H
@@ -19,7 +21,7 @@ class SAddress : public SText {
 public:
 	/**
 	 * ------------------------------------------------------------------------
-	 * defaults
+	 * Defaults
 	 * ------------------------------------------------------------------------
 	 */
 	SAddress() 						= default;
@@ -33,63 +35,64 @@ public:
 	SAddress& operator=(const SAddress& addr) 	= default;
 	/**
 	 * ------------------------------------------------------------------------
-	 * constructors
+	 * Constructors
 	 * ------------------------------------------------------------------------
 	 * process constructor
+	 * ----------------------------------------------------
 	 */
 	SAddress( 
-		const std::string& addr
-	);
+		const std::string& addr);
 	SAddress(
 		const std::string& user, 
 		const std::string& host, 
 		const uint16_t     port, 
-		const std::string& path
-	);
+		const std::string& path);
 	/**
+	 * ----------------------------------------------------
 	 * derivated constructor
+	 * ----------------------------------------------------
 	 */
-	SAddress(const char* addr): SAddress(std::string(addr)){}
+	SAddress(const char* addr)
+	: SAddress(std::string(addr)) {}
 	/**
 	 * ------------------------------------------------------------------------
-	 * accessors
+	 * Accessors
 	 * ------------------------------------------------------------------------
 	 */
-	inline const std::string& User()    const {
+	inline const std::string& user()    const {
 		return __name;
 	}
-	inline const std::string& File()    const {
+	inline const std::string& file()    const {
 		return __host;
 	}
-	inline const std::string& Host()    const {
+	inline const std::string& host()    const {
 		return __host;
 	}
-	inline const uint16_t     Port()    const {
+	inline const uint16_t     port()    const {
 		return __port;
 	}
-	inline const std::string& Path()    const {
+	inline const std::string& path()    const {
 		return __path;
 	}
-	inline const std::string& Channel() const {
+	inline const std::string& channel() const {
 		return __path;
 	}
 	/**
 	 * ------------------------------------------------------------------------
-	 * friends
+	 * Friends
 	 * ------------------------------------------------------------------------
 	 */
   	friend SAddress operator+(const SAddress& lhs, const SAddress& rhs) {
 		return SAddress(
-		  	Merge(lhs.User(), "_", rhs.User()),
-			Merge(lhs.Host(), ".", rhs.Host()),
-		  	lhs.Port() + rhs.Port(),
-		  	Merge(lhs.Path(), "/", rhs.Path())
-		);
+		  	__merge(lhs.user(), "_", rhs.user()),
+			__merge(lhs.host(), ".", rhs.host()),
+		  	__merge(lhs.port(),      rhs.port()),
+		  	__merge(lhs.path(), "/", rhs.path()));
 	}
 private:
 	/**
 	 * ------------------------------------------------------------------------
-	 * attributes
+	 * Variables
 	 * ------------------------------------------------------------------------
 	 */
 	std::string   __name;
@@ -98,19 +101,23 @@ private:
 	std::string   __path;
 	/**
 	 * ------------------------------------------------------------------------
-	 * utils
+	 * Utils
 	 * ------------------------------------------------------------------------
 	 */
-	static std::string Merge(std::string s1, std::string sep, std::string s2) {
+	static inline std::string __merge(
+		const std::string& s1, const std::string& sep, const std::string& s2) {
 		if(s1.empty() || s2.empty()){
 			return s1 + s2;
 		}
 		return s1 + sep + s2;
 	}
+	static inline uint16_t __merge(uint16_t v1, uint16_t v2) {
+		return v1 + v2;
+	}
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */
 #endif /* SADDRESS_H */

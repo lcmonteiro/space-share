@@ -13,18 +13,23 @@
  */
 class STestBasic {
 public:
-	STestBasic() = default;
-	/**
-	 */
-	virtual ~STestBasic() = default;
-	/**
-         * run test 
-	 */
-        int operator()(int iterations, int frameSize, int redundancy, int minBufferSize, int maxBufferSize);
+    STestBasic() = default;
+    /**
+     */
+    virtual ~STestBasic() = default;
+    /**
+     * run test 
+     */
+    int operator() (
+        int iterations, 
+        int frameSize, 
+        int redundancy, 
+        int minBufferSize, 
+        int maxBufferSize );
 private:
-        /**
-         *  
-         */
-        Frame Random(int min, int max);
+    /**
+     *  
+     */
+    Frame Random(int min, int max);
 };
 #endif	/* STESTBASIC_H */

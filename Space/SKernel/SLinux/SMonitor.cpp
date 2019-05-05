@@ -30,7 +30,7 @@ using namespace std;
  * ----------------------------------------------------------------------------
  */
 Monitor::SStatic::SStatic(): SMonitor() {
-    SMonitor::SetHandler(make_shared<SStaticMonitorHandler>());
+    SMonitor::handler(make_shared<SStaticMonitorHandler>());
 }
 /**
  * ----------------------------------------------------------------------------
@@ -38,15 +38,15 @@ Monitor::SStatic::SStatic(): SMonitor() {
  * ----------------------------------------------------------------------------
  */
 size_t Monitor::SStatic::size() {
-    return SMonitor::GetHandler<SStaticMonitorHandler>()->size();
+    return SMonitor::handler<SStaticMonitorHandler>()->size();
 }
 /**
  * ----------------------------------------------------------------------------
  * insert handler
  * ----------------------------------------------------------------------------
  */
-size_t Monitor::SStatic::Insert(Handler h) {
-    return SMonitor::GetHandler<SStaticMonitorHandler>()->Insert(
+size_t Monitor::SStatic::insert(Handler h) {
+    return SMonitor::handler<SStaticMonitorHandler>()->insert(
         static_pointer_cast<SResourceHandler>(h)
     );
 }
@@ -55,8 +55,8 @@ size_t Monitor::SStatic::Insert(Handler h) {
  *  wait for active handlers
  * ----------------------------------------------------------------------------
  */
-list<size_t> Monitor::SStatic::Wait(const Time& timeout) {
-    return SMonitor::GetHandler<SStaticMonitorHandler>()->Wait(timeout);
+list<size_t> Monitor::SStatic::wait(const Time& timeout) {
+    return SMonitor::handler<SStaticMonitorHandler>()->wait(timeout);
 }
 /**
  * ------------------------------------------------------------------------------------------------
@@ -67,8 +67,8 @@ list<size_t> Monitor::SStatic::Wait(const Time& timeout) {
  */
 Monitor::SDynamic::SDynamic(): SMonitor(), SResource() {
     auto p = make_shared<SDynamicMonitorHandler>();
-    SResource::SetHandler(p);
-    SMonitor::SetHandler(p);
+    SResource::handler(p);
+    SMonitor::handler(p);
 }
 /**
  * ----------------------------------------------------------------------------
@@ -76,15 +76,15 @@ Monitor::SDynamic::SDynamic(): SMonitor(), SResource() {
  * ----------------------------------------------------------------------------
  */
 size_t Monitor::SDynamic::size() {
-    return SMonitor::GetHandler<SDynamicMonitorHandler>()->size();
+    return SMonitor::handler<SDynamicMonitorHandler>()->size();
 }
 /**
  * ----------------------------------------------------------------------------
  * insert handler
  * ----------------------------------------------------------------------------
  */
-size_t Monitor::SDynamic::Insert(Handler h) {
-    return SMonitor::GetHandler<SDynamicMonitorHandler>()->Insert(
+size_t Monitor::SDynamic::insert(Handler h) {
+    return SMonitor::handler<SDynamicMonitorHandler>()->insert(
         static_pointer_cast<SResourceHandler>(h)
     );
 }
@@ -93,8 +93,8 @@ size_t Monitor::SDynamic::Insert(Handler h) {
  *  wait for active handlers
  * ----------------------------------------------------------------------------
  */
-list<size_t> Monitor::SDynamic::Wait(const chrono::milliseconds& timeout) {
-    return SMonitor::GetHandler<SDynamicMonitorHandler>()->Wait(timeout);
+list<size_t> Monitor::SDynamic::wait(const chrono::milliseconds& timeout) {
+    return SMonitor::handler<SDynamicMonitorHandler>()->wait(timeout);
 }
 /**
  * ------------------------------------------------------------------------------------------------

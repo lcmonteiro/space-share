@@ -1,7 +1,7 @@
 /**
  * ------------------------------------------------------------------------------------------------
  * File:   SFileResource.h
- * Author:      Luis Monteiro
+ * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
  * ------------------------------------------------------------------------------------------------
@@ -32,62 +32,63 @@ public:
      * ------------------------------------------------------------------------
      * Interfaces
      * ------------------------------------------------------------------------
-     * check resource
+     * check
      */
-    bool Good() const;
+    bool good() const;
     /**
      * ------------------------------------------------------------------------
      * Properties
      * ------------------------------------------------------------------------
-     * get size
+     * size
      */
     size_t size();
     /**
-     * get position
+     * position
      */
-    size_t Position();
+    size_t position();
     /**
-	 * get location
+	 * location
 	 */
-	SText Path() const; 
+	SText path() const; 
     /**
      * ------------------------------------------------------------------------
      * IO functions
      * ------------------------------------------------------------------------
      * fill and read frame
      */
-    template<typename T> SFileResource& Fill (T& f);
-    template<typename T> SFileResource& Read (T& f);
+    template<typename T> SFileResource& fill (T& f);
+    template<typename T> SFileResource& read (T& f);
     /**
      * drain and write frame
      */
-    template<typename T> SFileResource& Drain (T& f);
-    template<typename T> SFileResource& Write (T& f);
-    template<typename T> SFileResource& Drain (const T& f);
-    template<typename T> SFileResource& Write (const T& f);
+    template<typename T> SFileResource& drain (T& f);
+    template<typename T> SFileResource& write (T& f);
+    template<typename T> SFileResource& drain (const T& f);
+    template<typename T> SFileResource& write (const T& f);
     /**
      * flush
      */
-    SFileResource& Flush();
+    SFileResource& flush();
     /**
      * ------------------------------------------------------------------------
      * Global
      * ------------------------------------------------------------------------
      * link file
      */
-    static const std::string& Link(const std::string& from, const std::string& to);
+    static const std::string& Link(
+        const std::string& from, const std::string& to);
     /**
-     * get base name
+     * base name
      */
     static std::string BaseName(const std::string& pathname);
     /**
-      * get temporary dir
+      * temporary dir
       */
-    static std::string TmpPath();
+    static std::string PathTemp();
 protected:
     /**
      * ------------------------------------------------------------------------
-     * constructor
+     * Constructor
      * ------------------------------------------------------------------------
      */
     using SResource::SResource;
@@ -100,7 +101,7 @@ protected:
 class SIFileResource : public SFileResource {
 public:
     /**
-     * constructors
+     * Constructors
      */
     SIFileResource() = default;
     SIFileResource(const std::string& path);
@@ -114,7 +115,7 @@ public:
 class SOFileResource : public SFileResource {
 public:
     /**
-     * constructors
+     * Constructors
      */
     SOFileResource() = default;
     SOFileResource(const std::string& path);

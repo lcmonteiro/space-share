@@ -14,10 +14,14 @@
 #include <cstdint>
 #include <cstddef>
 /**
- * space kernel
+ * space
  */
 #include "SContainer.h"
-#include "SCodec.h"
+/**
+ * share
+ */
+#include "SEncoderCodec.h"
+#include "SDecoderCodec.h"
 /**
  * ------------------------------------------------------------------------------------------------
  * default definitions
@@ -32,23 +36,32 @@
 class OBufferShare {
 public:
     /**
-     * constructor 
+     * ------------------------------------------------------------------------
+     * Constructor 
+     * ------------------------------------------------------------------------
      */
-    OBufferShare(size_t capacity = BS_CAPACITY) : __encoder(capacity) {
-    }
+    OBufferShare(size_t capacity = BS_CAPACITY) 
+    : __encoder(capacity) {}
     /**
+     * ------------------------------------------------------------------------
+     * Interfaces
+     * ------------------------------------------------------------------------
+     **
      * set buffer
      */
-    size_t Set(const Frame& data, size_t sframes, size_t redundancy = 0);
+    size_t set(const Frame& data, size_t sframes, size_t redundancy = 0);
     /**
      * get coded frame
      */
-    Frame Get();
+    Frame get();
 protected:
     /**
-     * worker
+     * ------------------------------------------------------------------------
+     * Variables
+     * ------------------------------------------------------------------------
+     * encoder
      */
-    CodecEncoder __encoder;
+    Codec::SEncoder __encoder;
 };
 /**
  * ------------------------------------------------------------------------------------------------
@@ -58,23 +71,32 @@ protected:
 class IBufferShare {
 public:
     /**
-     * constructor 
+     * ------------------------------------------------------------------------
+     * Constructor 
+     * ------------------------------------------------------------------------
      */
-    IBufferShare(size_t capacity = BS_CAPACITY) : __decoder(capacity) {
-    }
+    IBufferShare(size_t capacity = BS_CAPACITY) 
+    : __decoder(capacity) {}
     /**
+     * ------------------------------------------------------------------------
+     * Interfaces
+     * ------------------------------------------------------------------------
+     **
      * set coded frame
      */
-    bool Set(Frame frame);
+    bool set(Frame frame);
     /**
-     * get buffer
+     * get uncoded buffer
      */
-    Frame Get();
+    Frame get();
 protected:
     /**
-     * worker
+     * ------------------------------------------------------------------------
+     * Variables
+     * ------------------------------------------------------------------------
+     * decoder
      */
-    CodecDecoder __decoder; 
+    Codec::SDecoder __decoder; 
 };
 /**
  * ------------------------------------------------------------------------------------------------

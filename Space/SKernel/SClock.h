@@ -1,8 +1,10 @@
 /**
+ * ------------------------------------------------------------------------------------------------
  * File:   SClock.h
  * Author: Luis Monteiro
  *
  * Created on January 19, 2019, 11:23 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SCLOCK_H
 #define SCLOCK_H
@@ -12,14 +14,16 @@
 #include <chrono>
 /**
  * ------------------------------------------------------------------------------------------------
- * SClock 
+ * Clock 
  * ------------------------------------------------------------------------------------------------
  */
-template <class DURATION=std::chrono::milliseconds, class CLOCK = std::chrono::steady_clock>
+template <
+    typename Time  = std::chrono::milliseconds, 
+    typename Clock = std::chrono::steady_clock >
 class SClock {
 public:
-    using Pointer  = typename CLOCK::time_point;
-    using Distance = DURATION;
+    using Pointer  = typename Clock::time_point;
+    using Distance = Time;
     /**
      * --------------------------------------------------------------------------------------------
      * Alarm 
@@ -27,58 +31,80 @@ public:
      */
     class Alarm {
     public:
+        /**
+         * --------------------------------------------------------------------
+         * Constructors
+         * --------------------------------------------------------------------
+         */
         Alarm(const Pointer& end, const Distance& period=Distance::zero())
-        : __end(end), __period(period) {
-        }
+        : __end(end), __period(period) {}
+
         Alarm(const Distance& delay, const Distance& period)
-        : Alarm(CLOCK::now() + delay, period) {
-        }
+        : Alarm(Clock::now() + delay, period) {}
+        
         Alarm(const Distance& period)
-        : Alarm(period,period) {
-        }
+        : Alarm(period,period) {}
         /**
          * --------------------------------------------------------------------
-         * interfaces 
+         * Interfaces 
          * --------------------------------------------------------------------
-         * snooze
+         * Snooze
+         * ------------------------------------------------
          */
-        inline Alarm& Snooze() {
-            __end = CLOCK::now() + __period;
+        inline Alarm& snooze() {
+            __end = Clock::now() + __period;
             return *this;
         }
         /**
-         * sleep
+         * ------------------------------------------------
+         * Sleep
+         * ------------------------------------------------
          */
-        inline Alarm& Sleep() {
-            STask::Sleep(std::min(__period, Remaining(__end)));
+        inline Alarm& sleep() {
+            STask::Sleep(
+                std::min(__period, Remaining(__end)));
             return *this;
         }
         /**
-         * sleep
+         * ------------------------------------------------
+         * Wait
+         * ------------------------------------------------
          */
-        inline Alarm& Wait() {
-            STask::Sleep(std::max(Distance::zero(), Remaining(__end)));
+        inline Alarm& wait() {
+            STask::Sleep(
+                std::max(Distance::zero(), Remaining(__end)));
             return *this;
         }
         /**
-         * yield
+         * ------------------------------------------------
+         * Yield
+         * ------------------------------------------------
          */
-        inline bool Yield() {
+        inline bool yield() {
             return STask::Sleep();
         }
         /**
-         * end point
+         * ------------------------------------------------
+         * End Point
+         * ------------------------------------------------
          */
-        inline Pointer Tigger() {
+        inline Pointer trigger() {
             return __end;
         }
         /**
-         * active
-         **/
-        inline bool Active() {
-            return CLOCK::now() > __end;
+         * ------------------------------------------------
+         * Active
+         * ------------------------------------------------
+         */
+        inline bool active() {
+            return Clock::now() > __end;
         }
     private:
+        /**
+         * --------------------------------------------------------------------
+         * Variables
+         * --------------------------------------------------------------------
+         */
         Pointer  __end;
         Distance __period;
     };
@@ -88,14 +114,12 @@ public:
      * --------------------------------------------------------------------------------------------
      */
     static inline Distance Remaining(const Pointer& end) {
-        return std::chrono::duration_cast<DURATION>(end-CLOCK::now());
+        return std::chrono::duration_cast<Distance>(end-Clock::now());
     }
-
-
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * end 
+ * End 
  * ------------------------------------------------------------------------------------------------
  */
 #endif

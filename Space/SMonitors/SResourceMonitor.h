@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SResourceMonitor.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SRESOURCEMONITOR_H
 #define SRESOURCEMONITOR_H
@@ -17,7 +19,7 @@
 #include "SMonitor.h"
 /**
  * -------------------------------------------------------------------------------------------------
- * default adapters 
+ * Default Adapters 
  * -------------------------------------------------------------------------------------------------
  */
 namespace Monitor {
@@ -25,92 +27,98 @@ namespace Resource {
 struct SDirect {
 	template<typename T>
 	static inline SMonitor::Handler GetHandler(T obj) {
-		return obj->SResource::GetHandler();
+		return obj->SResource::handler();
 	}
 };
 struct SIndirect {
 	template<typename T>
 	static inline SMonitor::Handler GetHandler(T obj) {
-		return obj->GetResource().GetHandler();
+		return obj->resource().handler();
 	}
 };
 }}
 /**
  * -------------------------------------------------------------------------------------------------
- * resource monitor
+ * Resource Monitor
  * -------------------------------------------------------------------------------------------------
  */
-template<typename ADAPT = Monitor::Resource::SDirect, typename BASE = Monitor::SStatic>
-class SResourceMonitor : public BASE {
+template<typename Adapt = Monitor::Resource::SDirect, typename Base = Monitor::SStatic>
+class SResourceMonitor : public Base {
 public:
     using Time = std::chrono::milliseconds; 
     /**
      * ------------------------------------------------------------------------
-     * defaults
+     * Defaults
      * ------------------------------------------------------------------------ 
      */
     SResourceMonitor(SResourceMonitor &&)            = default;
     SResourceMonitor& operator=(SResourceMonitor &&) = default;
     /**
      * ------------------------------------------------------------------------
-     * constructors
+     * Constructors
      * ------------------------------------------------------------------------
-     * template 
+     * Template 
      */
     template<typename T, typename... Args>
     SResourceMonitor(Time timeout, T arg, Args... args) 
     : SResourceMonitor(timeout) {
-        Insert(arg, args...);
+        insert(arg, args...);
     }
     template<typename T, typename... Args>
     SResourceMonitor(T arg, Args... args)
     : SResourceMonitor(Time(0), arg, std::forward<Args>(args)...) {
     }
     /**
-     * dafault
+     * main
      */
     SResourceMonitor(const Time& timeout=Time::zero()) 
-    : BASE(), __timeout(timeout) {
+    : Base(), __timeout(timeout) {
     }
     /**
      * ------------------------------------------------------------------------
-     * interface
+     * Interface
      * ------------------------------------------------------------------------
-     **
-     * insert
+     * Insert
+     * ----------------------------------------------------
      */
     template<typename T>
-    size_t Insert(T obj) {
-        return BASE::Insert(ADAPT::GetHandler(obj));
+    size_t insert(T obj) {
+        return Base::insert(Adapt::GetHandler(obj));
     }
     /**
+     * ----------------------------------------------------
      * check
+     * ----------------------------------------------------
      */
-    inline bool Good() {
-        return (__timeout != Time::zero()) && (BASE::size() != 0);
+    inline bool good() {
+        return (__timeout != Time::zero()) && Base::size();
     }
     /**
+     * ----------------------------------------------------
      * wait
+     * ----------------------------------------------------
      */
-    inline std::list<size_t> Wait(const Time& timeout) {
-        return BASE::Wait(timeout);
+    inline std::list<size_t> wait(const Time& timeout) {
+        return Base::wait(timeout);
     }
-    inline std::list<size_t> Wait() {
-        return BASE::Wait(__timeout);
+    inline std::list<size_t> wait() {
+        return Base::wait(__timeout);
     }
     /**
-     * check
+     * ----------------------------------------------------
+     * Check
+     * ----------------------------------------------------
      */
-    inline std::list<size_t> Check(const Time& timeout) {
+    inline std::list<size_t> check(const Time& timeout) {
         try {
-            return BASE::Wait(timeout);
+            return Base::Wait(timeout);
         } catch(MonitorExceptionTIMEOUT& ) {
             return {};
         }
     }
     inline std::list<size_t> Check() {
         try {
-            return BASE::Wait(__timeout);
+            return Base::Wait(__timeout);
         } catch(MonitorExceptionTIMEOUT& ) {
             return {};
         }
@@ -119,27 +127,27 @@ protected:
     using Handler  = SResource::pHandler<>;
     /**
      * ------------------------------------------------------------------------
-     * update
+     * Helpers
      * ------------------------------------------------------------------------
      * parse template
+     * ----------------------------------------------------
      */
     template<typename T, typename... Args>
-    void Insert(T first, Args... args) {
-        Insert(first); Insert(args...);
+    void insert(T first, Args... args) {
+        insert(first); insert(args...);
     }
 private:
     /**
      * ------------------------------------------------------------------------
-     * variables
+     * Variables
      * ------------------------------------------------------------------------
-     **
      * timeout
      */
     Time __timeout;
 };
 /**
  * -------------------------------------------------------------------------------------------------
- * end
+ * End
  * -------------------------------------------------------------------------------------------------
  */
 #endif /* SRESOURCEMONITOR_H */

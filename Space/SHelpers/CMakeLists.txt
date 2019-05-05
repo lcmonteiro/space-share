@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
-# SpaceShare target
+# ---------------------------------------------------------
+# SpaceHelper target
+# ---------------------------------------------------------
 add_library(SpaceHelper 
 STATIC
 	SBase64.cpp
@@ -16,3 +18,6 @@ PUBLIC
 	SpaceKernel
 	SpaceResource
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

@@ -28,7 +28,7 @@
 #include "SMonitor.h"
 /**
  * ------------------------------------------------------------------------------------------------
- * monitor handler
+ * Monitor Handler
  * ------------------------------------------------------------------------------------------------
  */
 class SMonitorHandler: public SMonitor::SHandler {
@@ -37,14 +37,14 @@ public:
     using Handlers = std::vector<Handler>;
     /**
      * ------------------------------------------------------------------------
-     * constructors & destructor
+     * Constructors & Destructor
      * ------------------------------------------------------------------------
      * main
      */
     SMonitorHandler() = default;
     /**
      * ------------------------------------------------------------------------
-     * interfaces
+     * Interfaces
      * ------------------------------------------------------------------------
      * size 
      */
@@ -59,19 +59,20 @@ protected:
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * static monitor handler
+ * Static Monitor Handler
  * ------------------------------------------------------------------------------------------------
  */
 class SStaticMonitorHandler: public SMonitorHandler {
 public:
     /**
      * ------------------------------------------------------------------------
-     * constructors & destructor
+     * Constructors & Destructor
      * ------------------------------------------------------------------------
      * main
      */
     SStaticMonitorHandler(std::initializer_list<Handler> handlers);
     /**
+     * empty
      */
     SStaticMonitorHandler() : SStaticMonitorHandler({}) {}
     /**
@@ -79,15 +80,15 @@ public:
     virtual ~SStaticMonitorHandler() = default;
     /**
      * ------------------------------------------------------------------------
-     * interfaces
+     * Interfaces
      * ------------------------------------------------------------------------
-     * insert 
+     * Insert 
      */
-    size_t Insert(Handler h);
+    size_t insert(Handler h);
     /**
-     * wait
+     * Wait
      */
-    std::list<size_t> Wait(const std::chrono::milliseconds& timeout);
+    std::list<size_t> wait(const std::chrono::milliseconds& timeout);
     /**
      */
 protected:
@@ -95,19 +96,19 @@ protected:
     using Locations = std::vector<Location>;
     /**
      * ------------------------------------------------------------------------
-     * native processes
+     * Native Processes
      * ------------------------------------------------------------------------
      **
      * check a group of locations
      */
-    std::list<size_t> __Check(const std::chrono::milliseconds& timeout);
+    std::list<size_t> _check(const std::chrono::milliseconds& timeout);
     /**
-     * helpers
+     * create a location
      */
-    inline Location __Create(Handler h);
+    inline Location _create(Handler h);
     /**
      * ------------------------------------------------------------------------
-     * variables
+     * Variables
      * ------------------------------------------------------------------------
      **
      * native locations
@@ -116,19 +117,20 @@ protected:
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * dynamic monitor handler
+ * Dynamic Monitor Handler
  * ------------------------------------------------------------------------------------------------
  */
 class SDynamicMonitorHandler: public SMonitorHandler, public SResourceHandler {
 public:
     /**
      * ------------------------------------------------------------------------
-     * constructors & destructor
+     * Constructors & Destructor
      * ------------------------------------------------------------------------
      * main
      */
     SDynamicMonitorHandler(std::initializer_list<Handler> handlers);
     /**
+     * empty
      */
     SDynamicMonitorHandler() : SDynamicMonitorHandler({}) {}
     /**
@@ -136,31 +138,33 @@ public:
     virtual ~SDynamicMonitorHandler() = default;
     /**
      * ------------------------------------------------------------------------
-     * interfaces
+     * Interfaces
      * ------------------------------------------------------------------------
-     * insert 
+     * Insert 
      */
-    size_t Insert(Handler h);
+    size_t insert(Handler h);
     /**
-     * wait
+     * Wait
      */
-    std::list<size_t> Wait(const std::chrono::milliseconds& timeout);
+    std::list<size_t> wait(const std::chrono::milliseconds& timeout);
 protected:
     using Handlers  = std::vector<Handler>;
     /**
      * ------------------------------------------------------------------------
-     * native processes
+     * Native Processes
      * ------------------------------------------------------------------------
      **
      * check a group of locations
      */
-    std::list<size_t> __Check(const std::chrono::milliseconds& timeout);
+    std::list<size_t> _check(const std::chrono::milliseconds& timeout);
     /**
-     * helpers
+     * insert handler
      */
-    inline void __Insert(Handler h, size_t position);
-
-    inline void __Remove(Handler h);
+    inline void _insert(Handler h, size_t position);
+    /**
+     * remove handler
+     */
+    inline void _remove(Handler h);
 };
 /**
  * ------------------------------------------------------------------------------------------------

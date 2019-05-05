@@ -1,30 +1,28 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * Container:  SIDirConnector.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SIDIRCONNECTORCODED_H
 #define SIDIRCONNECTORCODED_H
 /**
- * Space Resource
+ * space
  */
 #include "SDirectoryResource.h"
-/**
- * Space Kernel
- */
 #include "SContainer.h"
 /**
- * Share Kernel
+ * share
  */
 #include "SConnector.h"
 /**
- * Begin namespace Encoded
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
-/**
- * Begin namespace Message
- */
 namespace Message {
 /**
  * ------------------------------------------------------------------------------------------------
@@ -34,48 +32,66 @@ namespace Message {
 class SIDirConnector : public SInputConnector {
 public:
 	/**
-	 * constructor
+	 * ------------------------------------------------------------------------
+	 * Constructor
+	 * ------------------------------------------------------------------------
 	 */
 	SIDirConnector(const SText address);
 	/**
-	 * destructor
+	 * ------------------------------------------------------------------------
+	 * get resource
+	 * ------------------------------------------------------------------------
 	 */
-	virtual ~SIDirConnector() = default;
-	/**
-	 * inline overrides
-	 */
-	inline Resource& GetResource() override {
+	inline Resource& resource() override {
 		return __res;
 	}
 protected:
 	/**
-	 * -----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * IO functions
-	 * -----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * read
+	 * ----------------------------------------------------
 	 */
-	Document _Read() override;
+	Document _read() override;
 	/**
+	 * ----------------------------------------------------
 	 * drain
+	 * ----------------------------------------------------
 	 */
-	std::list<Document> _Drain() override;
+	std::list<Document> _drain() override;
 	/**
-	 * ----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * control functions
+	 * ------------------------------------------------------------------------
+	 * open
 	 * ----------------------------------------------------
-	 * open, good and close
 	 */
-	inline void _Open() override {
+	inline void _open() override {
 		__res = SIDirectoryResource(__uri);
 	}
-	inline bool _Good() override {
-		return __res.Valid();
+	/**
+	 * ----------------------------------------------------
+	 * good
+	 * ----------------------------------------------------
+	 */
+	inline bool _good() override {
+		return __res.good();
 	}
-	inline void _Close() override {
+	/**
+	 * ----------------------------------------------------
+	 * close
+	 * ----------------------------------------------------
+	 */
+	inline void _close() override {
 		__res = SIDirectoryResource();
 	}
 private:
 	/**
+	 * ------------------------------------------------------------------------
+	 * Variables
+	 * ------------------------------------------------------------------------
+	 **
 	 * resource 
 	 */
 	SIDirectoryResource __res;
@@ -84,13 +100,11 @@ private:
 	 */
 	std::string __file;
 };
+}}
 /**
- * End namespace Message
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- * End namespace Encoded
- */
-}
 #endif /* SIDIRCONNECTORCODED_H */
 

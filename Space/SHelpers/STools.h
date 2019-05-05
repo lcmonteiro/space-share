@@ -32,24 +32,29 @@ public:
      */
     static std::list<Container> Split(Container container, size_t max) {
         std::list<Container> out;
-        
-        // process ----------------------------------------
+        /**
+         * process
+         */
         size_t size = 0;
         Container chunk;
         for(auto& frame : container) {
 			size += frame.size();
-		
-        	// verify limit -------------------------------
+        	/**
+             * verify limit
+             */
 			if (size > max) {
 				out.emplace_back(chunk.detach());
 				size = frame.size();
 			}
-			// move frame to chunk ------------------------
+			/**
+             * move frame to chunk 
+             */
 			chunk.emplace_back(frame.detach());
         }
         out.emplace_back(chunk.detach());
-
-        // return split -----------------------------------
+        /**
+         * return split
+         */
         return out;
     }
 };

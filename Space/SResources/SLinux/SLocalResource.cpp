@@ -7,18 +7,12 @@
  * ------------------------------------------------------------------------------------------------
  */
 //#define __DEBUG__
-/*
- * base linux
- */
-#include <sys/socket.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/un.h>
 /**
  * space linux
  */
 #include "SResourceHandler.h"
 #include "SMonitorHandler.h"
+#include "SNativeResource.h"
 /**
  * space
  */
@@ -33,18 +27,12 @@
 using namespace std;
 /**
  * ------------------------------------------------------------------------------------------------
- * linux interface 
- * ------------------------------------------------------------------------------------------------
- */
-static size_t __Send(int fd, Frame::const_pointer p, Frame::size_type s);
-static size_t __Recv(int fd, Frame::pointer       p, Frame::size_type s);
-/**
- * ------------------------------------------------------------------------------------------------
  * BASE general interfaces
  * ------------------------------------------------------------------------------------------------
- * check good
+ * Check
+ * ----------------------------------------------------------------------------
  */
-bool SLocalResource::Good() {
+bool SLocalResource::good() {
     int error = 0;
     socklen_t len = sizeof (error);
     /**
@@ -52,7 +40,7 @@ bool SLocalResource::Good() {
      */
     try {
         if (::getsockopt(
-            GetHandler<SResourceHandler>()->FD(), SOL_SOCKET, SO_ERROR, &error, &len
+            handler<SResourceHandler>()->fd(), SOL_SOCKET, SO_ERROR, &error, &len
         ) < 0) {
             return false;
         }
@@ -62,27 +50,29 @@ bool SLocalResource::Good() {
     return error == 0;
 }
 /**
+ * ----------------------------------------------------------------------------
  * Set Timeout
+ * ----------------------------------------------------------------------------
  */
-SLocalResource& SLocalResource::SetTxTimeout(int timeout) {
+SLocalResource& SLocalResource::timeout_tx(int timeout) {
     struct timeval t = {
         .tv_sec = timeout,
         .tv_usec = 0
     };
     if (::setsockopt(
-        GetHandler<SResourceHandler>()->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) & t, sizeof (t)
+        handler<SResourceHandler>()->fd(), SOL_SOCKET, SO_SNDTIMEO, (void*) & t, sizeof (t)
     ) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     return *this;
 }
-SLocalResource& SLocalResource::SetRxTimeout(int timeout) {
+SLocalResource& SLocalResource::timeout_rx(int timeout) {
     struct timeval t = {
         .tv_sec = timeout,
         .tv_usec = 0
     };
     if (::setsockopt(
-        GetHandler<SResourceHandler>()->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) & t, sizeof (t)
+        handler<SResourceHandler>()->fd(), SOL_SOCKET, SO_RCVTIMEO, (void*) & t, sizeof (t)
     ) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
@@ -90,96 +80,92 @@ SLocalResource& SLocalResource::SetRxTimeout(int timeout) {
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * IO functions
+ * Inputs
  * ------------------------------------------------------------------------------------------------
- * Input
+ * Fill
  * ----------------------------------------------------------------------------
- * fill
  */
 template<>
-SLocalResource& SLocalResource::Fill(IOFrame& f) {
+SLocalResource& SLocalResource::fill(IOFrame& f) {
     while (!f.full()) {
-        f.Insert(__Recv(
-            GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize()
-        ));
+        f.insert(SNativeResource::Receive(
+            handler<SResourceHandler>()->fd(), f.idata(), f.isize()));
     }
     return *this;
 }
 template<>
-SLocalResource& SLocalResource::Fill(Frame& f) {
+SLocalResource& SLocalResource::fill(Frame& f) {
     for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, __Recv(
-            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
-        ));
+        it = next(it, SNativeResource::Receive(
+            handler<SResourceHandler>()->fd(), it.base(), distance(it, end)));
     }
-    return *this;
-}
-/**
- * read
- */
-template<>
-SLocalResource& SLocalResource::Read(IOFrame& f) {
-    f.Insert(__Recv(
-        GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize())
-    );
-    return *this;
-}
-template<>
-SLocalResource& SLocalResource::Read(Frame& f) {
-    f.Insert(__Recv(
-        GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
-    );
     return *this;
 }
 /**
  * ----------------------------------------------------------------------------
+ * Read
+ * ----------------------------------------------------------------------------
+ */
+template<>
+SLocalResource& SLocalResource::read(IOFrame& f) {
+    f.insert(SNativeResource::Receive(
+        handler<SResourceHandler>()->fd(), f.idata(), f.isize()));
+    return *this;
+}
+template<>
+SLocalResource& SLocalResource::read(Frame& f) {
+    f.insert(SNativeResource::Receive(
+        handler<SResourceHandler>()->fd(), f.data(), f.size()));
+    return *this;
+}
+/**
+ * ------------------------------------------------------------------------------------------------
  * Output
+ * ------------------------------------------------------------------------------------------------
+ * Drain
  * ----------------------------------------------------------------------------
- * drain
  */
 template<typename T>
-SLocalResource& SLocalResource::Drain(T& f) {
-    // send loop ----------------------
+SLocalResource& SLocalResource::drain(T& f) {
     while (!f.empty()) {
-        f.Remove(__Send(
-            GetHandler<SResourceHandler>()->FD(), f.Data(), f.size()
-        ));
+        f.remove(SNativeResource::Send(
+            handler<SResourceHandler>()->fd(), f.data(), f.size()));
     }
     return *this;
 }
 template<typename T>
-SLocalResource& SLocalResource::Drain(const T& f) {
-    // send loop ----------------------
+SLocalResource& SLocalResource::drain(const T& f) {
     for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, __Send(
-            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
-        ));
+        it = next(it, SNativeResource::Send(
+            handler<SResourceHandler>()->fd(), it.base(), distance(it, end)));
     }
     return *this;
 }
-template SLocalResource& SLocalResource::Drain(Frame&);
-template SLocalResource& SLocalResource::Drain(IOFrame&);
-template SLocalResource& SLocalResource::Drain(const Frame&);
-template SLocalResource& SLocalResource::Drain(const IOFrame&);
+template SLocalResource& SLocalResource::drain(Frame&);
+template SLocalResource& SLocalResource::drain(IOFrame&);
+template SLocalResource& SLocalResource::drain(const Frame&);
+template SLocalResource& SLocalResource::drain(const IOFrame&);
 /**
- * write
+ * ----------------------------------------------------------------------------
+ * Write
+ * ----------------------------------------------------------------------------
  */
 template<typename T>
-SLocalResource& SLocalResource::Write(T& f) {
-    f.Remove(
-        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
-    );
+SLocalResource& SLocalResource::write(T& f) {
+    f.remove(SNativeResource::Send(
+        handler<SResourceHandler>()->fd(), f.data(), f.size()));
     return *this;
 }
 template<typename T>
-SLocalResource& SLocalResource::Write(const T& f) {
-    __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size());
+SLocalResource& SLocalResource::write(const T& f) {
+    SNativeResource::Send(
+        handler<SResourceHandler>()->fd(), f.data(), f.size());
     return *this;
 }
-template SLocalResource& SLocalResource::Write(Frame&);
-template SLocalResource& SLocalResource::Write(IOFrame&);
-template SLocalResource& SLocalResource::Write(const Frame&);
-template SLocalResource& SLocalResource::Write(const IOFrame&);
+template SLocalResource& SLocalResource::write(Frame&);
+template SLocalResource& SLocalResource::write(IOFrame&);
+template SLocalResource& SLocalResource::write(const Frame&);
+template SLocalResource& SLocalResource::write(const IOFrame&);
 /**
  * ------------------------------------------------------------------------------------------------
  * MESSAGE general interfaces
@@ -187,7 +173,7 @@ template SLocalResource& SLocalResource::Write(const IOFrame&);
  * Bind
  * ----------------------------------------------------------------------------
  */
-Message::SLocalResource& Message::SLocalResource::Bind(const string& local) {
+Message::SLocalResource& Message::SLocalResource::bind(const string& local) {
     /**
      * bind parameters
      */
@@ -208,23 +194,23 @@ Message::SLocalResource& Message::SLocalResource::Bind(const string& local) {
     /**
      * bind
      */        
-    if (::bind(h->FD(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
+    if (::bind(h->fd(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
      * set options
      */
     struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
-    if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+    if (::setsockopt(h->fd(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
-    if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+    if (::setsockopt(h->fd(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
      * save handler
      */
-    SetHandler(h);
+    handler(h);
     return *this;
 }
 /**
@@ -232,7 +218,7 @@ Message::SLocalResource& Message::SLocalResource::Bind(const string& local) {
  * Wait
  * ----------------------------------------------------------------------------
  */
-Message::SLocalResource& Message::SLocalResource::Wait(
+Message::SLocalResource& Message::SLocalResource::wait(
     const string& local, chrono::seconds timeout
 ) {
     /**
@@ -260,36 +246,36 @@ Message::SLocalResource& Message::SLocalResource::Wait(
     /**
      * bind
      */        
-    if (::bind(h->FD(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
+    if (::bind(h->fd(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
      * set options
      */
     struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
-    if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+    if (::setsockopt(h->fd(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
-    if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+    if (::setsockopt(h->fd(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
      * wait for data 
      */
-    SStaticMonitorHandler({h}).Wait(timeout);
+    SStaticMonitorHandler({h}).wait(timeout);
     /**
      * get address and connect
      */
-    if (::recvfrom(h->FD(), nullptr, 0, MSG_PEEK,(struct sockaddr *)&caddr, &len) < 0) {
+    if (::recvfrom(h->fd(), nullptr, 0, MSG_PEEK,(struct sockaddr *)&caddr, &len) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
-    if (::connect(h->FD(), (struct sockaddr *)&caddr, len) < 0) {
+    if (::connect(h->fd(), (struct sockaddr *)&caddr, len) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
      * save handler
      */
-    SetHandler(h);
+    handler(h);
     return *this;
 }
 /**
@@ -297,7 +283,7 @@ Message::SLocalResource& Message::SLocalResource::Wait(
  * Link
  * ----------------------------------------------------------------------------
  */
-Message::SLocalResource& Message::SLocalResource::Link(const string& local) {
+Message::SLocalResource& Message::SLocalResource::link(const string& local) {
     /**
      * connect parameters
      */
@@ -318,33 +304,33 @@ Message::SLocalResource& Message::SLocalResource::Link(const string& local) {
     /**
      * connect
      */        
-    if (::connect(h->FD(), (struct sockaddr*) &caddr, sizeof(caddr)) < 0) {
+    if (::connect(h->fd(), (struct sockaddr*) &caddr, sizeof(caddr)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }    
     /**
      * set options
      */
     struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
-    if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+    if (::setsockopt(h->fd(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
-    if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+    if (::setsockopt(h->fd(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
      * save handler
      */
-    SetHandler(h);
+    handler(h);
     return *this;
 }
 /**
  * ------------------------------------------------------------------------------------------------
  * STREAM general interfaces
  * ------------------------------------------------------------------------------------------------
- * wait
+ * Wait
  * ----------------------------------------------------------------------------
  */
-Stream::SLocalResource& Stream::SLocalResource::Wait(
+Stream::SLocalResource& Stream::SLocalResource::wait(
     const string& local, chrono::seconds timeout
 ) {
     /**
@@ -372,44 +358,44 @@ Stream::SLocalResource& Stream::SLocalResource::Wait(
     /**
      * bind & listen
      */        
-    if (::bind(s->FD(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
+    if (::bind(s->fd(), (struct sockaddr*) &baddr, sizeof (baddr)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
-    if (::listen(s->FD(), 1) < 0) {
+    if (::listen(s->fd(), 1) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
      * wait connection
      */
-    SStaticMonitorHandler({s}).Wait(timeout);
+    SStaticMonitorHandler({s}).wait(timeout);
     /**
      * accept handler
      */
     auto h = make_shared<SResourceHandler>(
-        ::accept(s->FD(), (struct sockaddr *)&addr, &len)
+        ::accept(s->fd(), (struct sockaddr *)&addr, &len)
     );
     /**
      * set options
      */
     struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
-    if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+    if (::setsockopt(h->fd(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
-    if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+    if (::setsockopt(h->fd(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
      * save handler
      */
-    SetHandler(h);
+    handler(h);
     return *this;
 }
 /**
  * ----------------------------------------------------------------------------
- * link
+ * Link
  * ----------------------------------------------------------------------------
  */
-Stream::SLocalResource& Stream::SLocalResource::Link(const string& local) {
+Stream::SLocalResource& Stream::SLocalResource::link(const string& local) {
     /**
      * connect parameters
      */
@@ -430,54 +416,24 @@ Stream::SLocalResource& Stream::SLocalResource::Link(const string& local) {
     /**
      * bind
      */        
-    if (::connect(h->FD(), (struct sockaddr*) &caddr, sizeof(caddr)) < 0) {
+    if (::connect(h->fd(), (struct sockaddr*) &caddr, sizeof(caddr)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }    
     /**
      * set options
      */
     struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
-    if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+    if (::setsockopt(h->fd(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
-    if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+    if (::setsockopt(h->fd(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     /**
      * save handler
      */
-    SetHandler(h);
+    handler(h);
     return *this;
-}
-/**
- * ------------------------------------------------------------------------------------------------
- * linux functions
- * ------------------------------------------------------------------------------------------------
- */
-size_t __Send(int fd, Frame::const_pointer p, Frame::size_type s) {
-    auto n = ::send(fd, p, s, MSG_NOSIGNAL);
-    if (n <= 0) {
-        if (n < 0) {
-            throw OResourceExceptionABORT(strerror(errno));
-        }
-        throw OResourceExceptionABORT();
-    }
-    return n;
-}
-/**
- */
-size_t __Recv(int fd, Frame::pointer p, Frame::size_type s) {
-    auto n = ::recv(fd, p, s, 0);
-    if (n <= 0) {
-        if (n < 0) {
-            if (errno == EAGAIN) {
-                throw ResourceExceptionTIMEOUT();
-            }
-            throw IResourceExceptionABORT(strerror(errno));
-        }
-        throw IResourceExceptionABORT();
-    }
-    return n;
 }
 /**
  * ------------------------------------------------------------------------------------------------

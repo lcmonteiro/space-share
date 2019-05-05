@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * Connector: Connector.h
  * Author: Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SCONNECTOR_H
 #define SCONNECTOR_H
@@ -28,7 +30,7 @@
 #include "STask.h"
 /**
  * -----------------------------------------------------------------------------------------------
- * exceptions
+ * Exceptions
  * -----------------------------------------------------------------------------------------------
  */
 typedef class SConnectorExection : public std::system_error {
@@ -43,10 +45,7 @@ public:
     : system_error(ec, what), __uri(uri) {
     }
     /**
-     * destructor
-     */
-    virtual ~SConnectorExection() = default;
-    /**
+     * operator
      */
     inline std::string operator()(void) const {
         return __uri;
@@ -55,6 +54,9 @@ private:
     std::string __uri;
 } ConnectorExection;
 /**
+ * ----------------------------------------------------------------------------
+ * Timeout
+ * ----------------------------------------------------------------------------
  */
 typedef class SConnectorExceptionTIMEOUT : public SConnectorExection {
 public:
@@ -75,6 +77,9 @@ public:
     using ConnectorExceptionTIMEOUT::ConnectorExceptionTIMEOUT;
 } OConnectorExceptionTIMEOUT;
 /**
+ * ----------------------------------------------------------------------------
+ * Dead
+ * ----------------------------------------------------------------------------
  */
 typedef class SConnectorExceptionDead : public SConnectorExection {
 public:
@@ -96,80 +101,80 @@ public:
 } OConnectorExceptionDEAD;
 /**
  * ------------------------------------------------------------------------------------------------
- * connenctor base
+ * Connenctor Base
  * ------------------------------------------------------------------------------------------------
  **/
 class SConnector: public SLog, protected SEnergy<ConnectorExceptionDEAD> {
     /**
      * type definitions
      */
-    typedef STask Task;
+    using Task = STask;
 public:
-    /**
-     * connector default
-     */
-    typedef std::string  Key;
+    using Key  = std::string;
     /**
      * ------------------------------------------------------------------------
-     * defaults
+     * Defaults
      * ------------------------------------------------------------------------
      */
     SConnector()          = default;
     virtual ~SConnector() = default;
     /**
      * ------------------------------------------------------------------------
-     * constructor
+     * Constructor
      * ------------------------------------------------------------------------
      */
     SConnector(std::string uri, size_t energy = 1) 
-    : SLog(), SEnergy(energy), __uri(uri) {
-    }
+    : SLog(), SEnergy(energy), __uri(uri) { }
     /**
      * ------------------------------------------------------------------------
-     * interface
+     * Interface
      * ------------------------------------------------------------------------
-     * get uri 
+     * Get URI 
      * ----------------------------------------------------
      */
-    inline const SAddress& GetURI() const {
+    inline const SAddress& uri() const {
         return __uri;
     }
     /**
      * ----------------------------------------------------
-     * set energy
+     * Set Energy
      * ----------------------------------------------------
      */
-    inline void SetEnergy(size_t energy) {
-        SEnergy::Set(energy);    
+    inline void energy(size_t energy) {
+        SEnergy::set(energy);    
     }
     /**
      * ----------------------------------------------------
-     * get energy
+     * Get Energy
      * ----------------------------------------------------
      */
-    inline size_t GetEnergy() {
-        return SEnergy::Get();
+    inline size_t energy() {
+        return SEnergy::get();
     }
     /**
      * ----------------------------------------------------
-     * is worker is inactive 
+     * Is worker is inactive 
      * ----------------------------------------------------
      */
-    inline bool Inactive() {
+    inline bool inactive() {
         return !__waiter.joinable();
     }
     /**
      * ----------------------------------------------------
-     * repair connector
+     * Build Connector
      * ----------------------------------------------------
      */
-    inline void Repair() {
-        // decay energy resource ------ 
-        SEnergy::Decay();
-        // enable build ---------------
+    inline void build() {
+        /**
+         * decay energy resource
+         */ 
+        SEnergy::decay();
+        /**
+         * enable build
+         */
         __waiter = STask([this]() {
             try {
-                _Open();
+                _open();
             } catch (std::exception& ){} catch (...) {
                 throw;
             }
@@ -177,16 +182,20 @@ public:
     }
     /**
      * ----------------------------------------------------
-     * break connector
+     * Detroy Connector
      * ----------------------------------------------------
      **/
-    inline void Break() {
-        // cancel decay ---------------
-        SEnergy::Cancel();
-        // enable waiter --------------
+    inline void destroy() {
+        /**
+         * cancel decay
+         */
+         SEnergy::cancel();
+        /**
+         * enable waiter
+         */
         __waiter = STask([this]() {
             try {
-                _Close();
+                _close();
             } catch (std::exception& ){} catch (...) {
                 throw;
             }
@@ -194,23 +203,23 @@ public:
     }
     /**
      * ----------------------------------------------------
-     * check status
+     * Check Status
      * ----------------------------------------------------
      */
-    inline bool Good() {
-        return !empty() && _Good();
+    inline bool good() {
+        return !empty() && _good();
     }
     /**
      * ----------------------------------------------------
-     * wait (timeout) to be good
+     * Wait (timeout) to be good
      * ----------------------------------------------------
      */
-    SConnector& Wait(std::chrono::milliseconds timeout);
+    SConnector& wait(std::chrono::milliseconds timeout);
 protected:
     /**
-     * ----------------------------------------------------
-     * variables
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
+     * Variables
+     * ------------------------------------------------------------------------
      **
      * stream identifier
      */
@@ -224,73 +233,40 @@ protected:
      */
     size_t __energy;
     /**
-     * ----------------------------------------------------
-     * interfaces
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
+     * Interfaces
+     * ------------------------------------------------------------------------
      * close
      **/
-    virtual void _Close() = 0;
+    virtual void _close() = 0;
     /**
      * open
      */
-    virtual void _Open() = 0;
+    virtual void _open() = 0;
     /**
      * good
      */
-    virtual bool _Good() = 0;
+    virtual bool _good() = 0;
     /**
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
      * utilities
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
      * reshape 
      */
-    std::list<std::pair<size_t, size_t>> Shape(size_t len, size_t split);
+    std::list<std::pair<size_t, size_t>> _shape(size_t len, size_t split);
     /**
      * ------------------------------------------------------------------------
-     * logging
+     * Logging
      * ------------------------------------------------------------------------
-     * debug
-     * ----------------------------------------------------
      */
-    inline void __DEBUG(const std::string& msg) {
-        SLog::__DEBUG(__uri, msg);
-    }
-    /**
-     * ----------------------------------------------------
-     * information
-     * ----------------------------------------------------
-     */
-    inline void __INFO(const std::string& msg) {
-        SLog::__INFO(__uri, msg);
-    }
-    /**
-     * ----------------------------------------------------
-     * warning
-     * ----------------------------------------------------
-     */
-    inline void __WARNING(const std::string& msg) {
-        SLog::__WARNING(__uri, msg);
-    }
-    /**
-     * ----------------------------------------------------
-     * error
-     * ----------------------------------------------------
-     */
-    inline void __ERROR(const std::string& msg) {
-        SLog::__ERROR(__uri, msg);
-    }
-    /**
-     * ----------------------------------------------------
-     * critical error
-     * ----------------------------------------------------
-     */
-    inline void __CRITICAL(const std::string& msg) {
-        SLog::__CRITICAL(__uri, msg);
-    }
+    inline void _debug  (const std::string& msg) { SLog::_debug  (__uri, msg); }
+    inline void _info   (const std::string& msg) { SLog::_info   (__uri, msg); }
+    inline void _warning(const std::string& msg) { SLog::_warning(__uri, msg); }
+    inline void _error  (const std::string& msg) { SLog::_error  (__uri, msg); }
 };
 /**
  * ----------------------------------------------------------------------------
- * definitions
+ * Definitions
  * ----------------------------------------------------------------------------
  */
 typedef std::shared_ptr<SConnector> Connector;
@@ -309,22 +285,25 @@ class SInputConnector : public SConnector {
 public:
     using SConnector::SConnector;
     /**
-     * constructor
+     * ----------------------------------------------------
+     * Constructor
+     * ----------------------------------------------------
      */
     SInputConnector() = default;
     /**
-     * destructor
+     * ----------------------------------------------------
+     * Get Resource
+     * ----------------------------------------------------
      */
-    virtual ~SInputConnector() = default;
+    virtual Resource& resource() = 0;
     /**
+     * ----------------------------------------------------
+     * Read Data
+     * ----------------------------------------------------
      */
-    virtual Resource& GetResource() = 0;
-    /**
-     * read data
-     */
-    inline Document Read() {
+    inline Document read() {
         try {
-            return _Read();
+            return _read();
         } catch (ResourceExceptionTIMEOUT& ex) {
             INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
@@ -337,11 +316,13 @@ public:
         }
     }
     /**
-     * read residual data 
+     * ----------------------------------------------------
+     * Read Residual Data 
+     * ----------------------------------------------------
      */
-    inline std::list<Document> Drain() {
+    inline std::list<Document> drain() {
         try {
-            return _Drain();
+            return _drain();
         } catch (ResourceExceptionTIMEOUT& ex) {
             INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
@@ -350,7 +331,6 @@ public:
             throw IConnectorExceptionDEAD(__uri);
         }
     }
-
 protected:
     /**
      * ----------------------------------------------------
@@ -359,11 +339,13 @@ protected:
      **
      * read
      */
-    virtual Document _Read() = 0;
+    virtual Document _read() = 0;
     /**
      * drain 
-     **/
-    virtual std::list<Document> _Drain() { return {}; }
+     */
+    virtual std::list<Document> _drain() { 
+        return {}; 
+    }
 };
 /**
  * ----------------------------------------------------------------------------
@@ -374,19 +356,19 @@ class SOutputConnector: public SConnector {
 public:
     using SConnector::SConnector;
     /**
-     * constructor
+     * ----------------------------------------------------
+     * Constructor
+     * ----------------------------------------------------
      */
     SOutputConnector() = default;
     /**
-     * destructor
+     * ----------------------------------------------------
+     * Write Data
+     * ----------------------------------------------------
      */
-    virtual ~SOutputConnector() = default;
-    /**
-     * write data
-     */
-    inline void Write(const Document& data){
+    inline void write(const Document& data){
         try {
-            _Write(data);
+            _write(data);
         } catch (ResourceExceptionABORT& ex) {
             WARNING(ex.what());
             throw OConnectorExceptionDEAD(__uri);
@@ -399,7 +381,7 @@ protected:
      * ----------------------------------------------------
      * write
      **/
-    virtual void _Write(const Document& container) = 0;
+    virtual void _write(const Document& container) = 0;
 };
 /**
  * ----------------------------------------------------------------------------
@@ -410,23 +392,25 @@ class SInOutputConnector : public SConnector {
 public:
     using SConnector::SConnector;
     /**
-     * constructor
+     * ----------------------------------------------------
+     * Constructor
+     * ----------------------------------------------------
      */
     SInOutputConnector() = default;
     /**
-     * destructor
+     * ----------------------------------------------------
+     * Get Resource
+     * ----------------------------------------------------
      */
-    virtual ~SInOutputConnector() = default;
+    virtual Resource& resource() = 0;
     /**
-     * get resource
+     * ----------------------------------------------------
+     * Read Data
+     * ----------------------------------------------------
      */
-    virtual Resource& GetResource() = 0;
-    /**
-     * read data
-     */
-    inline Document Read() {
+    inline Document read() {
         try {
-            return _Read();
+            return _read();
         } catch (ResourceExceptionTIMEOUT& ex) {
             INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
@@ -439,11 +423,13 @@ public:
         }
     }
     /**
-     * read residual data 
+     * ----------------------------------------------------
+     * Read Residual Data 
+     * ----------------------------------------------------
      */
-    inline std::list<Document> Drain() {
+    inline std::list<Document> drain() {
         try {
-            return _Drain();
+            return _drain();
         } catch (ResourceExceptionTIMEOUT& ex) {
             INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
@@ -453,11 +439,13 @@ public:
         }
     }
     /**
-     * write data
+     * ----------------------------------------------------
+     * Write Data
+     * ----------------------------------------------------
      */
-    inline void Write(const Document& data) {
+    inline void write(const Document& data) {
         try {
-            _Write(data);
+            _write(data);
         } catch (ResourceExceptionABORT& ex) {
             WARNING(ex.what());
             throw OConnectorExceptionDEAD(__uri);
@@ -471,19 +459,21 @@ protected:
      **
      * read
      */
-    virtual Document _Read() = 0;
+    virtual Document _read() = 0;
     /**
      * drain  
      */
-    virtual std::list<Document> _Drain() { return {}; }
+    virtual std::list<Document> _drain() {
+        return {}; 
+    }
     /**
      * write 
      */
-    virtual void _Write(const Document& container) = 0;
+    virtual void _write(const Document& container) = 0;
 };
 /**
  * ----------------------------------------------------------------------------
- * definitions
+ * Definitions
  * ----------------------------------------------------------------------------
  */
 typedef std::shared_ptr<SInputConnector>    IConnector;
@@ -505,23 +495,25 @@ class SInputConnector : public SConnector {
 public:
     using SConnector::SConnector;
     /**
-     * constructor
+     * ----------------------------------------------------
+     * Constructor
+     * ----------------------------------------------------
      */
     SInputConnector() = default;
     /**
-     * destructor
+     * ----------------------------------------------------
+     * Get Resource
+     * ----------------------------------------------------
      */
-    virtual ~SInputConnector() = default;
+    virtual Resource& resource() = 0;
     /**
-     * get resource
+     * ----------------------------------------------------
+     * Read Coded Data
+     * ----------------------------------------------------
      */
-    virtual Resource& GetResource() = 0;
-    /**
-     * read coded data
-     */
-    inline Document Read() {
+    inline Document read() {
         try {
-            return _Read();
+            return _read();
         } catch (ResourceExceptionTIMEOUT& ex) {
             INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
@@ -534,11 +526,13 @@ public:
         }
     }
     /**
-     * read residual coded data 
+     * ----------------------------------------------------
+     * Read Residual Coded Data 
+     * ----------------------------------------------------
      */
-    inline std::list<Document> Drain() {
+    inline std::list<Document> drain() {
         try {
-            return _Drain();
+            return _drain();
         } catch (ResourceExceptionTIMEOUT& ex) {
             INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
@@ -549,6 +543,9 @@ public:
     }
 protected:
     /**
+     * ----------------------------------------------------
+     * Variables
+     * ----------------------------------------------------
      * machine state
      */
     size_t __state;
@@ -559,11 +556,13 @@ protected:
      **
      * read
      */
-    virtual Document _Read() = 0;
+    virtual Document _read() = 0;
     /**
      * drain
      */
-    virtual std::list<Document> _Drain() { return {}; }
+    virtual std::list<Document> _drain() { 
+        return {}; 
+    }
 };
 /**
  * ----------------------------------------------------------------------------
@@ -574,19 +573,19 @@ class SOutputConnector : public SConnector {
 public:
     using SConnector::SConnector;
     /**
-     * constructor
+     * ----------------------------------------------------
+     * Constructor
+     * ----------------------------------------------------
      */
     SOutputConnector() = default;
     /**
-     * destructor
+     * ----------------------------------------------------
+     * Write Coded Data
+     * ----------------------------------------------------
      */
-    virtual ~SOutputConnector() = default;
-    /**
-     * write coded data
-     */
-    inline void Write(const Document& data){
+    inline void write(const Document& data){
         try {
-            _Write(data);
+            _write(data);
         } catch (ResourceExceptionABORT& ex) {
             WARNING(ex.what());
             throw OConnectorExceptionDEAD(__uri);
@@ -599,7 +598,7 @@ protected:
      * ----------------------------------------------------
      * write
      **/
-    virtual void _Write(const Document& container) = 0;
+    virtual void _write(const Document& container) = 0;
 };
 /**
  * ----------------------------------------------------------------------------
@@ -610,22 +609,25 @@ class SInOutputConnector: public SConnector {
 public:
     using SConnector::SConnector;
     /**
-     * constructor
+     * ----------------------------------------------------
+     * Constructor
+     * ----------------------------------------------------
      */
     SInOutputConnector() = default;
     /**
-     * destructor
+     * ----------------------------------------------------
+     * Get Resource
+     * ----------------------------------------------------
      */
-    virtual ~SInOutputConnector() = default;    
+    virtual Resource& resource() = 0;
     /**
+     * ----------------------------------------------------
+     * Read Coded Data
+     * ----------------------------------------------------
      */
-    virtual Resource& GetResource() = 0;
-    /**
-     * read coded data
-     */
-    inline Document Read(){
+    inline Document read(){
         try {
-            return _Read();
+            return _read();
         } catch (ResourceExceptionTIMEOUT& ex) {
             INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
@@ -638,11 +640,13 @@ public:
         }
     }
     /**
-     * read residual coded data 
+     * ----------------------------------------------------
+     * Read Residual Coded Data 
+     * ----------------------------------------------------
      */
-    inline std::list<Document> Drain() {
+    inline std::list<Document> drain() {
         try {
-            return _Drain();
+            return _drain();
         } catch (ResourceExceptionTIMEOUT& ex) {
             INFO(ex.what());
             throw IConnectorExceptionTIMEOUT(__uri);
@@ -652,11 +656,13 @@ public:
         }
     }
     /**
-     * write coded data
+     * ----------------------------------------------------
+     * Write Coded Data
+     * ----------------------------------------------------
      */
-    inline void Write(const Document& data){
+    inline void write(const Document& data){
         try {
-            _Write(data);
+            _write(data);
         } catch (ResourceExceptionABORT& ex) {
             WARNING(ex.what());
             throw OConnectorExceptionDEAD(__uri);
@@ -664,6 +670,9 @@ public:
     }
 protected:
     /**
+     * ----------------------------------------------------
+     * Variables
+     * ----------------------------------------------------
      * machine state
      */
     size_t __state;
@@ -674,19 +683,21 @@ protected:
      **
      * read
      */
-    virtual Document _Read() = 0;
+    virtual Document _read() = 0;
     /**
      * drain 
      */
-    virtual std::list<Document> _Drain() { return {}; }
+    virtual std::list<Document> _drain() {
+         return {}; 
+    }
     /**
      * write 
      */
-    virtual void _Write(const Document& container) = 0;
+    virtual void _write(const Document& container) = 0;
 };
 /**
  * ----------------------------------------------------------------------------
- * definitions
+ * Definitions
  * ----------------------------------------------------------------------------
  */
 typedef std::shared_ptr<SInputConnector>    IConnector;
@@ -695,7 +706,7 @@ typedef std::shared_ptr<SInOutputConnector> IOConnector;
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */
 #endif /* SCONNECTOR_H */

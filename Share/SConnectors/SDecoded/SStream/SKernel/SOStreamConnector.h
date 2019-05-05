@@ -1,20 +1,22 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SOStreamConnector.h
  * Author: Luis Monteiro
  *
  * Created on June 11, 2018, 1:34 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SOSTREAMCONNECTOR_H
 #define SOSTREAMCONNECTOR_H
 /**
- *  Space Kernel
+ *  space
  */
 #include "SContainer.h"
 #include "SAddress.h"
 #include "STask.h"
 #include "SText.h"
 /**
- * Share Kernel
+ * share
  */
 #include "SConnector.h"
 /**
@@ -26,55 +28,54 @@ namespace Decoded {
 namespace Stream  {
 /**
  */
-template<class RESOURCE>
+template<class Adapter>
 class SOStreamConnector : public SOutputConnector {
 public:
     /**
-     * constructor
-     */
-    SOStreamConnector(
-        const SText address // connection address
-    ) : SOutputConnector(address), __res() {}
-    /**
-     * destructor
-     */
-    virtual ~SOStreamConnector() = default;
-    /**
-     */
-protected:
-    /**
-     * ----------------------------------------------------------------------------------------
-     * O functions
-     * ----------------------------------------------------------------------------------------
-     * write
+     * ------------------------------------------------------------------------
+     * Constructor
      * ------------------------------------------------------------------------
      */
-    void _Write(const Document& container) override {
-
-        // log info ---------------------------------------
-        INFO("DATA::OUT::n=" << container.size() << "=" << container.front());
-
-        // write nframes ----------------------------------
+    SOStreamConnector(
+        const SText address) 
+    : SOutputConnector(address), 
+    __res() {}
+protected:
+        /**
+     * ------------------------------------------------------------------------
+     * Write 
+     * ------------------------------------------------------------------------
+     */
+    void _write(const Document& container) override {
+        /**
+         * log info
+         */
+        INFO("DATA::OUT::n=" << container.size() << "=" << container.at(0));
+        /**
+         * write nframes
+         */
         for (auto& f : container) {
-            __res.Drain(f);
+            __res.drain(f);
         }
     }
     /**
-     * --------------------------------------------------------------------------------------------
-     * control functions
-     * --------------------------------------------------------------------------------------------
-     * open
+     * ------------------------------------------------------------------------
+     * Open
      * ------------------------------------------------------------------------
      */
-    inline void _Open() override {
+    inline void _open() override {
         std::default_random_engine eng{std::random_device{}()};
-        // sleep distribution -----------------------------
+        /**
+         * sleep distribution
+         */
         std::uniform_int_distribution<> dist{100, 1000};
-        // main loop --------------------------------------
+        /**
+         * main loop
+         */
         int i = 0;
         do {
             try {
-                __res.Link(__uri);
+                __res.link(__uri);
                 break;
             } catch (std::system_error& ex) {
                 WARNING(ex.what());
@@ -83,32 +84,31 @@ protected:
     }
     /**
      * ------------------------------------------------------------------------
-     * good
+     * Good
      * ------------------------------------------------------------------------
      */
-    inline bool _Good() override {
-        return __res.Good();
+    inline bool _good() override {
+        return __res.good();
     }
     /**
      * ------------------------------------------------------------------------
-     * close
+     * Close
      * ------------------------------------------------------------------------
      */
-    inline void _Close() override {
-        __res.Reset();
+    inline void _close() override {
+        __res.reset();
     }
 private:
     /**
-     * --------------------------------------------------------------------------------------------
-     * variables
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
+     * Variables
+     * ------------------------------------------------------------------------
      **
      * resource
      */
-    RESOURCE __res;
+    Adapter __res;
 };
-}
-}
+}}
 /**
  * ------------------------------------------------------------------------------------------------
  * End namespace Decoded & Stream

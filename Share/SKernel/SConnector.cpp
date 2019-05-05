@@ -1,21 +1,25 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   Connector.cpp
- * Author: root
+ * Author: Luis Monteiro
  * 
  * Created on March 27, 2017, 11:47 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #include "SConnector.h"
 /**
- * wait to be good
+ * ----------------------------------------------------------------------------
+ * Wait to be good
+ * ----------------------------------------------------------------------------
  */
-SConnector& SConnector::Wait(std::chrono::milliseconds timeout) {
+SConnector& SConnector::wait(std::chrono::milliseconds timeout) {
 	auto start = std::chrono::steady_clock::now();
 	auto end = start + timeout;
 	do {
-		if(Good()) {
+		if(good()) {
 			return *this;
 		}
-		if(Inactive()){
+		if(inactive()) {
 			throw ConnectorExceptionDEAD(__uri);
 		}
 		std::this_thread::yield();
@@ -26,9 +30,11 @@ SConnector& SConnector::Wait(std::chrono::milliseconds timeout) {
 	throw ConnectorExceptionTIMEOUT(__uri);
 }
 /**
+ * ----------------------------------------------------------------------------
  * Shape stream
+ * ----------------------------------------------------------------------------
  */
-std::list<std::pair<size_t, size_t>> SConnector::Shape(size_t len, size_t split) {
+std::list<std::pair<size_t, size_t>> SConnector::_shape(size_t len, size_t split) {
 	std::list<std::pair<size_t, size_t>> out;
 	/**
 	 * compute references
@@ -59,3 +65,8 @@ std::list<std::pair<size_t, size_t>> SConnector::Shape(size_t len, size_t split)
 	out.emplace_back(ref.rem + split, 1);
 	return out;
 }
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */

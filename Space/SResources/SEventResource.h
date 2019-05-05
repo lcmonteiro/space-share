@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SEventResource.h
- * Author:      Luis Monteiro
+ * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SEVENTRESOURCE_H
 #define SEVENTRESOURCE_H
@@ -12,19 +14,19 @@
 #include "SResource.h"
 /**
  * ------------------------------------------------------------------------------------------------
- * event resource
+ * Event Resource
  * ------------------------------------------------------------------------------------------------
  */
 class SEventResource : public SResource {
 public:
     /**
      * ----------------------------------------------------
-     * constructors
+     * Constructors
      * ----------------------------------------------------
      * default
      */
-    SEventResource(SEventResource&& ) = default;
-    SEventResource()                  = default;
+    SEventResource(SEventResource&&) = default;
+    SEventResource()                 = default;
     /**
      * main
      * @param init
@@ -32,27 +34,27 @@ public:
     SEventResource(int init);
     /**
      * ----------------------------------------------------
-     * operators
+     * Operators
      * ----------------------------------------------------
      * move 
      */
     SEventResource& operator=(SEventResource&& t) = default;
     /**
      * ----------------------------------------------------
-     * interfaces
+     * Interfaces
      * ----------------------------------------------------
      **
      * send event
      */
-    bool Send();
+    bool send();
     /**
      * clear event
      */
-    int Clear();
+    int clear();
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */
 #endif /* SEVENTRESOURCE_H */

@@ -34,14 +34,14 @@ public:
     }
     SBuffer(const Frame& frame): Super() {
         exceptions(std::ios::failbit);
-        Write(frame);
+        drain(frame);
     }
     /**
      * ------------------------------------------------------------------------
-     * get length between read and write positions
+     * Length between read and write positions
      * ------------------------------------------------------------------------
      */
-    inline size_t Length() {
+    inline size_t size() {
         return tellp() - tellg();
     }
     /**
@@ -50,51 +50,50 @@ public:
      * ------------------------------------------------------------------------
      */
     template <
-        typename FRAME, 
-        typename = std::enable_if_t<std::is_base_of<SFrame, FRAME>::value>
+        typename Frame, 
+        typename = std::enable_if_t<std::is_base_of<SFrame, Frame>::value>
     >
-    SBuffer& Write(const FRAME& f) {
-        write(f.data(), f.size()); return *this;
+    SBuffer& drain(const Frame& f) {
+        Super::write(f.data(), f.size()); return *this;
     }
     /**
      * ------------------------------------------------------------------------
-     * write container
+     * drain container 
      * ------------------------------------------------------------------------
      */
-    SBuffer& Write(const Container& c) {
-        for (auto& f : c) { Write(f); } return *this;
+    SBuffer& drain(const Container& c) {
+        for (auto& f : c) { drain(f); } return *this;
     }
     /**
      * ------------------------------------------------------------------------
-     * read frame with specific length
+     * drain specific length to a frame
      * ------------------------------------------------------------------------
      */
-    inline Frame Read(size_t len) {
-        if (Length() < len) {
+    inline Frame drain(size_t len) {
+        if (size() < len) 
             throw ContainerException(SText("len=", len));
-        }
-        auto frame = Frame(len).Expand().detach();
-        read(frame.Data(), frame.size());
+        auto frame = Frame(len, len);
+        Super::read(frame.data(), frame.size());
         return std::move(frame);
     }
     /**
      * ------------------------------------------------------------------------
-     * read until the end
+     * Read until the end
      * ------------------------------------------------------------------------
      */
-    inline Frame Read() {
-        Frame frame(Length());
-        read(frame.data(), frame.size());
+    inline Frame drain_all() {
+        auto frame = Frame(size()).inflate().detach();
+        Super::read(frame.data(), frame.size());
         return std::move(frame);
     }
     /**
      * ------------------------------------------------------------------------
-     * read Read until fill frame or end of buffer
+     * Read until fill frame or end of buffer
      * ------------------------------------------------------------------------
      */
-    inline SBuffer& Fill(IOFrame& f) {
+    inline SBuffer& fill(IOFrame& f) {
         do { 
-            f.Insert(readsome(f.IData(), f.isize())); 
+            f.insert(readsome(f.idata(), f.isize())); 
         } while (gcount());
         return *this;
     }
@@ -106,9 +105,9 @@ public:
  **/
 inline std::ostream& operator<<(std::ostream& os, const Buffer& b) {
     os << "[";
-    // for (auto v : b) {
-    //     os << int(v) << " ";
-    // }
+    for (auto& v : b.str()) {
+        os << int(v) << " ";
+    }
     return os << "]";
 }
 /**

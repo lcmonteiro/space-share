@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SBimap.h
- * Author: Luis MOnteiro
+ * Author: Luis Monteiro
  *
  * Created on 15 de Maio de 2018, 11:16
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SBIMAP_H
 #define SBIMAP_H
@@ -11,20 +13,23 @@
  */
 #include <map>
 /**
- */
-using namespace std;
-/**
  * ------------------------------------------------------------------------------------------------
  * Bimap key <-> val
  * ------------------------------------------------------------------------------------------------
  */
-template <typename T1, typename T2, typename Compare1 = less<T1>, typename Compare2 = less<T2>>
+template <
+    typename T1, 
+    typename T2, 
+    typename Compare1 = std::less<T1>, 
+    typename Compare2 = std::less<T2>>
 class SBimap {     
 public:
-    typedef map<T1, T2, Compare1> map1;
-    typedef map<T2, T1, Compare2> map2;
+    using Map1 = std::map<T1, T2, Compare1>;
+    using Map2 = std::map<T2, T1, Compare2>;
     /**
-     * constructors
+     * ------------------------------------------------------------------------
+     * Constructors
+     * ------------------------------------------------------------------------
      */
     SBimap() = default;
 
@@ -32,65 +37,76 @@ public:
     
     SBimap(const SBimap& v) = default;
     /**
-     * operators
+     * ------------------------------------------------------------------------
+     * Operators
+     * ------------------------------------------------------------------------
      */
     SBimap& operator=(const SBimap&) = default;
     
     SBimap& operator=(SBimap&&) = default;
     /**
-     * quantity
+     * ------------------------------------------------------------------------
+     * Quantity
+     * ------------------------------------------------------------------------
      */
     bool empty() {
         return _1.empty(); 
     }
-    
     size_t size() {
         return _1.size(); 
     }
-    
-    size_t Count(T1 v1) {
+    size_t count(T1 v1) {
         return _1.count(v1); 
     }
-    size_t Count2(T2 v2) {
+    size_t count2(T2 v2) {
         return _2.count(v2); 
     }
     /**
-     * insert
+     * ------------------------------------------------------------------------
+     * Insert
+     * ------------------------------------------------------------------------
      */
-    SBimap& Insert(T1 v1, T2 v2) {
+    SBimap& insert(T1 v1, T2 v2) {
         _1[v1] = v2;
         _2[v2] = v1;
         return *this;
     }
     /**
-     * erase
+     * ------------------------------------------------------------------------
+     * Erase
+     * ------------------------------------------------------------------------
      */
-    SBimap& Erase(T1 v1) {
+    SBimap& erase(T1 v1) {
         _2.erase(_1.at(v1));
         _1.erase(v1);
         return *this;
     }
-    SBimap& Erase2(T2 v2) {
+    SBimap& erase2(T2 v2) {
         _1.erase(_2.at(v2));
         _2.erase(v2);
         return *this;
     }
-    SBimap& Clear() {
+    SBimap& clear() {
         _1.clear();
         _2.clear();
         return *this;
     }
     /**
-     * find
+     * ------------------------------------------------------------------------
+     * Find
+     * ------------------------------------------------------------------------
      */
-    T2 Find(T1 v1){
+    T2 find(T1 v1){
         return _1.at(v1);
     }
-    T1 Find2(T2 v2){
+    T1 find2(T2 v2){
         return _2.at(v2);
     }
     /**
+     * ------------------------------------------------------------------------
      * std iterators
+     * ------------------------------------------------------------------------
+     * forward
      */
     typename map1::const_iterator cbegin() {
         return _1.cbegin();
@@ -108,7 +124,9 @@ public:
     typename map1::const_iterator cend() {
         return _1.cend();
     }
-    // 
+    /**
+     * backware
+     */
     typename map2::const_iterator crbegin() {
         return _1.cbegin();
     }
@@ -126,9 +144,18 @@ public:
         return _2.cend();
     }
 protected:
-    map1 _1;
-    map2 _2;
+    /**
+     * ------------------------------------------------------------------------
+     * Variables
+     * ------------------------------------------------------------------------
+     */ 
+    Map1 _1;
+    Map2 _2;
 };
-
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */ 
 #endif /* SBIMAP_H */
 

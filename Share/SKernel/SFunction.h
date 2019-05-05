@@ -9,13 +9,13 @@
 #ifndef SFUNCTION_H
 #define SFUNCTION_H
 /**
- * C++
+ * std
  */
 #include <ctime>
 #include <string>
 #include <list>
 /**
- * Space Kernel
+ * space
  */
 #include "SLog.h"
 #include "SEnergy.h"
@@ -23,7 +23,7 @@
 #include "SResourceMonitor.h"
 /**
  * ------------------------------------------------------------------------------------
- * exceptions 
+ * Exceptions 
  * ------------------------------------------------------------------------------------
  **/
 typedef class SFunctionException : public std::logic_error {
@@ -35,7 +35,11 @@ public:
     SFunctionException(const std::string& msg): std::logic_error(msg) {
     }
 } FunctionException;
-
+/**
+ * ----------------------------------------------------------------------------
+ * Dead
+ * ----------------------------------------------------------------------------
+ */
 typedef class SFunctionExceptionDead : public SFunctionException {
 public:
     using SFunctionException::SFunctionException;
@@ -47,51 +51,43 @@ public:
 } FunctionExceptionDEAD;
 /**
  * ------------------------------------------------------------------------------------
- * function base 
+ * Function base 
  * ------------------------------------------------------------------------------------
  **/
 class SFunction: public SLog, public SEnergy<FunctionExceptionDEAD> {
 public:
     /**
      * ------------------------------------------------------------------------
-     * constructor
+     * Constructor
      * ------------------------------------------------------------------------
      */
-    SFunction(string id, size_t energy = UINT32_MAX, uint8_t verbose = 0)
-        : SLog(verbose), SEnergy(energy), __id(id) {
-        Recover();
+    SFunction(std::string id, size_t energy = UINT32_MAX, uint8_t verbose = 0)
+    : SLog(verbose), SEnergy(energy), __id(id) {
+        recover();
     }
     /**
      * ------------------------------------------------------------------------
-     * destructor
+     * Recover Function
      * ------------------------------------------------------------------------
      */
-    virtual ~SFunction() = default;
-    /**
-     * ------------------------------------------------------------------------
-     * recover function
-     * ------------------------------------------------------------------------
-     */
-    virtual void Recover() { SEnergy::Restore(); }
+    virtual void recover() { SEnergy::restore(); }
 protected:
     /**
      * ------------------------------------------------------------------------
-     * variables
+     * Variables
      * ------------------------------------------------------------------------
      * function id
-     * ----------------------------------------------------
      */
-    string __id;
+    std::string __id;
     /**
      * ------------------------------------------------------------------------
-     * logging
+     * Logging
      * ------------------------------------------------------------------------
-     **/
-    inline void __DEBUG(   const string& msg) { SLog::__DEBUG(   __id, msg); }
-    inline void __INFO(    const string& msg) { SLog::__INFO(    __id, msg); }
-    inline void __WARNING( const string& msg) { SLog::__WARNING( __id, msg); }
-    inline void __ERROR(   const string& msg) { SLog::__ERROR(   __id, msg); }
-    inline void __CRITICAL(const string& msg) { SLog::__CRITICAL(__id, msg); }
+     */
+    inline void _debug  (const std::string& msg) { SLog::_debug  (__id, msg); }
+    inline void _info   (const std::string& msg) { SLog::_info   (__id, msg); }
+    inline void _warning(const std::string& msg) { SLog::_warning(__id, msg); }
+    inline void _error  (const std::string& msg) { SLog::_error  (__id, msg); }
 };
 /**
  * ------------------------------------------------------------------------------------------------
@@ -108,34 +104,37 @@ public:
     using ORoad = SRoad<K, OUT>;
     using Data  = DOC;
     /**
-     * constructor
+     * ------------------------------------------------------------------------
+     * Constructors
+     * ------------------------------------------------------------------------
+     * base
      */
     using SFunction::SFunction;
     /**
-     * default constructor
+     * default
      */ 
     SFunctionSpread(size_t energy = UINT32_MAX, uint8_t verbose = 0)
     : SFunction("Spread", energy, verbose) {}
     /**
      * ------------------------------------------------------------------------
-     * process 
+     * Process 
      * ------------------------------------------------------------------------
      */
-    void Process(IRoad& in, ORoad& out) {
+    void process(IRoad& in, ORoad& out) {
         try {
             /**
              * waiting, read and process container
              **/
-            for (auto& it : in.Wait()) {
+            for (auto& it : in.wait()) {
                 try {
-                    processData(it->second->Read(), out);
+                    _process_data(it->second->read(), out);
                 } catch (ConnectorExceptionDEAD& ex) {
                     try {
-                        for(auto& d: it->second->Drain()) { 
-                            processData(move(d), out);
+                        for(auto& d: it->second->drain()) { 
+                            _process_data(move(d), out);
                         }
                     } catch (...) {}
-                    in.Exception(it);
+                    in.exception(it);
                 } catch (ConnectorExceptionTIMEOUT& ex) {}
             }
         } catch (MonitorException& ex) {
@@ -144,8 +143,8 @@ public:
              **/
             for (auto s : in) {
                 try {
-                    for(auto& d: s.second->Drain()) { 
-                        processData(move(d), out);
+                    for(auto& d: s.second->drain()) { 
+                        _process_data(std::move(d), out);
                     }
                 } catch (...) {}
             }
@@ -154,52 +153,56 @@ public:
              **/
             throw;
         }
-        SEnergy::Restore();
+        SEnergy::restore();
     }
     /**
      * ------------------------------------------------------------------------
-     * drain
+     * Drain
      * ------------------------------------------------------------------------
      */
-    void Drain(IRoad& in, ORoad& out) {
-        // drain ----------------------
-        drainRoad(in, out);
-        // process --------------------
-        processData(out);
+    void drain(IRoad& in, ORoad& out) {
+        /**
+         * drain
+         */
+        _drain_road(in, out);
+        /**
+         * process
+         */
+        _process_data(out);
     }
 protected:
     /**
      * ------------------------------------------------------------------------
-     * drain road 
+     * Drain Road 
      * ------------------------------------------------------------------------
      */
-    inline void drainRoad(IRoad& in, ORoad& out) {
+    inline void _drain_road(IRoad& in, ORoad& out) {
         for (auto it = in.begin(), end = in.end(); it != end;) {
             try {
-                for (auto& d : it->second->Drain()) { 
-                    processData(move(d), out); 
+                for (auto& d : it->second->drain()) { 
+                    _process_data(std::move(d), out); 
                 } ++it;
             } catch (IConnectorExceptionDEAD& ex) {
-                in.Exception(it);
+                in.exception(it);
             }
         }
     }
     /**
      * -------------------------------------------------------------------------
-     * process Data
+     * Process Data
      * -------------------------------------------------------------------------
      */
-    virtual void processData(Data&& data, ORoad& out) {
+    virtual void _process_data(Data&& data, ORoad& out) {
         for (auto it = out.begin(), end = out.end(); it != end;) {
             try {
-                it->second->Write(data); ++it;
+                it->second->write(data); ++it;
             } catch (ConnectorExceptionDEAD& ex) {
-                out.Exception(it);
+                out.exception(it);
             } catch (ConnectorExceptionTIMEOUT& ex) {
             }
         }
 	}
-    virtual void processData(ORoad& out) {
+    virtual void _process_data(ORoad& out) {
     }
 };
 /**
@@ -217,102 +220,107 @@ public:
     using IRoad  = SRoadMonitor<K, IN>;
     using ORoad  = SRoad<K, OUT>;
     /**
-     * base constructor
+     * ------------------------------------------------------------------------
+     * Constructors
+     * ------------------------------------------------------------------------
+     * base 
      */
     using SFunction::SFunction;
     /**
-     * default constructor
+     * default
      */ 
     SFunctionSpliter(size_t energy = UINT32_MAX, uint8_t verbose = 0)
     : SFunction("Spliter", energy, verbose) {}
     /**
      * ------------------------------------------------------------------------
-     * process
+     * Process
      * ------------------------------------------------------------------------
      */
-    inline void Process(IORoad& io, IRoad& in, ORoad& out) {
+    inline void process(IORoad& io, IRoad& in, ORoad& out) {
         for (auto& i : SResourceMonitor<>(
             std::min(io.GetTimeout(), in.GetTimeout()), &io, &in
-        ).Wait()) {
+        ).wait()) {
             if (i == 0) {
-                processRoad(io, out);
+                _process_road(io, out);
                 continue;
             }
             if (i == 1) {
-                processRoad(in, io);
+                _process_road(in, io);
                 continue;
             }
         }
-        SEnergy::Restore();
+        SEnergy::restore();
     }
-    inline void Process(IORoad& io, ORoad& out) {
-        processRoad(io, out);
-        SEnergy::Restore();
+    inline void process(IORoad& io, ORoad& out) {
+        _process_road(io, out);
+        SEnergy::restore();
     }
-    inline void Process(IRoad& in, IORoad& io) {
-        processRoad(in, io);
-        SEnergy::Restore();
+    inline void process(IRoad& in, IORoad& io) {
+        _process_road(in, io);
+        SEnergy::restore();
     }
     /**
      * ------------------------------------------------------------------------
-     * drain
+     * Drain
      * ------------------------------------------------------------------------
      */
-    inline void Drain(IORoad& io, IRoad& in, ORoad& out) {
-        // drain roads
-        drainRoad(io, out);
-        drainRoad(in, io);
+    inline void drain(IORoad& io, IRoad& in, ORoad& out) {
+        /**
+         * drain roads
+         */
+        _drain_road(io, out);
+        _drain_road(in, io);
     }
 protected:
     /**
      * ------------------------------------------------------------------------
-     * process road
+     * Process Road
      * ------------------------------------------------------------------------
      */
     template<class I, class O>
-    void processRoad(I& in, O& out) {
-        for (auto& it : in.Wait()) {
+    void _process_road(I& in, O& out) {
+        for (auto& it : in.wait()) {
             try {
-                processData(it->second->Read(), out);
+                _process_data(it->second->read(), out);
             } catch (ConnectorExceptionDEAD& ex) {
                 try {
-                    for(auto& d: it->second->Drain()) {
-                        processData(move(d), out); 
+                    for(auto& d: it->second->drain()) {
+                        _process_data(std::move(d), out); 
                     }
                 } catch (...) {}
-                in.Exception(it);
+                in.exception(it);
             } catch (ConnectorExceptionTIMEOUT& ex) {}
         }
     }
     /**
      * ------------------------------------------------------------------------
-     * drain road 
+     * Drain Road 
      * ------------------------------------------------------------------------
      */
     template<class I, class O>
-    void drainRoad(I& in, O& out) {
+    void _drain_road(I& in, O& out) {
         for (auto it = in.begin(), end = in.end(); it != end;) {
             try {
-                for (auto& d : it->second->Drain()) { 
-                    processData(move(d), out); 
+                for (auto& d : it->second->drain()) { 
+                    _process_data(std::move(d), out); 
                 } ++it;
             } catch (IConnectorExceptionDEAD& ex) {
-                in.Exception(it);
+                in.exception(it);
             }
         }
     }
     /**
      * ------------------------------------------------------------------------
-     * process data 
+     * Process Data 
      * ------------------------------------------------------------------------
      */
     template<class D, class O>
-    inline void processData(D&& data, O& out) {
+    inline void _process_data(D&& data, O& out) {
         for (auto it = out.begin(), end = out.end(); it != end;) {
             try {
-                it->second->Write(data); ++it;
+                it->second->write(data); ++it;
             } catch (ConnectorExceptionDEAD& ex) {
-                out.Exception(it);
+                out.exception(it);
             } catch (ConnectorExceptionTIMEOUT& ex) {
             }
         }

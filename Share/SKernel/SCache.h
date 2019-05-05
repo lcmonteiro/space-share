@@ -13,17 +13,17 @@
  */
 #include <cmath>
 /**
- * Space Kernel
+ * space
  */
 #include "SChain.h"
 /**
- * Share Kernel
+ * share
  */
 #include "SConnector.h"
-#include "SCodec.h"
+#include "SDecoderCodec.h"
 /**
  * ------------------------------------------------------------------------------------------------
- * message cache
+ * Message Cache
  * ------------------------------------------------------------------------------------------------
  */
 namespace Message {
@@ -38,13 +38,15 @@ class SCache {
     /**
      */
     using Context = Encoded::SContext;
-    using Decoder = CodecDecoder;
+    using Random  = Codec::SEngine::Random;
+    using Decoder = Codec::SDecoder;
+    using pStamp  = Codec::pStamp;
     using Chain   = SChain<Encoded::Context, Decoder>;
-    using Storage = map<State, Chain>;
+    using Storage = std::map<State, Chain>;
 public:
     /**
      * ------------------------------------------------------------------------
-     * defaults
+     * Defaults
      * ------------------------------------------------------------------------
      * constructor
      */
@@ -55,16 +57,16 @@ public:
     SCache& operator=(SCache&&) = default;
     /**
      * ------------------------------------------------------------------------
-     * constructors
+     * Constructors
      * ------------------------------------------------------------------------
      * main
      * @param stamp
      * @param capacity - number max of containers
      */
-    SCache(SharedStamp stamp = CodecStamp::Get(CodecStamp::NONE), size_t capacity = 10)
+    SCache(pStamp stamp = Codec::SStamp::Get(Codec::SStamp::NONE), size_t capacity = 10)
     : __stamp(stamp), __storage() {
-        __storage[Open] = Chain(capacity);
-        __storage[Done] = Chain(capacity);
+        __storage[Open]  = Chain(capacity);
+        __storage[Done]  = Chain(capacity);
         __storage[Close] = Chain(capacity);
     }
     /**
@@ -72,26 +74,26 @@ public:
      * Add Encoded Document
      * ------------------------------------------------------------------------
      */
-    inline bool Push(Encoded::Document&& doc) {
-        if(__storage[Close].Exist(doc)) {
+    inline bool push(Encoded::Document&& doc) {
+        if(__storage[Close].exist(doc)) {
             return false;
         }
-        if(__storage[Done].Exist(doc)) {
+        if(__storage[Done].exist(doc)) {
             return false;
         }
         try {
-            if(__storage[Open].Find(doc).push(std::move(doc)).full()) {
-                __storage[Done].Insert(
+            if(__storage[Open].find(doc).push(std::move(doc)).full()) {
+                __storage[Done].insert(
                     doc, 
-                    std::move(__storage[Open].Find(doc))
+                    std::move(__storage[Open].find(doc))
                 );
             }
         } catch(std::out_of_range&) {
-            Decoder c(doc.NumFrames(), std::move(doc), __stamp);
+            Decoder c(doc.frame_count(), std::move(doc), __stamp);
             if (c.full()) {
-                __storage[Done].Insert(doc, std::move(c));
+                __storage[Done].insert(doc, std::move(c));
             } else {
-                __storage[Open].Insert(doc, std::move(c));
+                __storage[Open].insert(doc, std::move(c));
             }
         }
         return true;
@@ -101,20 +103,23 @@ public:
      * Remove Decoded Document
      * ------------------------------------------------------------------------
      */
-    inline std::list<Decoded::Document> Pop() {
+    inline std::list<Decoded::Document> pop() {
 	    auto& done  = __storage[Done];
 	    auto& close = __storage[Close];
-
-	    // get all decoded messages -----------------------
-	    std::list<Decoded::Document> docs;
+	    /**
+         * get all decoded messages
+         */
+        std::list<Decoded::Document> docs;
 	    for(auto it = done.begin(); it != done.end(); it = done.erase(it)) {
 	        auto p = *it;
-
-	        // create document ---------------------------- 
+	        /**
+             * create document
+             */  
 	        docs.emplace_back(std::move(p->second.pop()));
-
-	        // move context to close ----------------------
-	        close.Insert(p->first, std::move(p->second.clear()));
+	        /**
+             * move context to close
+             */
+	        close.insert(p->first, std::move(p->second.clear()));
 	    }
         return docs;
     } 
@@ -123,36 +128,40 @@ public:
      * Clear 
      * ------------------------------------------------------------------------
      */
-    inline void Clear() {
+    inline void clear() {
         __storage.clear();
     }
     /* ------------------------------------------------------------------------
      * Move 
      * ------------------------------------------------------------------------
      */
-    inline void Move() {
-        // create a random context ------------------------
+    inline void move() {
+        /**
+         * create a random context
+         */
         Context ctxt(__rand(), 0);
-
-        // insert a random context on done and close states
-        __storage[Done].Insert(ctxt,  Decoder());
-        __storage[Close].Insert(ctxt, Decoder());
+        /**
+         * insert a random context on done and close states
+         */
+        __storage[Done ].insert(ctxt, Decoder());
+        __storage[Close].insert(ctxt, Decoder());
     }
 protected:
     /**
      * ------------------------------------------------------------------------
-     * settings
+     * Variables
      * ------------------------------------------------------------------------
      * codec stamp 
      */
-    SharedStamp __stamp;
+    pStamp __stamp;
     /**
      * storage of documents
      */
     Storage __storage;
     /**
+     * random device
      */
-    Codec::Random __rand;
+    Random __rand;
 };
 }
 /**
@@ -162,7 +171,15 @@ protected:
  */
 namespace Stream {
 class SCache {
+    /**
+     * ------------------------------------------------------------------------
+     * Helpers
+     * ------------------------------------------------------------------------
+     */
     using Context = Encoded::SContext;
+    using Decoder = Codec::SDecoder;
+    using pStamp  = Codec::pStamp;
+    using Storage = std::map<Context, Decoder>;
     /**
      * ------------------------------------------------------------------------
      * Reference
@@ -201,7 +218,7 @@ class SCache {
          *  Context operators
          */
         inline SReference& operator=(const Context& s) {
-            __pos = s.Position();
+            __pos = s.position();
             return *this;
         }
         inline operator Context() const {
@@ -211,27 +228,24 @@ class SCache {
          * Context compare
          */
         inline bool gt(const Context& s) const {
-            return (__pos - s.Position()) < (UINT32_MAX >> 1);
+            return (__pos - s.position()) < (UINT32_MAX >> 1);
         }
         inline bool lt(const Context& s) const {
-            return (__pos - s.Position()) > (UINT32_MAX >> 1);
+            return (__pos - s.position()) > (UINT32_MAX >> 1);
         }
         inline bool eq(const Context& s) const {
-            return (__pos == s.Position());
+            return (__pos == s.position());
         }
         inline bool neq(const Context& s) const {
-            return (__pos != s.Position());
+            return (__pos != s.position());
         }
         private:
         uint32_t __pos;
     } Reference;
-    /**
-     */
-    typedef map<Context, CodecDecoder> Storage;
 public:
     /**
      * ------------------------------------------------------------------------
-     * defaults
+     * Defaults
      * ------------------------------------------------------------------------
      * constructor
      */
@@ -242,12 +256,12 @@ public:
     SCache& operator=(SCache&&) = default;
     /**
      * ------------------------------------------------------------------------
-     * constructors
+     * Constructors
      * ------------------------------------------------------------------------
      * main
      * @param n - number of Containers
      */
-    SCache(SharedStamp stamp = CodecStamp::Get(CodecStamp::NONE), uint32_t n = 0) 
+    SCache(pStamp stamp = Codec::SStamp::Get(Codec::SStamp::NONE), uint32_t n = 0) 
     : __stamp(stamp), __n(n), __min(), __back(), __front(), __max() {
     }
     /**
@@ -255,7 +269,7 @@ public:
      * Add Encoded document
      * ------------------------------------------------------------------------
      */
-    inline bool Push(Encoded::Document&& doc) {
+    inline bool push(Encoded::Document&& doc) {
 	    /**
 	     * check context
 	     */
@@ -263,16 +277,16 @@ public:
 	        if (__min.neq(__max)) {
 	        	return false;
 	        }
-	        __min = Reference(doc.Position() - __n);
-	        __max = Reference(doc.Position() + __n);
+	        __min = Reference(doc.position() - __n);
+	        __max = Reference(doc.position() + __n);
 	        __back = __front = doc;
 	    }
 	    if (__max.lt(doc)) {
 	        if (__min.neq(__max)) {
 	        	return false;
 	        }
-	        __min = Reference(doc.Position() - __n);
-	        __max = Reference(doc.Position() + __n);
+	        __min = Reference(doc.position() - __n);
+	        __max = Reference(doc.position() + __n);
 	        __back = __front = doc;
 	    }
 	    /**
@@ -288,7 +302,7 @@ public:
 	        /**
 	         * inset a new container 
 	         */
-	        __storage[doc] = CodecDecoder(doc.NumFrames(), std::move(doc), __stamp);
+	        __storage[doc] = Decoder(doc.frame_count(), std::move(doc), __stamp);
 	        /**
 	         * update movement
 	         */
@@ -318,7 +332,7 @@ public:
      * Remove Decoded Document
      * ------------------------------------------------------------------------
      */
-    inline std::list<Decoded::Document> Pop() {
+    inline std::list<Decoded::Document> pop() {
         /**
          * get all decoded messages
          */
@@ -347,13 +361,13 @@ public:
      * Shrink
      * ------------------------------------------------------------------------
      */
-    inline SCache& Shrink() {
+    inline SCache& shrink() {
         for (; __min.lt(__back); __min.next()) {
             __storage.erase(__min);
         }
         return *this;
     }
-    inline SCache& Shrink(size_t n) {
+    inline SCache& shrink(size_t n) {
         for (size_t i = 0; i< n && __min.lt(__back); ++i, __min.next()) {
             __storage.erase(__min);
         }
@@ -364,7 +378,7 @@ public:
      * Move
      * ------------------------------------------------------------------------
      */
-    inline SCache& Move(size_t n = 1) {
+    inline SCache& move(size_t n = 1) {
         /**
          * shift
          */
@@ -387,7 +401,7 @@ public:
      * Clear
      * ------------------------------------------------------------------------
      */
-    inline void Clear() {
+    inline void clear() {
 	    /**
 	     * erase all storage 
 	     */
@@ -396,16 +410,16 @@ public:
 	     * set reference to begin 
 	     */
 	    __front = Reference(0);
-	    __back = Reference(0);
-	    __min = Reference(0);
-	    __max = Reference(0);
+	    __back  = Reference(0);
+	    __min   = Reference(0);
+	    __max   = Reference(0);
     }
     /**
      * ------------------------------------------------------------------------
      * Length 
      * ------------------------------------------------------------------------
      */
-    inline size_t Length() {
+    inline size_t length() {
 	    return __storage.size();
     }
     /**
@@ -413,7 +427,7 @@ public:
      * Count - number of full contaires
      * ------------------------------------------------------------------------
      */
-    inline size_t Count() {
+    inline size_t count() {
 	    size_t size = 0;
 	    for (auto& c : __storage) {
 	        if (c.second.full()) {
@@ -427,7 +441,7 @@ public:
      * Weight
      * ------------------------------------------------------------------------
      */
-    inline size_t Weight() {
+    inline size_t weight() {
 	    size_t size = 0;
 	    for (auto& c : __storage) {
 	        size += c.second.size();
@@ -439,7 +453,7 @@ public:
      * Density
      * ------------------------------------------------------------------------
      */
-    inline size_t Density() {
+    inline size_t density() {
 	    size_t density = 0;
 	    /**
 	     * forward
@@ -464,23 +478,23 @@ public:
      * Compare
      * ------------------------------------------------------------------------
      */
-    inline bool Stronger(SCache& cache) {
-	    if(cache.Density() < Density()){
+    inline bool stronger(SCache& cache) {
+	    if(cache.density() < density()){
 	        return true;
 	    }
-	    if(cache.Length() < Length()){
+	    if(cache.length() < length()){
 	        return true;
 	    }
-	    return cache.Weight() < Weight(); 
+	    return cache.weight() < weight(); 
     }
 protected:
     /**
      * ------------------------------------------------------------------------
-     * Settings
+     * Variables
      * ------------------------------------------------------------------------
      * stamp
      */
-    SharedStamp __stamp;
+    pStamp __stamp;
     /**
      * tolerance
      */

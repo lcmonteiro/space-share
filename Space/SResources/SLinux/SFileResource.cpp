@@ -38,9 +38,9 @@ using namespace std;
  * check resource
  * ----------------------------------------------------------------------------
  */
-bool SFileResource::Good() const {
+bool SFileResource::good() const {
 	return SNativeResource::IsFile(
-        GetHandler<SResourceHandler>()->FD());
+        handler<SResourceHandler>()->fd());
 }
 /**
  * ----------------------------------------------------------------------------
@@ -48,16 +48,16 @@ bool SFileResource::Good() const {
  * ----------------------------------------------------------------------------
  */
 size_t SFileResource::size() {
-    return SNativeResource::Length(
-        GetHandler<SResourceHandler>()->FD());
+    return SNativeResource::Size(
+        handler<SResourceHandler>()->fd());
 }
 /**
  * ----------------------------------------------------------------------------
  * get position
  * ----------------------------------------------------------------------------
  */
-size_t SFileResource::Position() {
-    auto cur = ::lseek(GetHandler<SResourceHandler>()->FD(), 0, SEEK_CUR);
+size_t SFileResource::position() {
+    auto cur = ::lseek(handler<SResourceHandler>()->fd(), 0, SEEK_CUR);
     if (cur < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
@@ -68,9 +68,9 @@ size_t SFileResource::Position() {
  * get file path
  * ----------------------------------------------------------------------------
  */
-SText SFileResource::Path() const {
+SText SFileResource::path() const {
 	return SNativeResource::Path(
-        GetHandler<SResourceHandler>()->FD());
+        handler<SResourceHandler>()->fd());
 }
 /**
  * ----------------------------------------------------------------------------
@@ -91,20 +91,18 @@ string SFileResource::BaseName(const string& path) {
  * fill
  */
 template<>
-SFileResource& SFileResource::Fill(IOFrame& f) {
+SFileResource& SFileResource::fill(IOFrame& f) {
     while (!f.full()) {
-        f.Insert(SNativeResource::Read(
-            GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize()
-        ));
+        f.insert(SNativeResource::Read(
+            handler<SResourceHandler>()->fd(), f.idata(), f.isize()));
     }
     return *this;
 }
 template<>
-SFileResource& SFileResource::Fill(Frame& f) {
+SFileResource& SFileResource::fill(Frame& f) {
     for (auto it = f.begin(), end = f.end(); it != end;) {
         it = next(it, SNativeResource::Read(
-            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
-        ));
+            handler<SResourceHandler>()->fd(), it.base(), distance(it, end)));
     }
     return *this;
 }
@@ -112,17 +110,15 @@ SFileResource& SFileResource::Fill(Frame& f) {
  * read
  */
 template<>
-SFileResource& SFileResource::Read(IOFrame& f) {
-    f.Insert(SNativeResource::Read(
-        GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize())
-    );
+SFileResource& SFileResource::read(IOFrame& f) {
+    f.insert(SNativeResource::Read(
+        handler<SResourceHandler>()->fd(), f.idata(), f.isize()));
     return *this;
 }
 template<>
-SFileResource& SFileResource::Read(Frame& f) {
-    f.Insert(SNativeResource::Read(
-        GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
-    );
+SFileResource& SFileResource::read(Frame& f) {
+    f.insert(SNativeResource::Read(
+        handler<SResourceHandler>()->fd(), f.data(), f.size()));
     return *this;
 }
 /**
@@ -132,56 +128,51 @@ SFileResource& SFileResource::Read(Frame& f) {
  * drain
  */
 template<typename T>
-SFileResource& SFileResource::Drain(T& f) {
-    // send loop ----------------------
+SFileResource& SFileResource::drain(T& f) {
     while (!f.empty()) {
-        f.Remove(SNativeResource::Write(
-            GetHandler<SResourceHandler>()->FD(), f.Data(), f.size()
-        ));
+        f.remove(SNativeResource::Write(
+            handler<SResourceHandler>()->fd(), f.data(), f.size()));
     }
     return *this;
 }
 template<typename T>
-SFileResource& SFileResource::Drain(const T& f) {
-    // send loop ----------------------
+SFileResource& SFileResource::drain(const T& f) {
     for (auto it = f.begin(), end = f.end(); it != end;) {
         it = next(it, SNativeResource::Write(
-            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
-        ));
+            handler<SResourceHandler>()->fd(), it.base(), distance(it, end)));
     }
     return *this;
 }
-template SFileResource& SFileResource::Drain(Frame&);
-template SFileResource& SFileResource::Drain(IOFrame&);
-template SFileResource& SFileResource::Drain(const Frame&);
-template SFileResource& SFileResource::Drain(const IOFrame&);
+template SFileResource& SFileResource::drain(Frame&);
+template SFileResource& SFileResource::drain(IOFrame&);
+template SFileResource& SFileResource::drain(const Frame&);
+template SFileResource& SFileResource::drain(const IOFrame&);
 /**
  * write
  */
 template<typename T>
-SFileResource& SFileResource::Write(T& f) {
-    f.Remove(
-        SNativeResource::Write(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
+SFileResource& SFileResource::write(T& f) {
+    f.remove(
+        SNativeResource::Write(handler<SResourceHandler>()->fd(), f.data(), f.size())
     );
     return *this;
 }
 template<typename T>
-SFileResource& SFileResource::Write(const T& f) {
-    SNativeResource::Write(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size());
+SFileResource& SFileResource::write(const T& f) {
+    SNativeResource::Write(handler<SResourceHandler>()->fd(), f.data(), f.size());
     return *this;
 }
-template SFileResource& SFileResource::Write(Frame&);
-template SFileResource& SFileResource::Write(IOFrame&);
-template SFileResource& SFileResource::Write(const Frame&);
-template SFileResource& SFileResource::Write(const IOFrame&);
-
+template SFileResource& SFileResource::write(Frame&);
+template SFileResource& SFileResource::write(IOFrame&);
+template SFileResource& SFileResource::write(const Frame&);
+template SFileResource& SFileResource::write(const IOFrame&);
 /**
  * ----------------------------------------------------------------------------
- * flush
+ * Flush
  * ----------------------------------------------------------------------------
  */
-SFileResource& SFileResource::Flush() {
-    ::fsync(GetHandler<SResourceHandler>()->FD());
+SFileResource& SFileResource::flush() {
+    ::fsync(handler<SResourceHandler>()->fd());
     return *this;
 }
 /**
@@ -201,7 +192,7 @@ const string& SFileResource::Link(const string& from, const string& to) {
  * get temporary directory
  * ----------------------------------------------------------------------------
  */
-string SFileResource::TmpPath() {
+string SFileResource::PathTemp() {
 #ifdef __ANDROID__
     const char* default_tmp = "/data/local/tmp";
 #else
@@ -224,13 +215,13 @@ string SFileResource::TmpPath() {
  */
 SIFileResource::SIFileResource(const string& path) 
 : SFileResource() {
-    SetHandler(make_shared<SResourceHandler>(
+    handler(make_shared<SResourceHandler>(
         ::open(path.data(), O_RDONLY)
     ));
 }
 SIFileResource::SIFileResource(const string& path, const SFileResource& link) 
 : SIFileResource(
-    Link(path, link.Path())
+    Link(path, link.path())
 ) {}
 /**
  * ------------------------------------------------------------------------------------------------
@@ -241,7 +232,7 @@ SIFileResource::SIFileResource(const string& path, const SFileResource& link)
  */
 SOFileResource::SOFileResource(const string& path) 
 : SFileResource() {
-    SetHandler(make_shared<SResourceHandler>(
+    handler(make_shared<SResourceHandler>(
         ::open(
             path.data(), 
             O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH
@@ -250,7 +241,7 @@ SOFileResource::SOFileResource(const string& path)
 }
 SOFileResource::SOFileResource(const string& path, const SFileResource& link) 
 : SOFileResource(
-    Link(path, link.Path())
+    Link(path, link.path())
 ) {}
 /**
  * ------------------------------------------------------------------------------------------------

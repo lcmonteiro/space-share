@@ -21,6 +21,7 @@
  * space
  */
 #include "SText.h"
+#include "SItertool.h"
 /**
  * ------------------------------------------------------------------------------------------------
  * Exceptions
@@ -40,9 +41,9 @@ typedef class SFrame : public std::vector<uint8_t> {
 public:
     /**
      * ------------------------------------------------------------------------
-     * helpres
+     * helpers
      * ------------------------------------------------------------------------
-     * super class
+     * Super class
      * ----------------------------------------------------
      */
     using Super = std::vector<uint8_t>;
@@ -60,36 +61,32 @@ public:
     >;
     /**
      * ------------------------------------------------------------------------
-     * initialization
+     * constructors - initialization
      * ------------------------------------------------------------------------
-     * constructors
-     * ----------------------------------------------------
      */
     SFrame(const size_t capacity, const size_t size, const uint8_t value)
-    : Super() { reserve(capacity); assign(size, value); }
+    : Super() { Super::reserve(capacity); assign(size, value); }
 
     SFrame(const size_t capacity, const size_t size)
-    : Super() { reserve(capacity); resize(size);        }
+    : Super() { Super::reserve(capacity); resize(size);        }
     
     SFrame(const size_t capacity)
-    : Super() { reserve(capacity);                      }
+    : Super() { Super::reserve(capacity);                      }
     
     template<typename T, typename = if_iterator_t<T>>
     SFrame(const size_t capacity, T beg, T end)
-    : Super() { reserve(capacity); assign(beg, end);    }
+    : Super() { Super::reserve(capacity); assign(beg, end);    }
     
     template<typename T, typename = if_iterator_t<T>>
     SFrame(T beg, T end)
-    : Super(beg, end) {                                 }
-    
+    : Super(beg, end) {                                        }
+
     SFrame(std::initializer_list<uint8_t> l) 
-    : Super(l) {                                        }
+    : Super(l) {                                               }
     /**
      * ------------------------------------------------------------------------
-     * conversions
-     * ------------------------------------------------------------------------
      * constructors
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
      */
     SFrame()                  = default;
     SFrame(SFrame&&)          = default;
@@ -97,8 +94,10 @@ public:
     SFrame(SIOFrame&& f);
     SFrame(const SIOFrame& f);
     /**
-     * ----------------------------------------------------
-     * operation=
+     * ------------------------------------------------------------------------
+     * Operatores
+     * ------------------------------------------------------------------------
+     * operation =
      * ----------------------------------------------------
      */ 
     SFrame& operator=(SFrame&&)      = default; 
@@ -116,18 +115,10 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * get capacity
+     * Sum all elements until max reach 
      * ------------------------------------------------------------------------
      */
-    inline size_t Capacity() const {
-        return capacity();
-    }
-    /**
-     * ------------------------------------------------------------------------
-     * sum values
-     * ------------------------------------------------------------------------
-     */
-    inline size_t Sum(size_t max) {
+    inline size_t sum(size_t max) {
         size_t s = 0;
         for (auto it = begin(); it != end() && s < max; ++it) {
             s += *it;
@@ -136,72 +127,20 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * reserve size (guaranty that exist size (sz) )
+     * Insert frame -> append
      * ------------------------------------------------------------------------
      */
-    inline SFrame& Reserve(size_t sz) {
-        if (sz > size()) {  
-            resize(sz);
-        }
+    inline SFrame& insert(const SFrame& f) {
+        Super::insert(end(), f.begin(), f.end());
         return *this;
     }
     /**
      * ------------------------------------------------------------------------
-     * unserialize number
+     * Insert size -> resize
      * ------------------------------------------------------------------------
      */
-    template <class T>
-    T Number() const {
-        auto rit = rbegin();
-        // set iterator position --------------------------
-        for (auto i = 0; (i < sizeof(T)) && (rit != rend());) {
-            ++i, ++rit;
-        } 
-        // decode number ----------------------------------
-        T result = 0;
-        for (auto it = rit.base(); it != end(); ++it) {
-            result <<= 8;
-            result |= T(*it);
-        }
-        // return number -----------------------------------
-        return result;
-    }
-    /**
-     * ------------------------------------------------------------------------
-     * serialize number
-     * ------------------------------------------------------------------------
-     */
-    template <class T>
-    SFrame& Number(T val) {
-        // reserve sizeof (val) --------------------------- 
-        Reserve(sizeof (T));
-        // encode number ----------------------------------
-        size_t i = 0;
-        for (auto it = rbegin(); i < sizeof (T); ++it, ++i) {
-            *it = value_type(val);
-            val >>= 8;
-        }
-        // return frame -----------------------------------
-        return *this;
-    }
-    /**
-     * ------------------------------------------------------------------------
-     * get data
-     * ------------------------------------------------------------------------
-     */
-    inline const_pointer Data() const {
-        return data();
-    }
-    inline pointer Data() {
-        return data();
-    }
-    /**
-     * ------------------------------------------------------------------------
-     * insert size -> resize
-     * ------------------------------------------------------------------------
-     */
-    inline SFrame& Insert(size_t sz) {
-        resize(sz);
+    inline SFrame& insert(size_t sz) {
+        Super::resize(sz); 
         return *this;
     }
     /**
@@ -209,7 +148,7 @@ public:
      * Remove size -> resize(-size)
      * ------------------------------------------------------------------------
      */
-    inline SFrame& Remove(size_t sz) {
+    inline SFrame& remove(size_t sz) {
         if(size() != sz){
             std::rotate(begin(), std::next(begin(), sz), end());
             resize(size() - sz);
@@ -224,7 +163,7 @@ public:
      *  - throw exception when size > size()
      * ------------------------------------------------------------------------
      */
-    inline SFrame& Shrink(size_t sz = 0) {
+    inline SFrame& shrink(size_t sz = 0) {
         if (size() < sz) {
             throw FrameException(
                 SText("Shrink=(", size(), "<", sz, ")"));
@@ -234,22 +173,21 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * expand to capacity
+     * Inflate
      * ------------------------------------------------------------------------
      */
-    inline SFrame& Expand() {
+    inline SFrame& inflate() {
         resize(capacity());
         return *this;
     }
     /**
      * ------------------------------------------------------------------------
-     * shift to position given by (offset)
+     * Shift to position given by (offset)
      * ------------------------------------------------------------------------
      */
-    inline SFrame& Shift(size_t offset) {
+    inline SFrame& shift(size_t offset) {
         std::rotate(
-            begin(), next(begin(), offset), end()
-        );
+            begin(), next(begin(), offset), end());
         return *this;
     }
     /**
@@ -265,18 +203,44 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
+     * get number
+     * ------------------------------------------------------------------------
+     */
+    template <class Type>
+    Type number() const {
+        /**
+         *  decode number
+         */
+        return Itertool::GetNumber<Type>(rbegin(), rend());
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * set number
+     * ------------------------------------------------------------------------
+     */
+    template <class Type>
+    SFrame& number(Type val) {
+        /**
+         * reserve space
+         */
+        if (sizeof(Type) > size()) resize(sizeof(Type));
+        /**
+         * encode number
+         */
+        Itertool::SetNumber(rbegin(), rend(), val);
+        /**
+         * return itself
+         */
+        return *this;
+    }
+    /**
+     * ------------------------------------------------------------------------
      * detach  
      * ------------------------------------------------------------------------
      */
     inline SFrame&& detach() {
         return std::move(*this);
     }
-    /**
-     * ------------------------------------------------------------------------
-     * change context
-     * ------------------------------------------------------------------------
-     */
-    SIOFrame IOFrame();
 } Frame;
 /**
  * ------------------------------------------------------------------------------------------------
@@ -287,10 +251,8 @@ typedef class SIOFrame: protected SFrame {
 public:  
     /**
      * ------------------------------------------------------------------------
-     * conversions
-     * ------------------------------------------------------------------------
      * constructors
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
      */
     SIOFrame(size_t sz = 0);
     SIOFrame(SFrame&&);
@@ -298,37 +260,18 @@ public:
     SIOFrame(const SFrame&);
     SIOFrame(const SIOFrame&);
     /**
-     * ----------------------------------------------------
-     * operators
-     * ----------------------------------------------------
+     * -------------------------------------------------------------------------
+     * operator =
+     * -------------------------------------------------------------------------
      */ 
     SIOFrame& operator=(SFrame&& f); 
     SIOFrame& operator=(SIOFrame&& f) = default; 
     SIOFrame& operator=(const SFrame& f);
     SIOFrame& operator=(const SIOFrame& f);
     /**
-     * ------------------------------------------------------------------------
-     * Standard functions
-     * ------------------------------------------------------------------------
-     * general
-     * ----------------------------------------------------
-     */
-    inline value_type    front() const { return *begin();       }
-    inline value_type    back()  const { return *end();         }
-    inline const_pointer data()  const { return begin().base(); }
-    /**
-     * ----------------------------------------------------
-     * iterators
-     * ----------------------------------------------------
-     */
-    inline const_iterator begin()  const { return __beg; }
-    inline const_iterator end()    const { return __end; }
-    inline iterator       begin()        { return __beg; }
-    inline iterator       end()          { return __end; }
-    /**
-     * ----------------------------------------------------
-     * operators
-     * ----------------------------------------------------
+     * -------------------------------------------------------------------------
+     * operators != & ==
+     * -------------------------------------------------------------------------
      */
     inline bool operator == (const SIOFrame& f) const {
         return std::equal(begin(), end(), f.begin(), f.end());
@@ -338,12 +281,21 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * get capacity
+     * references
      * ------------------------------------------------------------------------
      */
-    inline size_t Capacity() const {
-        return Super::size();
-    }
+    inline value_type    front() const { return *begin(); }
+    inline value_type    back()  const { return *end();   }
+    /**
+     * ------------------------------------------------------------------------
+     * iterators
+     * ------------------------------------------------------------------------
+     */
+    inline const_iterator begin()  const { return __beg; }
+    inline const_iterator end()    const { return __end; }
+    inline iterator       begin()        { return __beg; }
+    inline iterator       end()          { return __end; }
+    
      /**
      * ------------------------------------------------------------------------
      * position
@@ -351,77 +303,85 @@ public:
      * begin position
      * ----------------------------------------------------
      */
-    inline SIOFrame& Reset() {
+    inline SIOFrame& clear() {
         __beg = Super::begin();
         __end = Super::begin();
         return *this;
     }
     /**
      * ----------------------------------------------------
-     * move position forward (n)
+     * Move end position forward (n)
      * ----------------------------------------------------
      */
-    inline SIOFrame& Insert(size_t n) {
+    inline SIOFrame& insert(size_t n) {
         __end = std::next(end(), n);
         return *this;
     }
     /**
      * ----------------------------------------------------
-     * move position forward (n)
+     * Move begin position forward (n)
      * ----------------------------------------------------
      */
-    inline SIOFrame& Remove(size_t n) {
+    inline SIOFrame& remove(size_t n) {
         __beg = std::next(begin(), n);
         return *this;
     }
     /**
      * ----------------------------------------------------
-     * fill data into iframe
+     * Fill data into iframe
      * ----------------------------------------------------
      */
-    inline SIOFrame& Fill(SIOFrame& in) {
-        // check size -----------------
+    inline SIOFrame& fill(SIOFrame& in) {
+        /**
+         *  check size
+         */
         auto sz = std::min(size(), in.isize());
-        // copy data ------------------
-        std::memcpy(in.IData(), Data(), sz);
-        // update in ------------------
-        in.Insert(sz);
-        // update out -----------------
-        return Remove(sz);
+        /**
+         *  copy data
+         */
+        std::memcpy(in.idata(), data(), sz);
+        /**
+         *  update in
+         */
+        in.insert(sz);
+        /**
+         *  update out
+         */
+        return remove(sz);
     }   
     /**
-     * ----------------------------------------------------
-     * seek to position (p)
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
+     * Seek position (p)
+     * ------------------------------------------------------------------------
      */
-    inline SIOFrame& ISeek(size_t p) {
+    inline SIOFrame& iseek(size_t p) {
         __end = std::min(std::next(begin(), p), Super::end());
         return *this;
     }
-    inline SIOFrame& OSeek(size_t p) {
+    inline SIOFrame& oseek(size_t p) {
          __beg = std::min(std::next(Super::begin(), p), end());
         return *this;
     }
     /**
      * ------------------------------------------------------------------------
-     * get data pointer
+     * Data pointers
      * ------------------------------------------------------------------------
      */
-    inline const_pointer OData() const {
-        return Super::data();
-    }
-    inline const_pointer Data() const {
-        return begin().base();
-    }
-    inline pointer Data() {
-        return begin().base();
-    }
-    inline pointer IData() {
-        return end().base();
+    inline const_pointer odata() const { return Super::data();  }
+    inline pointer       idata()       { return end().base();   }
+    inline const_pointer data()  const { return begin().base(); }
+    inline pointer       data()        { return begin().base(); }
+    /**
+     * ------------------------------------------------------------------------
+     * Capacity
+     * ------------------------------------------------------------------------
+     */
+    inline size_t capacity() const {
+        return Super::size();
     }
     /**
      * ------------------------------------------------------------------------
-     * Size
+     * Sizes
      * ------------------------------------------------------------------------
      */
     inline size_t osize() const {
@@ -435,126 +395,162 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
+     * Deflate
+     * ------------------------------------------------------------------------
+     */
+    inline SIOFrame& deflate() {
+        /**
+         * rotate
+         */ 
+        std::rotate(Super::begin(), begin(), Super::end()); 
+        /**
+         * resize
+         */
+        resize(std::distance(begin(), end()));
+        /**
+         * reset
+         */
+        __beg = Super::begin();
+        __end = Super::end();
+        /**
+         * return itself
+         */ 
+        return *this;
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * Inflate
+     * ------------------------------------------------------------------------
+     */
+    inline SIOFrame& inflate() {
+        /**
+         * resize
+         */
+        Super::resize(Super::capacity());
+        /**
+         * return itself
+         */
+        return *this;
+    }
+    /**
+     * ------------------------------------------------------------------------
      * Shrink
      * ------------------------------------------------------------------------
      */
-    inline SIOFrame& Shrink() {
-        // rotate ----------------------------------------- 
-        std::rotate(Super::begin(), begin(), Super::end()); 
-        // resize -----------------------------------------
-        resize(std::distance(begin(), end()));
-        // reset ------------------------------------------
-        __beg = Super::begin();
-        __end = Super::end();
-        // return -----------------------------------------
-        return *this;
-    }
-    inline SIOFrame& Shrink(size_t sz) {
-        // check ------------------------------------------  
+    inline SIOFrame& shrink(size_t sz) {
+        /**
+         * check
+         */  
         if (size() < sz) {
             throw FrameException(
                 SText("Shrink=(", size(), "<", sz, ")"));
         }
-        // shrink -----------------------------------------
-        return ISeek(sz);
+        /**
+         * shrink
+         */
+        return iseek(sz);
     }
     /**
      * ------------------------------------------------------------------------
-     * expand
+     * Expand
      * ------------------------------------------------------------------------
      */
-    inline SIOFrame& Expand() {
-        // resize -----------------------------------------
-        Super::resize(Super::capacity());
-        // return -----------------------------------------
-        return *this;
-    }
-    inline SIOFrame& Expand(size_t sz) {
-        // delta ------------------------------------------
+    inline SIOFrame& expand(size_t sz) {
+        /**
+         * compute delta
+         */
         auto delta = (sz - size());
-        // check ------------------------------------------  
+        /**
+         * check delta
+         */  
         if (0 > delta) {
             throw FrameException(
                 SText("Expand=(", delta, ")"));
         }
-        // expand -----------------------------------------
-        return Reserve(delta).Insert(delta);
+        /**
+         * expand delta
+         */
+        return reserve(delta).insert(delta);
     }
     /**
      * ------------------------------------------------------------------------
      * reserve size (guaranty that exist (n) bytes )
      * ------------------------------------------------------------------------
      */
-    inline SIOFrame& Reserve(size_t n) {
+    inline SIOFrame& reserve(size_t n) {
         auto isz = isize();
-        // verify ----------------------------------------- 
+        /**
+         * verify
+         */ 
         if (n > isz) {
             auto osz = osize();
-            // resize -------------------------------------    
+            /**
+             * resize
+             */    
             resize(Super::size() + n - isz);
-            // reset -------------------------------------- 
+            /**
+             * reset
+             */ 
             __beg = std::next(Super::begin(), osz);
             __end = std::prev(Super::end(), n);
         }
-        // return -----------------------------------------
+        /**
+         *  return itself
+         */
         return *this;
     }
     /**
      * ------------------------------------------------------------------------
-     * unserialize number
+     * Unserialize number
      * ------------------------------------------------------------------------
      */
-    template <class T>
-    T Number() const {
-        // referencies ------------------------------------
-        auto rit  = std::make_reverse_iterator(end());
-        auto rend = std::make_reverse_iterator(begin());
-        // set iterator position --------------------------
-        for (auto i = 0; (i < sizeof(T)) && (rit != rend);) {
-            ++i, ++rit;
-        } 
-        // decode number ----------------------------------
-        T result = 0;
-        for (auto it = rit.base(); it != end(); ++it) {
-            result <<= 8;
-            result |= T(*it);
-        }
-        // return number ----------------------------------
-        return result;
+    template <class Type>
+    Type number() const {
+        /**
+         *  decode number
+         */
+        return Itertool::GetNumber<Type>(
+            std::make_reverse_iterator(end()), 
+            std::make_reverse_iterator(begin()));
     }
     /**
      * ------------------------------------------------------------------------
-     * serialize number
+     * Serialize number
      * ------------------------------------------------------------------------
      */
     template <class T>
-    SIOFrame& Number(T val) {
-        // referencies ------------------------------------
-        auto rit = std::make_reverse_iterator(end());
-        auto rend = std::make_reverse_iterator(begin());
-        // encode number ----------------------------------
-        size_t i = 0;
-        for (auto i = 0; (i < sizeof(T)) && (rit != rend); ++rit, ++i) {
-            *rit = value_type(val);
-            val >>= 8;
-        }
-        // return frame -----------------------------------
+    SIOFrame& number(T val) {
+        /**
+         * encode number
+         */
+        Itertool::SetNumber(
+            std::make_reverse_iterator(end()), 
+            std::make_reverse_iterator(begin()), val);
+        /**
+         * return itself
+         */
         return *this;
     }
     /**
      * ------------------------------------------------------------------------
-     * write frame
+     * Write frame
      * ------------------------------------------------------------------------
      */
-    inline SIOFrame& Write(const SFrame& f) {
-        // size check -------------------------------------
+    inline SIOFrame& write(const SFrame& f) {
+        /**
+         * check size
+         */
         if (isize() < f.size()) {
             throw FrameException(
                 SText("Write=(", size(), "<", f.size(), ")"));
         }
-        // copy -------------------------------------------
+        /**
+         * copy data
+         */
         __end = std::copy(f.begin(), f.end(), end());
-        // return -----------------------------------------
+        /**
+         * return itself
+         */
         return *this;
     }
     /**
@@ -562,16 +558,22 @@ public:
      * Read frame with (n) bytes
      * ------------------------------------------------------------------------
      */
-    inline SFrame Read(size_t n) {
-        // size check -------------------------------------
+    inline SFrame read(size_t n) {
+        /**
+         * check size
+         */
         if (size() < n) {
             throw FrameException(
                 SText("Read=(", size(), "<", n, ")"));
         }
-        // reference --------------------------------------
+        /** 
+         * save reference
+         */
         auto beg = begin();
-        // return new frame -------------------------------
-        return SFrame(beg, Remove(n).begin());
+        /**
+         * return new frame
+         */
+        return SFrame(beg, remove(n).begin());
     }
     /**
      * ------------------------------------------------------------------------
@@ -596,7 +598,7 @@ private:
     friend class SFrame;
     /**
      * ------------------------------------------------------------------------
-     * variable
+     * Variables
      * ------------------------------------------------------------------------
      * iterator 
      */
@@ -609,10 +611,10 @@ private:
  * ------------------------------------------------------------------------------------------------
  **/
 template <
-    typename FRAME, 
-    typename = std::enable_if_t<std::is_base_of<SFrame, FRAME>::value>
+    typename Frame, 
+    typename = std::enable_if_t<std::is_base_of<SFrame, Frame>::value>
 >
-inline std::ostream& operator<<(std::ostream& os, const FRAME& f) {
+inline std::ostream& operator<<(std::ostream& os, const Frame& f) {
     os << "[";
     for (auto v : f) {
         os << int(v) << " ";

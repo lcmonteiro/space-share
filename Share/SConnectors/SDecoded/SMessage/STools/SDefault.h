@@ -34,24 +34,32 @@ public:
      * ------------------------------------------------------------------------
      */
     static inline Container& Split(IOFrame& buf, Document& chunks) {
-        // process chunk size -----------------------------
+        /**
+         * compute chunk size
+         */
         auto res = div(
             static_cast<int>(buf.size() + sizeof (framesize_t)), 
             static_cast<int>(chunks.capacity())
         );
-        // normalize chunks size --------------------------
-        size_t size = res.rem > 0 ? res.quot + 1 : res.quot;
-        
-        // resize frame and add buffer size ---------------
-        buf.Expand(
+        /**
+         * normalize chunks size
+         */
+        auto size = size_t(res.rem > 0 ? res.quot + 1 : res.quot);
+        /** 
+         * resize frame and add buffer size
+         */
+        buf.expand(
             size * chunks.capacity()
-        ).Number<framesize_t>(buf.size());
-
-        // container fill up ------------------------------
+        ).number<framesize_t>(buf.size());
+        /**
+         * container fill up
+         */
         while(!chunks.full()) {
-            chunks.emplace_back(buf.Read(size));
+            chunks.emplace_back(buf.read(size));
         }
-        // return a split container -----------------------
+        /**
+         * return a split container
+         */
         return chunks;
     }
     /**
@@ -60,17 +68,23 @@ public:
      * ------------------------------------------------------------------------
      */
     static inline IOFrame& Join(const Document& chunks, IOFrame& buf) {
-        // reset buffer -----------------------------------
-        buf.Reset();
-
-        // fill up buffer ---------------------------------
+        /**
+         * reset buffer
+         */
+        buf.clear();
+        /**
+         * fill up buffer
+         */
         for(auto& c: chunks) {
-            buf.Reserve(c.size()).Write(c);
+            buf.reserve(c.size()).write(c);
         }
-        // resize buffer (read size from end) ------------ 
-        buf.Shrink(buf.Number<framesize_t>());
-
-        // return a joined buffer -------------------------
+        /**
+         *  resize buffer (read size from end)
+         */ 
+        buf.shrink(buf.number<framesize_t>());
+        /**
+         *  return a joined buffer
+         */
         return buf;
     }
 };

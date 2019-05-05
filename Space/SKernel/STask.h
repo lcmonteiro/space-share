@@ -20,7 +20,7 @@
 #include "SEventResource.h"
 /**
  * ------------------------------------------------------------------------------------------------
- * task
+ * Task
  * ------------------------------------------------------------------------------------------------
  **/
 class STask : public std::thread {
@@ -28,92 +28,96 @@ public:
     using Time = std::chrono::milliseconds;
     /**
      * ------------------------------------------------------------------------
-     * defaults
+     * Defaults
      * ------------------------------------------------------------------------
      */
     STask() = default;
     /**
      * ------------------------------------------------------------------------
-     * constructor
+     * Constructor
      * ------------------------------------------------------------------------
      */
     template<typename Func, typename... Args> explicit
     STask(Func&& f, Args&&... args)
     : std::thread(std::forward<Func>(f), std::forward<Args>(args)...),
     __event(0) {
-        __Init(std::thread::get_id());
+        _init(std::thread::get_id());
     }
     STask(STask&& t): std::thread(), __event() {
         *this = std::move(t);
     }
     /**
      * ------------------------------------------------------------------------
-     * move - operator 
+     * Destructor
+     * ------------------------------------------------------------------------
+     */
+    virtual ~STask() {
+        _end(std::thread::get_id());
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * Move - Operator 
      * ------------------------------------------------------------------------
      */
     STask& operator=(STask&& t) {
-        // swap thread base -------------------------------
+        /**
+         * swap thread base
+         */
         std::thread::swap(t);
-        // swap event -------------------------------------
+        /**
+         * swap event
+         */
         std::swap(__event, t.__event);
-        // update tasks data base -------------------------
-        __Init(std::thread::get_id());
-        // return updated task ----------------------------
+        /**
+         * update tasks data base
+         */
+        _init(std::thread::get_id());
+        /**
+         * return updated task
+         */
         return *this;
     }
     /**
      * ------------------------------------------------------------------------
-     * destructor
+     * Interrupt
      * ------------------------------------------------------------------------
      */
-    virtual ~STask() {
-        __End(std::thread::get_id());
+    inline void interrupt() {
+        __event.send();
     }
     /**
      * ------------------------------------------------------------------------
-     * interface
+     * Resource
      * ------------------------------------------------------------------------
-     * check if joinable
      */
-    inline bool Joinable() {
-        return std::thread::joinable();
-    }
-    /**
-     * wait for Join
-     */
-    inline void Join() {
-        std::thread::join();
-    }
-    /**
-     * interrupt thread
-     */
-    inline void Interrupt() {
-        __event.Send();
-    }
-    /**
-     * get resource
-     */
-    inline Resource& GetResource() {
+    inline Resource& resource() {
         return __event;
     }
     /**
      * ------------------------------------------------------------------------
-     * Global
+     * Globals
      * ------------------------------------------------------------------------
-     * enable main task
+     * Enable main task
+     * ----------------------------------------------------
      */
     static STask& Enable(); 
     /**
-     * get this instance
+     * ----------------------------------------------------
+     * This Instance
+     * ----------------------------------------------------
      */
     static STask& Instance();
     /**
-     * sleep this task
+     * ----------------------------------------------------
+     * Sleep This Task
+     * ----------------------------------------------------
      */
     static bool Sleep(const Time& timeout = Time::zero());
 protected:
     /**
-     * protected constructor
+     * ------------------------------------------------------------------------
+     * Protected Constructor
+     * ------------------------------------------------------------------------
      */
     STask(int init): __event(init) {} 
     /**
@@ -121,9 +125,10 @@ protected:
      * manager tasks 
      * ------------------------------------------------------------------------
      * init / end
+     * ----------------------------------------------------
      */
-    void __Init(std::thread::id id);
-    void __End(std::thread::id  id);
+    void _init(std::thread::id id);
+    void _end (std::thread::id id);
 private:
     /**
      * ------------------------------------------------------------------------
@@ -134,9 +139,10 @@ private:
     SEventResource __event;
     /**
      * ------------------------------------------------------------------------
-     * tasks data base - declaration
+     * Tasks Data Base - Declaration
      * ------------------------------------------------------------------------
-     * static variables 
+     * Static Variables
+     * ---------------------------------------------------- 
      */
     using DataBase = std::map<thread::id, STask*>; 
     using Mutex    = std::mutex; 
@@ -144,11 +150,13 @@ private:
     static Mutex    __mutex;
     static STask    __init;
     /**
-     * interfaces
+     * ---------------------------------------------------
+     * Interfaces
+     * ---------------------------------------------------
      */
-    static void   __Insert(std::thread::id id, STask* p_task);
-    static STask* __Find  (std::thread::id id);
-    static void   __Remove(std::thread::id id);
+    static void   _insert(std::thread::id, STask*);
+    static STask* _find  (std::thread::id);
+    static void   _remove(std::thread::id);
 };
 /**
  * --------------------------------------------------------------------------------------------------------------------

@@ -1,28 +1,37 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SIrcConnector.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
-#ifndef SIRCSTREAMCODED_H
-#define SIRCSTREAMCODED_H
+#ifndef SIRCCONNECTORCODED_H
+#define SIRCCONNECTORCODED_H
 /**
+ * space
  */
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
+#include "SContainer.h"
+#include "SConnector.h"
 /**
- * Base coded streams
+ * connector
  */
 #include "SKernel/SIIrcConnector.h"
 #include "SKernel/SOIrcConnector.h"
 #include "SKernel/SIOIrcConnector.h"
 /**
- * Begin namespace Code
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
-namespace Code {
+namespace Encoded {
+namespace Message {
 /**
- * Input UDP Connector  template
- */
+ * ----------------------------------------------------------------------------
+ * Input IRC Connector
+ * ----------------------------------------------------------------------------
+ * template
+ */	
 template<class T>
 class SIIrcConnectorT : public T {
 public:
@@ -40,7 +49,10 @@ public:
 	}
 };
 /**
- * Output UDP Connector  template
+ * ----------------------------------------------------------------------------
+ * Output IRC Connector
+ * ----------------------------------------------------------------------------
+ * template
  */
 template<class T>
 class SOIrcConnectorT : public T {
@@ -55,11 +67,13 @@ public:
 	/**
 	 * constructor
 	 */
-	SOIrcConnectorT(const string address) : T(address) {
-	}
+	SOIrcConnectorT(const string address) : T(address) {}
 };
 /**
- * InOutput UDP Connector  template
+ * ----------------------------------------------------------------------------
+ * InOutput IRC Connector  
+ * ----------------------------------------------------------------------------
+ * template
  */
 template<class T>
 class SIOIrcConnectorT : public T {
@@ -78,16 +92,18 @@ public:
 	}
 };
 /**
- * definitions
+ * ----------------------------------------------------------------------------
+ * Definitions
+ * ----------------------------------------------------------------------------
  */
 typedef SIIrcConnectorT<SIIrcConnector>   IIrcConnector;
 typedef SOIrcConnectorT<SOIrcConnector>   OIrcConnector;
 typedef SIOIrcConnectorT<SIOIrcConnector> IOIrcConnector;
+}}
 /**
- * End namespace Code
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- */
-#endif /* SIRCSTREAMCODED_H */
+#endif /* SIRCCONNECTORCODED_H */
 

@@ -1,7 +1,7 @@
 /**
  * ------------------------------------------------------------------------------------------------- 
  * File:   SIRCResource.h
- * Author:      Luis Monteiro
+ * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
  * -------------------------------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 #ifndef SIRCRESOURCE_H
 #define SIRCRESOURCE_H
 /**
- * Space resource
+ * Space
  */
 #include "SRemoteResource.h"
 #include "SExtensions/STextExtension.h"
@@ -29,7 +29,7 @@ class SIRCResource : public STextExtension<Stream::SRemoteResource> {
 public:
     /**
      * ------------------------------------------------------------------------
-     * process types
+     * Process Types
      * ------------------------------------------------------------------------
      */
     typedef enum {
@@ -43,22 +43,22 @@ public:
     } TYPE;
     /**
      * ------------------------------------------------------------------------
-     * Defaults
+     * Constructors
      * ------------------------------------------------------------------------
-     * constructor
-     * ----------------------------------------------------
      */
     SIRCResource()                   = default;
     SIRCResource(SIRCResource&& res) = default;
     /**
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
      * destructor
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
      */
     virtual ~SIRCResource();
     /**
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
      * operatores
+     * ------------------------------------------------------------------------
+     * move
      * ----------------------------------------------------
      */
     SIRCResource& operator=(SIRCResource &&) = default;
@@ -66,41 +66,51 @@ public:
      * ------------------------------------------------------------------------
      * Interfaces
      * ------------------------------------------------------------------------
-     * connect
+     * Connect
      * ----------------------------------------------------
      */
-    void Connect(
-        const SText& host, uint16_t port, int tx_timeout = 5, int rx_timeout = 5
-    );
+    void connect(
+        const SText& host, 
+        uint16_t port, 
+        int tx_timeout = 5, 
+        int rx_timeout = 5 );
     /**
      * ----------------------------------------------------
-     * join
+     * Join
      * ----------------------------------------------------
      */
-    void Join(SText user, SText channel, int timeout = 100);
+    void join(
+        SText user, 
+        SText channel, 
+        int timeout = 100);
     /**
      * ----------------------------------------------------
-     * send frame
+     * Send Frame
      * ----------------------------------------------------
      */
     template<typename T>
-    SIRCResource& Write(const T& frame);
+    SIRCResource& write(const T& frame);
     /**
      * ----------------------------------------------------
-     * receive frame
+     * Receive Frame
      * ----------------------------------------------------
      */
-    SIRCResource& Read(Frame& frame);
-    SIRCResource& Read(Frame& frame, const std::chrono::seconds& time);
+    SIRCResource& read(Frame& frame);
+    /**
+     * with timeout
+     */
+    SIRCResource& read(
+        Frame& frame, 
+        const std::chrono::seconds& time);
     /**
      * ----------------------------------------------------
      * keep - processing
      * ---------------------------------------------------
      */
-    void Keep();    
+    void keep();    
 protected:
     using Super::Super;
-    using Super::Link;
+    using Super::link;
     /**
      * ------------------------------------------------------------------------
      * Internal
@@ -108,15 +118,15 @@ protected:
      * process line
      * ----------------------------------------------------
      */
-    TYPE Process(SText& line);
+    TYPE _process(SText& line);
     /**
      * ----------------------------------------------------
      * wait for message type 
      * ----------------------------------------------------
      */
-    SText WaitFor(
-        TYPE type, const std::chrono::system_clock::time_point& end
-    );
+    SText _wait_for(
+        TYPE type, 
+        const std::chrono::system_clock::time_point& end);
 private:
     /**
      * ------------------------------------------------------------------------

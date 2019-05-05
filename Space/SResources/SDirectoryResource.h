@@ -1,7 +1,7 @@
 /**
  * ------------------------------------------------------------------------------------------------ 
  * File:   SDirectoryResource.h
- * Author:      Luis Monteiro
+ * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
  * ------------------------------------------------------------------------------------------------
@@ -9,6 +9,7 @@
 #ifndef SDIRECTORYRESOURCE_H
 #define SDIRECTORYRESOURCE_H
 /**
+ * space
  */
 #include "SFileResource.h"
 /**
@@ -20,34 +21,32 @@ class SDirectoryResource : public SResource {
 public:
     /**
      * ------------------------------------------------------------------------
-     * defaults
+     * Constructor
      * ------------------------------------------------------------------------
-     **
-     * constructor
+     * default
      */
     SDirectoryResource() = default;
     /**
-     * move operator(swap)
+     * init 
+     */
+    SDirectoryResource(const std::string& path)
+    : SResource(), __path(path) {} 
+    /**
+     * ------------------------------------------------------------------------
+     * Move Operator(swap)
+     * ------------------------------------------------------------------------
      */
     SDirectoryResource& operator=(SDirectoryResource &&) = default;
     /**
      * ------------------------------------------------------------------------
-     * initialization 
+     * status
      * ------------------------------------------------------------------------
      */
-    SDirectoryResource(const std::string& path): SResource(), __path(path) {} 
-    /**
-     * --------------------------------------------------------------------
-     * interfaces
-     * --------------------------------------------------------------------
-     **
-     * status
-     */
-    bool Valid();
+    bool good();
 protected:
     /**
      * ------------------------------------------------------------------------
-     * variables 
+     * Variables 
      * ------------------------------------------------------------------------
      ** 
      * directory path
@@ -63,34 +62,28 @@ class SIDirectoryResource : public SDirectoryResource {
 public:
     /**
      * ------------------------------------------------------------------------
-     * defaults
+     * Constructors
      * ------------------------------------------------------------------------
-     * constructors
+     * default
      */
     SIDirectoryResource()                      = default;
     SIDirectoryResource(SIDirectoryResource&&) = default;
     /**
-     * destructor
-     */
-    virtual ~SIDirectoryResource() = default;
-    /**
-     * operator
-     */
-    SIDirectoryResource& operator=(SIDirectoryResource&&) = default;
-    /**
-     * --------------------------------------------------------------------
-     *  initilialization
-     * --------------------------------------------------------------------
+     * init
      */
     SIDirectoryResource(const std::string& path);
     /**
-     * --------------------------------------------------------------------
-     * interfaces
-     * --------------------------------------------------------------------
-     **
-     * get resource
+     * ------------------------------------------------------------------------
+     * Move Operator
+     * ------------------------------------------------------------------------
      */
-    SIFileResource GetResource();
+    SIDirectoryResource& operator=(SIDirectoryResource&&) = default;
+    /**
+     * ------------------------------------------------------------------------
+     * Resource
+     * ------------------------------------------------------------------------
+     */
+    SIFileResource resource();
 };
 /**
  * ------------------------------------------------------------------------------------------------
@@ -101,37 +94,34 @@ class SODirectoryResource : public SDirectoryResource {
 public:
     /**
      * ------------------------------------------------------------------------
-     * defaults
-     * ------------------------------------------------------------------------
      * constructors
+     * ------------------------------------------------------------------------
+     * default
      */
     SODirectoryResource()                      = default;
     SODirectoryResource(SODirectoryResource&&) = default;
     /**
-     * destructor
-     */
-    virtual ~SODirectoryResource() = default;
-    /**
-     * operator
-     */
-    SODirectoryResource& operator=(SODirectoryResource&&) = default;
-    /**
-     * --------------------------------------------------------------------
-     *  initilialization
-     * --------------------------------------------------------------------
+     * init
      */
     SODirectoryResource(const std::string& path, size_t capacity);
     /**
-     * --------------------------------------------------------------------
-     * interfaces
-     * --------------------------------------------------------------------
-     **
-     * get resource
+     * ------------------------------------------------------------------------
+     * Move Operator
+     * ------------------------------------------------------------------------
      */
-    SOFileResource GetResource();
-    SOFileResource GetResource(const std::string& name);
+    SODirectoryResource& operator=(SODirectoryResource&&) = default;
+    /**
+     * ------------------------------------------------------------------------
+     * Get Resource
+     * ------------------------------------------------------------------------
+     */
+    SOFileResource resource();
+    SOFileResource resource(const std::string& name);
 private:
     /**
+     * ------------------------------------------------------------------------
+     * Variables
+     * ------------------------------------------------------------------------
      * settings
      */
      size_t __capacity;

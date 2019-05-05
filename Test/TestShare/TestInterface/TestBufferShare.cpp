@@ -43,16 +43,16 @@ TEST(SBufferShare, Code)
     // encode and decode loop ---------
     for (
         // init loop ------------------ 
-        int i = 0, n = enc.Set(in, part, plus); 
+        int i = 0, n = enc.set(in, part, plus); 
         
         // validation -----------------
-        (i < n) && (dec.Set(enc.Get()) == false);
+        (i < n) && (dec.set(enc.get()) == false);
 
         // next ----------------------- 
         ++i
     );
     // test ---------------------------
-    EXPECT_EQ(in, dec.Get());
+    EXPECT_EQ(in, dec.get());
 }
 /**
  * ------------------------------------------------------------------------------------------------

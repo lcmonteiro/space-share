@@ -1,10 +1,10 @@
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * File:   SConnectorCodec.h
  * Author: Luis Monteiro
  *
  * Created on July 19, 2017, 5:22 PM
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SSTREAMCODEC_H
 #define SSTREAMCODEC_H
@@ -13,15 +13,19 @@
  */
 #include <map>
 /**
- * Share Kernel
+ * space
  */
-#include "SCodec.h"
 #include "SBuffer.h"
+/**
+ * share 
+ */
+#include "SEncoderCodec.h"
+#include "SDecoderCodec.h"
 #include "SDocument.h"
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * SStreamCodec
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 class SStreamCodec {
 public:
@@ -30,42 +34,53 @@ public:
      * Encode
      *---------------------------------------------------------------------------------------------
      */
-    template<class IS, class OS, CodecStamp::Type T =CodecStamp::MESSAGE>
-    static void Encode(IS in, std::vector<std::pair<size_t, OS>> out, size_t chunks, uint64_t seed) {
+    template<class IS, class OS, Codec::SStamp::Type T =Codec::SStamp::MESSAGE>
+    static void Encode(
+        IS in, std::vector<std::pair<size_t, OS>> out, size_t chunks, uint64_t seed
+        ) {
         typedef typename IS::char_type* ipointer;
         typedef typename OS::char_type* opointer;
-        // container ----------------------------------------------------------
-        Container box(chunks);
-
-        // get stream size ----------------------------------------------------
-        size_t len = Size(in);
-        
-        // compute frame size -------------------------------------------------
-        size_t sz = Split(len, chunks);
-        
-        // length buffer ------------------------------------------------------   
-        Buffer buff(Frame().Number(filesize_t(len)));
-        
-        // insert length buffer -----------------------------------------------
+        /**
+         *  container
+         */
+        auto box = Container(chunks);
+        /**
+         * stream size
+         */
+        auto len = __size(in);
+        /**
+         * compute frame size
+         */
+        auto sz = __split(len, chunks);
+        /**
+         * insert length -> buffer 
+         */
+        auto buff  = Buffer(Frame().number(filesize_t(len)));
         auto frame = IOFrame(sz);
-        for (Fill(buff, frame); frame.full(); Fill(buff, frame)) {
+        for (__fill(buff, frame); frame.full(); __fill(buff, frame)) {
             box.emplace_back(frame.detach());
             frame = IOFrame(sz);
         }
-        // insert data --------------------------------------------------------
-        for (Fill(in, frame); !box.full(); Fill(in, frame)){
+        /**
+         * insert data
+         */
+        for (__fill(in, frame); !box.full(); __fill(in, frame)) {
             box.emplace_back(frame.detach());
             frame = IOFrame(sz);
         }
-        // create stamp -------------------------------------------------------
-        auto stamp = CodecStamp::Generate(T, seed);
-        
-        // create encoder -----------------------------------------------------
-        CodecEncoder en(std::move(box), stamp);
-        
-        // drain coded data to output stream ----------------------------------
+        /**
+         * create stamp
+         */
+        auto stamp = Codec::SStamp::Generate(T, seed);
+        /**
+         * create encoder
+         */ 
+        auto en = Codec::SEncoder(std::move(box), stamp);
+        /**
+         * drain coded data to output stream
+         */
         for (auto& o : out) {
-            en.NumFrames(o.first);
+            en.frame_count(o.first);
             for (auto& d : en.pop()) {
                 o.second.write(opointer(d.data()), d.size());
             }
@@ -76,50 +91,60 @@ public:
      * Decode
      *---------------------------------------------------------------------------------------------
      */
-    template<class IS, class OS, CodecStamp::Type T =CodecStamp::MESSAGE>
-    static void Decode(std::vector<std::pair<size_t, IS>> in, OS out, size_t chunks, uint64_t seed) {
+    template<class IS, class OS, Codec::SStamp::Type T =Codec::SStamp::MESSAGE>
+    static void Decode(
+        std::vector<std::pair<size_t, IS>> in, OS out, size_t chunks, uint64_t seed
+        ) {
         typedef typename IS::char_type* ipointer;
         typedef typename OS::char_type* opointer;
-
-        // sort in-streams ----------------------------------------------------
-        for (auto& s : Selector(std::move(in))) {
+        /**
+         *  sort in-streams
+         */
+        for (auto& s : __selector(std::move(in))) {
             Container box(chunks);
-
-            // fill box -------------------------------------------------------
+            /**
+             *  fill box
+             */
             for (auto& ss : s.second) {
-                // fill box ---------------------------------------------------
                 auto frame = IOFrame(s.first);
-                for (Fill(ss, frame); frame.full(); Fill(ss, frame)) {
+                for (__fill(ss, frame); frame.full(); __fill(ss, frame)) {
                     box.emplace_back(frame.detach());
                     frame = IOFrame(s.first);
                 }
             }
-            // create stamp ---------------------------------------------------
-            auto stamp = CodecStamp::Generate(T, seed);
-            
-            // decoder --------------------------------------------------------
-            auto data = CodecDecoder(chunks, std::move(box), stamp).pop();
-            
-            // iterators ------------------------------------------------------
-            auto it = data.begin(), end = data.end();
-            
-            // remove length --------------------------------------------------
-            auto iframe = IOFrame(sizeof(filesize_t));
-            auto oframe = IOFrame();
-            for (; (it != end) && (!iframe.full()); ++it) {
-                oframe = IOFrame(std::move(*it));
-                oframe.Fill(iframe);
+            /**
+             * create stamp
+             */
+            auto stamp = Codec::SStamp::Generate(T, seed);
+            /**
+             * create decoder
+             */
+            auto data = Codec::SDecoder(chunks, std::move(box), stamp).pop();
+            /**
+             * remove lenhgt
+             */
+            auto it   = data.begin();
+            auto end  = data.end();
+            auto ifrm = IOFrame(sizeof(filesize_t));
+            auto ofrm = IOFrame();
+            for (; (it != end) && (!ifrm.full()); ++it) {
+                ofrm = IOFrame(std::move(*it));
+                ofrm.fill(ifrm);
             }
-            size_t len = iframe.Number<filesize_t>();
-            
-            // drain out-frame ---------------------------------------------------
-            out.write(opointer(oframe.data()), oframe.size());
-            
-            // write ----------------------------------------------------------
+            size_t len = ifrm.number<filesize_t>();
+            /**
+             *  drain out-frame 
+             */
+            out.write(opointer(ofrm.data()), ofrm.size());
+            /**
+             *  write
+             */
             for (; (it != end) && (out.tellp() < (len - it->size())); ++it) {
                 out.write(opointer(it->data()), it->size());
             }
-            // write last -----------------------------------------------------
+            /**
+             * write last
+             */
             if (it != end) {
                 out.write(opointer(it->data()), len - out.tellp());
             }
@@ -133,7 +158,7 @@ private:
      * Split
      * ------------------------------------------------------------------------
      */
-    inline static size_t Split(size_t len, size_t chunks){
+    inline static size_t __split(size_t len, size_t chunks) {
         auto ref = div(
             int(len) + sizeof(filesize_t), 
             int(chunks)
@@ -146,7 +171,7 @@ private:
      * ------------------------------------------------------------------------
      */
     template<class IS>
-    static size_t Size(IS& s){
+    static size_t __size(IS& s) {
         s.seekg (0, s.end);
         size_t len = s.tellg();
         s.seekg (0, s.beg);
@@ -158,10 +183,10 @@ private:
      * ------------------------------------------------------------------------
      */
     template<class IS>
-    static void Fill(IS& s, IOFrame& f){
+    static void __fill(IS& s, IOFrame& f) {
         typedef typename IS::char_type* ipointer;
         do{ 
-            f.Insert(s.readsome(ipointer(f.IData()), f.isize())); 
+            f.insert(s.readsome(ipointer(f.idata()), f.isize())); 
         } while (s.gcount());
     }
     /**
@@ -170,10 +195,10 @@ private:
      * ------------------------------------------------------------------------
      */
     template<class IS>
-    static std::map<size_t, std::vector<IS>> Selector(std::vector<std::pair<size_t, IS>> in) {
+    static auto __selector(std::vector<std::pair<size_t, IS>> in) {
         std::map<size_t, std::vector<IS>> out;
         for(auto& s : in){
-            auto ref = std::div(Size(s.second), int(s.first));
+            auto ref = std::div(__size(s.second), int(s.first));
             if(ref.rem == 0) {
                 auto it = out.find(ref.quot);
                 if (it != out.end()) {
@@ -189,9 +214,9 @@ private:
     }
 };
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * End
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* SSTREAMCODEC_H */
 

@@ -73,33 +73,33 @@ TEST(SModule, EchoSpliter)
             {Module::IO::VERBOSE, "0"}
         }}}
     });
-    s.Detach();
+    s.start();
     // build a test frames ---------------------------------------------------- 
     auto const in  = SRandom::Frame(size);
     auto       out = IOFrame(size);
 
     // interface resource -----------------------------------------------------
     auto interface = Message::SRemoteResource()
-        .Link(addr, port1)
+        .link(addr, port1)
     .detach();
 
     // wait -------------------------------------------------------------------
-    EXPECT_EQ(s.WaitState(Spliter::Time(3000), Spliter::PLAY), true);
+    EXPECT_EQ(s.state_wait(Spliter::Time(3000), Spliter::PLAY), true);
 
     // send ------------------------------------------------------------------- 
-    EXPECT_EQ(interface.Write(in).Good(), true);
+    EXPECT_EQ(interface.write(in).good(), true);
 
     // wait ------------------------------------------------------------------- 
-    Monitor(Monitor::Time(3000), &interface).Wait();
+    Monitor(Monitor::Time(3000), &interface).wait();
 
     // receive ----------------------------------------------------------------
-    EXPECT_EQ(interface.Read(out).Good(), true);
+    EXPECT_EQ(interface.read(out).good(), true);
 
     // test data --------------------------------------------------------------
     EXPECT_EQ(in, out);
 
     // end module -------------------------------------------------------------
-    s.Attach();
+    s.stop();
 }
 /**
  * ------------------------------------------------------------------------------------------------

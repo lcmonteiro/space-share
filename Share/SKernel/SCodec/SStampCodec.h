@@ -1,95 +1,107 @@
 /**
  * ------------------------------------------------------------------------------------------------ 
- * File:   SODirConnector.h
+ * File:   SCodecStamp.h
  * Author: Luis Monteiro
  *
- * Created on November 26, 2015, 12:37 PM
+ * Created on September 29, 2015, 5:48 PM
  * ------------------------------------------------------------------------------------------------
  */
-#ifndef SODIRSTREAM_H
-#define SODIRSTREAM_H
+#ifndef SCODECSTAMP_H
+#define SCODECSTAMP_H
 /**
- * space
+ * std
  */
-#include "SDirectoryResource.h"
-#include "SContainer.h"
-/**
- * share
- */
-#include "SConnector.h"
+#include <cstdint>
+#include <memory>
+#include <vector>
+#include <map>
 /**
  * ------------------------------------------------------------------------------------------------
- * Begin namespace Encoded & Message
+ * Codec Stamp
  * ------------------------------------------------------------------------------------------------
  */
-namespace Encoded {
-namespace Message {
+namespace Codec {
+/**
+ * ----------------------------------------------------------------------------
+ * Definitions
+ * ----------------------------------------------------------------------------
+ * density:
+ * 1º field size
+ * 2º sparsity
+ */
+using Density = std::pair<uint8_t, uint8_t>;
+/**
+ * stamp: 
+ * group of densities  
+ */
+using Stamp = std::vector<Density>;
+/**
+ * stamp pointer 
+ */
+using pStamp = std::shared_ptr<const Stamp>;
 /**
  * ------------------------------------------------------------------------------------------------
- * ODirConnector
+ * Codec Stamp
  * ------------------------------------------------------------------------------------------------
  */
-class SODirConnector : public SOutputConnector {
+class SStamp {
 public:
 	/**
 	 * ------------------------------------------------------------------------
-	 * Constructor
+	 * Types
 	 * ------------------------------------------------------------------------
 	 */
-	SODirConnector(const SText address, const uint32_t nfiles);
-protected:
-	/**
+	typedef enum {
+		NONE, SPARSE, STREAM, MESSAGE, FULL
+	} Type;
+	/** 
 	 * ------------------------------------------------------------------------
-	 * IO functions
+	 * get stamp by type
 	 * ------------------------------------------------------------------------
-	 * write
-	 * ----------------------------------------------------
 	 */
-	void _write(const Document& container) override;
-	/**
+	static pStamp Get(const Type t) {
+			return __definitions.at(t);  
+	} 
+	/** 
 	 * ------------------------------------------------------------------------
-	 * control functions
+	 * Generate stamp
 	 * ------------------------------------------------------------------------
-	 * open
-	 * ----------------------------------------------------
 	 */
-	inline void _open() override {
-		__res = SODirectoryResource(__uri, __n);
+	static pStamp Generate(Type t, const uint64_t seed = 0) {
+		return Generate(
+			seed, __templates.at(t).first, __templates.at(t).second);
 	}
-	/**
-	 * ----------------------------------------------------
-	 * good
-	 * ----------------------------------------------------
-	 */
-	inline bool _good() override {
-		return __res.good();
-	}
-	/**
-	 * ----------------------------------------------------
-	 * close
-	 * ----------------------------------------------------
-	 */
-	inline void _close() override {
-		__res = SODirectoryResource();
-	}
+	static pStamp Generate(
+		const uint64_t seed = 0, 
+		const Density& min  = {1, 1}, 
+		const Density& max  = {255, 255}
+	);  
 private:
 	/**
 	 * ------------------------------------------------------------------------
 	 * Variables
 	 * ------------------------------------------------------------------------
-	 * resource 
+	 **
+	 * stamp definitions
 	 */
-	SODirectoryResource __res;	
-	/**
-	 * number of resources
+	static const std::map<
+		const int, 
+		const pStamp
+	> __definitions;
+	/** 
+	 * stamp templates
 	 */
-	size_t __n;
+	static const std::map<
+		const int, std::pair<
+			const Density, // minimum  
+			const Density  // maximum
+		>
+	> __templates;
 };
-}}
 /**
  * ------------------------------------------------------------------------------------------------
- * End namespace Encoded & Message
+ * End
  * ------------------------------------------------------------------------------------------------
- */
-#endif /* SODIRSTREAMCODED_H */
-
+ */ 
+}
+#endif /* SCODECSTAMP_H */

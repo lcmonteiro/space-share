@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
-# target
+# ---------------------------------------------------------
+# ShareFunction target
+# ---------------------------------------------------------
 add_library(ShareFunction 
 INTERFACE
 )
@@ -8,3 +10,6 @@ target_include_directories(ShareFunction
 INTERFACE
 	.
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

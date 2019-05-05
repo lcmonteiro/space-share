@@ -9,9 +9,7 @@
 #ifndef SMODULECONNECTORS_H
 #define SMODULECONNECTORS_H
 /**
- * --------------------------------------------------------------------------------------------------------------------
- * Includes
- * --------------------------------------------------------------------------------------------------------------------
+ * module
  */
 #include "SProperties.h"
 #include "SModule.h"
@@ -67,11 +65,11 @@ namespace Input {
                  */
                 {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::IFileConnector::Make(
-                        o.Get(IO::URI),
-                        o.Get(IO::NFRAMES, size_t(50))
+                        o.get(IO::URI),
+                        o.get(IO::NFRAMES, size_t(50))
                     );
-                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    in->SetEnergy(o.Get(IO::ENERGY,   1));
+                    in->verbose(o.get(IO::VERBOSE, 0));
+                    in->energy (o.get(IO::ENERGY,  1));
                     return in;
                 }},
                 /**
@@ -81,12 +79,12 @@ namespace Input {
                  */
                 {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::ILocConnector::Make(
-                        o.Get(IO::URI),
-                        o.Get(IO::NFRAMES, size_t(50)),
-                        o.Get(IO::SFRAMES, size_t(1550))
+                        o.get(IO::URI),
+                        o.get(IO::NFRAMES, size_t(50)),
+                        o.get(IO::SFRAMES, size_t(1550))
                     );
-                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    in->SetEnergy(o.Get(IO::ENERGY,   1));
+                    in->verbose(o.get(IO::VERBOSE, 0));
+                    in->energy (o.get(IO::ENERGY,  1));
                     return in;
                 }},
                 /**
@@ -96,12 +94,12 @@ namespace Input {
                  */
                 {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::IUdpConnector::Make(
-                        o.Get(IO::URI),
-                        o.Get(IO::NFRAMES, size_t(50)),
-                        o.Get(IO::SFRAMES, size_t(1550))
+                        o.get(IO::URI),
+                        o.get(IO::NFRAMES, size_t(50)),
+                        o.get(IO::SFRAMES, size_t(1550))
                     );
-                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    in->SetEnergy(o.Get( IO::ENERGY,  1));
+                    in->verbose(o.get(IO::VERBOSE, 0));
+                    in->energy (o.get( IO::ENERGY, 1));
                     return in;
                 }},
                 /**
@@ -111,21 +109,21 @@ namespace Input {
                  */
                 {SConnector::Key(IO::Type::STREAM_REMOTE), [](const SModule::Command::Group& o) {
                     auto io = Decoded::Stream::ITcpConnector::Make(
-                        o.Get(IO::URI),
-                        o.Get(IO::NFRAMES, size_t(50)),
-                        o.Get(IO::SFRAMES, size_t(4096))
+                        o.get(IO::URI),
+                        o.get(IO::NFRAMES, size_t(50)),
+                        o.get(IO::SFRAMES, size_t(4096))
                     );
-                    io->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    io->SetEnergy(o.Get(IO::ENERGY,   1));
+                    io->verbose(o.get(IO::VERBOSE, 0));
+                    io->energy (o.get(IO::ENERGY,  1));
                     return io;
                 }},
             };
             try {
                 return GENERATOR.at(
-                    o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_LOCAL))
+                    o.get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_LOCAL))
                 )(o);
             } catch(...) {
-                throw std::runtime_error(SText("invalid input connetor: ", o.Get(IO::URI)));
+                throw std::runtime_error(SText("invalid input connetor: ", o.get(IO::URI)));
             }
         }
     };
@@ -137,7 +135,7 @@ namespace Input {
     template <>
     struct Builder<Encoded::IConnector> {
         static inline Encoded::IConnector Build(const SModule::Command::Group& o){
-            static std::map<SConnector::Key, std::function <Encoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
+            static std::map<SConnector::Key, std::function<Encoded::IConnector(const SModule::Command::Group&)>> GENERATOR {
                 /**
                  * --------------------------------------------------------------------------------
                  * message local 
@@ -145,11 +143,11 @@ namespace Input {
                  */
                 {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
                     auto in = Encoded::Message::ILocConnector::Make(
-                        o.Get(IO::URI),
-                        o.Get(IO::SFRAMES, size_t(1550))
+                        o.get(IO::URI),
+                        o.get(IO::SFRAMES, size_t(1550))
                     );
-                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    in->SetEnergy(o.Get(IO::ENERGY,   1));
+                    in->verbose(o.get(IO::VERBOSE, 0));
+                    in->energy (o.get(IO::ENERGY,  1));
                     return in;
                 }},
                 /**
@@ -159,19 +157,19 @@ namespace Input {
                  */
                 {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto in = Encoded::Message::IFileConnector::Make(
-                        o.Get(IO::URI)
+                        o.get(IO::URI)
                     );
-                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    in->SetEnergy(o.Get(IO::ENERGY,   1));
+                    in->verbose(o.get(IO::VERBOSE, 0));
+                    in->energy (o.get(IO::ENERGY,  1));
                     return in;
                 }}
             };
             try {
                 return GENERATOR.at(
-                    o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
+                    o.get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
                 )(o);
             } catch(...) {
-                throw std::runtime_error(SText("invalid input connetor: ", o.Get(IO::URI)));
+                throw std::runtime_error(SText("invalid input connetor: ", o.get(IO::URI)));
             }
         }
     };
@@ -207,10 +205,10 @@ namespace Output {
                  */
                 {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto out = Decoded::Message::OFileConnector::Make(
-                        o.Get(IO::URI)
+                        o.get(IO::URI)
                     );
-                    out->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    out->SetEnergy(o.Get(IO::ENERGY,   1));
+                    out->verbose(o.get(IO::VERBOSE, 0));
+                    out->energy (o.get(IO::ENERGY,  1));
                     return out;
                 }},
                 /**
@@ -220,10 +218,10 @@ namespace Output {
                  */
                 {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
                     auto out = Decoded::Message::OLocConnector::Make(
-                        o.Get(IO::URI)
+                        o.get(IO::URI)
                     );
-                    out->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    out->SetEnergy(o.Get(IO::ENERGY,   1));
+                    out->verbose(o.get(IO::VERBOSE, 0));
+                    out->energy (o.get(IO::ENERGY,  1));
                     return out;
                 }},
                 /**
@@ -233,10 +231,10 @@ namespace Output {
                  */
                 {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
                     auto out = Decoded::Message::OUdpConnector::Make(
-                        o.Get(IO::URI)
+                        o.get(IO::URI)
                     );
-                    out->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    out->SetEnergy(o.Get(IO::ENERGY,   1));
+                    out->verbose(o.get(IO::VERBOSE, 0));
+                    out->energy (o.get(IO::ENERGY,  1));
                     return out;
                 }},
                 /**
@@ -246,19 +244,19 @@ namespace Output {
                  */
                 {SConnector::Key(IO::Type::STREAM_REMOTE), [](const SModule::Command::Group& o) {
                     auto out = Decoded::Stream::OTcpConnector::Make(
-                        o.Get(IO::URI)
+                        o.get(IO::URI)
                     );
-                    out->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    out->SetEnergy(o.Get(IO::ENERGY,   1));
+                    out->verbose(o.get(IO::VERBOSE, 0));
+                    out->energy (o.get(IO::ENERGY,  1));
                     return out;
                 }}
             };
             try{
                 return GENERATOR.at(
-                    o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_REMOTE))
+                    o.get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_REMOTE))
                 )(o);
             } catch(...) {
-                throw std::runtime_error(SText("invalid output connetor: ", o.Get(IO::URI)));
+                throw std::runtime_error(SText("invalid output connetor: ", o.get(IO::URI)));
             }
         }
     };
@@ -278,11 +276,11 @@ namespace Output {
                  */
                 {SConnector::Key(IO::Type::MESSAGE_LOCAL), [](const SModule::Command::Group& o) {
                     auto out = Encoded::Message::OLocConnector::Make(
-                        o.Get(IO::URI),
-                        o.Get(IO::SFRAMES, size_t(1550))
+                        o.get(IO::URI),
+                        o.get(IO::SFRAMES, size_t(1550))
                     );
-                    out->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    out->SetEnergy(o.Get(IO::ENERGY,   1));
+                    out->verbose(o.get(IO::VERBOSE, 0));
+                    out->energy (o.get(IO::ENERGY,  1));
                     return out;
                 }},
                 /**
@@ -292,19 +290,19 @@ namespace Output {
                  */
                 {SConnector::Key(IO::Type::MESSAGE_FILE), [](const SModule::Command::Group& o) {
                     auto out = Encoded::Message::OFileConnector::Make(
-                        o.Get(IO::URI)
+                        o.get(IO::URI)
                     );
-                    out->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    out->SetEnergy(o.Get(IO::ENERGY,   1));
+                    out->verbose(o.get(IO::VERBOSE, 0));
+                    out->energy (o.get(IO::ENERGY,  1));
                     return out;
                 }}
             };
             try {
                 return GENERATOR.at(
-                    o.Get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
+                    o.get(IO::TYPE, SConnector::Key(IO::Type::MESSAGE_FILE))
                 )(o);
             } catch(...) {
-                throw std::runtime_error(SText("invalid output connetor: ", o.Get(IO::URI)));
+                throw std::runtime_error(SText("invalid output connetor: ", o.get(IO::URI)));
             }
         }
     };
@@ -335,31 +333,31 @@ namespace IOput {
             static std::map<SConnector::Key, std::function <Decoded::IOConnector(const SModule::Command::Group&)>> GENERATOR {
                 // {SConnector::Key(IO::Type::STREAM_LOCAL), [](const SModule::Command::Group& o) {
                 //     auto io = Decoded::Stream::IOLocConnector::Make(
-                //         o.Get(IO::URI,     std::string("/tmp/data.y")),
-                //         o.Get(IO::NFRAMES, 50),
-                //         o.Get(IO::SFRAMES, 4096)
+                //         o.get(IO::URI,     std::string("/tmp/data.y")),
+                //         o.get(IO::NFRAMES, 50),
+                //         o.get(IO::SFRAMES, 4096)
                 //     );
-                //     io->SetVerbose(o.Get(IO::VERBOSE, 0));
-                //     io->SetEnergy(o.Get(IO::ENERGY,   1));
+                //     io->verbose(o.get(IO::VERBOSE, 0));
+                //     io->energy (o.get(IO::ENERGY,  1));
                 //     return io;
                 // }},
                 {SConnector::Key(IO::Type::MESSAGE_REMOTE), [](const SModule::Command::Group& o) {
                     auto in = Decoded::Message::IOUdpConnector::Make(
-                        o.Get(IO::URI),
-                        o.Get(IO::NFRAMES, size_t(50)),
-                        o.Get(IO::SFRAMES, size_t(1550))
+                        o.get(IO::URI),
+                        o.get(IO::NFRAMES, size_t(50)),
+                        o.get(IO::SFRAMES, size_t(1550))
                     );
-                    in->SetVerbose(o.Get(IO::VERBOSE, 0));
-                    in->SetEnergy(o.Get( IO::ENERGY,  1));
+                    in->verbose(o.get(IO::VERBOSE, 0));
+                    in->energy (o.get( IO::ENERGY, 1));
                     return in;
                 }}
             };
             try {
                 return GENERATOR.at(
-                    o.Get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
+                    o.get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
                 )(o);
             } catch(...) {
-                throw std::runtime_error(SText("invalid (in|out)put connetor: ", o.Get(IO::URI)));
+                throw std::runtime_error(SText("invalid (in|out)put connetor: ", o.get(IO::URI)));
             }
         }
     };
@@ -376,10 +374,10 @@ namespace IOput {
             };
             try {
                 return GENERATOR.at(
-                    o.Get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
+                    o.get(IO::TYPE, SConnector::Key(IO::Type::STREAM_REMOTE))
                 )(o);
             } catch(...) {
-                throw std::runtime_error(SText("invalid (in|out)put connetor: ", o.Get(IO::URI)));
+                throw std::runtime_error(SText("invalid (in|out)put connetor: ", o.get(IO::URI)));
             }
         }
     };

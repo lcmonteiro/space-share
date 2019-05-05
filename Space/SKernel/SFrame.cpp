@@ -22,7 +22,7 @@ using namespace std;
  * ----------------------------------------------------
  */
 SFrame::SFrame(SIOFrame&& f) 
-: SFrame(forward<SFrame>(f.Shrink())) { f.Reset(); }
+: SFrame(forward<SFrame>(f.deflate())) { f.clear(); }
 
 SFrame::SFrame(const SIOFrame& f)
 : SFrame(f.begin(), f.end()) {}
@@ -32,10 +32,10 @@ SFrame::SFrame(const SIOFrame& f)
  * --------------------------------------------------------
  */
 SFrame& SFrame::operator=(SIOFrame&& f) {
-    return (*this = forward<SFrame>(f.Shrink()));
+    return (*this = forward<SFrame>(f.deflate()));
 } 
 SFrame& SFrame::operator=(const SIOFrame& f) {
-    return (*this = forward<SFrame>(SIOFrame(f).Shrink()));
+    return (*this = forward<SFrame>(SIOFrame(f).deflate()));
 }
 /**
  * ------------------------------------------------------------------------
@@ -50,7 +50,7 @@ __beg(Super::begin()), __end(Super::begin()) {}
 
 SIOFrame::SIOFrame(SIOFrame&& f) 
 : SFrame(forward<SFrame>(f)), 
-__beg(f.begin()), __end(f.end()) { f.Reset(); }
+__beg(f.begin()), __end(f.end()) { f.clear(); }
 
 SIOFrame::SIOFrame(SFrame&& f)
 : SFrame(forward<SFrame>(f)), 
@@ -77,14 +77,6 @@ SIOFrame& SIOFrame::operator=(const SFrame& f) {
 }
 SIOFrame& SIOFrame::operator=(const SIOFrame& f) {
     return (*this = SIOFrame(f));
-}
-/**
- * ---------------------------------------------------------
- * change context
- * ---------------------------------------------------------
- */
-SIOFrame SFrame::IOFrame() {
-    return detach();
 }
 /**
  * ------------------------------------------------------------------------------------------------

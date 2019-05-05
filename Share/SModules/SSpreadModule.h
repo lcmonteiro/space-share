@@ -1,80 +1,66 @@
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * File:   SSpreadModule.h
  * Author: Luis Monteiro
  *
  * Created on November 16, 2018, 5:59 PM
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SSPREADMODULE_H
 #define SSPREADMODULE_H
 /**
- * Module
+ * module
  */
 #include "SBaseModule.h" 
 /**
- *---------------------------------------------------------------------------------------------------------------------
- * SSpreadModule
- *---------------------------------------------------------------------------------------------------------------------
+ *-------------------------------------------------------------------------------------------------
+ * Spread Module
+ *-------------------------------------------------------------------------------------------------
  */
-template<class I_CON, class DOC, class O_CON>
+namespace Module {
+template<typename Input, typename Data, typename Output>
 class SSpreadModule : public SBaseModule {
     /**
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * Helpers
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * exception types
-     * ------------------------------------------------------------------------
      */
-    using IRoadExceptionDETACHED = SRoadExceptionDETACHED<I_CON>;
-    using ORoadExceptionDETACHED = SRoadExceptionDETACHED<O_CON>;
+    using IRoadExceptionDETACHED = SRoadExceptionDETACHED<Input>;
+    using ORoadExceptionDETACHED = SRoadExceptionDETACHED<Output>;
     /**
-     * ------------------------------------------------------------------------
      * builders
-     * ------------------------------------------------------------------------
      */
-    using IBuilder = Module::Input::Builder<I_CON>;
-    using FBuilder = Module::Spread::Builder<I_CON, DOC, O_CON>;
-    using OBuilder = Module::Output::Builder<O_CON>; 
+    using IBuilder = Module::Input::Builder<Input>;
+    using FBuilder = Module::Spread::Builder<Input, Data, Output>;
+    using OBuilder = Module::Output::Builder<Output>; 
     /** 
-     * ------------------------------------------------------------------------
      * connector types
-     * ------------------------------------------------------------------------
      */
-    using IRoad = SRoadMonitor<SConnector::Key, I_CON>;
-    using ORoad = SRoad<SConnector::Key, O_CON>;
+    using IRoad = SRoadMonitor<SConnector::Key, Input>;
+    using ORoad = SRoad<SConnector::Key, Output>;
     /**
-     * ------------------------------------------------------------------------
      * function type
-     * ------------------------------------------------------------------------
      */
     using Function = typename FBuilder::Pointer;
 public:
     /**
-     * --------------------------------------------------------------------------------------------
-     * Interfaces
-     * --------------------------------------------------------------------------------------------
-     * defaults
      * ------------------------------------------------------------------------
+     * Constructors
+     * ------------------------------------------------------------------------
+     * default
      */
     SSpreadModule(SSpreadModule&&)            = default;
     SSpreadModule& operator=(SSpreadModule&&) = default;
     /**
-     * ------------------------------------------------------------------------
-     * constructor
-     * ------------------------------------------------------------------------
+     * main
      */
-    SSpreadModule(const Command& cmd): SBaseModule(cmd[Command::MODULE].Head(), {
+    SSpreadModule(const Command& cmd)
+    : SBaseModule(cmd[Command::MODULE].head(), {
         {Command::FUNCTION, cmd[Command::FUNCTION]},
         {Command::INPUT,    cmd[Command::INPUT]   },
         {Command::OUTPUT,   cmd[Command::OUTPUT]  },
     }), __in(), __out(), __func() {}
-    /**
-     * ------------------------------------------------------------------------
-     * destructor
-     * ------------------------------------------------------------------------
-     */
-    virtual ~SSpreadModule() { Attach(); }
 protected:
     /**
      * ------------------------------------------------------------------------
@@ -91,151 +77,160 @@ protected:
      */
     Function __func;
     /**
-     * --------------------------------------------------------------------------------------------
-     * Execute
-     * --------------------------------------------------------------------------------------------
-     * process command
+     * ------------------------------------------------------------------------
+     * Execute - Process Command
      * ------------------------------------------------------------------------
      */
-    void __ProcessCommand(const Command& cmd) {
-        // create and insert inputs -----------------------
+    void _process_command(const Command& cmd) override {
+        /**
+         * create and insert inputs
+         */
         for(auto& o: cmd[Command::INPUT]) {
             try {
-                __in.Insert(o[Module::IO::URI], IBuilder::Build(o));
+                __in.insert(o[Module::IO::URI], IBuilder::Build(o));
             } catch (std::out_of_range&) {
-                __UpdateRoad(__in, o);
+                _update_road(__in, o);
             }
         }
-        // create and insert outputs ----------------------
+        /**
+         * create and insert outputs
+         */
         for(auto o: cmd[Command::OUTPUT]) {
             try {
-                __out.Insert(o[Module::IO::URI], OBuilder::Build(o));
+                __out.insert(o[Module::IO::URI], OBuilder::Build(o));
             } catch (std::out_of_range&) {
-                __UpdateRoad(__out, o);
+                _update_road(__out, o);
             }
         }
-        // create and insert outputs ----------------------
+        /**
+         * create and insert outputs
+         */
         for(auto o: cmd[Command::FUNCTION]) {
             __func = FBuilder::Build(o);
         }
     }
     /**
-     * --------------------------------------------------------------------------------------------
-     * process machine
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
+     * Execute - Process Machine
+     * ------------------------------------------------------------------------
      */
-    State __ProcessMachine(const State& state, const Clock::Pointer& end) override {
-        // log info -----------------------------------------------------------
+    State _process_machine(const State& state, const Clock::Pointer& end) override {
+        /**
+         * log info
+         */
         INFO("Process={ "
             << "state: "     << state              << ", "
-            << "energy:"     << SEnergy::Get()     << ", "
-            << "inputs:"     << __GetStatus(__in)  << ", "
-            << "outputs:"    << __GetStatus(__out) << "  "
+            << "energy:"     << SEnergy::get()     << ", "
+            << "inputs:"     << _status(__in)  << ", "
+            << "outputs:"    << _status(__out) << "  "
             << "}"
         );
         /**
-         * --------------------------------------------------------------------
+         * ------------------------------------------------
          * state machine process
-         * --------------------------------------------------------------------
+         * ------------------------------------------------
          */
         try {
             switch(state) {
-                // open -----------------------------------
                 case OPEN: {
                     return OWAIT;
                 }
-                // out wait -------------------------------
                 case OWAIT: {
-                    return __ProcessWAIT(end, __out, IWAIT);
+                    return _process_wait(end, __out, IWAIT);
                 }
-                // in wait --------------------------------
                 case IWAIT: {
-                    return __ProcessWAIT(end, __in, PLAY);
+                    return _process_wait(end, __in, PLAY);
                 }
-                // play -----------------------------------
                 case PLAY: {
-                    return __ProcessPLAY(end);
+                    return _process_play(end);
                 }
-                // update ---------------------------------
                 case UPDATE : {
-                    __out.Update(); __in.Update();
+                    __out.update(); 
+                    __in.update();
                     return PLAY;
                 }
-                // default --------------------------------
                 default: {
                     return OPEN;
                 }
             }
         }
         /**
-         * --------------------------------------------------------------------
+         * ------------------------------------------------
          * state machine exceptions
-         * --------------------------------------------------------------------
-         * out road detach --------------------------------
+         * ------------------------------------------------
+         * out road detach
          */
         catch (ORoadExceptionDETACHED & ex) {
-            WARNING("OUT = " << __out.Status());
+            WARNING("OUT = " << __out.status());
             if(PLAY == state) {
-                SEnergy::Decay();
+                SEnergy::decay();
             }
-            __func->Recover();
-            __in.Reset();
+            __func->recover();
+            __in.reset();
             return OWAIT;
         }
-        // in road detach ---------------------------------
+        /**
+         * in road detach
+         */
         catch (IRoadExceptionDETACHED & ex) {
-            WARNING("IN = " << __in.Status());
+            WARNING("IN = " << __in.status());
             if(PLAY == state) {
-                SEnergy::Decay();
+                SEnergy::decay();
             }
-            __func->Recover();
+            __func->recover();
             return IWAIT;
         }
-        // function dead ---------------------------------- 
+        /**
+         * function dead
+         */ 
         catch (FunctionExceptionDEAD& ex) {
             WARNING("FUNC");
-            SEnergy::Decay();
-            __func->Recover();
+            SEnergy::decay();
+            __func->recover();
         }
         return state;
     }
     /**
-     * --------------------------------------------------------------------------------------------
-     * process states
-     * --------------------------------------------------------------------------------------------
-     * PLAY
      * ------------------------------------------------------------------------
+     * process states
+     * ------------------------------------------------------------------------
+     * PLAY
      */
-    inline State __ProcessPLAY(const Clock::Pointer& end) {
+    inline State _process_play(const Clock::Pointer& end) {
         ResourceMonitor m (&__in);
-
-        // first ------------------------------------------
+        /**
+         * first
+         */
         try { 
-            for(auto& i : m.Wait(Clock::Remaining(end))) {
-                __func->Process(__in, __out);
+            for(auto& i : m.wait(Clock::Remaining(end))) {
+                __func->process(__in, __out);
             }
         } catch (MonitorExceptionTIMEOUT & ex) {
-            __func->Drain(__in, __out);
-            __func->Decay();
+            __func->drain(__in, __out);
+            __func->decay();
             return UPDATE;
         }
-        // remaining --------------------------------------
+        /**
+         * remaining
+         */
         try { 
             do {
-                for(auto& i : m.Wait(Clock::Remaining(end))) {
-                    __func->Process(__in, __out);
+                for(auto& i : m.wait(Clock::Remaining(end))) {
+                    __func->process(__in, __out);
                 }           
             } while(Clock::Remaining(end) > Clock::Distance::zero());
         } catch (MonitorExceptionTIMEOUT & ex) { }
-
-        // return state -----------------------------------
+        /**
+         * return state
+         */
         return UPDATE;
     }
 };
+}
 /**
- *---------------------------------------------------------------------------------------------------------------------
+ *-------------------------------------------------------------------------------------------------
  * End
- *---------------------------------------------------------------------------------------------------------------------
+ *-------------------------------------------------------------------------------------------------
  */
 #endif /* SSPREADMODULE_H */
 

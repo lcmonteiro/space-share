@@ -1,7 +1,7 @@
 /**
  * ------------------------------------------------------------------------------------------------ 
  * File:   SLocalResource.h
- * Author:      Luis Monteiro
+ * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
  * ------------------------------------------------------------------------------------------------
@@ -27,34 +27,33 @@ public:
     /* ------------------------------------------------------------------------
      * general interfaces
      * ------------------------------------------------------------------------
-     **
      * status
      */
-    bool Good();
+    bool good();
     /**
      * timeout
      */
-    SLocalResource& SetRxTimeout(int timeout);
-    SLocalResource& SetTxTimeout(int timeout);
+    SLocalResource& timeout_rx(int timeout);
+    SLocalResource& timeout_tx(int timeout);
     /**
      * ------------------------------------------------------------------------
      * IO functions
      * ------------------------------------------------------------------------
      * fill and read frame
      */
-    template<typename T> SLocalResource& Fill (T& f);
-    template<typename T> SLocalResource& Read (T& f);
+    template<typename T> SLocalResource& fill (T& f);
+    template<typename T> SLocalResource& read (T& f);
     /**
      * drain and write frame
      */
-    template<typename T> SLocalResource& Drain (T& f);
-    template<typename T> SLocalResource& Write (T& f);
-    template<typename T> SLocalResource& Drain (const T& f);
-    template<typename T> SLocalResource& Write (const T& f);
+    template<typename T> SLocalResource& drain (T& f);
+    template<typename T> SLocalResource& write (T& f);
+    template<typename T> SLocalResource& drain (const T& f);
+    template<typename T> SLocalResource& write (const T& f);
 protected:
     /**
      * ------------------------------------------------------------------------
-     * defaults
+     * Defaults
      * ------------------------------------------------------------------------
      */
     SLocalResource()                            = default;
@@ -63,32 +62,39 @@ protected:
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * message
+ * Message
  * ------------------------------------------------------------------------------------------------
  */
 namespace Message {
     class SLocalResource : public ::SLocalResource {
     public:
         /**
-         * defaults
+         * --------------------------------------------------------------------
+         * Defaults
+         * --------------------------------------------------------------------
          */
         SLocalResource()                            = default;
         SLocalResource(SLocalResource&&)            = default;
         SLocalResource& operator=(SLocalResource&&) = default;
         /**
+         * --------------------------------------------------------------------
+         * Connections
+         * --------------------------------------------------------------------
          * bind
          */
-        SLocalResource& Bind(const std::string& local);
+        SLocalResource& bind(const std::string& local);
         /**
-         * wait
+         * Wait
          */
-        SLocalResource& Wait(const std::string& local, std::chrono::seconds timeout);
+        SLocalResource& wait(const std::string& local, std::chrono::seconds timeout);
         /**
-         * link
+         * Link
          */
-        SLocalResource& Link(const std::string& local);
+        SLocalResource& link(const std::string& local);
         /**
-         * detach
+         * --------------------------------------------------------------------
+         * Detach
+         * --------------------------------------------------------------------
          */
         inline SLocalResource detach() {
             return std::move(*this);
@@ -97,30 +103,37 @@ namespace Message {
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * stream
+ * Stream
  * ------------------------------------------------------------------------------------------------
  */
 namespace Stream {
     class SLocalResource : public ::SLocalResource {
     public:
         /**
-         * defaults
+         * --------------------------------------------------------------------
+         * Defaults
+         * --------------------------------------------------------------------
          */
         SLocalResource()                            = default;
         SLocalResource(SLocalResource&&)            = default;
         SLocalResource& operator=(SLocalResource&&) = default;
         /**
-         * wait
+         * --------------------------------------------------------------------
+         * Connections
+         * --------------------------------------------------------------------
+         * Wait
          */
-        SLocalResource& Wait(
-            const std::string& local, std::chrono::seconds timeout=std::chrono::hours{24}
-        );
+        SLocalResource& wait(
+            const std::string& local, 
+            std::chrono::seconds timeout=std::chrono::hours{24});
         /**
-         * link
+         * Link
          */
-        SLocalResource& Link(const std::string& local);
+        SLocalResource& link(const std::string& local);
         /**
-         * detach
+         * --------------------------------------------------------------------
+         * Detach
+         * --------------------------------------------------------------------
          */
         inline SLocalResource detach() {
             return std::move(*this);
@@ -129,7 +142,7 @@ namespace Stream {
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */
 #endif /* SLOCALRESOURCE_H */

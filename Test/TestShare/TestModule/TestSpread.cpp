@@ -31,10 +31,10 @@ TEST(Spread, Data)
 {
     STask::Enable();
     // define types -----------------------------------------------------------
-    using Emitter  = SSpreadModule<
+    using Emitter  = Module::SSpreadModule<
         Decoded::IConnector, Decoded::Document, Decoded::OConnector
     >;
-    using Receptor = SSpreadModule<
+    using Receptor = Module::SSpreadModule<
         Decoded::IConnector, Decoded::Document, Decoded::OConnector
     >;
     using Monitor = SResourceMonitor<
@@ -124,35 +124,35 @@ TEST(Spread, Data)
 
     // out interface resource --------------------------------------------------
     auto interface_o = Message::SLocalResource()
-        .Bind(addr_o)
+        .bind(addr_o)
     .detach();
     // decode start ------------------------------------------------------------
-    re.Detach();
+    re.start();
 
     // decode wait -------------------------------------------------------------
-    EXPECT_EQ(re.WaitState(Receptor::Time(30000), Receptor::PLAY), true);
+    EXPECT_EQ(re.state_wait(Receptor::Time(30000), Receptor::PLAY), true);
     
     // encode start ------------------------------------------------------------
-    em.Detach();
+    em.start();
     
     // encode wait -------------------------------------------------------------
-    EXPECT_EQ(em.WaitState(Emitter::Time(30000), Emitter::PLAY), true);
+    EXPECT_EQ(em.state_wait(Emitter::Time(30000), Emitter::PLAY), true);
     
     // in interface resource ---------------------------------------------------
     auto interface_i = Message::SLocalResource()
-        .Link(addr_i)
+        .link(addr_i)
     .detach();
 
     // send ------------------------------------------------------------------- 
-    EXPECT_EQ(interface_i.Write(frame_i).Good(), true);
+    EXPECT_EQ(interface_i.write(frame_i).good(), true);
 
     // wait ------------------------------------------------------------------- 
-    Monitor(Monitor::Time(3000), &interface_o).Wait();
+    Monitor(Monitor::Time(3000), &interface_o).wait();
 
     // receive ----------------------------------------------------------------
-    EXPECT_EQ(interface_o.Read(frame_1).Good(), true);
-    EXPECT_EQ(interface_o.Read(frame_2).Good(), true);
-    EXPECT_EQ(interface_o.Read(frame_3).Good(), true);
+    EXPECT_EQ(interface_o.read(frame_1).good(), true);
+    EXPECT_EQ(interface_o.read(frame_2).good(), true);
+    EXPECT_EQ(interface_o.read(frame_3).good(), true);
 
     // test data --------------------------------------------------------------
     EXPECT_EQ(frame_i, frame_1);
@@ -168,10 +168,10 @@ TEST(Spread, Code)
 {
     STask::Enable();
     // define types -----------------------------------------------------------
-    using Encode  = SSpreadModule<
+    using Encode  = Module::SSpreadModule<
         Decoded::IConnector, Decoded::Document, Encoded::OConnector
     >;
-    using Decode  = SSpreadModule<
+    using Decode  = Module::SSpreadModule<
         Encoded::IConnector, Encoded::Document, Decoded::OConnector
     >;
     using Monitor = SResourceMonitor<
@@ -258,34 +258,34 @@ TEST(Spread, Code)
 
     // out interface resource --------------------------------------------------
     auto interface_o = Message::SLocalResource()
-        .Bind(addr_o)
+        .bind(addr_o)
     .detach();
     
     // decode start ------------------------------------------------------------
-    de.Detach();
+    de.start();
 
     // decode wait -------------------------------------------------------------
-    EXPECT_EQ(de.WaitState(Decode::Time(3000), Decode::PLAY), true);
+    EXPECT_EQ(de.state_wait(Decode::Time(3000), Decode::PLAY), true);
     
     // encode start ------------------------------------------------------------
-    en.Detach();
+    en.start();
     
     // encode wait -------------------------------------------------------------
-    EXPECT_EQ(en.WaitState(Encode::Time(3000), Encode::PLAY), true);
+    EXPECT_EQ(en.state_wait(Encode::Time(3000), Encode::PLAY), true);
     
     // in interface resource ---------------------------------------------------
     auto interface_i = Message::SLocalResource()
-        .Link(addr_i)
+        .link(addr_i)
     .detach();
 
     // send ------------------------------------------------------------------- 
-    EXPECT_EQ(interface_i.Drain(frame_i).Good(), true);
+    EXPECT_EQ(interface_i.drain(frame_i).good(), true);
 
         // wait ------------------------------------------------------------------- 
-    Monitor(Monitor::Time(3000), &interface_o).Wait();
+    Monitor(Monitor::Time(3000), &interface_o).wait();
 
     // receive ----------------------------------------------------------------
-    EXPECT_EQ(interface_o.Read(frame_o).Good(), true);
+    EXPECT_EQ(interface_o.read(frame_o).good(), true);
 
     // test data --------------------------------------------------------------
     EXPECT_EQ(frame_i, frame_o);

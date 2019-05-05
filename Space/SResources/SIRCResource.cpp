@@ -20,31 +20,31 @@
 /**
  * definitions
  */
-#define TOPIC_STR "share"
+#define TOPIC_STR   "share"
 /**
  * ----------------------------------------------------------------------------
  * Connect
  * ----------------------------------------------------------------------------
  **/
-void SIRCResource::Connect(
-    const SText& host, uint16_t port, int tx_timeout, int rx_timeout) {
+void SIRCResource::connect(
+    const SText& host, uint16_t port, int timeout_tx, int timeout_rx) {
     /**
      * connect
      */
-    Super::Link(host, port);
+    Super::link(host, port);
     /**
      * configuration
      */
-    SetTxTimeout(tx_timeout);
-    SetRxTimeout(rx_timeout);
-    SetNoDelay(true);
+    Super::timeout_tx(timeout_tx);
+    Super::timeout_rx(timeout_rx);
+    Super::delay(false);
 }
 /**
  * ----------------------------------------------------------------------------
  * Join
  * ----------------------------------------------------------------------------
  */
-void SIRCResource::Join(SText user, SText channel, int timeout) {
+void SIRCResource::join(SText user, SText channel, int timeout) {
     auto end = std::chrono::system_clock::now() + std::chrono::seconds{timeout};
     /**
      * ----------------------------------------------------
@@ -78,11 +78,11 @@ void SIRCResource::Join(SText user, SText channel, int timeout) {
         /**
          * wait for welcome
          */
-        WaitFor(WELCOME, end);
+        _wait_for(WELCOME, end);
         /**
          * wait initial messages
          */
-        WaitFor(NONE, end);
+        _wait_for(NONE, end);
     };
     /**
      */
@@ -103,7 +103,7 @@ void SIRCResource::Join(SText user, SText channel, int timeout) {
         /**
          * wait for Join
          */
-        WaitFor(JOIN, end);
+        _wait_for(JOIN, end);
     };
     /**
      * ------------------------------------------------------------------------
@@ -119,7 +119,7 @@ void SIRCResource::Join(SText user, SText channel, int timeout) {
          */
         register_func(user);
         /**
-         * chennel join
+         * channel join
          */
         join_func(channel);
     } catch (IRCExceptionUSER& ex) {
@@ -143,12 +143,12 @@ void SIRCResource::Join(SText user, SText channel, int timeout) {
  * receive
  * ----------------------------------------------------------------------------
  */
-SIRCResource& SIRCResource::Read(Frame& frame) {
+SIRCResource& SIRCResource::read(Frame& frame) {
     SText line(MAX_LINE_SZ, ' ');
     /**
      * process line
      */
-    if (Process(line) == MSG) {
+    if (_process(line) == MSG) {
         /**
          * process message
          */
@@ -157,10 +157,9 @@ SIRCResource& SIRCResource::Read(Frame& frame) {
     }
     throw ResourceExceptionTIMEOUT();
 }
-SIRCResource& SIRCResource::Read(Frame& frame, const std::chrono::seconds& time) {
+SIRCResource& SIRCResource::read(Frame& frame, const std::chrono::seconds& time) {
     frame = SBase64::Decode(
-        WaitFor(MSG, std::chrono::system_clock::now() + time)
-    );
+        _wait_for(MSG, std::chrono::system_clock::now() + time));
     return *this;
 }
 /**
@@ -169,7 +168,7 @@ SIRCResource& SIRCResource::Read(Frame& frame, const std::chrono::seconds& time)
  * ----------------------------------------------------------------------------
  */
 template<>
-SIRCResource& SIRCResource::Write(const IOFrame& frame) {
+SIRCResource& SIRCResource::write(const IOFrame& frame) {
     /**
      * write
      */
@@ -188,10 +187,10 @@ SIRCResource& SIRCResource::Write(const IOFrame& frame) {
  * keep
  * ----------------------------------------------------------------------------
  */
-void SIRCResource::Keep() {
-    while (!SResourceMonitor<>(this).Wait(std::chrono::hours{24}).empty()) {
+void SIRCResource::keep() {
+    while (!SResourceMonitor<>(this).wait(std::chrono::hours{24}).empty()) {
         SText line(MAX_LINE_SZ, ' ');
-        Process(line);
+        _process(line);
     }
 } 
 /**
@@ -199,7 +198,7 @@ void SIRCResource::Keep() {
  * process line
  * ----------------------------------------------------------------------------
  **/
-SIRCResource::TYPE SIRCResource::Process(SText& line) {
+SIRCResource::TYPE SIRCResource::_process(SText& line) {
     /**
      * commands
      */
@@ -407,13 +406,17 @@ SIRCResource::TYPE SIRCResource::Process(SText& line) {
  * wait for message type 
  * ----------------------------------------------------------------------------
  */
-SText SIRCResource::WaitFor(TYPE type, const std::chrono::system_clock::time_point& end) {
+SText SIRCResource::_wait_for(
+    TYPE type, const std::chrono::system_clock::time_point& end) {
+    /**
+     * process
+     */
     while(std::chrono::system_clock::now() < end) {
         SText line(MAX_LINE_SZ, ' ');
         /**
          * wait for next message
          */
-        if (Process(line) == type) {
+        if (_process(line) == type) {
             return line;
         }
     }

@@ -42,33 +42,33 @@ TEST(DecodedMessageUDP, Link)
     );
 
     // connect ------------------------
-    ic->Repair();
-    oc->Repair();
+    ic->build();
+    oc->build();
     
     // sleep --------------------------
     STask::Sleep(milliseconds(10));
 
     // create data --------------------
     Container idata {
-        SRandom::Frame(size), SFrame().Number(size)
+        SRandom::Frame(size), SFrame().number(size)
     }; 
     
     // test oconnection ---------------
-    EXPECT_EQ(oc->Wait(milliseconds(100)).Good(), true);
+    EXPECT_EQ(oc->wait(milliseconds(100)).good(), true);
     
     // send ---------------------------
-    oc->Write(idata);
+    oc->write(idata);
     
     // test iconnection ---------------
-    EXPECT_EQ(ic->Wait(milliseconds(100)).Good(), true);
+    EXPECT_EQ(ic->wait(milliseconds(100)).good(), true);
     
     // receive ------------------------
-    auto odata = ic->Read();
+    auto odata = ic->read();
 
     // test data ----------------------
     EXPECT_EQ(
-        SBuffer().Write(idata).Read(size), 
-        SBuffer().Write(odata).Read(size));
+        SBuffer().drain(idata).drain(size), 
+        SBuffer().drain(odata).drain(size));
 }
 /**
  * ------------------------------------------------------------------------------------------------

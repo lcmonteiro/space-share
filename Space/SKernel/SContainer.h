@@ -9,18 +9,8 @@
 #ifndef SCONTAINER_H
 #define SCONTAINER_H
 /**
- * std
- */
-#include <vector>
-#include <ostream>
-#include <cstdint>
-#include <cstring>
-#include <algorithm>
-#include <stdexcept>
-/**
  * space
  */
-#include "SItertool.h"
 #include "SFrame.h"
 #include "SText.h"
 /**
@@ -42,14 +32,14 @@ public:
     using Super = std::vector<Frame>;
     /**
      * ------------------------------------------------------------------------
-     * using from supper 
+     * Using from supper 
      * ------------------------------------------------------------------------
      **/
     using Super::Super;
     using Super::operator=;
     /**
      * ------------------------------------------------------------------------
-     * constructors
+     * Constructors
      * ------------------------------------------------------------------------
      */
     SContainer(size_t capacity) : Super() {
@@ -57,25 +47,25 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * reset
+     * Clear container
      * ------------------------------------------------------------------------
      */
-    inline SContainer& Reset() {
-        clear(); 
+    inline SContainer& clear() {
+        Super::clear(); return *this;
+    }
+    /**
+     * ------------------------------------------------------------------------
+     * Push a frame container
+     * ------------------------------------------------------------------------
+     */
+    template<typename Container>
+    SContainer& push(const Container& c) {
+        Super::insert(end(), c.begin(), c.end());
         return *this;
     }
     /**
      * ------------------------------------------------------------------------
-     * append list buffer
-     * ------------------------------------------------------------------------
-     */
-    inline SContainer& Append(const SContainer& buffer) {
-        insert(end(), buffer.begin(), buffer.end());
-        return *this;
-    }
-    /**
-     * ------------------------------------------------------------------------
-     *  check size
+     * Check size
      * ------------------------------------------------------------------------
      */
     inline bool full() const {
@@ -83,36 +73,43 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * set number
+     * Set number
      * ------------------------------------------------------------------------
      */
     template <class T>
-    SContainer& Number(T val) {
-        // prepare ---------------------------------------
-        Itertool::Stretch<SContainer> s(*this);
-
-        // encode ----------------------------------------
+    SContainer& number(T val) {
+        /**
+         * prepare iterator
+         */
+        auto s = Itertool::BuildStretch(*this);
+        /**
+         * encode number
+         */
         Itertool::SetNumber(s.rbegin(), s.rend(), val);
-        
-        // return self -----------------------------------
+        /**
+         * return itself
+         */ 
         return *this;
     }
     /**
      * ------------------------------------------------------------------------
-     * get number
+     * Get number
      * ------------------------------------------------------------------------
      */
     template <typename Type>
-    Type Number() const {
-        // prepare ----------------------------------------
+    Type number() const {
+        /**
+         * prepare iterator
+         */
         auto s = Itertool::BuildStretch(*this);
-
-        // decode -----------------------------------------
+        /**
+         * decode number
+         */
         return Itertool::GetNumber<Type>(s.rbegin(), s.rend());
     }
     /**
      * ------------------------------------------------------------------------
-     * detach  
+     * Detach  
      * ------------------------------------------------------------------------
      */
     inline SContainer&& detach() {
@@ -121,7 +118,7 @@ public:
 } Container;
 /**
  * ------------------------------------------------------------------------------------------------
- * utilities
+ * Utilities
  * ------------------------------------------------------------------------------------------------
  **/
 inline std::ostream& operator<<(std::ostream& os, const SContainer& c) {
@@ -133,7 +130,7 @@ inline std::ostream& operator<<(std::ostream& os, const SContainer& c) {
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  **/
 #endif /* SSCONTAINER_H */

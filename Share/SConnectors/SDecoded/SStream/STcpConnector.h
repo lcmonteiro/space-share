@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   STcpStreamConnector.h
  * Author: Luis Monteiro
  *
  * Created on December 6, 2016, 11:17 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef STCPSTREAMCONNECTOR_H
 #define STCPSTREAMCONNECTOR_H
@@ -13,22 +15,22 @@
 #include "SConnector.h"
 #include "SRemoteResource.h"
 /**
- * kernel
+ * stream
  */
 #include "SKernel/SIStreamConnector.h"
 #include "SKernel/SOStreamConnector.h"
 #include "SKernel/SIOStreamConnector.h"
 /**
  * ------------------------------------------------------------------------------------------------
- * End namespace Decoded & Stream
+ * Begin namespace Decoded & Stream
  * ------------------------------------------------------------------------------------------------
  */
 namespace Decoded {
-namespace Stream {
+namespace Stream  {
 /**
- * ------------------------------------------------------------------------------------------------
- * Resource adapter
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
+ * Resource Adapter
+ * ----------------------------------------------------------------------------
  */
 class ResourceAdapterTcp : private ::Stream::SRemoteResource {
 public:
@@ -38,29 +40,29 @@ public:
      */
     using Super::Super;
     using Super::operator=;
-    using Super::Fill;
-    using Super::Drain;
-    using Super::Good;
+    using Super::fill;
+    using Super::drain;
+    using Super::good;
     /**
      * interfaces
      */
-    inline Super& Base() {
+    inline Super& base() {
         return *this;
     }
-    inline void Wait(const SAddress& uri) {
-        Super::Wait(uri.Host(), uri.Port());
+    inline void wait(const SAddress& uri) {
+        Super::wait(uri.host(), uri.port());
     }
-    inline void Link(const SAddress& uri) {
-        Super::Link(uri.Host(), uri.Port());
+    inline void link(const SAddress& uri) {
+        Super::link(uri.host(), uri.port());
     }
-    inline void Reset() {
+    inline void reset() {
         *this = Super();
     }
 };    
 /**
- * ------------------------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------
  * Input TCP Connector
- * ------------------------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------
  * template
  */
 template<class R>
@@ -79,9 +81,9 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------
  * Output TCP Connector
- * ------------------------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------
  * template
  */
 template<class R>
@@ -100,9 +102,9 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------
  * IO TCP Connector
- * ------------------------------------------------------------------------------------------------
+ * ---------------------------------------------------------------------------
  * template
  */
 template<class R>
@@ -121,13 +123,13 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
- * definition
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
+ * Definition
+ * ----------------------------------------------------------------------------
  */
 typedef SIOTcpConnectorT<ResourceAdapterTcp> IOTcpConnector;
-typedef SITcpConnectorT<ResourceAdapterTcp>  ITcpConnector;
-typedef SOTcpConnectorT<ResourceAdapterTcp>  OTcpConnector;
+typedef SITcpConnectorT< ResourceAdapterTcp>  ITcpConnector;
+typedef SOTcpConnectorT< ResourceAdapterTcp>  OTcpConnector;
 }}
 /**
  * ------------------------------------------------------------------------------------------------

@@ -48,7 +48,7 @@ public:
      */
     SProcess(const Command& cmd, const SAddress uri={}, uint8_t verbose = 0)
     : SProcess(uri, verbose) {
-	    __cmds.Insert(cmd);
+	    __cmds.insert(cmd);
     }
     /**
      * default constructors
@@ -57,17 +57,11 @@ public:
     SProcess(SProcess&&) = default;
     /**
      * ------------------------------------------------------------------------
-     * Destructor
-     * ------------------------------------------------------------------------
-     */
-    virtual ~SProcess()  = default;
-    /**
-     * ------------------------------------------------------------------------
      * properties
      * ------------------------------------------------------------------------
      */
-    inline  SProcess& Insert(const Command& cmd) {
-        __cmds.Insert(cmd);
+    inline  SProcess& insert(const Command& cmd) {
+        __cmds.insert(cmd);
         return *this;
     }
     /**
@@ -75,18 +69,18 @@ public:
      * Run
      * ------------------------------------------------------------------------
      */
-    inline int Run() {
-        return Execute();
+    inline int run() {
+        return _execute();
     }
     /**
      * ------------------------------------------------------------------------
-     * Detach 
+     * Start - Task 
      * ------------------------------------------------------------------------
      */
-    inline void Detach() {
+    inline void start() {
         __worker = Task([this]() {
             try {
-                return Run();
+                return run();
             } catch (std::exception& ex) {
                 ERROR("Unexpected Exit = " << ex.what());
                 return -1;
@@ -98,60 +92,44 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * Attach
+     * Stop - Task
      * ------------------------------------------------------------------------
      */
-    inline void Attach() {
+    inline void stop() {
         __worker = Task();
     }
     /**
      * ------------------------------------------------------------------------
-     * Join
+     * Join - Task
      * ------------------------------------------------------------------------
      */
-    inline bool Join() {
-        try {
-            __worker.Join();
-        } catch(...) {
-            return false;
-        }
-        return true;
+    inline void join() {
+        __worker.join();
     }
 protected:
     /**
      * ------------------------------------------------------------------------
-     * properties
+     * Properties
      * ------------------------------------------------------------------------
      */
-    inline typename Commands::List __Commands() {
-        return __cmds.Remove();
+    inline typename Commands::List _commands() {
+        return __cmds.remove();
     }
     /**
      * ------------------------------------------------------------------------
      * Execute
      * ------------------------------------------------------------------------
      */
-    virtual int Execute() = 0;
+    virtual int _execute() = 0;
     /**
      * ------------------------------------------------------------------------
      * Logging
      * ------------------------------------------------------------------------
      */
-    inline void __DEBUG(const std::string& msg) {
-        SLog::__DEBUG(__uri, msg);
-    }
-    inline void __INFO(const std::string& msg) {
-        SLog::__INFO(__uri, msg);
-    }
-    inline void __WARNING(const std::string& msg) {
-        SLog::__WARNING(__uri, msg);
-    }
-    inline void __ERROR(const std::string& msg) {
-        SLog::__ERROR(__uri, msg);
-    }
-    inline void __CRITICAL(const std::string& msg) {
-        SLog::__CRITICAL(__uri, msg);
-    }
+    inline void _debug  (const std::string& msg) { SLog::_debug  (__uri, msg); }
+    inline void _info   (const std::string& msg) { SLog::_info   (__uri, msg); }
+    inline void _warning(const std::string& msg) { SLog::_warning(__uri, msg); }
+    inline void _error  (const std::string& msg) { SLog::_error  (__uri, msg); }
 private:
     /**
      * ------------------------------------------------------------------------
@@ -173,6 +151,10 @@ private:
      */
     Task __worker;
 };
-
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */
 #endif /* SPROCESS_H */
 

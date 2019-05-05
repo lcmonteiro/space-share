@@ -1,8 +1,10 @@
-/*
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   SEventResource.cpp
  * Author: Luis Monteiro
  *
  * Created on June 3, 2015, 10:12 AM
+ * ------------------------------------------------------------------------------------------------
  **
  * base linux
  */
@@ -19,28 +21,31 @@
 #include "SEventResource.h"
 /**
  * ----------------------------------------------------------------------------
- * constructors
+ * Constructors
  * ----------------------------------------------------------------------------
  */
 SEventResource::SEventResource(int init) : SResource() {
-    SetHandler(std::make_shared<SResourceHandler>(
-        ::eventfd(init, 0)
-    ));
+    handler(std::make_shared<SResourceHandler>(::eventfd(init, 0)));
 }
 /**
  * ----------------------------------------------------------------------------
- * interfaces
+ * Interfaces
  * ----------------------------------------------------------------------------
  * send
  */
-bool SEventResource::Send() {
-     return (eventfd_write (GetHandler<SResourceHandler>()->FD(), 1) == 0);
+bool SEventResource::send() {
+    return (::eventfd_write (handler<SResourceHandler>()->fd(), 1) == 0);
 }
 /**
  * clear
  */
-int SEventResource::Clear() {
-     eventfd_t val = 0;
-     eventfd_read(GetHandler<SResourceHandler>()->FD(), &val);
-     return val;
+int SEventResource::clear() {
+    eventfd_t val = 0;
+    ::eventfd_read(handler<SResourceHandler>()->fd(), &val);
+    return val;
 }
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */

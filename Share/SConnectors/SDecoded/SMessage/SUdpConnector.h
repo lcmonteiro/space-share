@@ -9,19 +9,19 @@
 #ifndef SUDPMESSAGECONNECTOR_H
 #define SUDPMESSAGECONNECTOR_H
 /**
- * Space
+ * space
  */
 #include "SContainer.h"
 #include "SConnector.h"
 #include "SRemoteResource.h"
 /**
- * Kernel
+ * share - connector
  */
 #include "SKernel/SIOMessageConnector.h"
 #include "SKernel/SIMessageConnector.h"
 #include "SKernel/SOMessageConnector.h"
 /**
- * Tools
+ * tools
  */
 #include "SDefault.h"
 /**
@@ -32,9 +32,9 @@
 namespace Decoded {
 namespace Message {
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Resource adapter
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 class ResourceAdapterUdp : private ::Message::SRemoteResource {
 public:
@@ -44,32 +44,32 @@ public:
      */
     using Super::SRemoteResource;
     using Super::operator=;
-    using Super::Read;
-    using Super::Drain;
-    using Super::Good;
+    using Super::read;
+    using Super::drain;
+    using Super::good;
     /**
      * interfaces
      */
-    inline Super& Base() {
+    inline Super& base() {
         return *this;
     }
-    inline void Bind(const SAddress& uri) {
-        Super::Bind(uri.Host(), uri.Port());
+    inline void bind(const SAddress& uri) {
+        Super::bind(uri.host(), uri.port());
     }
-    inline void Wait(const SAddress& uri) {
-        Super::Wait(uri.Host(), uri.Port());
+    inline void wait(const SAddress& uri) {
+        Super::wait(uri.host(), uri.port());
     }
-    inline void Link(const SAddress& uri) {
-        Super::Link(uri.Host(), uri.Port());
+    inline void link(const SAddress& uri) {
+        Super::link(uri.host(), uri.port());
     }
-    inline void Reset() {
+    inline void reset() {
         *this = Super();
     }
 };    
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Input UDP Connector
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * template
  */
 template <typename R, typename T> 
@@ -103,10 +103,10 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Output UDP Connector
- * ------------------------------------------------------------------------------------------------
- * template
+ * ----------------------------------------------------------------------------
+* template
  */
 template <typename R, typename T> 
 using SOMessageConnector = 
@@ -137,9 +137,9 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * IO UDP Connector
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * template
  */
 template <typename R, typename T> 
@@ -175,13 +175,13 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Definition
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 typedef SIOUdpConnectorT<ResourceAdapterUdp, SDefault> IOUdpConnector;
-typedef SIUdpConnectorT<ResourceAdapterUdp, SDefault>  IUdpConnector;
-typedef SOUdpConnectorT<ResourceAdapterUdp, SDefault>  OUdpConnector;
+typedef SIUdpConnectorT<ResourceAdapterUdp,  SDefault> IUdpConnector;
+typedef SOUdpConnectorT<ResourceAdapterUdp,  SDefault> OUdpConnector;
 }}
 /**
  * ------------------------------------------------------------------------------------------------

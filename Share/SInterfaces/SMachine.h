@@ -52,9 +52,9 @@ public:
      * config object
      * ------------------------------------------------------------------------
      */
-    class Config : public vector<Command> {
+    class Config : public std::vector<Command> {
     public:
-        using vector<Command>::vector;
+        using std::vector<Command>::vector;
         /**
          * ------------------------------------------------
          * add
@@ -70,8 +70,8 @@ public:
          * ------------------------------------------------
          */
         inline Config& swap(Key k1, Key k2) {
-            for (auto& m : *this){
-                m.Swap(k1, k2);
+            for (auto& m : *this) {
+                m.swap(k1, k2);
             }
             return *this;
         }
@@ -82,7 +82,7 @@ public:
          */
         inline Config& update(Key k1, Key k2, Val val) {
             for (auto& m : *this){
-                m.Update(k1, k2, val);
+                m.update(k1, k2, val);
             }
             return *this;
         }
@@ -123,20 +123,20 @@ public:
      * wait for all modules join
      * ----------------------------------------------------
      */
-    bool wait();
+    void wait();
     /**
      * ------------------------------------------------------------------------
      * Checkup 
      * ------------------------------------------------------------------------
-     * check state
+     * check state (greaten then)
      * @param s - state
      * @return  - number of modules in that state
      * ---------------------------------------------------- 
      */
-    inline int is_state(SModule::State s) {
+    inline int state_gt(SModule::State s) {
         int n = 0;
         for(auto& m : __modules) {
-            n += m.second->IsState(s) ? 1 : 0;
+            n += m.second->state_gt(s) ? 1 : 0;
         }
         return n;
     }
@@ -147,7 +147,7 @@ public:
      * ----------------------------------------------------
      */
     inline float good() {
-        return float(is_state(SModule::PLAY)) / __modules.size();
+        return float(state_gt(SModule::PLAY)) / __modules.size();
     }
     /**
      * ------------------------------------------------------------------------

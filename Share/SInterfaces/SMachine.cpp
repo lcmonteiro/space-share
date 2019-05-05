@@ -40,10 +40,10 @@ SMachine::SMachine(const SAddress& uri, const Config& conf)
 bool SMachine::process(Time timeout) {
     try {
         // wait data --------------------------------------
-        ResourceMonitor(timeout, &__monitor).Wait();
+        ResourceMonitor(timeout, &__monitor).wait();
 
         // process command --------------------------------
-        _process_cmd(__monitor.Read());
+        _process_cmd(__monitor.read());
 
     } catch (ResourceExceptionTIMEOUT& ex) {
     } catch (MonitorExceptionTIMEOUT& ex) {
@@ -55,12 +55,10 @@ bool SMachine::process(Time timeout) {
  * wait
  * ------------------------------------------------------------------------------------------------
  */
-bool SMachine::wait() {
-    bool out = true;
+void SMachine::wait() {
     for(auto& m : __modules) {
-        out &= m.second->Join();
+        m.second->join();
     }
-    return out;
 }
 /**
  *---------------------------------------------------------------------------------------------------------------------
@@ -84,12 +82,14 @@ void SMachine::_process_cmd(const Command& cmd) {
  * ------------------------------------------------------------------------------------------------
  */
 void SMachine::_insert_module(Key uri, const Command& cmd) {
-
-    // install module -------------------------------------
+    /**
+     * install module
+     */
     __modules.emplace(uri, CreateModule(cmd));
-    
-    //  start module --------------------------------------
-    __modules[uri]->Detach();
+    /**
+     * start module
+     */
+    __modules[uri]->start();
 }
 /**
  * ------------------------------------------------------------------------------------------------
@@ -149,14 +149,14 @@ SMachine::Link SMachine::CreateModule(const Command& cmd) {
     static std::map<Key, std::function <Link(const Command& cmd)>> GENERATOR {
         // Encode -------------------------------------------------------------
         {Module::Type::ENCODE, [](const Command& cmd) {
-            using Encode = SSpreadModule<
+            using Encode = Module::SSpreadModule<
                 Decoded::IConnector, Decoded::Document, Encoded::OConnector
             >;
             return std::make_shared<Encode>(cmd);
         }},
         // Decode -------------------------------------------------------------
         {Module::Type::DECODE, [](const Command& cmd) {
-            using Decode = SSpreadModule<
+            using Decode = Module::SSpreadModule<
                 Encoded::IConnector, Encoded::Document, Decoded::OConnector
             >;
             return std::make_shared<Decode>(cmd);

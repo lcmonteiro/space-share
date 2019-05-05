@@ -19,20 +19,20 @@
  * Chain
  * ------------------------------------------------------------------------------------------------
  */
-template<class K, class D>
+template<class Key, class Data>
 class SChain {
     /**
      * ------------------------------------------------------------------------
-     * types
+     * Types
      * ------------------------------------------------------------------------
      */
-    using Map       = std::map<K, D>;
+    using Map       = std::map<Key, Data>;
     using List      = std::list<typename Map::iterator>;
     using Iterator  = typename List::iterator;
 public:
     /**
      * ------------------------------------------------------------------------
-     * defaults
+     * Defaults
      * ------------------------------------------------------------------------
      * move constructor
      */
@@ -43,14 +43,14 @@ public:
     SChain& operator=(SChain&& chain) = default;
     /**
      * ------------------------------------------------------------------------
-     * constructor
+     * Constructor
      * ------------------------------------------------------------------------
      */
-    SChain(size_t capacity = 10): __map(), __list(), __capacity(capacity) {
-    }
+    SChain(size_t capacity = 10)
+    : __map(), __list(), __capacity(capacity) {}
     /**
      * ------------------------------------------------------------------------
-     * iterators
+     * Iterators
      * ------------------------------------------------------------------------
      */
     inline Iterator begin() {
@@ -65,14 +65,14 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * insert document 
+     * Insert document 
      * ------------------------------------------------------------------------
      */
-    SChain& Insert(K key, D&& doc) {
+    SChain& insert(Key k, Data&& d) {
         /**
          * insert on map
          */
-        auto r = __map.emplace(key, move(doc));
+        auto r = __map.emplace(k, std::move(d));
         /**
          * check insert
          */
@@ -92,26 +92,26 @@ public:
     }
     /**
      * ------------------------------------------------------------------------
-     * find document
+     * Find document
      * ------------------------------------------------------------------------
      */
-    inline D& Find(K key) {
-        return __map.at(key);
+    inline Data& find(Key k) {
+        return __map.at(k);
     }
     /**
      * ------------------------------------------------------------------------
-     * exist document
+     * Exist document
      * ------------------------------------------------------------------------
      */
-    inline bool Exist(K key) {
-        return __map.count(key) != 0;
+    inline bool exist(Key k) {
+        return __map.count(k) != 0;
     }
     /**
      * ------------------------------------------------------------------------
-     * clear document
+     * Clear document
      * ------------------------------------------------------------------------
      */
-    inline void Clear() {
+    inline void clear() {
         __map.clear();
         __list.clear();
     }
@@ -133,6 +133,10 @@ protected:
      */
     size_t __capacity;
 };
-
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */
 #endif /* SCHAIN_H */
 

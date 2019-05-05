@@ -9,19 +9,19 @@
 #ifndef SLOCMESSAGECONNECTOR_H
 #define SLOCMESSAGECONNECTOR_H
 /**
- * Space
+ * space
  */
 #include "SContainer.h"
 #include "SConnector.h"
 #include "SLocalResource.h"
 /**
- * Kernel
+ * share - connector
  */
 #include "SKernel/SIOMessageConnector.h"
 #include "SKernel/SIMessageConnector.h"
 #include "SKernel/SOMessageConnector.h"
 /**
- * Tools
+ * tools
  */
 #include "SDefault.h"
 /**
@@ -32,9 +32,9 @@
 namespace Decoded {
 namespace Message {
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Resource adapter
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 class ResourceAdapterLoc : private ::Message::SLocalResource {
 public:
@@ -44,32 +44,32 @@ public:
      */
     using Super::SLocalResource;
     using Super::operator=;
-    using Super::Read;
-    using Super::Drain;
-    using Super::Good;
+    using Super::read;
+    using Super::drain;
+    using Super::good;
     /**
      * interfaces
      */
-    inline Super& Base() {
+    inline Super& base() {
         return *this;
     }
-    inline void Bind(const SAddress& uri) {
-        Super::Bind(uri.File());
+    inline void bind(const SAddress& uri) {
+        Super::bind(uri.file());
     }
-    inline void Wait(const SAddress& uri) {
-        Super::Bind(uri.File());
+    inline void wait(const SAddress& uri) {
+        Super::bind(uri.file());
     }
-    inline void Link(const SAddress& uri) {
-        Super::Link(uri.File());
+    inline void link(const SAddress& uri) {
+        Super::link(uri.file());
     }
-    inline void Reset() {
+    inline void reset() {
         *this = Super();
     }
 };    
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Input LOC Connector
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * template
  */
 template <typename R, typename T> 
@@ -103,9 +103,9 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Output LOC Connector
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * template
  */
 template <typename R, typename T> 
@@ -137,9 +137,9 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * IO LOC Connector
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * template
  */
 template <typename R, typename T> 
@@ -175,13 +175,13 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Definition
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 typedef SIOLocConnectorT<ResourceAdapterLoc, SDefault> IOLocConnector;
-typedef SILocConnectorT<ResourceAdapterLoc, SDefault>  ILocConnector;
-typedef SOLocConnectorT<ResourceAdapterLoc, SDefault>  OLocConnector;
+typedef SILocConnectorT<ResourceAdapterLoc,  SDefault> ILocConnector;
+typedef SOLocConnectorT<ResourceAdapterLoc,  SDefault> OLocConnector;
 }}
 /**
  * ------------------------------------------------------------------------------------------------

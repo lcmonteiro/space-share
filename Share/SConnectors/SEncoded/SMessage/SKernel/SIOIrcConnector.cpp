@@ -1,10 +1,16 @@
-/*
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   SIOIrcConnector.cpp
  * Author: Luis Monteiro
  *
  * Created on June 3, 2015, 10:12 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #include "SIOIrcConnector.h"
+/**
+ * namespaces
+ */
+using namespace std;
 /**
  * ------------------------------------------------------------------------------------------------
  * Begin namespace Encoded & Message
@@ -17,34 +23,45 @@ namespace Message {
  * Constructor
  * ----------------------------------------------------------------------------
  */
-SIOIrcConnector::SIOIrcConnector(const std::string& address)
-: SInOutputConnector(address){
-}
+SIOIrcConnector::SIOIrcConnector(const SText& address)
+: SInOutputConnector(address) {}
 /**
  * ----------------------------------------------------------------------------
  * Read
  * ----------------------------------------------------------------------------
  */
-Document SIOIrcConnector::_Read() {
+Document SIOIrcConnector::_read() {
     Frame tmp;
-    // receive --------------------------------------------
-    __res.Read(tmp);
-    // parse ----------------------------------------------
-    IOFrame out    = std::move(tmp);
-    auto position = out.Read(sizeof (reference_t)).Number<reference_t>();
-    auto nframest = out.Read(sizeof (numframes_t)).Number<numframes_t>();
-    auto framelen = out.Read(sizeof (framesize_t)).Number<framesize_t>();
-    // log ------------------------------------------------
+    /**
+     * receive
+     */
+    __res.read(tmp);
+    /**
+     * parse
+     */
+    IOFrame out = std::move(tmp);
+    auto position = out.read(
+        sizeof (reference_t)).number<reference_t>();
+    auto nframest = out.read(
+        sizeof (framecount_t)).number<framecount_t>();
+    auto framelen = out.read(
+        sizeof (framesize_t)).number<framesize_t>();
+    /**
+     * log info
+     */
     INFO("CODE::IN::" 
         << "pos=" << position << " " 
         << "n="   << nframest << " " 
-        << "len=" << framelen
-    );
-    // read nframes ---------------------------------------
-    Document container(Context(position, nframest, framelen));
+        << "len=" << framelen );
+    /**
+     * read nframes
+     */
+    auto container = Document(Context(position, nframest, framelen));
     container.reserve(1);
-    container.push_back(out.Read(framelen));
-    // return container -----------------------------------
+    container.emplace_back(out.read(framelen));
+    /**
+     * return container
+     */
     return container;
 }
 /**
@@ -52,31 +69,33 @@ Document SIOIrcConnector::_Read() {
  * Write
  * ----------------------------------------------------------------------------
  */
-void SIOIrcConnector::_Write(const Document& container) {
+void SIOIrcConnector::_write(const Document& container) {
     IOFrame io = Frame(
         sizeof (reference_t) + 
-        sizeof (numframes_t) + 
-        sizeof (framesize_t) + container.Framesize()
-    );
-    // write context --------------------------------------
-    io.Write(Frame().Number<reference_t>(container.Position()));
-    io.Write(Frame().Number<numframes_t>(container.NumFrames()));
-    io.Write(Frame().Number<framesize_t>(container.Framesize()));
-    
-    // log ------------------------------------------------
+        sizeof (framecount_t) + 
+        sizeof (framesize_t) + container.frame_size());
+    /**
+     * write context
+     */ 
+    io.write(Frame().number<reference_t>(container.position()));
+    io.write(Frame().number<framecount_t>(container.frame_count()));
+    io.write(Frame().number<framesize_t>(container.frame_size()));
+    /**
+     * log info
+     */
     INFO("CODE::OUT::"
-        << "pos=" << container.Position()  << " " 
-        << "n="   << container.NumFrames() << " "
-        << "sz="  << container.Framesize() << " " 
-        << "len=" << container.size()
-    );
-    // write nframes --------------------------------------
+        << "pos=" << container.position()  << " " 
+        << "n="   << container.frame_count() << " "
+        << "sz="  << container.frame_size() << " " 
+        << "len=" << container.size());
+    /**
+     * write nframes
+     */
     for (auto& f : container) {
-        __res.Write(
-            io.ISeek(
-                sizeof (reference_t) + sizeof (numframes_t) + sizeof (framesize_t)
-            ).Write(f)
-        );
+        __res.write(io.iseek(
+            sizeof (reference_t) + 
+            sizeof (framecount_t) + 
+            sizeof (framesize_t)).write(f));
     }
 }
 /**
@@ -84,32 +103,41 @@ void SIOIrcConnector::_Write(const Document& container) {
  * Open
  * ----------------------------------------------------------------------------
  */
-void SIOIrcConnector::_Open() {
+void SIOIrcConnector::_open() {
     std::mt19937_64 eng{std::random_device{}()};
     /**
-     */
-    std::uniform_int_distribution<> dist{5000, 20000};
+     * sleep distribution
+     */ 
+   std::uniform_int_distribution<> dist{5000, 20000};
     /**
+     * process
      */
     int i = 0;
     do {
         try {
             SIRCResource res;
-            // connect to server --------------------------
-            res.Connect(__uri.Host(), __uri.Port());
+            /**
+             * connect to server
+             */
+            res.connect(__uri.host(), __uri.port());
             INFO("CONNECTED");
             STask::Sleep(chrono::seconds{1});
-            // join to channel ---------------------------
-            res.Join(__uri.User(), __uri.Channel());
+            /**
+             * join to channel
+             */
+            res.join(__uri.user(), __uri.channel());
             INFO("JOINED");
             STask::Sleep(chrono::seconds{1});
-            // swap resources ----------------------------
+            /**
+             * swap resources
+             */
             std::swap(__res, res);
-            // active ------------------------------------
             break;
         } catch (IRCExceptionBANNED& ex) {
             ERROR(ex.what());
-            // reset connection --------------------------
+            /**
+             * reset connection
+             */
             __res = SIRCResource();
             break;
         } catch (ResourceExceptionTIMEOUT& ex) {
@@ -119,7 +147,6 @@ void SIOIrcConnector::_Open() {
         } catch (std::system_error& ex) {
             WARNING(ex.what());
         }
-        // random sleep --------------------------------------
     } while (STask::Sleep(std::chrono::milliseconds{dist(eng) + (1000 * i++)}));
 }
 }}
@@ -128,5 +155,3 @@ void SIOIrcConnector::_Open() {
  * End namespace Encoded & Message
  * ------------------------------------------------------------------------------------------------
  */
-
-

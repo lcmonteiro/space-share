@@ -1,56 +1,62 @@
-/*
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   SIDirConnector.cpp
  * Author: Luis Monteiro
  *
  * Created on June 3, 2015, 10:12 AM
+ * ------------------------------------------------------------------------------------------------
+ **
+ * linux
  */
 #include <sys/inotify.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
 /**
+ * share
  */
 #include "SIDirConnector.h"
 /**
- * Begin namespace Encoded
+ * namespaces
  */
-namespace Encoded {
-/**
- * Begin namespace Message
- */
-namespace Message {
+using namespace Encoded;
+using namespace Message;
 /**
  * ----------------------------------------------------------------------------
- * constructor
+ * Constructor
  * ----------------------------------------------------------------------------
  */
-SIDirConnector::SIDirConnector(const SText address): SInputConnector(address){
-}
+SIDirConnector::SIDirConnector(const SText address)
+: SInputConnector(address) {}
 /** 
  * ----------------------------------------------------------------------------
- * drain
+ * Drain
  * ----------------------------------------------------------------------------
  */
-std::list<Document> SIDirConnector::_Drain() {
-	// log ------------------------------------------------
+std::list<Document> SIDirConnector::_drain() {
+	/**
+	 * log info
+	 */
 	INFO("CODE(drain)::IN::n=0");
-	// drain empty container ------------------------------
+	/**
+	 * drain empty container
+	 */
 	return {};
 }
 /**
  * ----------------------------------------------------------------------------
- * read
+ * Read
  * ----------------------------------------------------------------------------
  */
-Document SIDirConnector::_Read() {
-	// // create resource ------------------------------------
-	// auto res = __res.GetResource();
+Document SIDirConnector::_read() {
+	// // create resource
+	// auto res = __res.resource();
 	// // read context ---------------------------------------
-	// auto position = res.Read(sizeof(reference_t)).Number<reference_t>();
-	// auto nframest = res.Read(sizeof(numframes_t)).Number<numframes_t>();
-	// auto nframesp = res.Read(sizeof(numframes_t)).Number<numframes_t>();
-	// auto framelen = res.Read(sizeof(framesize_t)).Number<framesize_t>();
-	// // log ------------------------------------------------
+	// auto position = res.read(sizeof(reference_t)).Number<reference_t>();
+	// auto nframest = res.read(sizeof(framecount_t)).Number<framecount_t>();
+	// auto nframesp = res.read(sizeof(framecount_t)).Number<framecount_t>();
+	// auto framelen = res.read(sizeof(framesize_t)).Number<framesize_t>();
+	// // log
 	// INFO("CODE::IN::" 
 	// 	<< "pos=" << position << " " 
 	// 	<< "n="   << nframest << " " 
@@ -61,17 +67,14 @@ Document SIDirConnector::_Read() {
 	// Document container(Context(position, nframest, framelen));
 	// container.reserve(nframesp);
 	// while(!container.full()){
-	// 	container.push_back(res.Read(framelen));
+	// 	container.push_back(res.read(framelen));
 	// }
 	// // return full container ------------------------------
 	// return container;
 	return {};
 }
 /**
- * End namespace Message
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- * End namespace Encoded
- */
-}

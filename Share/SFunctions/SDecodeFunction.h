@@ -15,14 +15,14 @@
 #include <cmath>
 #include <sstream>
 /**
- * Share Kernel
+ * share
  */
 #include "SConnector.h"
 #include "SCache.h"
 /**
- *-------------------------------------------------------------------------------------------------
- * message context
- *-------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
+ * Message context
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Message {
 /**
@@ -31,94 +31,109 @@ namespace Message {
 class SDecodeFunction : public SFunctionSpread<
 	SConnector::Key, Encoded::IConnector, Encoded::Document, Decoded::OConnector> {
     /**
-     * super class
+     * Super class
      */ 
     using Super = SFunctionSpread<
-        SConnector::Key, Encoded::IConnector, Encoded::Document, Decoded::OConnector
-    >;
+        SConnector::Key, Encoded::IConnector, Encoded::Document, Decoded::OConnector>;
     /**
      * helpers
      */
-    using ORoad = typename Super::ORoad;
-    using Data  = typename Super::Data;
-    using Cache = Message::SCache;
+    using ORoad  = typename Super::ORoad;
+    using Data   = typename Super::Data;
+    using Cache  = Message::SCache;
+    using pStamp = Codec::pStamp;
 public:
     /**
 	 * ------------------------------------------------------------------------
-     * SDecodeFunction 
+     * Constructor  
      * @param stamp
      * @param nContainers
 	 * ------------------------------------------------------------------------
      */
     SDecodeFunction(
-		SharedStamp stamp, uint32_t nContainers, uint32_t energy = 3, uint8_t verbose = 0
-	): Super("Decode", energy, verbose), __cache(stamp, nContainers) {
-    }
-    SDecodeFunction(
-		const string& id, 
-    	SharedStamp stamp, uint32_t nContainers, uint32_t energy = 3, uint8_t verbose = 0
-    ): Super(string("Decode(") + id + ")", energy, verbose), __cache(stamp, nContainers) {
-    }
+		pStamp stamp,
+		uint32_t nContainers, 
+		uint32_t energy = 3, 
+		uint8_t verbose = 0)
+	: Super("Decode", energy, verbose), 
+	__cache(stamp, nContainers) {}
+    
+	SDecodeFunction(
+		const std::string& id, 
+    	pStamp stamp, 
+		uint32_t nContainers, 
+		uint32_t energy = 3, 
+		uint8_t verbose = 0)
+	: Super(std::string("Decode(") + id + ")", energy, verbose), 
+	__cache(stamp, nContainers) {}
     /**
 	 * ------------------------------------------------------------------------
      * Drain
 	 * ------------------------------------------------------------------------
      */
-    void Drain(ORoad& out) {
-	    // move cache -----------------
-	    __cache.Move();
-	    
-		// process --------------------
-	    processData(out);
+    void drain(ORoad& out) {
+	    /**
+		 * move cache
+		 */
+	    __cache.move();
+		/**
+		 * process
+		 */
+	    _process_data(out);
     }
     /**
 	 * ------------------------------------------------------------------------
      * Recover
 	 * ------------------------------------------------------------------------
      */
-    void Recover() override {
-	    // clear cache ----------------
-	    __cache.Clear();
-	    
-		// base recover ---------------
-	    SFunction::Recover();
+    void recover() override {
+	    /**
+		 * clear cache
+		 */
+	    __cache.clear();
+		/**
+		 * base recover
+		 */
+	    Super::recover();
     }
 protected:
     /**
      * ------------------------------------------------------------------------
-     * process Data
+     * Process Data
      *-------------------------------------------------------------------------
      */
-	void processData(ORoad& out) override {
-	    for (auto& doc: __cache.Pop()) {
+	void _process_data(ORoad& out) override {
+	    for (auto& doc: __cache.pop()) {
 	        for (auto it = out.begin(), end = out.end(); it != end;) {
 	            try {
-	                it->second->Write(doc); ++it;
+	                it->second->write(doc); ++it;
 	            } catch (ConnectorExceptionDEAD& ex) {
-	                out.Exception(it);
+	                out.exception(it);
 	            } catch (ConnectorExceptionTIMEOUT& ex) {
 	            }
 	        }
         }
     }
-	void processData(Data&& data, ORoad& out) override {
-	    DEBUG("receive={" 
-	        << " p=" << data.Position() 
-	        << " n=" << data.NumFrames() 
+	void _process_data(Data&& data, ORoad& out) override {
+	    /**
+		 * log debug
+		 */
+		DEBUG("receive={" 
+	        << " p=" << data.position() 
+	        << " n=" << data.frame_count() 
 	        << " s=" << data.size() 
-	        << " }"
-	    );
+	        << " }");
 	    /**
 	     * insert coded data
 	     */
-	    if(__cache.Push(std::move(data))){
-	        processData(out);
+	    if(__cache.push(std::move(data))){
+	        _process_data(out);
 	    }
     }
 private:
 	/**
      * ------------------------------------------------------------------------
-     * variables
+     * Variables
      *-------------------------------------------------------------------------
 	 **
      * cache
@@ -127,9 +142,9 @@ private:
 };
 }
 /**
- *-------------------------------------------------------------------------------------------------
- * stream context
- *-------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
+ * Stream Context
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Stream {
 /**
@@ -142,17 +157,17 @@ class SDecodeFunction : public SFunctionSpread<
      */
     const size_t AUX_SIZE = 5;
     /**
-     * super class
+     * Super class
      */ 
     using Super = SFunctionSpread<
-        SConnector::Key, Encoded::IConnector, Encoded::Document, Decoded::OConnector
-    >;
+        SConnector::Key, Encoded::IConnector, Encoded::Document, Decoded::OConnector>;
 	/**
      * define types
      */ 
-    using Road  = typename Super::ORoad;
-    using Data  = typename Super::Data;
-    using Cache = Stream::SCache;
+    using Road   = typename Super::ORoad;
+    using Data   = typename Super::Data;
+    using Cache  = Stream::SCache;
+	using pStamp = Codec::pStamp;
 public:
     /**
 	 * ------------------------------------------------------------------------
@@ -161,14 +176,25 @@ public:
 	 * ------------------------------------------------------------------------
      */
     SDecodeFunction(
-		SharedStamp stamp, uint32_t nContainers, uint32_t energy = 3, uint8_t verbose = 0
-	): Super("Decode", energy, verbose), __cache(stamp, nContainers), __cache_aux(AUX_SIZE) {
-    	for(auto&c :__cache_aux){ c = Cache(stamp, nContainers); }
-    }
+		pStamp stamp, 
+		uint32_t nContainers, 
+		uint32_t energy = 3, 
+		uint8_t verbose = 0)
+	: Super("Decode", energy, verbose), 
+	__cache(stamp, nContainers), 
+	__cache_aux(AUX_SIZE) {
+		for(auto&c :__cache_aux){ c = Cache(stamp, nContainers); }
+	}
+
     SDecodeFunction(
-    	const string& id, 
-    	SharedStamp stamp, uint32_t nContainers, uint32_t energy = 3, uint8_t verbose = 0
-    ): Super(string("Decode(") + id + ")", energy, verbose), __cache(stamp, nContainers), __cache_aux(AUX_SIZE) {
+    	const std::string& id, 
+    	pStamp stamp,
+		uint32_t nContainers, 
+		uint32_t energy = 3, 
+		uint8_t verbose = 0)
+	: Super(std::string("Decode(") + id + ")", energy, verbose), 
+	__cache(stamp, nContainers), 
+	__cache_aux(AUX_SIZE) {
     	for(auto&c :__cache_aux){ c = Cache(stamp, nContainers); }
     }
     /**
@@ -176,36 +202,30 @@ public:
      * Drain
 	 * ------------------------------------------------------------------------
      */
-    void Drain(Road& out) {
+    void drain(Road& out) {
 	    /**
 	     * move main cache
 	     */
-	    if(__cache_aux.front().Length()) {
-	        __cache.Move(); 
+	    if(__cache_aux.front().length()) {
+	        __cache.move(); 
 	    }
 	    /**
 	     * move caches
 	     */
 	    for(auto&c :__cache_aux) {
-	        c.Move(); 
+	        c.move(); 
 	    }
 	    /**
 	     * sort aux caches
 	     */
-	    sortCache();
+	    _sort_cache();
 	    /**
 	     * try to swap caches 
 	     */
-	    if (swapCache(__cache, __cache_aux.front())) {
-	        /**
-	         * reset Connector
-	         */
-	        out.Reset();
+	    if (_swap_cache(__cache, __cache_aux.front())) {
+	        out.reset();
 	    } else {
-	        /**
-	         * process data
-	         */
-	        processData(out);
+	        _process_data(out);
 	    }
     }
     /**
@@ -213,64 +233,65 @@ public:
      * Recover
 	 * ------------------------------------------------------------------------
      */
-    void Recover() override {
+    void recover() override {
 	    /**
 	     * clear cache
 	     */
-	    __cache.Clear();
+	    __cache.clear();
 	    /**
 	     * clear aux cache
 	     */
 	    for(auto&c :__cache_aux){
-	        c.Clear(); 
+	        c.clear(); 
 	    }
 	    /** 
 		 * recover function
 	     */
-	    SFunction::Recover();
+	    Super::recover();
     }
 protected:
     /**
 	 * ------------------------------------------------------------------------
-     * process Data
+     * Process Data
      * ------------------------------------------------------------------------
 	 */
-    void processData(Road& out) override {
-	    for (auto& data: __cache.Pop()) {
+    void _process_data(Road& out) override {
+	    for (auto& data: __cache.pop()) {
 	        for(auto it = out.begin(); it != out.end();){
 		        try {
-		            it->second->Write(data); ++it;
+		            it->second->write(data); ++it;
 		        } catch (ConnectorExceptionDEAD& ex) {
-		            out.Exception(it);
+		            out.exception(it);
 		        } catch (ConnectorExceptionTIMEOUT& ex) {}
 	        }
 	        /**
 	         * reset cache aux
 	         */
-	        for(auto&c :__cache_aux){ c.Clear(); }
+	        for(auto&c :__cache_aux){ c.clear(); }
 	    }
     }
-    inline void processData(Data&& data, Road& out) {
+    inline void _process_data(Data&& data, Road& out) override {
 	    /**
 	     * insert on cache
 	     */
 	    DEBUG("receive::" 
-			<< "pos=" << data.Position()  << " " 
-			<< "n="   << data.NumFrames() << " "
-			<<"s=" << data.size()
-		);
-	    if (!__cache.Push(move(data))) {
+			<< "pos=" << data.position()  << " " 
+			<< "n="   << data.frame_count() << " "
+			<<"s="    << data.size());
+	    if (!__cache.push(move(data))) {
 	        /**
 	         * add to aux caches
 	         */
 	        for (auto& c : __cache_aux) {
-		        DEBUG("receive(aux)::" << "aux=" << c.Density() << " cur=" << __cache.Density());
-		        if (c.Push(move(data))) {
+		        DEBUG("receive(aux)::" 
+					<< "aux=" << c.density() << " " 
+					<< "cur=" << __cache.density());
+		        if (c.push(move(data))) {
 		            /**
 		             * try to swap caches 
 		             */
-		            if (swapCache(__cache.Shrink(c.Density()), c)) {
-		     	       out.Reset();
+		            if (_swap_cache(__cache.shrink(c.density()), c)) {
+		     	       out.reset();
 		            }
 		            return;
 		        }
@@ -278,18 +299,18 @@ protected:
 	        /**
 	         * sort aux caches
 	         */
-	        sortCache();
+	        _sort_cache();
 	        /**
 	         * reset last aux cache
 	         */
-	        __cache_aux.back().Clear();
-	        __cache_aux.back().Push(move(data));
+	        __cache_aux.back().clear();
+	        __cache_aux.back().push(move(data));
 	        return;
 	    }
 	    /**
 	     * remove cache
 	     */
-	    processData(out);
+	    _process_data(out);
     }
     /**
 	 * ------------------------------------------------------------------------
@@ -298,32 +319,30 @@ protected:
 	 **
 	 * sort cache
      */
-    inline void sortCache(){
-	    sort(__cache_aux.begin(), __cache_aux.end(), [](Cache& a, Cache& b) {
-	        return a.Stronger(b);   
-	    });
+    inline void _sort_cache(){
+	    std::sort(__cache_aux.begin(), __cache_aux.end(), 
+			[](Cache& a, Cache& b) { return a.stronger(b); });
     }
     /**
      * try to swap caches
      */
-    inline bool swapCache(Cache& main, Cache& aux) {
-	    if (aux.Stronger(main)) {
+    inline bool _swap_cache(Cache& main, Cache& aux) {
+	    if (aux.stronger(main)) {
 	        /**
 	         * log 
 	         */
 	        WARNING("broken::"
-	 	       	<< " aux=" << aux.Density() << " cur=" << main.Density()
-	    	   	<< " aux=" << aux.Length()  << " cur=" << main.Length()
-	        	<< " aux=" << aux.Weight()  << " cur=" << main.Weight()
-	        );
+	 	       	<< " aux=" << aux.density() << " cur=" << main.density()
+	    	   	<< " aux=" << aux.length()  << " cur=" << main.length()
+	        	<< " aux=" << aux.weight()  << " cur=" << main.weight());
 	        /**
 	         *  swap caches 
 	         */
-	        swap(main, aux);
+	        std::swap(main, aux);
 	        /**
 	         *  shrink 
 	         */
-	        aux.Shrink();
+	        aux.shrink();
 	        return true;
 	    }
 	    return false;
@@ -331,7 +350,7 @@ protected:
 private:
 	/**
 	 * ------------------------------------------------------------------------
-	 * variables
+	 * Variables
 	 * ------------------------------------------------------------------------
 	 **
      * main container
@@ -340,13 +359,13 @@ private:
     /**
      * aux containers
      */
-    vector<Cache> __cache_aux;
+    std::vector<Cache> __cache_aux;
 };
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */
-#endif    /* SDECODE_H */
+#endif /* SDECODE_FUNCTION_H */
 

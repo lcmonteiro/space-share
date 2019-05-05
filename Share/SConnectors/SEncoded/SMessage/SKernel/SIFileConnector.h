@@ -1,15 +1,15 @@
 /**
- * -------------------------------------------------------------------------------------------------------------------- 
+ * ------------------------------------------------------------------------------------------------
  * File:   SIFileConnector.h
  * Author: Luis Monteiro
  *
  * Created on December 11, 2016, 1:25 AM
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SIFILECONNECTORCODED_H
 #define SIFILECONNECTORCODED_H
 /**
- * Space Kernel
+ * space
  */
 #include "SContainer.h"
 #include "SAddress.h"
@@ -17,20 +17,20 @@
 #include "STask.h"
 #include "SText.h"
 /**
- * Share Kernel
+ * share
  */
 #include "SConnector.h"
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * Begin namespace Encoded & Message
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
 namespace Message {
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * Base - SIFileConnector
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Base {
 /**
@@ -40,35 +40,39 @@ class SIFileConnector : public Super {
 public:
     /**
      * ------------------------------------------------------------------------
-     * constructor
+     * Constructor
      * ------------------------------------------------------------------------
      */
     SIFileConnector(
-        const SText  address
+        const SText address
     ): Super(address), __res() {}
     /**
      * ------------------------------------------------------------------------
-     * get resource
+     * Get Resource
      * ------------------------------------------------------------------------
      */
-    inline Resource& GetResource() override {
-        return __res.Base();
+    inline Resource& resource() override {
+        return __res.base();
     }
 protected:
     /**
      * ------------------------------------------------------------------------
-     * open
+     * Open
      * ------------------------------------------------------------------------
      */
-    inline void _Open() override {
+    inline void _open() override {
         std::default_random_engine eng{std::random_device{}()};
-        // sleep distribution -----------------------------
+        /**
+         * sleep distribution
+         */
         std::uniform_int_distribution<> dist{100, 1000};
-        // main loop --------------------------------------
+        /**
+         * main loop
+         */
         int i = 0;
         do {
             try {
-                __res.Bind(this->__uri);
+                __res.bind(this->__uri);
                 break;
             } catch (std::system_error& ex) {
                 WARNING(ex.what());
@@ -77,23 +81,23 @@ protected:
     }
     /**
      * ------------------------------------------------------------------------
-     * good
+     * Good
      * ------------------------------------------------------------------------
      */
-    inline bool _Good() override {
-        return __res.Good();
+    inline bool _good() override {
+        return __res.good();
     }
     /**
      * ------------------------------------------------------------------------
-     * close
+     * Close
      * ------------------------------------------------------------------------
      */
-    inline void _Close() override {
-        __res.Reset();
+    inline void _close() override {
+        __res.reset();
     }
     /**
      * ------------------------------------------------------------------------
-     * variables
+     * Variables
      * ------------------------------------------------------------------------
      * resource 
      */
@@ -113,7 +117,7 @@ class SIFileConnector : public Super {
 public:
     /**
      * ------------------------------------------------------------------------
-     * constructor
+     * Constructor
      * ------------------------------------------------------------------------
      */
     SIFileConnector(
@@ -122,51 +126,57 @@ public:
 protected:
     /**
      * ------------------------------------------------------------------------
-     * read
+     * Read
      * ------------------------------------------------------------------------
      */
-    Document _Read() override {
-        // read context -----------------------------------
+    Document _read() override {
+        /**
+         * read context
+         */
         IOFrame buf_position(sizeof (reference_t)); 
-        this->__res.Fill(buf_position);
-        auto position = buf_position.Number<reference_t>();
+        this->__res.fill(buf_position);
+        auto position = buf_position.number<reference_t>();
 
-        IOFrame buf_nframest(sizeof (numframes_t)); 
-        this->__res.Fill(buf_nframest);
-        auto nframest = buf_nframest.Number<reference_t>();
+        IOFrame buf_nframest(sizeof (framecount_t)); 
+        this->__res.fill(buf_nframest);
+        auto nframest = buf_nframest.number<reference_t>();
         
-        IOFrame buf_nframesp(sizeof (numframes_t)); 
-        this->__res.Fill(buf_nframesp);
-        auto nframesp = buf_nframesp.Number<reference_t>();
+        IOFrame buf_nframesp(sizeof (framecount_t)); 
+        this->__res.fill(buf_nframesp);
+        auto nframesp = buf_nframesp.number<reference_t>();
     
         IOFrame buf_framelen(sizeof (reference_t)); 
-        this->__res.Fill(buf_framelen);
-        auto framelen = buf_framelen.Number<reference_t>();
-        
-        // log info ---------------------------------------
+        this->__res.fill(buf_framelen);
+        auto framelen = buf_framelen.number<reference_t>();
+        /**
+         * read nframes
+         */
+        auto doc = Document(Context(position, nframest, framelen));
+        doc.reserve(nframesp);
+        while(!doc.full()) {
+            IOFrame buf(framelen);
+            this->__res.fill(buf);
+            doc.emplace_back(buf.detach());
+        }
+        /**
+         * log info
+         */
         INFO("CODE::IN::" 
             << "pos=" << position << " " 
             << "n="   << nframest << " " 
             << "sz="  << nframesp << " " 
-            << "len=" << framelen
-        );
-        // read nframes -----------------------------------
-        Document doc(Context(position, nframest, framelen));
-        doc.reserve(nframesp);
-        while(!doc.full()) {
-            IOFrame buf(framelen);
-            this->__res.Fill(buf);
-            doc.emplace_back(buf.detach());
-        }
-        // return document --------------------------------
+            << "len=" << framelen);
+        /**
+         * return document
+         */
         return doc;
     }
 };
 }
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * End namespace Encoded & Message
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 }}
 #endif /* SIFILECONNECTORCODED_H */

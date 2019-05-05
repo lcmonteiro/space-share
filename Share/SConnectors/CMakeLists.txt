@@ -3,7 +3,9 @@ cmake_minimum_required (VERSION 3.8)
 add_subdirectory(SDecoded)
 # folder for Encoded
 add_subdirectory(SEncoded)
-# target
+# ---------------------------------------------------------
+# ShareConnector target
+# ---------------------------------------------------------
 add_library(ShareConnector 
 INTERFACE
 )
@@ -18,3 +20,6 @@ INTERFACE
 	ShareConnectorDecoded
 	ShareConnectorEncoded
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

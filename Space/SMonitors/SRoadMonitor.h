@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SRoadMonitor.h
  * Author: Luis Monteiro
  *
  * Created on January 21, 2019, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SROADMONITOR_H
 #define SROADMONITOR_H
@@ -17,53 +19,57 @@
  * -------------------------------------------------------------------------------------------------
  */
 template<
-    typename KEY, 
-    typename OBJ, 
-    typename ADAPT=Monitor::Resource::SIndirect,
-    typename BASE =Monitor::SDynamic
+    typename Key, 
+    typename Obj, 
+    typename Adapt = Monitor::Resource::SIndirect,
+    typename Base  = Monitor::SDynamic
 >
 class SRoadMonitor 
 : public SContainerMonitor<
-    SRoad<KEY, OBJ>, Monitor::Container::SPair, SResourceMonitor<ADAPT, BASE>
+    SRoad<Key, Obj>, Monitor::Container::SPair, SResourceMonitor<Adapt, Base>
 > {
 public:
     /**
      * ------------------------------------------------------------------------
-     * helpers
+     * Helpers
      * ------------------------------------------------------------------------
      */
     using Super = SContainerMonitor<
-        SRoad<KEY, OBJ>, Monitor::Container::SPair, SResourceMonitor<ADAPT, BASE>
-    >;
-    using Road = SRoad<
-        KEY, OBJ
-    >;
+        SRoad<Key, Obj>, Monitor::Container::SPair, SResourceMonitor<Adapt, Base>>;
+    using Road  = SRoad<Key, Obj>;
     /**
      * ------------------------------------------------------------------------
-     * constructor
+     * Constructor
      * ------------------------------------------------------------------------
      */
     using Super::Super;
     /**
      * ------------------------------------------------------------------------
-     * interfaces
+     * Interfaces
      * ------------------------------------------------------------------------
-     * insert 
+     * Insert
+     * ---------------------------------------------------- 
      */
-    inline SRoadMonitor& Insert(KEY k, OBJ o) {
-        Road::Insert(std::forward<KEY>(k), std::forward<OBJ>(o));
+    inline SRoadMonitor& insert(Key k, Obj o) {
+        Road::insert(
+            std::forward<Key>(k), 
+            std::forward<Obj>(o));
         return *this;
     }
     /**
-     * update
+     * ----------------------------------------------------
+     * Update
+     * ----------------------------------------------------
      */
-    inline SRoadMonitor& Update() {
-        Road::Update();
-        Super::Update();
+    inline SRoadMonitor& update() {
+        Road::update();
+        Super::update();
         return *this;
     }
     /**
-     * detach
+     * ----------------------------------------------------
+     * Detach
+     * ----------------------------------------------------
      */
     inline SRoadMonitor detach() {
         return std::move(*this);
@@ -71,8 +77,7 @@ public:
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */
 #endif /* SROADMONITOR_H */
-

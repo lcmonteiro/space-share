@@ -1,7 +1,7 @@
 /**
  * ------------------------------------------------------------------------------------------------
  * File:   STextExtension.h
- * Author:      Luis Monteiro
+ * Author: Luis Monteiro
  *
  * Created on February 2612, 2019, 23:37
  * ------------------------------------------------------------------------------------------------
@@ -9,7 +9,7 @@
 #ifndef STEXTEXTENSION_H
 #define STEXTEXTENSION_H
 /**
- * Space
+ * space
  */
 #include "SFrame.h"
 #include "SText.h"
@@ -24,7 +24,7 @@ class STextExtension : public RESOURCE {
 public:
     /**
      * ------------------------------------------------------------------------
-     * from super
+     * From Super
      * ------------------------------------------------------------------------
      */
     using Super::Super;
@@ -38,16 +38,20 @@ public:
      */
     STextExtension& operator >>(SText& txt) {
         IOFrame in(1);
-        // fill text --------------------------------------
+        /**
+         * fill text
+         */
         for (auto it = txt.begin(); txt.end() != it; ++it) {
-
-            // receive ------------------------------------
-            Super::Fill(in.Reset());
-
-            // verify end ---------------------------------
+            /**
+             * receive
+             */
+            this->fill(in.clear());
+            /**
+             * verify end
+             */
             if (::iscntrl(in.front())) {
                 if (in.front() == '\r') {
-                    Super::Fill(in.Reset());
+                    this->fill(in.clear());
                 }
                 if(in.front() == '\n') {
                     txt.erase(it, txt.end());
@@ -55,7 +59,9 @@ public:
                 }
                 continue;
             }
-            // set value ----------------------------------
+            /**
+             * set value
+             */
             *it = in.front();
         }
         return *this;
@@ -66,9 +72,8 @@ public:
      * ----------------------------------------------------
      */
     STextExtension& operator<<(const SText& txt) {
-        Super::Drain(
-            IOFrame(Frame(txt.begin(), txt.end()))
-        );
+        Super::drain(
+            IOFrame(Frame(txt.begin(), txt.end())));
         return *this;
     }
 };

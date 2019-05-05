@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SContainerMonitor.h
  * Author: Luis Monteiro
  *
  * Created on January 21, 2019, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SCONTAINERMONITOR_H
 #define SCONTAINERMONITOR_H
@@ -18,7 +20,7 @@
 #include "SRoad.h"
 /**
  * -------------------------------------------------------------------------------------------------
- * default adapters 
+ * Default Adapters 
  * -------------------------------------------------------------------------------------------------
  */
 namespace Monitor {
@@ -43,27 +45,24 @@ struct SPair {
 		return it;
 	}
 };
-}
-}
+}}
 /**
  * -------------------------------------------------------------------------------------------------
- * ContainerMonitor
+ * Container Monitor
  * -------------------------------------------------------------------------------------------------
  */
 template<
-    typename CONTAINER, 
-    typename ADAPTER=Monitor::Container::SOne,
-    typename MOTITOR=SResourceMonitor<Monitor::Resource::SIndirect, Monitor::SDynamic>
+    typename Container, 
+    typename Adapter = Monitor::Container::SOne,
+    typename Monitor = SResourceMonitor<Monitor::Resource::SIndirect, Monitor::SDynamic>
 >
-class SContainerMonitor : public CONTAINER, public MOTITOR {
-    using Container = CONTAINER;
-    using Monitor   = MOTITOR;
+class SContainerMonitor : public Container, public Monitor {
 public:
     using Location  = typename Container::Location;
     using Time      = typename Monitor::Time; 
     /**
      * ------------------------------------------------------------------------
-     * defaults
+     * Defaults
      * ------------------------------------------------------------------------ 
      */
     SContainerMonitor()                                = default;
@@ -71,7 +70,7 @@ public:
     SContainerMonitor& operator=(SContainerMonitor &&) = default;
     /**
      * ------------------------------------------------------------------------
-     * constructors
+     * Constructors
      * ------------------------------------------------------------------------
      * template 
      */
@@ -80,49 +79,59 @@ public:
     : Container(std::forward<Args>(args)...), Monitor(timeout), __rev(0) {}
     /**
      * ------------------------------------------------------------------------
-     * interfaces
+     * Interfaces
      * ------------------------------------------------------------------------
-     * wait 
+     * Wait 
      * ----------------------------------------------------
      */
-    inline std::list<Location> Wait() {
-        // update monitor -------------
-        Update();
-        // wait and map ---------------
+    inline std::list<Location> wait() {
+        /**
+         * update monitor
+         */
+        update();
+        /**
+         * wait and map
+         */
         std::list<Location> res;
-        for(auto& r : Monitor::Wait()) {
+        for(auto& r : Monitor::wait()) {
             res.emplace_back(__map.at(r));
         }
         return res;
     }
     /**
      * ----------------------------------------------------
-     * update
+     * Update
      * ----------------------------------------------------
      */
-    inline SContainerMonitor& Update() {
-        // reload if changed ----------
-        if(__Changed()) {
+    inline SContainerMonitor& update() {
+        /**
+         * reload if changed
+         */
+        if(_changed()) {
             static_cast<Monitor&>(*this) = Monitor();
             for(auto it = Container::begin(); Container::end() != it; ++it) {
                 __map.emplace(
-                    Monitor::Insert(ADAPTER::GetResource(it)), ADAPTER::GetLocation(it)
-                );
+                    Monitor::insert(
+                        Adapter::GetResource(it)), 
+                        Adapter::GetLocation(it));
             }
         }
-        // return self ----------------
+        /**
+         * return itself
+         */
         return *this;
     }
 protected:
     /**
      * ------------------------------------------------------------------------
-     * helpers
+     * Helpers
      * ------------------------------------------------------------------------
-     * changed 
+     * Changed
+     * ---------------------------------------------------- 
      */
-    inline bool __Changed() {
-        if(Container::Resvision() != __rev) {
-            __rev = Container::Resvision();
+    inline bool _changed() {
+        if(Container::resvision() != __rev) {
+            __rev = Container::resvision();
             return true;
         } else {
             return false;
@@ -144,7 +153,7 @@ private:
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */
 #endif /* SCONTAINERMONITOR_H */

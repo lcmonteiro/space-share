@@ -3,7 +3,9 @@ cmake_minimum_required (VERSION 3.8)
 add_subdirectory(SMessage)
 # folder for Encoded
 add_subdirectory(SStream)
-# target
+# ---------------------------------------------------------
+# ShareConnectorEncoded target
+# ---------------------------------------------------------
 add_library(ShareConnectorEncoded 
 INTERFACE
 )
@@ -13,3 +15,6 @@ INTERFACE
 	ShareConnectorEncodedMessage
 	ShareConnectorEncodedStream
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

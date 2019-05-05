@@ -24,7 +24,7 @@
 #include "SRoad.h"
 /**
  * ------------------------------------------------------------------------------------------------
- * exceptions 
+ * Exceptions 
  * ------------------------------------------------------------------------------------------------
  **/
 typedef class SModuleException : public std::logic_error {
@@ -36,7 +36,11 @@ public:
     SModuleException(const std::string& msg): std::logic_error(msg){
     }
 } ModuleException;
-
+/**
+ * ----------------------------------------------------------------------------
+ * Dead
+ * ----------------------------------------------------------------------------
+ */
 typedef class SModuleExceptionDead : public SModuleException {
 public:
     using SModuleException::SModuleException;
@@ -48,14 +52,16 @@ public:
 } ModuleExceptionDEAD;
 /**
  * ------------------------------------------------------------------------------------------------
- * module 
+ * Module 
  * ------------------------------------------------------------------------------------------------
  **/
 class SModuleCommand: public SCommand<SText, SText> {
 public:
     using Command = SCommand<SText, SText>;
     /**
-     * keys
+     * ----------------------------------------------------
+     * Keys
+     * ----------------------------------------------------
      */
     static constexpr const char* MODULE   = "M";
     static constexpr const char* FUNCTION = "F";
@@ -63,11 +69,15 @@ public:
     static constexpr const char* OUTPUT   = "O";
     static constexpr const char* INOUT    = "X";
     /**
-     * constructor
+     * ----------------------------------------------------
+     * Constructor
+     * ----------------------------------------------------
      */ 
     using Command::Command;
     /**
-     * add
+     * ----------------------------------------------------
+     * Add
+     * ----------------------------------------------------
      */
     #define ADD(key_, name_)                        \
     SModuleCommand& add_##name_(const Group& conf) {\
@@ -84,7 +94,9 @@ public:
     ADD(OUTPUT,   Output  );
     ADD(INOUT,    InOutput);
     /**
-     * set
+     * ----------------------------------------------------
+     * Set
+     * ----------------------------------------------------
      */
     #define SET(key_, name_)                        \
     SModuleCommand& set_##name_(const Group& conf) {\
@@ -94,10 +106,12 @@ public:
     SET(MODULE,   module  );
     SET(FUNCTION, function);
     /**
-     * gets
+     * ----------------------------------------------------
+     * Gets
+     * ----------------------------------------------------
      */
     #define GETS(key_, name_)               \
-    const Groups& get_##name_##s() const {   \
+    const Groups& get_##name_##s() const {  \
         static const Groups empty{};        \
         try {                               \
             return (*this)[key_];           \
@@ -111,7 +125,9 @@ public:
     GETS(OUTPUT,   output  );
     GETS(INOUT,    inoutput);
     /**
-     * get
+     * ----------------------------------------------------
+     * Get
+     * ----------------------------------------------------
      */
     #define GET(key_, name_)                \
     const Group& get_##name_() const {      \
@@ -127,7 +143,7 @@ public:
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * module 
+ * Module 
  * ------------------------------------------------------------------------------------------------
  **/
 class SModule 
@@ -135,13 +151,14 @@ class SModule
 public:   
     using Time = std::chrono::milliseconds;
     /**
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * Definitions
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * state type
      */
     typedef enum {OPEN = 0, OWAIT, IOWAIT, IWAIT, PLAY, UPDATE, CLOSE} State;
     /**
+     * types
      */
     using Key = std::string;
     using Val = std::string;
@@ -152,25 +169,41 @@ public:
     using Groups  = Command::Groups;
     using Link    = std::shared_ptr<SModule>;
     /**
-     * --------------------------------------------------------------------------------------------
-     * Check state
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
+     * Check State
+     * ------------------------------------------------------------------------
+     * get state
+     * ----------------------------------------------------
      */
-    inline State GetState(void) {
+    inline State state(void) {
         return __state;
     }
-    inline bool IsState(State s) {
+    /**
+     * ----------------------------------------------------
+     * test state
+     * ----------------------------------------------------
+     */
+    inline bool state_gt(State s) {
         return __state >= s;
     }
-    inline bool WaitState(const Time& timeout, State s) {
+    /**
+     * ----------------------------------------------------
+     * wait state
+     * ----------------------------------------------------
+     */
+    inline bool state_wait(const Time& timeout, State s) {
         SClock<Time>::Alarm timer(timeout, Time(10));
-        // verify -----------------------------------------
+        /**
+         * verify
+         */
 	    do {
-		    if(IsState(s)) {
+		    if(state_gt(s)) {
 			    return true;
 		    }
-	    } while (!timer.Sleep().Active());
-        // time expired -----------------------------------
+	    } while (!timer.sleep().active());
+        /**
+         * time expired
+         */
         return false;
     }
 protected:
@@ -178,34 +211,33 @@ protected:
      * ------------------------------------------------------------------------
      * Constructors
      * ------------------------------------------------------------------------
-     * main constructor
+     * main
      */
     SModule(const SAddress uri, size_t energy, uint8_t verbose)
-    : SProcess(uri, verbose), SEnergy(energy), __state(OPEN) {
-    }
+    : SProcess(uri, verbose), SEnergy(energy), __state(OPEN) {}
     /**
-     * default constructor
+     * default
      */
     SModule() = default;
     /**
      * ------------------------------------------------------------------------
-     * internal interfaces
+     * Internal Interfaces
      * ------------------------------------------------------------------------
      */
-    inline void SetState(State s) {
+    inline void state(State s) {
         __state = s;
     }
 private:
     /**
      * ------------------------------------------------------------------------
-     * variables
+     * Variables
      * ------------------------------------------------------------------------
      */
     std::atomic<State> __state;
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * end 
+ * End 
  * ------------------------------------------------------------------------------------------------
  **/
 #endif /* SMODULE */

@@ -10,13 +10,14 @@
 /**
  * ----------------------------------------------------------------------------
  * Encode
- * ---------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 SText SBase64::Encode(Frame::const_iterator begin, Frame::const_iterator end) {
 	/**
 	 * basis
 	 */
-	static const char basis[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+	static const char basis[] = 
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 	/**
 	 * output
 	 */
@@ -74,30 +75,26 @@ Frame SBase64::Decode(SText::const_iterator begin, SText::const_iterator end) {
 		64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64
 	};
 	/**
-	 * output
+	 * output - reserve size
 	 */
-	Frame out;
-	/**
-	 * reserve size
-	 */
-	out.reserve(((distance(begin, end) + 3) / 4) * 3);
+	auto out = Frame(((distance(begin, end) + 3) / 4) * 3);
 	/**
 	 * process
 	 */
 	auto it0 = begin, it1 = begin + 1, it2 = begin + 2, it3 = begin + 3;
 	for (; it3 < end; it0 += 4, it1 += 4, it2 += 4, it3 += 4) {
-		out.push_back((uint8_t) (map[int(*it0)] << 2 | map[int(*it1)] >> 4));
-		out.push_back((uint8_t) (map[int(*it1)] << 4 | map[int(*it2)] >> 2));
-		out.push_back((uint8_t) (map[int(*it2)] << 6 | map[int(*it3)]));
+		out.emplace_back((uint8_t) (map[int(*it0)] << 2 | map[int(*it1)] >> 4));
+		out.emplace_back((uint8_t) (map[int(*it1)] << 4 | map[int(*it2)] >> 2));
+		out.emplace_back((uint8_t) (map[int(*it2)] << 6 | map[int(*it3)]));
 	}
 	if (it1 < end) {
-		out.push_back((uint8_t) (map[int(*it0)] << 2 | map[int(*it1)] >> 4));
+		out.emplace_back((uint8_t) (map[int(*it0)] << 2 | map[int(*it1)] >> 4));
 	}
 	if (it2 < end) {
-		out.push_back((uint8_t) (map[int(*it1)] << 4 | map[int(*it2)] >> 2));
+		out.emplace_back((uint8_t) (map[int(*it1)] << 4 | map[int(*it2)] >> 2));
 	}
 	if (it3 < end) {
-		out.push_back((uint8_t) (map[int(*it2)] << 6 | map[int(*it3)]));
+		out.emplace_back((uint8_t) (map[int(*it2)] << 6 | map[int(*it3)]));
 	}
 	return out;
 }

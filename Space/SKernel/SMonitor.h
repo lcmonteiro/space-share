@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * Stream: Monitor.h
  * Author: Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef MONITOR_H
 #define MONITOR_H
@@ -62,7 +64,7 @@ public:
 } MonitorExceptionCANCEL;
 /**
  * ------------------------------------------------------------------------------------------------
- * monitor
+ * Monitor
  * ------------------------------------------------------------------------------------------------
  */
 class SMonitor {
@@ -90,12 +92,12 @@ public:
 	 * handler pointer
 	 */
 	template<class H = SHandler>
-	inline pHandler<H> GetHandler() const {
+	inline pHandler<H> handler() const {
 		return std::static_pointer_cast<H>(__h);
 	}
 	/**
      * ------------------------------------------------------------------------
-     * interfaces
+     * Interfaces
      * ------------------------------------------------------------------------
      * size 
      */
@@ -103,15 +105,15 @@ public:
 	/**
 	 * insert 
      */
-    virtual size_t Insert(Handler h) = 0;
+    virtual size_t insert(Handler h) = 0;
     /**
      * wait
      */
-    virtual std::list<size_t> Wait(const Time& timeout) = 0;
+    virtual std::list<size_t> wait(const Time& timeout) = 0;
 protected:
 	/**
 	 * ------------------------------------------------------------------------
-	 * constructor
+	 * Constructor
 	 * ------------------------------------------------------------------------
 	 */
 	SMonitor() = default;
@@ -122,7 +124,7 @@ protected:
 	 * set phandler
 	 */
 	template<class H = SHandler>
-	void SetHandler(pHandler<H> h) {
+	void handler(pHandler<H> h) {
 		__h = std::static_pointer_cast<SHandler>(h);	
 	}
 private:
@@ -146,20 +148,20 @@ class SStatic: public SMonitor {
 protected:
 	/**
      * ------------------------------------------------------------------------
-     * defaults
+     * Defaults
      * ------------------------------------------------------------------------ 
      */
     SStatic(SStatic &&)            = default;
     SStatic& operator=(SStatic &&) = default;
 	/**
 	 * ------------------------------------------------------------------------
-	 * constructor
+	 * Constructor
 	 * ------------------------------------------------------------------------
 	 */
 	SStatic();
 	/**
      * ------------------------------------------------------------------------
-     * interfaces
+     * Interfaces
      * ------------------------------------------------------------------------
      * size 
      */
@@ -167,22 +169,22 @@ protected:
 	/**
 	 * insert 
      */
-    size_t Insert(Handler h) override;
+    size_t insert(Handler h) override;
     /**
      * wait
      */
-    std::list<size_t> Wait(const Time& timeout) override;
+    std::list<size_t> wait(const Time& timeout) override;
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * base - dynamic monitor
+ * Base - Dynamic monitor
  * ------------------------------------------------------------------------------------------------
  */
 class SDynamic: public SMonitor, public SResource {
 protected:
 	/**
      * ------------------------------------------------------------------------
-     * defaults
+     * Defaults
      * ------------------------------------------------------------------------ 
      */
     SDynamic(SDynamic &&)            = default;
@@ -195,7 +197,7 @@ protected:
 	SDynamic();
 	/**
      * ------------------------------------------------------------------------
-     * interfaces
+     * Interfaces
      * ------------------------------------------------------------------------
      * size 
      */
@@ -203,15 +205,15 @@ protected:
 	/**
 	 * insert 
      */
-    size_t Insert(Handler h) override;
+    size_t insert(Handler h) override;
     /**
      * wait
      */
-    std::list<size_t> Wait(const Time& timeout) override;
+    std::list<size_t> wait(const Time& timeout) override;
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */
 }

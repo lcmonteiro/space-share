@@ -13,15 +13,13 @@
  */
 #include <string>
 /**
- * ----------------------------------------------------------------------------
  * Definitions
- * ----------------------------------------------------------------------------
  **/
 //#define __LOG_SSTREAM__
 /**
- * ----------------------------------------------------------------------------
- * flags
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
+ * Flags
+ * ------------------------------------------------------------------------------------------------
  **/
 #ifdef __LOG__
 #define __LOG_DEBUG__           true
@@ -31,76 +29,73 @@
 #define __LOG_CRITICAL__        true
 #endif
 /**
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * macros
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  **/
 #if __LOG_DEBUG__
-#define DEBUG(__x__)    do{ std::ostringstream o; o << __x__; this->__DEBUG(o.str());    }while(0)
+#define DEBUG(__x__)    do{ std::ostringstream o; o << __x__; this->_debug(o.str());    }while(0)
 #else
 #define DEBUG(__x__)
 #endif
 #if __LOG_INFO__
-#define INFO(__x__)     do{ std::ostringstream o; o << __x__; this->__INFO(o.str());     }while(0)
+#define INFO(__x__)     do{ std::ostringstream o; o << __x__; this->_info(o.str());     }while(0)
 #else
 #define INFO(__x__)
 #endif
 #if __LOG_WARNING__
-#define WARNING(__x__)  do{ std::ostringstream o; o << __x__; this->__WARNING(o.str());  }while(0)
+#define WARNING(__x__)  do{ std::ostringstream o; o << __x__; this->_warning(o.str());  }while(0)
 #else
 #define WARNING(__x__)
 #endif
 #if __LOG_ERROR__
-#define ERROR(__x__)    do{ std::ostringstream o; o << __x__; this->__ERROR(o.str());    }while(0)
+#define ERROR(__x__)    do{ std::ostringstream o; o << __x__; this->_error(o.str());    }while(0)
 #else
 #define ERROR(__x__)
 #endif
-#if __LOG_CRITICAL__
-#define CRITICAL(__x__) do{ std::ostringstream o; o << __x__; this->__CRITICAL(o.str()); }while(0)
-#else
-#define CRITICAL(__x__)
-#endif
 /**
- * ----------------------------------------------------------------------------
- * log base
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
+ * Log Base
+ * ------------------------------------------------------------------------------------------------
  **/
 class SLog {
 public:
     /**
-     * constructor
+     * ------------------------------------------------------------------------
+     * Constructor
+     * ------------------------------------------------------------------------
      */
     SLog(uint8_t verbose = 0) : __verbose(verbose) {
     }
     /**
-     * destructor
+     * ------------------------------------------------------------------------
+     * Configure
+     * ------------------------------------------------------------------------
      */
-    virtual ~SLog() = default;
-    /**
-     * configure
-     */
-    inline void SetVerbose(uint8_t level) {
+    inline void verbose(uint8_t level) {
         __verbose = level;
     }
 protected:
     /**
+     * ------------------------------------------------------------------------
+     * Variables
+     * ------------------------------------------------------------------------
      * verbose level
      */
     uint8_t __verbose;
     /**
-     * ----------------------------------------------------
-     * logging level function
-     * ----------------------------------------------------
+     * ------------------------------------------------------------------------
+     * Logging level function
+     * ------------------------------------------------------------------------
      */
-    void __DEBUG   (const std::string& id, const std::string& msg);
-    void __INFO    (const std::string& id, const std::string& msg);
-    void __WARNING (const std::string& id, const std::string& msg);
-    void __ERROR   (const std::string& id, const std::string& msg);
-    void __CRITICAL(const std::string& id, const std::string& msg);
+    void _debug   (const std::string& id, const std::string& msg);
+    void _info    (const std::string& id, const std::string& msg);
+    void _warning (const std::string& id, const std::string& msg);
+    void _error   (const std::string& id, const std::string& msg);
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */ 
 #endif /* SLOG_H */

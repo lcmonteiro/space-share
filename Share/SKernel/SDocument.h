@@ -28,7 +28,7 @@
  **/
 typedef uint64_t filesize_t;
 typedef uint32_t reference_t;
-typedef uint16_t numframes_t;
+typedef uint16_t framecount_t;
 typedef uint32_t framesize_t;
 /**
  * ------------------------------------------------------------------------------------------------
@@ -45,7 +45,7 @@ typedef class SDocument : public Container {
 public:
     /**
      * ----------------------------------------------------
-     * defaults
+     * Defaults
      * ----------------------------------------------------
      * constructors
      * --------------------------------
@@ -55,12 +55,6 @@ public:
     SDocument(const SDocument&) = default;
     /**
      * --------------------------------
-     * destructor
-     * --------------------------------
-     */
-    virtual ~SDocument() = default;
-    /**
-     * --------------------------------
      * operatores
      * --------------------------------
      */
@@ -68,15 +62,14 @@ public:
     SDocument& operator=(const SDocument&) = default;
     /**
      * ----------------------------------------------------
-     * container constructor
+     * Container Constructor
      * ----------------------------------------------------
      */
     SDocument(SContainer&& ctn) 
-    : Container(std::move(ctn)) {
-    }
+    : Container(std::move(ctn)) {}
+
     SDocument(const SContainer& ctn) 
-    : Container(ctn) {
-    }
+    : Container(ctn) {}
     /**
      * --------------------------------
      * operatores
@@ -123,21 +116,20 @@ public:
     SContext& operator=(const SContext&) = default;
     /**
      * ----------------------------------------------------
-     * constructors
+     * Constructors
      * ----------------------------------------------------
      */
     SContext()
     : __init(0),
-     __pos(0), __n_frames(0), __frame_sz(0) {
-    }
+     __pos(0), __n_frames(0), __frame_sz(0) {}
+
     SContext(size_t pos, size_t n_frames)
     : __init(2), 
-    __pos(pos), __n_frames(n_frames), __frame_sz(0) {
-    }
+    __pos(pos), __n_frames(n_frames), __frame_sz(0) {}
+
     SContext(size_t pos, size_t n_frames, size_t frame_sz)
     : __init(3), 
-    __pos(pos), __n_frames(n_frames), __frame_sz(frame_sz) {
-    }
+    __pos(pos), __n_frames(n_frames), __frame_sz(frame_sz) {}
     /**
      * ----------------------------------------------------
      * interfaces
@@ -145,13 +137,13 @@ public:
      * getters 
      * --------------------------------
      */
-    inline reference_t Position() const {
+    inline reference_t position() const {
         return __pos;
     }
-    inline numframes_t NumFrames() const {
+    inline framecount_t frame_count() const {
         return __n_frames;
     }
-    inline framesize_t Framesize() const {
+    inline framesize_t frame_size() const {
         return __frame_sz;
     }
     /**
@@ -170,7 +162,7 @@ protected:
      */
     size_t       __init;
     reference_t  __pos;
-    numframes_t  __n_frames;
+    framecount_t __n_frames;
     framesize_t  __frame_sz;
 } Context;
 /**
@@ -182,68 +174,56 @@ typedef class SDocument : public Container, public Context {
 public:
     /**
      * ----------------------------------------------------
-     * defaults
+     * Defaults
      * ----------------------------------------------------
      * constructors
-     * --------------------------------
      */
     SDocument()                 = default;
     SDocument(SDocument&&)      = default;
     SDocument(const SDocument&) = default;
     /**
-     * --------------------------------
-     * destructor
-     * --------------------------------
-     */
-    virtual ~SDocument() = default;
-    /**
-     * --------------------------------
      * operatores
-     * --------------------------------
      */
     SDocument& operator=(SDocument&&)      = default;
     SDocument& operator=(const SDocument&) = default;
     /**
      * ----------------------------------------------------
-     * context constructor
+     * Context Constructor
      * ----------------------------------------------------
      */
     SDocument(Context&& ctx) 
-    : Container(), Context(std::move(ctx)) {
-    }
+    : Container(), Context(std::move(ctx)) {}
+
     SDocument(const SContext& ctx) 
-    : Container(), Context(ctx) {
-    }
+    : Container(), Context(ctx) {}
     /**
      * ----------------------------------------------------
-     * container constructor
+     * Container Constructor
      * ----------------------------------------------------
      */
     SDocument(SContainer&& ctn) 
-    : Container(std::move(ctn)), Context() {
-    }
+    : Container(std::move(ctn)), Context() {}
+
     SDocument(const SContainer& ctn) 
-    : Container(ctn), Context() {
-    }
+    : Container(ctn), Context() {}
     /**
      * ----------------------------------------------------
-     * container&context constructor
+     * Container&Context Constructor
      * ----------------------------------------------------
      */
     SDocument(SContainer&& ctn, SContext&& ctx) 
-    : Container(std::move(ctn)), Context(std::move(ctx)) {
-    }
+    : Container(std::move(ctn)), Context(std::move(ctx)) {}
+
     SDocument(const SContainer& ctn, const SContext& ctx) 
-    : Container(ctn), Context(ctx) {
-    }
+    : Container(ctn), Context(ctx) {}
     /**
      * ----------------------------------------------------
-     * interfaces
+     * Interfaces
      * ----------------------------------------------------
      **
      * remove n elements
      */
-    inline SDocument Remove(int n) {
+    inline SDocument remove(int n) {
         SDocument d(Context(*this));
         d.reserve(n);
         while(n--) {
@@ -255,16 +235,20 @@ public:
     /**
      * insert elements
      */
-    inline SDocument& Insert(SDocument doc) {
-        std::move(std::begin(doc), std::end(doc), std::back_inserter(*this));
+    inline SDocument& insert(SDocument doc) {
+        std::move(
+            std::begin(doc), 
+            std::end(doc), 
+            std::back_inserter(*this));
         return *this;
     }
     /**
      * split context and container
      */
-    inline std::pair<Context, Container> Split() const {
+    inline std::pair<Context, Container> split() const {
         return {
-            std::move(*this), std::move(*this)
+            std::move(*this), 
+            std::move(*this)
         };
     }
 } Document;
@@ -277,18 +261,20 @@ typedef class SIDocument : public SDocument {
 public:
     using SDocument::SDocument;
     /**
-     * default constructors
+     * ----------------------------------------------------
+     * Default Constructors
+     * -----------------------------------------------------
      */
-    SIDocument() : __capacity(0) {
-    }
+    SIDocument() : __capacity(0) {}
+
     SIDocument(SIDocument&& d) = default;
 
     SIDocument(const SIDocument& d) = default;
     /**
-     * destructor
-     */
-    virtual ~SIDocument() = default;
-    /**
+     * ----------------------------------------------------
+     * Operatores
+     * ----------------------------------------------------
+     **
      * move operator
      */
     SIDocument& operator=(SIDocument&& doc) = default;
@@ -297,25 +283,32 @@ public:
      */
     SIDocument& operator=(const SIDocument& doc) = default;
     /**
-     * push data
+     * ----------------------------------------------------
+     * Push Data
+     * ----------------------------------------------------
      */
-    SIDocument& Push(Frame&& data);
+    SIDocument& push(Frame&& data);
     /**
-     * check container
+     * ----------------------------------------------------
+     * Check Container
+     * ----------------------------------------------------
      */
     inline bool full() {
         return (__init > 3) && (size() >= __capacity);
     }
 protected:
     /**
+     * ----------------------------------------------------
+     * Variables
+     * ----------------------------------------------------
      * capacity
      */
-    numframes_t __capacity;
+    framecount_t __capacity;
 } IDocument;
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  **/
 #endif /* SDOCUMENT_H */

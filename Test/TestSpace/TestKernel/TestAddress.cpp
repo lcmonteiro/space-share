@@ -14,13 +14,13 @@ TEST(SAddress, Create)
 {
     //use case 1
     SAddress a("lm@host.pt/test");
-    EXPECT_EQ(a.Host(), "host.pt");
-    EXPECT_EQ(a.User(), "lm");
-    EXPECT_EQ(a.Port(), 0);
-    EXPECT_EQ(a.Path(), "test");    
+    EXPECT_EQ(a.host(), "host.pt");
+    EXPECT_EQ(a.user(), "lm");
+    EXPECT_EQ(a.port(), 0);
+    EXPECT_EQ(a.path(), "test");    
     // use case 2
     SAddress b("7aquzu0b");
-    EXPECT_EQ(b.File(), "7aquzu0b");
+    EXPECT_EQ(b.file(), "7aquzu0b");
 }
 
 TEST(SAddress, Sum1)
@@ -29,10 +29,10 @@ TEST(SAddress, Sum1)
     SAddress b("cc@local.com/sample");
     //use case 1 -> positive
     auto s = a + b;
-    EXPECT_EQ(s.Host(), "host.pt.local.com");
-    EXPECT_EQ(s.User(), "lm_cc");
-    EXPECT_EQ(s.Port(), 0);
-    EXPECT_EQ(s.Path(), "test/sample");    
+    EXPECT_EQ(s.host(), "host.pt.local.com");
+    EXPECT_EQ(s.user(), "lm_cc");
+    EXPECT_EQ(s.port(), 0);
+    EXPECT_EQ(s.path(), "test/sample");    
     // use case 2 -> negative
 }
 

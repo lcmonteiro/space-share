@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
-# target
+# ---------------------------------------------------------
+# ShareConnectorDecodedMessageKernel target
+# ---------------------------------------------------------
 add_library(ShareConnectorDecodedMessageKernel 
 STATIC
 	SIDirConnector.cpp
@@ -17,3 +19,6 @@ PUBLIC
 	SpaceKernel
 	ShareKernel
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

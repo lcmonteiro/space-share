@@ -19,7 +19,7 @@ TEST(SFileResource, Create)
 {
     SOFileResource f("/tmp/test");
 
-    EXPECT_EQ(f.Path(), "/tmp/test");
+    EXPECT_EQ(f.path(), "/tmp/test");
 }
 /**
  */
@@ -40,9 +40,9 @@ TEST(SFileResource, Move)
     //f2 = move(f1);
 
 
-    EXPECT_NE(f.Path(), "/tmp/test1");
-    EXPECT_EQ(f1.Path(), "/tmp/test1");
-    EXPECT_EQ(f2.Path(), "/tmp/test2");
+    EXPECT_NE(f.path(), "/tmp/test1");
+    EXPECT_EQ(f1.path(), "/tmp/test1");
+    EXPECT_EQ(f2.path(), "/tmp/test2");
 }
 /**
  * ------------------------------------------------------------------------------------------------

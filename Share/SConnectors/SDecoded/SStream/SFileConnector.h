@@ -1,41 +1,81 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SFileConnector.h
- * Author: root
+ * Author: Luis Monteiro
  *
  * Created on December 2, 2016, 2:13 PM
+ * ------------------------------------------------------------------------------------------------
  */
-
-#ifndef SFILESTREAMDATA_H
-#define SFILESTREAMDATA_H
+#ifndef SFILESTREAMCONNECTOR_H
+#define SFILESTREAMCONNECTOR_H
 /**
- * Space Kernel
+ * space
  */
 #include "SContainer.h"
-/**
- * Share Kernel
- */
 #include "SConnector.h"
+#include "SFileResource.h"
 /**
- * Stream Kernel
+ * stream
  */
-#include "SKernel/SIFileConnector.h"
-#include "SKernel/SOFileConnector.h"
+#include "SKernel/SIStreamConnector.h"
+#include "SKernel/SOStreamConnector.h"
+#include "SKernel/SIOStreamConnector.h"
 /**
- * Begin namespace Data
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Decoded & Stream
+ * ------------------------------------------------------------------------------------------------
  */
-namespace Stream {
+namespace Decoded {
+namespace Stream  {
 /**
- * Input File Connector template
+ * ----------------------------------------------------------------------------
+ * Resource adapter
+ * ----------------------------------------------------------------------------
  */
-template<class T>
-class SIFileConnectorT : public T {
+class ResourceAdapterFile : private SFileResource {
 public:
+    using Super = SFileResource;
+    /**
+     * default
+     */
+    using Super::Super;
+    using Super::operator=;
+    using Super::read;
+    using Super::drain;
+    using Super::good;
+    using Super::size;
+    /**
+     * interfaces
+     */
+    inline Super& base() {
+        return *this;
+    }
+    inline void wait(const SAddress& uri) {
+        *this = SIFileResource(uri);
+    }
+    inline void bind(const SAddress& uri) {
+        *this = SIFileResource(uri);
+    }
+    inline void link(const SAddress& uri) {
+        *this = SOFileResource(uri);
+    }
+    inline void reset() {
+        *this = Super();
+    }
+}; 
+/**
+ * ----------------------------------------------------------------------------
+ * Input File Connector
+ * ----------------------------------------------------------------------------
+ * template
+ */
+template<class R>
+class SIFileConnectorT : public SIStreamConnector <R> {
+public:
+    using SIStreamConnector<R>::SIStreamConnector;
+    /**
+     */
+    SIFileConnectorT() = delete;
     /**
      * make
      */
@@ -43,22 +83,20 @@ public:
     static IConnector Make(Args &&...args) {
         return make_shared<SIFileConnectorT>(forward<Args>(args)...);
     }
-    /**
-     * constructor
-     */
-    SIFileConnectorT(
-        const string address,
-        const size_t nframes,
-        const size_t sframes
-    ) : T(address, nframes, sframes) {
-    }
 };
 /**
- * Output File Connector template
+ * ----------------------------------------------------------------------------
+ * Output File Connector
+ * ----------------------------------------------------------------------------
+ * template
  */
-template<class T>
-class SOFileConnectorT : public T {
+template<class R>
+class SOFileConnectorT : public SOStreamConnector<R> {
 public:
+    using SOStreamConnector<R>::SOStreamConnector;
+    /**
+     */
+    SOFileConnectorT() = delete;
     /**
      * make
      */
@@ -66,22 +104,20 @@ public:
     static OConnector Make(Args &&...args) {
         return make_shared<SOFileConnectorT>(forward<Args>(args)...);
     }
-    /**
-     * constructor
-     */
-    SOFileConnectorT(const string address) : T(address) {
-    }
 };
 /**
- * definitions
+ * ----------------------------------------------------------------------------
+ * Definition
+ * ----------------------------------------------------------------------------
  */
-typedef SIFileConnectorT<SIFileConnector> IFileConnector;
-typedef SOFileConnectorT<SOFileConnector> OFileConnector;
+typedef SIFileConnectorT<ResourceAdapterFile> IFileConnector;
+typedef SOFileConnectorT<ResourceAdapterFile> OFileConnector;
+}}
 /**
- * End namespace Data
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Decoded & Stream
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- */
-#endif /* SFILESTREAMDATA_H */
+#endif /* SFILESTREAMCONNECTOR_H */
+
 

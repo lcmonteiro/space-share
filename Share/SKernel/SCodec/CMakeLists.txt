@@ -1,9 +1,11 @@
 cmake_minimum_required (VERSION 3.8)
-# target
+# ---------------------------------------------------------
+# ShareKernelCodec target
+# ---------------------------------------------------------
 add_library(ShareKernelCodec 
 STATIC
-	SCodec.cpp
-	SCodecStamp.cpp
+	SEngineCodec.cpp
+	SStampCodec.cpp
 )
 # includes
 target_include_directories(ShareKernelCodec 
@@ -15,3 +17,6 @@ target_link_libraries(ShareKernelCodec
 PRIVATE 
 	SpaceKernel
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

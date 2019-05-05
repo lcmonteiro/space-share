@@ -1,5 +1,5 @@
 /**
- * ------------------------------------------------------------------------------------------------ 
+ * ------------------------------------------------------------------------------------------------
  * File:   SOIrcConnector.h
  * Author: Luis Monteiro
  *
@@ -9,7 +9,7 @@
 #ifndef SOIRCSTREAMCODED_H
 #define SOIRCSTREAMCODED_H
 /**
- * Space
+ * space
  */
 #include "SIRCResource.h"
 #include "SContainer.h"
@@ -17,7 +17,7 @@
 #include "SChannel.h"
 #include "STask.h"
 /**
- * Share
+ * share
  */
 #include "SConnector.h"
 /**
@@ -35,41 +35,49 @@ namespace Message {
 class SOIrcConnector : public SOutputConnector {
 public:
 	/**
-	 * constructor
+	 * ------------------------------------------------------------------------
+	 * Constructor
+	 * ------------------------------------------------------------------------
 	 */
-	SOIrcConnector(const std::string address);
-	/**
-	 * destructor
-	 */
-	virtual ~SOIrcConnector() = default;
-	/**
-	 */
+	SOIrcConnector(const SText& address);
 protected:
 	/**
-	 * -----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * IO functions
-	 * -----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * write
+	 * ----------------------------------------------------
 	 */
-	void _Write(const Document& container) override;
+	void _write(const Document& container) override;
+	/**
+	 * ------------------------------------------------------------------------
+	 * Control Functions
+	 * ------------------------------------------------------------------------
+	 * open
+	 * ----------------------------------------------------
+	 */
+	void _open() override;
 	/**
 	 * ----------------------------------------------------
-	 * control functions
+	 * good
 	 * ----------------------------------------------------
-	 * open, good and close
 	 */
-	void _Open() override;
-	/**
-	 * inline
-	 */
-	inline bool _Good() override{
-		return __res.Good();
+	inline bool _good() override{
+		return __res.good();
 	}
-	inline void _Close() override {
+	/**
+	 * ----------------------------------------------------
+	 * close
+	 * ----------------------------------------------------
+	 */
+	inline void _close() override {
 		__res = SIRCResource();
 	}
 private:
 	/**
+	 * ------------------------------------------------------------------------
+	 * Variables
+	 * ------------------------------------------------------------------------
 	 * resource 
 	 */
 	SIRCResource __res;

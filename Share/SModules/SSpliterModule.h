@@ -1,293 +1,279 @@
 /**
- * -------------------------------------------------------------------------------------------------------------------- 
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SSpliterModule.h
  * Author: Luis Monteiro
  *
  * Created on January 26, 2017, 5:59 PM
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SSPLITERMODULE_H
 #define SSPLITERMODULE_H
 /**
- * Module
+ * module
  */
 #include "SBaseModule.h"
 /**
- *---------------------------------------------------------------------------------------------------------------------
+ *-------------------------------------------------------------------------------------------------
  * Module name space
- *---------------------------------------------------------------------------------------------------------------------
+ *-------------------------------------------------------------------------------------------------
  */
 namespace Module {
 /**
  */
-template<class IO_CON, class I_CON, class O_CON>
+template<class InOutput, class Input, class Output>
 class SSpliterModule : public SBaseModule {
     /**
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * Helpers
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * exception types
-     * ------------------------------------------------------------------------
      */
-    using IORoadExceptionDETACHED = SRoadExceptionDETACHED<IO_CON>;
-    using IRoadExceptionDETACHED  = SRoadExceptionDETACHED<I_CON>;
-    using ORoadExceptionDETACHED  = SRoadExceptionDETACHED<O_CON>;
+    using IORoadExceptionDETACHED = SRoadExceptionDETACHED<InOutput>;
+    using IRoadExceptionDETACHED  = SRoadExceptionDETACHED<Input>;
+    using ORoadExceptionDETACHED  = SRoadExceptionDETACHED<Output>;
     /**
-     * ------------------------------------------------------------------------
      * builders 
-     * ------------------------------------------------------------------------
      */
-    using IOBuilder = Module::IOput::Builder<IO_CON>;
-    using IBuilder  = Module::Input::Builder<I_CON>;
-    using OBuilder  = Module::Output::Builder<O_CON>;
-    using FBuilder  = Module::Spliter::Builder<IO_CON, I_CON, O_CON>; 
+    using IOBuilder = Module::IOput::Builder<InOutput>;
+    using IBuilder  = Module::Input::Builder<Input>;
+    using OBuilder  = Module::Output::Builder<Output>;
+    using FBuilder  = Module::Spliter::Builder<InOutput, Input, Output>; 
     /** 
-     * ------------------------------------------------------------------------
      * connector types
-     * ------------------------------------------------------------------------
      */
-    using IORoad = SRoadMonitor<SConnector::Key, IO_CON>;
-    using IRoad  = SRoadMonitor<SConnector::Key, I_CON>;
-    using ORoad  = SRoad<SConnector::Key, O_CON>; 
+    using IORoad = SRoadMonitor<SConnector::Key, InOutput>;
+    using IRoad  = SRoadMonitor<SConnector::Key, Input>;
+    using ORoad  = SRoad<SConnector::Key, Output>; 
     /**
-     * ------------------------------------------------------------------------
      * function type
-     * ------------------------------------------------------------------------
      */
     using Function = typename FBuilder::Pointer;
 public:
     /**
-     * --------------------------------------------------------------------------------------------
-     * Interfaces
-     * --------------------------------------------------------------------------------------------
-     * defaults
      * ------------------------------------------------------------------------
+     * Constructors
+     * ------------------------------------------------------------------------
+     * default
      */
     SSpliterModule(SSpliterModule&&)            = default;
     SSpliterModule& operator=(SSpliterModule&&) = default;
     /**
-     * ------------------------------------------------------------------------
-     * constructor
-     * ------------------------------------------------------------------------
+     * main
      */
-    SSpliterModule(const Command& cmd): SBaseModule(cmd[Command::MODULE].Head(), {
+    SSpliterModule(const Command& cmd)
+    : SBaseModule(cmd[Command::MODULE].head(), {
         {Command::FUNCTION, cmd[Command::FUNCTION]},
         {Command::INOUT,    cmd[Command::INOUT]   },
         {Command::INPUT,    cmd[Command::INPUT]   },
         {Command::OUTPUT,   cmd[Command::OUTPUT]  },
     }), __io(), __in(), __out(), __func() {}
-    /**
-     * ------------------------------------------------------------------------
-     * destructor
-     * ------------------------------------------------------------------------
-     */
-    virtual ~SSpliterModule() { Attach(); }
 protected:
     /**
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * Variables
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      * input/output
-     * --------------------------------
      */
     IORoad __io;
     /**
-     * --------------------------------
      * input
-     * --------------------------------
      */
     IRoad __in;
     /**
-     * --------------------------------
      * output
-     * --------------------------------
      */
     ORoad __out;
     /**
-     * --------------------------------
      * function
-     * --------------------------------
      */
     Function __func;
     /**
-     * --------------------------------------------------------------------------------------------
-     * Execute
-     * --------------------------------------------------------------------------------------------
-     * process command
+     * ------------------------------------------------------------------------
+     * Execute - process command
      * ------------------------------------------------------------------------
      */
-    void __ProcessCommand(const Command& cmd) {
-        // create and insert input/outputs ----------------
+    void _process_command(const Command& cmd) override {
+        /**
+         * create and insert input/outputs
+         */
         for(auto& o: cmd[Command::INOUT]) {
             try {
-                __io.Insert(o[Module::IO::URI], IOBuilder::Build(o));
+                __io.insert(o[Module::IO::URI], IOBuilder::Build(o));
             } catch (std::out_of_range&) {
-                __UpdateRoad(__io, o);
+                _update_road(__io, o);
             }
         }
-        // create and insert inputs -----------------------
+        /**
+         * create and insert inputs
+         */
         for(auto& o: cmd[Command::INPUT]) {
             try {
-                __in.Insert(o[Module::IO::URI], IBuilder::Build(o));
+                __in.insert(o[Module::IO::URI], IBuilder::Build(o));
             } catch (std::out_of_range&) {
-                __UpdateRoad(__in, o);
+                _update_road(__in, o);
             }
         }
-        // create and insert outputs ----------------------
+        /**
+         * create and insert outputs
+         */
         for(auto o: cmd[Command::OUTPUT]) {
             try {
-                __out.Insert(o[Module::IO::URI], OBuilder::Build(o));
+                __out.insert(o[Module::IO::URI], OBuilder::Build(o));
             } catch (std::out_of_range&) {
-                __UpdateRoad(__out, o);
+                _update_road(__out, o);
             }
         }
-        // create and insert outputs ----------------------
+        /**
+         * create and insert outputs
+         */
         for(auto o: cmd[Command::FUNCTION]) {
             __func = FBuilder::Build(o);
         }
     }
     /**
-     * --------------------------------------------------------------------------------------------
-     * process machine
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
+     * execute - process machine
+     * ------------------------------------------------------------------------
      */
-    State __ProcessMachine(const State& state, const Clock::Pointer& end) override {
-        // log info -----------------------------------------------------------
+    State _process_machine(const State& state, const Clock::Pointer& end) override {
+        /**
+         * log info
+         */
         INFO("Process={ "
             << "state: "      << state               << ", "
-            << "energy: "     << SEnergy::Get()      << ", "
-            << "inputs: "     << __GetStatus(__in)   << ", "
-            << "outputs: "    << __GetStatus(__out)  << ", "
-            << "in|outputs: " << __GetStatus(__io)   << " "
-            << "}"
-        );
+            << "energy: "     << SEnergy::get()      << ", "
+            << "inputs: "     << _status(__in)   << ", "
+            << "outputs: "    << _status(__out)  << ", "
+            << "in|outputs: " << _status(__io)   << " "
+            << "}");
         /**
-         * --------------------------------------------------------------------
+         * ------------------------------------------------
          * state machine process
-         * --------------------------------------------------------------------
+         * ------------------------------------------------
          */
         try {
             switch(state) {
-                // open -----------------------------------
                 case OPEN: {
                     return OWAIT;
                 }
-                // out wait -------------------------------
                 case OWAIT: {
-                    return __ProcessWAIT(end, __out, IOWAIT);
+                    return _process_wait(end, __out, IOWAIT);
                 }
-                // in wait --------------------------------
                 case IOWAIT: {
-                    return __ProcessWAIT(end, __io, IWAIT);
+                    return _process_wait(end, __io, IWAIT);
                 }
-                // in wait --------------------------------
                 case IWAIT: {
-                    return __ProcessWAIT(end, __in, PLAY);
+                    return _process_wait(end, __in, PLAY);
                 }
-                // play -----------------------------------
                 case PLAY: {
-                    return __ProcessPLAY(end);
+                    return _process_play(end);
                 }
-                // update ---------------------------------
                 case UPDATE : {
-                    __out.Update(); 
-                    __io.Update(); 
-                    __in.Update();
+                    __out.update(); 
+                    __io.update(); 
+                    __in.update();
                     return PLAY;
                 }
-                // default --------------------------------
                 default: {
                     return OPEN;
                 }
             }
         }
         /**
-         * --------------------------------------------------------------------
+         * ------------------------------------------------
          * state machine exceptions
-         * --------------------------------------------------------------------
+         * ------------------------------------------------
          * out road detach
          */
         catch (ORoadExceptionDETACHED & ex) {
-            WARNING("OUT = " << __out.Status());
+            WARNING("OUT = " << __out.status());
             if(PLAY == state) {
-                SEnergy::Decay();
+                SEnergy::decay();
             }
-            __func->Recover();
-            __in.Reset();
-            __io.Reset();
+            __func->recover();
+            __in.reset();
+            __io.reset();
             return OWAIT;
         } 
-        // io road detach ---------------------------------
+        /**
+         * io road detach
+         */
         catch (IORoadExceptionDETACHED & ex) {
-            WARNING("IO = " << __io.Status());
+            WARNING("IO = " << __io.status());
             if(PLAY == state) {
-                SEnergy::Decay();
+                SEnergy::decay();
             }
-            __func->Recover();
-            __in.Reset();
+            __func->recover();
+            __in.reset();
             return IOWAIT;
         }
-        // in road detach ---------------------------------
+        /**
+         * in road detach
+         */
         catch (IRoadExceptionDETACHED & ex) {
-            WARNING("IN = " << __in.Status());
+            WARNING("IN = " << __in.status());
             if(PLAY == state) {
-                SEnergy::Decay();
+                SEnergy::decay();
             }
-            __func->Recover();
+            __func->recover();
             return IWAIT;
         }
-        // function dead ---------------------------------- 
+        /**
+         * function dead
+         */ 
         catch (FunctionExceptionDEAD& ex) {
             WARNING("FUNC");
-            SEnergy::Decay();
-            __func->Recover();
+            SEnergy::decay();
+            __func->recover();
         }
         return state;
     }
     /**
-     * --------------------------------------------------------------------------------------------
-     * process states
-     * --------------------------------------------------------------------------------------------
-     * PLAY
      * ------------------------------------------------------------------------
+     * process states
+     * ------------------------------------------------------------------------
+     * PLAY
      */
-    inline State __ProcessPLAY(const Clock::Pointer& end) {
+    inline State _process_play(const Clock::Pointer& end) {
         ResourceMonitor m (&__io, &__in);
-
-        // first ------------------------------------------
+        /**
+         * first
+         */
         try {
-            for(auto& i : m.Wait(Clock::Remaining(end))) {
+            for(auto& i : m.wait(Clock::Remaining(end))) {
                 switch(i) {
-                    case 0: __func->Process(__io, __out); break;
-                    case 1: __func->Process(__in, __io);  break;
+                    case 0: __func->process(__io, __out); break;
+                    case 1: __func->process(__in, __io);  break;
                 }
             }
         } catch (MonitorExceptionTIMEOUT & ex) {
-            __func->Drain(__io, __in, __out);
-            __func->Decay();
+            __func->drain(__io, __in, __out);
+            __func->decay();
             return UPDATE;
         }
-        // remaining --------------------------------------
+        /**
+         * remaining
+         */
         try { 
             do {
-                for(auto& i : m.Wait(Clock::Remaining(end))) {
+                for(auto& i : m.wait(Clock::Remaining(end))) {
                     switch(i) {
-                        case 0: __func->Process(__io, __out); break;
-                        case 1: __func->Process(__in, __io);  break;
+                        case 0: __func->process(__io, __out); break;
+                        case 1: __func->process(__in, __io);  break;
                     }
                 }                
             } while(Clock::Remaining(end) > Clock::Distance::zero());
         } catch (MonitorExceptionTIMEOUT & ex) { }
-
-        // return state -----------------------------------
+        /**
+         * return state
+         */
         return UPDATE;
     }
 };
 }
 /**
- *---------------------------------------------------------------------------------------------------------------------
+ *-------------------------------------------------------------------------------------------------
  * End
- *---------------------------------------------------------------------------------------------------------------------
+ *-------------------------------------------------------------------------------------------------
  */
 #endif /* SSPLITERMODULE_H */
-

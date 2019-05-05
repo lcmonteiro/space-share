@@ -23,11 +23,11 @@ TEST(SBuffer, frame)
     auto buf = Buffer();
     
     // fill buffer
-    buf.Write(Frame({0, 1, 2, 3, 9}));
-    buf.Write(Frame({0, 1, 2, 3, 9}));
+    buf.drain(Frame({0, 1, 2, 3, 9}));
+    buf.drain(Frame({0, 1, 2, 3, 9}));
     
     //test 
-    EXPECT_EQ(buf.Read(10), Frame({0, 1, 2, 3, 9, 0, 1, 2, 3, 9}));
+    EXPECT_EQ(buf.drain(10), Frame({0, 1, 2, 3, 9, 0, 1, 2, 3, 9}));
 }
 /**
  * ------------------------------------------------------------------------------------------------

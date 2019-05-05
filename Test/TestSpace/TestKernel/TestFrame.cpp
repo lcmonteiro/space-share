@@ -23,10 +23,10 @@ TEST(SFrame, Conversion)
     IOFrame in = SFrame(10, 1).detach();
 
     // write --------------------------
-    in.Expand().Write({1, 2, 3}).Write({9, 8, 7});
+    in.inflate().write({1, 2, 3}).write({9, 8, 7});
 
     //test case 
-    EXPECT_EQ(IOFrame(in).Read(5), Frame({0, 1, 2, 3, 9}));
+    EXPECT_EQ(IOFrame(in).read(5), Frame({0, 1, 2, 3, 9}));
 }
 /**
  * ------------------------------------------------------------------------------------------------
@@ -40,16 +40,16 @@ TEST(SFrame, Number)
     // test case 1 --------------------
     Frame frm1 (10, 10);
     // set sample on a frame
-    frm1.Number(sample);
+    frm1.number(sample);
     // test case 1 
-    EXPECT_EQ(frm1.Number<int>(), sample);
+    EXPECT_EQ(frm1.number<int>(), sample);
     
     // test case 2 --------------------
     Frame frm2 (4, 4);
     // set sample on a frame
-    frm2.Number(sample);
+    frm2.number(sample);
     // test case 1 
-    EXPECT_EQ(frm2.Number<int>(), sample);
+    EXPECT_EQ(frm2.number<int>(), sample);
 }
 /**
  * ------------------------------------------------------------------------------------------------
@@ -62,10 +62,10 @@ TEST(SFrame, DownConversion)
     IOFrame f = SFrame(10, 1).detach();
 
     // write --------------------------
-    f.Expand().Write({1, 2, 3}).Write({9, 8, 7});
+    f.inflate().write({1, 2, 3}).write({9, 8, 7});
 
     //test 1 --------------------------
-    EXPECT_EQ(f.Read(5), SFrame({0, 1, 2, 3, 9}));
+    EXPECT_EQ(f.read(5), SFrame({0, 1, 2, 3, 9}));
 
     //test 2 --------------------------
     EXPECT_EQ(SFrame({8, 7}), f);
@@ -90,7 +90,7 @@ TEST(SFrame, Sizes)
     EXPECT_EQ(f.isize(), SIZE);
 
     // insert
-    f.Write(SFrame(SIZE>>1, SIZE>>1));
+    f.write(SFrame(SIZE>>1, SIZE>>1));
 
     // test 2
     EXPECT_EQ(f.size(), SIZE>>1);
@@ -99,7 +99,7 @@ TEST(SFrame, Sizes)
     EXPECT_EQ(f.isize(), SIZE>>1);
     
     // remove -------------------------
-    f.Read(SIZE>>2);
+    f.read(SIZE>>2);
 
     // test 3 -------------------------
     EXPECT_EQ(f.size(), SIZE>>2);

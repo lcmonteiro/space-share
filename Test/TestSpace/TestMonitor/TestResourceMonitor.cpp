@@ -37,21 +37,21 @@ TEST(SResourceMonitor, Events)
     auto monitor = ResourceMonitor(&event1, &event2);
 
     // set event 1 ---------------------------------------
-    event1.Send();
+    event1.send();
 
     // monitor test --------------------------------------
-    auto res1 = monitor.Wait(ResourceMonitor::Time(10));
+    auto res1 = monitor.wait(ResourceMonitor::Time(10));
     EXPECT_EQ(res1.size(),  1);
     EXPECT_EQ(res1.front(), 0);
 
     // clr event 1 ---------------------------------------
-    event1.Clear();
+    event1.clear();
 
     // set event 2 ---------------------------------------
-    event2.Send();
+    event2.send();
 
     // monitor test --------------------------------------
-    auto res2 = monitor.Wait(ResourceMonitor::Time(10));
+    auto res2 = monitor.wait(ResourceMonitor::Time(10));
     EXPECT_EQ(res2.size(),  1);
     EXPECT_EQ(res2.front(), 1);
 }

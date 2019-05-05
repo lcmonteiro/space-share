@@ -51,16 +51,16 @@ TEST(SLocalResource, OneWay)
     auto       out = IOFrame(size);
     
     // bind -------------------------------------------------------------------
-    rem_s.Bind(addr);
+    rem_s.bind(addr);
 
     // link & send ------------------------------------------------------------ 
-    rem_c.Link(addr).Write(in);
+    rem_c.link(addr).write(in);
 
     // wait -------------------------------------------------------------------
-    ResourceMonitor(&rem_s).Wait(std::chrono::milliseconds(100));
+    ResourceMonitor(&rem_s).wait(std::chrono::milliseconds(100));
 
     // read -------------------------------------------------------------------
-    EXPECT_EQ(rem_s.Fill(out).Good(), true);
+    EXPECT_EQ(rem_s.fill(out).good(), true);
 
     // test data --------------------------------------------------------------
     EXPECT_EQ(in, out);

@@ -14,6 +14,9 @@
 #include "SText.h"
 #include "SFrame.h"
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Base64
+ * ------------------------------------------------------------------------------------------------
  */
 namespace SBase64 {
 	/**
@@ -21,13 +24,15 @@ namespace SBase64 {
 	 * Encode
 	 * ------------------------------------------------------------------------
 	 */
-	SText Encode(Frame::const_iterator begin, Frame::const_iterator end);
+	SText Encode(
+		Frame::const_iterator begin, Frame::const_iterator end);
 	/**
 	 * ------------------------------------------------------------------------
 	 * Decode
 	 * ------------------------------------------------------------------------
 	 */
-	Frame Decode(SText::const_iterator begin, SText::const_iterator end);
+	Frame Decode(
+		SText::const_iterator begin, SText::const_iterator end);
 	/**
 	 * ------------------------------------------------------------------------
 	 * Utilities

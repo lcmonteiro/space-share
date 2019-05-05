@@ -1,56 +1,62 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SStreamConnector.h
  * Author: Luis Monteiro
  *
  * Created on December 6, 2016, 11:17 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SLOCSTREAMCONNECTORCODED_H
 #define SLOCSTREAMCONNECTORCODED_H
 /**
- * Space Kernel
+ * space 
  */
 #include "SContainer.h"
+#include "SLocalResource.h"
 /**
- * Share Kernel
+ * share
  */
 #include "SConnector.h"
 /**
- * Stream Kernel
+ * connector
  */
 #include "SKernel/SIStreamConnector.h"
 #include "SKernel/SOStreamConnector.h"
 #include "SKernel/SIOStreamConnector.h"
 /**
- * Begin namespace Encoded
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Encoded & Stream
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
-/**
- * Begin namespace Data
- */
-namespace Stream {
+namespace Stream  {
 /**
  * ------------------------------------------------------------------------------------------------
  * Resource adapter
  * ------------------------------------------------------------------------------------------------
  */
-class ResourceAdapterLoc : private SSocketResource {
+class ResourceAdapterLoc : private ::Stream::SLocalResource {
 public:
-    using SSocketResource::SSocketResource;
-    using SSocketResource::operator=;
-    using SSocketResource::Fill;
-    using SSocketResource::Drain;
-    using SSocketResource::Good;
+    using Super = ::Stream::SLocalResource;
+    /**
+     * default
+     */
+    using Super::SLocalResource;
+    using Super::operator=;
+    using Super::fill;
+    using Super::drain;
+    using Super::good;
     /**
      * interfaces
      */
-    inline SSocketResource& Base() {
+    inline Super& base() {
         return *this;
     }
-    inline void Wait(const SAddress& uri) {
-        SSocketResource::Bind(uri.Path(), STREAM);
+    inline void wait(const SAddress& uri) {
+        Super::bind(uri.file());
     }
-    inline void Reset() {
-        *this = SSocketResource();
+    inline void reset() {
+        *this = Super();
     }
 };    
 /**
@@ -118,21 +124,17 @@ public:
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * definition
+ * Definition
  * ------------------------------------------------------------------------------------------------
  */
 typedef SIOLocConnectorT<ResourceAdapterLoc> IOLocConnector;
-typedef SILocConnectorT<ResourceAdapterLoc>  ILocConnector;
-typedef SOLocConnectorT<ResourceAdapterLoc>  OLocConnector;
+typedef SILocConnectorT< ResourceAdapterLoc>  ILocConnector;
+typedef SOLocConnectorT< ResourceAdapterLoc>  OLocConnector;
+}}
 /**
- * End namespace Stream
- */
-}
-/**
- * End namespace Encoded
- */
-}
-/**
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Decoded & Stream
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* SLOCSTREAMCONNECTORCODED_H */
 

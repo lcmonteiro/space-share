@@ -1,72 +1,82 @@
-/*
+/**
+ * -------------------------------------------------------------------------------------------------
  * File:   SIDirConnector.cpp
  * Author: Luis Monteiro
  *
  * Created on June 3, 2015, 10:12 AM
+ * ------------------------------------------------------------------------------------------------
+ **
+ * std
  */
 #include <sys/inotify.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
 /**
+ * space
  */
 #include "SIDirConnector.h"
 /**
- * Begin namespace Decoded
+ * namespaces
  */
-namespace Decoded {
+using namespace Decoded;
+using namespace Message;
 /**
- * Begin namespace Message
- */
-namespace Message {
-/**
+ * ----------------------------------------------------------------------------
+ * Constructor
+ * ----------------------------------------------------------------------------
  */
 SIDirConnector::SIDirConnector(const SText address, const SText file)
-: SInputConnector(address), __file(file) {
-}
+: SInputConnector(address), __file(file) {}
 /**
+ * ----------------------------------------------------------------------------
+ * Read
+ * ----------------------------------------------------------------------------
  */
-Document SIDirConnector::_Read() {
-	/**------------------------------------------------------------------------------------------------------------*
+Document SIDirConnector::_read() {
+	/**
 	 * open file
-	 *----------------------------------------------------------------------------------------*/
+	 */
 //	auto fd = __openfile();
 //	if (fd <= 0) {
 //		return Frame();
 //	}
-	/**------------------------------------------------------------------------------------------------------------*
+	/**
 	 * create resource
-	 *----------------------------------------------------------------------------------------*/
+	 */
 //	auto res = SDireResource(fd);
-	// read nframes ---------------------------------------
+	// read nframes
 	Document container;
 //	container.reserve(nnframesp);
 //	for (auto i = size_t(0); i < nnframesp; ++i) {
-//		container.push_back(res.Read(framelen));
+//		container.push_back(res.read(framelen));
 //	}
 	/**
 	 */
 	return container;
 }
 /**
+ * ----------------------------------------------------------------------------
+ * Open
+ * ----------------------------------------------------------------------------
  */
-void SIDirConnector::_Open(){
-//	/**------------------------------------------------------------------------------------------------------------*
+void SIDirConnector::_open(){
+//	/**
 //	 * open file watch
-//	 *----------------------------------------------------------------------------------------*/
+//	 */
 //	auto fd = inotify_init();
 //	if (fd < 0) {
 //		throw ConnectorExection(__uri, make_error_code(errc(errno)));
 //        }
-//	/**------------------------------------------------------------------------------------------------------------*
+//	/**
 //	 * register directory
-//	 *----------------------------------------------------------------------------------------*/
-//	if (inotify_add_watch(fd, __uri.Path().c_str(), IN_CLOSE_WRITE | IN_MOVED_TO) < 0) {
+//	 */
+//	if (inotify_add_watch(fd, __uri.path().c_str(), IN_CLOSE_WRITE | IN_MOVED_TO) < 0) {
 //		throw ConnectorExection(__uri, make_error_code(errc(errno)), "inotify_add_watch");
 //	}
-//	/**------------------------------------------------------------------------------------------------------------*
+//	/*
 //	 * create resource
-//	 *----------------------------------------------------------------------------------------*/
+//	 */
 //	__res = SLinuxResource(fd);
 }
 /**
@@ -105,10 +115,7 @@ void SIDirConnector::_Open(){
 //	return -1;
 //}
 /**
- * End namespace Message
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- * End namespace Message
- */
-}

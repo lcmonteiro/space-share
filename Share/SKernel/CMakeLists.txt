@@ -1,7 +1,9 @@
 cmake_minimum_required (VERSION 3.8)
 # folder for core objects
 add_subdirectory(SCodec)
-# SpaceShare target
+# ---------------------------------------------------------
+# ShareKernel target
+# ---------------------------------------------------------
 add_library(ShareKernel STATIC
 	SConnector.cpp
 	SDocument.cpp
@@ -16,6 +18,8 @@ PUBLIC
 target_link_libraries(ShareKernel 
 PUBLIC
 	SpaceKernel
-PRIVATE 
 	ShareKernelCodec
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

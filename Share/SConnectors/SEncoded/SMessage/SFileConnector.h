@@ -1,5 +1,5 @@
 /**
- * ------------------------------------------------------------------------------------------------ 
+ * ------------------------------------------------------------------------------------------------
  * File:   SFileMessageConnector.h
  * Author: Luis Monteiro
  *
@@ -9,13 +9,13 @@
 #ifndef SFILEMESSAGECONNECTORCODED_H
 #define SFILEMESSAGECONNECTORCODED_H
 /**
- * Space
+ * space
  */
 #include "SContainer.h"
 #include "SConnector.h"
 #include "SFileResource.h"
 /**
- * Kernel
+ * connector
  */
 #include "SKernel/SIFileConnector.h"
 #include "SKernel/SOFileConnector.h"
@@ -27,9 +27,9 @@
 namespace Encoded {
 namespace Message {
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Resource adapter
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 class ResourceAdapterFile : private SFileResource {
 public:
@@ -39,30 +39,30 @@ public:
      */
     using Super::Super;
     using Super::operator=;
-    using Super::Fill;
-    using Super::Drain;
-    using Super::Good;
+    using Super::fill;
+    using Super::drain;
+    using Super::good;
     using Super::size;
     /**
      * interfaces
      */
-    inline Super& Base() {
+    inline Super& base() {
         return *this;
     }
-    inline void Bind(const SAddress& uri) {
+    inline void bind(const SAddress& uri) {
         *this = SIFileResource(uri);
     }
-    inline void Link(const SAddress& uri) {
+    inline void link(const SAddress& uri) {
         *this = SOFileResource(uri);
     }
-    inline void Reset() {
+    inline void reset() {
         *this = Super();
     }
 };     
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Input File Connector
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * template
  */
 template <typename R> 
@@ -86,9 +86,9 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Output File Connector
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * template
  */
 template <typename R> 
@@ -112,9 +112,9 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Definition
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 typedef SIFileConnectorT<ResourceAdapterFile> IFileConnector;
 typedef SOFileConnectorT<ResourceAdapterFile> OFileConnector;

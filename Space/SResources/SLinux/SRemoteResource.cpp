@@ -11,11 +11,8 @@
  * base linux
  */
 #include <netinet/tcp.h>
-#include <sys/socket.h>
 #include <arpa/inet.h>
-#include <unistd.h>
 #include <netdb.h>
-#include <sys/un.h>
 /**
  * std
  */
@@ -28,6 +25,7 @@
  */
 #include "SResourceHandler.h"
 #include "SMonitorHandler.h"
+#include "SNativeResource.h"
 /**
  * space
  */
@@ -43,18 +41,12 @@
 using namespace std;
 /**
  * ------------------------------------------------------------------------------------------------
- * linux interface
- * ------------------------------------------------------------------------------------------------
- */
-static size_t __Send(int fd, Frame::const_pointer p, Frame::size_type s);
-static size_t __Recv(int fd, Frame::pointer       p, Frame::size_type s);
-/**
- * ------------------------------------------------------------------------------------------------
  * BASE general interfaces
  * ------------------------------------------------------------------------------------------------
- * check good
+ * check
+ * ----------------------------------------------------------------------------
  */
-bool SRemoteResource::Good() {
+bool SRemoteResource::good() {
     int error = 0;
     socklen_t len = sizeof (error);
     /**
@@ -62,7 +54,7 @@ bool SRemoteResource::Good() {
      */
     try {
         if (::getsockopt(
-            GetHandler<SResourceHandler>()->FD(), SOL_SOCKET, SO_ERROR, &error, &len
+            handler<SResourceHandler>()->fd(), SOL_SOCKET, SO_ERROR, &error, &len
         ) < 0) {
             return false;
         }
@@ -72,144 +64,145 @@ bool SRemoteResource::Good() {
     return error == 0;
 }
 /**
+ * ----------------------------------------------------------------------------
  * Set Timeout
+ * ----------------------------------------------------------------------------
  */
-SRemoteResource& SRemoteResource::SetTxTimeout(int timeout) {
+SRemoteResource& SRemoteResource::timeout_tx(int timeout) {
     struct timeval t = {
         .tv_sec = timeout,
         .tv_usec = 0
     };
     if (::setsockopt(
-        GetHandler<SResourceHandler>()->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) & t, sizeof (t)
+        handler<SResourceHandler>()->fd(), SOL_SOCKET, SO_SNDTIMEO, (void*) & t, sizeof (t)
     ) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     return *this;
 }
-SRemoteResource& SRemoteResource::SetRxTimeout(int timeout) {
+SRemoteResource& SRemoteResource::timeout_rx(int timeout) {
     struct timeval t = {
         .tv_sec = timeout,
         .tv_usec = 0
     };
     if (::setsockopt(
-        GetHandler<SResourceHandler>()->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) & t, sizeof (t)
+        handler<SResourceHandler>()->fd(), SOL_SOCKET, SO_RCVTIMEO, (void*) & t, sizeof (t)
     ) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     return *this;
 }
 /**
- * SetNoDelay
+ * ----------------------------------------------------------------------------
+ * Set Delay
+ * ----------------------------------------------------------------------------
  */
-SRemoteResource& SRemoteResource::SetNoDelay(bool flag) {
-    int f = flag ? 1 : 0;
+SRemoteResource& SRemoteResource::delay(bool flag) {
+    int f = flag ? 0 : 1;
     if (::setsockopt(
-        GetHandler<SResourceHandler>()->FD(), IPPROTO_TCP, TCP_NODELAY, (void*) & f, sizeof (f)
+        handler<SResourceHandler>()->fd(), IPPROTO_TCP, TCP_NODELAY, (void*) & f, sizeof (f)
     ) < 0) {
         throw ResourceException(make_error_code(errc(errno)));
     }
     return *this;
 }
 /**
- * ------------------------------------------------------------------------------------------------
- * IO functions
  * ------------------------------------------------------------------------------------------------
  * Input
+ * ------------------------------------------------------------------------------------------------
+ * Fill
  * ----------------------------------------------------------------------------
- * fill
  */
 template<>
-SRemoteResource& SRemoteResource::Fill(IOFrame& f) {
+SRemoteResource& SRemoteResource::fill(IOFrame& f) {
     while (!f.full()) {
-        f.Insert(__Recv(
-            GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize()
-        ));
+        f.insert(SNativeResource::Receive(
+            handler<SResourceHandler>()->fd(), f.idata(), f.isize()));
     }
     return *this;
 }
 template<>
-SRemoteResource& SRemoteResource::Fill(Frame& f) {
+SRemoteResource& SRemoteResource::fill(Frame& f) {
     for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, __Recv(
-            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
-        ));
+        it = next(it, SNativeResource::Receive(
+            handler<SResourceHandler>()->fd(), it.base(), distance(it, end)));
     }
-    return *this;
-}
-/**
- * read
- */
-template<>
-SRemoteResource& SRemoteResource::Read(IOFrame& f) {
-    f.Insert(__Recv(
-        GetHandler<SResourceHandler>()->FD(), f.IData(), f.isize())
-    );
-    return *this;
-}
-template<>
-SRemoteResource& SRemoteResource::Read(Frame& f) {
-    f.Insert(__Recv(
-        GetHandler<SResourceHandler>()->FD(), f.Data(), f.size())
-    );
     return *this;
 }
 /**
  * ----------------------------------------------------------------------------
+ * Read
+ * ----------------------------------------------------------------------------
+ */
+template<>
+SRemoteResource& SRemoteResource::read(IOFrame& f) {
+    f.insert(SNativeResource::Receive(
+        handler<SResourceHandler>()->fd(), f.idata(), f.isize()));
+    return *this;
+}
+template<>
+SRemoteResource& SRemoteResource::read(Frame& f) {
+    f.insert(SNativeResource::Receive(
+        handler<SResourceHandler>()->fd(), f.data(), f.size()));
+    return *this;
+}
+/**
+ * ------------------------------------------------------------------------------------------------
  * Output
+ * ------------------------------------------------------------------------------------------------
+ * Drain
  * ----------------------------------------------------------------------------
- * drain
  */
 template<typename T>
-SRemoteResource& SRemoteResource::Drain(T& f) {
-    // send loop ----------------------
+SRemoteResource& SRemoteResource::drain(T& f) {
     while (!f.empty()) {
-        f.Remove(__Send(
-            GetHandler<SResourceHandler>()->FD(), f.Data(), f.size()
-        ));
+        f.remove(SNativeResource::Send(
+            handler<SResourceHandler>()->fd(), f.data(), f.size()));
     }
     return *this;
 }
 template<typename T>
-SRemoteResource& SRemoteResource::Drain(const T& f) {
-    // send loop ----------------------
+SRemoteResource& SRemoteResource::drain(const T& f) {
     for (auto it = f.begin(), end = f.end(); it != end;) {
-        it = next(it, __Send(
-            GetHandler<SResourceHandler>()->FD(), it.base(), distance(it, end)
-        ));
+        it = next(it, SNativeResource::Send(
+            handler<SResourceHandler>()->fd(), it.base(), distance(it, end)));
     }
     return *this;
 }
-template SRemoteResource& SRemoteResource::Drain(Frame&);
-template SRemoteResource& SRemoteResource::Drain(IOFrame&);
-template SRemoteResource& SRemoteResource::Drain(const Frame&);
-template SRemoteResource& SRemoteResource::Drain(const IOFrame&);
+template SRemoteResource& SRemoteResource::drain(Frame&);
+template SRemoteResource& SRemoteResource::drain(IOFrame&);
+template SRemoteResource& SRemoteResource::drain(const Frame&);
+template SRemoteResource& SRemoteResource::drain(const IOFrame&);
 /**
- * write
+ * ----------------------------------------------------------------------------
+ * Write
+ * ----------------------------------------------------------------------------
  */
 template<typename T>
-SRemoteResource& SRemoteResource::Write(T& f) {
-    f.Remove(
-        __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size()));
+SRemoteResource& SRemoteResource::write(T& f) {
+    f.remove(SNativeResource::Send(
+        handler<SResourceHandler>()->fd(), f.data(), f.size()));
     return *this;
 }
 template<typename T>
-SRemoteResource& SRemoteResource::Write(const T& f) {
-    __Send(GetHandler<SResourceHandler>()->FD(), f.Data(), f.size());
+SRemoteResource& SRemoteResource::write(const T& f) {
+    SNativeResource::Send(
+        handler<SResourceHandler>()->fd(), f.data(), f.size());
     return *this;
 }
-template SRemoteResource& SRemoteResource::Write(Frame&);
-template SRemoteResource& SRemoteResource::Write(IOFrame&);
-template SRemoteResource& SRemoteResource::Write(const Frame&);
-template SRemoteResource& SRemoteResource::Write(const IOFrame&);
+template SRemoteResource& SRemoteResource::write(Frame&);
+template SRemoteResource& SRemoteResource::write(IOFrame&);
+template SRemoteResource& SRemoteResource::write(const Frame&);
+template SRemoteResource& SRemoteResource::write(const IOFrame&);
 /**
  * ------------------------------------------------------------------------------------------------
  * MESSAGE general interfaces
  * ------------------------------------------------------------------------------------------------
- * bind
+ * Bind
+ * ----------------------------------------------------------------------------
  */
-Message::SRemoteResource& Message::SRemoteResource::Bind(
-    const string& host, uint16_t port
-) {
+Message::SRemoteResource& Message::SRemoteResource::bind(
+    const string& host, uint16_t port) {
     /**
      * bind parameters
      */
@@ -246,17 +239,17 @@ Message::SRemoteResource& Message::SRemoteResource::Bind(
          * set options
          */
         int opt = 1;
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
+        if (::setsockopt(h->fd(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
             continue;
         }
-        if (::bind(h->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
+        if (::bind(h->fd(), rp->ai_addr, rp->ai_addrlen) < 0) {
             continue;
         }
         struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+        if (::setsockopt(h->fd(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
             continue;
         }
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+        if (::setsockopt(h->fd(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
             continue;
         }
 #ifdef __DEBUG__
@@ -277,7 +270,7 @@ Message::SRemoteResource& Message::SRemoteResource::Bind(
         /**
          * save handler
          */
-        SetHandler(h);
+        handler(h);
         return *this;
     }
     /**
@@ -287,11 +280,12 @@ Message::SRemoteResource& Message::SRemoteResource::Bind(
     throw ResourceException(make_error_code(errc::no_such_device_or_address));
 }
 /**
- * wait
+ * ----------------------------------------------------------------------------
+ * Wait
+ * ----------------------------------------------------------------------------
  */
-Message::SRemoteResource& Message::SRemoteResource::Wait(
-    const string& host, uint16_t port, chrono::seconds timeout
-) {
+Message::SRemoteResource& Message::SRemoteResource::wait(
+    const string& host, uint16_t port, chrono::seconds timeout) {
     /**
      * bind parameters
      */
@@ -328,17 +322,17 @@ Message::SRemoteResource& Message::SRemoteResource::Wait(
          * set options
          */
         int opt = 1;
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
+        if (::setsockopt(h->fd(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
             continue;
         }
-        if (::bind(h->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
+        if (::bind(h->fd(), rp->ai_addr, rp->ai_addrlen) < 0) {
             continue;
         }
         struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+        if (::setsockopt(h->fd(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
             continue;
         }
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+        if (::setsockopt(h->fd(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
             continue;
         }
 #ifdef __DEBUG__
@@ -359,11 +353,11 @@ Message::SRemoteResource& Message::SRemoteResource::Wait(
         /**
          * wait for data 
          */
-        SStaticMonitorHandler({h}).Wait(timeout);
+        SStaticMonitorHandler({h}).wait(timeout);
         /**
          * get address and connect
          */
-        if (::recvfrom(h->FD(), nullptr, 0, MSG_PEEK,(struct sockaddr *)&addr, &len) < 0) {
+        if (::recvfrom(h->fd(), nullptr, 0, MSG_PEEK,(struct sockaddr *)&addr, &len) < 0) {
             throw ResourceException(make_error_code(errc(errno)));
         }
 #ifdef __DEBUG__
@@ -377,13 +371,13 @@ Message::SRemoteResource& Message::SRemoteResource::Wait(
             cout << "connected: " << "host=" << hbuf << ", serv=" << sbuf << endl;
         }
 #endif
-        if (::connect(h->FD(), (struct sockaddr *)&addr, len) < 0) {
+        if (::connect(h->fd(), (struct sockaddr *)&addr, len) < 0) {
             throw ResourceException(make_error_code(errc(errno)));
         }
         /**
          * save handler
          */
-        SetHandler(h);
+        handler(h);
         return *this;
     }
     /**
@@ -393,15 +387,18 @@ Message::SRemoteResource& Message::SRemoteResource::Wait(
     throw ResourceException(make_error_code(errc::no_such_device_or_address));
 }
 /**
- * link
+ * ----------------------------------------------------------------------------
+ * Link
+ * ----------------------------------------------------------------------------
  */
-Message::SRemoteResource& Message::SRemoteResource::Link(const string& host, uint16_t host_port) {
+Message::SRemoteResource& Message::SRemoteResource::link(
+    const string& host, uint16_t host_port) {
     /**
      * connect parameters
      */
     struct addrinfo hints;
     memset(&hints, 0, sizeof (struct addrinfo));
-    hints.ai_family = AF_UNSPEC;            // Allow IPv4 or IPv6 
+    hints.ai_family   = AF_UNSPEC;          // Allow IPv4 or IPv6 
     hints.ai_socktype = SOCK_DGRAM;         // Datagram socket
     /**
      * get info
@@ -424,17 +421,17 @@ Message::SRemoteResource& Message::SRemoteResource::Link(const string& host, uin
         /**
          * try to connect
          */
-        if (::connect(h->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
+        if (::connect(h->fd(), rp->ai_addr, rp->ai_addrlen) < 0) {
             continue;
         }
         /**
          * set options
          */
         struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+        if (::setsockopt(h->fd(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
             continue;
         }
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+        if (::setsockopt(h->fd(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
             continue;
         }
 #ifdef __DEBUG__
@@ -455,7 +452,7 @@ Message::SRemoteResource& Message::SRemoteResource::Link(const string& host, uin
         /**
          * save handler
          */
-        SetHandler(h);
+        handler(h);
         return *this;
     }
     /**
@@ -468,11 +465,11 @@ Message::SRemoteResource& Message::SRemoteResource::Link(const string& host, uin
  * ------------------------------------------------------------------------------------------------
  * STREAM general interfaces
  * ------------------------------------------------------------------------------------------------
- * wait
+ * Wait
+ * ----------------------------------------------------------------------------
  */
-Stream::SRemoteResource& Stream::SRemoteResource::Wait(
-    const string& host, uint16_t port, chrono::seconds timeout
-) {
+Stream::SRemoteResource& Stream::SRemoteResource::wait(
+    const string& host, uint16_t port, chrono::seconds timeout) {
     /**
      * bind parameters
      */
@@ -509,13 +506,13 @@ Stream::SRemoteResource& Stream::SRemoteResource::Wait(
          * bind and listen
          */
         int opt = 1;
-        if (::setsockopt(s->FD(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
+        if (::setsockopt(s->fd(), SOL_SOCKET, SO_REUSEADDR, (int*) & opt, sizeof (int)) < 0) {
             continue;
         }
-        if (::bind(s->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
+        if (::bind(s->fd(), rp->ai_addr, rp->ai_addrlen) < 0) {
             continue;
         }
-        if (::listen(s->FD(), 1) < -1) {
+        if (::listen(s->fd(), 1) < -1) {
             continue;
         }
 #ifdef __DEBUG__
@@ -536,27 +533,27 @@ Stream::SRemoteResource& Stream::SRemoteResource::Wait(
         /**
          * wait connection
          */
-        SStaticMonitorHandler({s}).Wait(timeout);        
+        SStaticMonitorHandler({s}).wait(timeout);        
         /**
          * accept handler
          */
         auto h = make_shared<SResourceHandler>(
-            ::accept(s->FD(), (struct sockaddr *)&addr, &len)
+            ::accept(s->fd(), (struct sockaddr *)&addr, &len)
         );
         /**
          * set options
          */
         struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+        if (::setsockopt(h->fd(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
             throw ResourceException(make_error_code(errc(errno)));
         }
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+        if (::setsockopt(h->fd(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
             throw ResourceException(make_error_code(errc(errno)));
         }
         /**
          * save handler
          */
-        SetHandler(h);
+        handler(h);
         return *this;
     }
     /**
@@ -566,11 +563,12 @@ Stream::SRemoteResource& Stream::SRemoteResource::Wait(
     throw ResourceException(make_error_code(errc::no_such_device_or_address));
 }
 /**
- * ------------------------------------------------------------------------------------------------
- * Connect
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
+ * Link
+ * ----------------------------------------------------------------------------
  */
-Stream::SRemoteResource& Stream::SRemoteResource::Link(const string& host, uint16_t host_port) {
+Stream::SRemoteResource& Stream::SRemoteResource::link(
+    const string& host, uint16_t host_port) {
     /**
      * connect parameters
      */
@@ -599,17 +597,17 @@ Stream::SRemoteResource& Stream::SRemoteResource::Link(const string& host, uint1
         /**
          * try to connect
          */
-        if (::connect(h->FD(), rp->ai_addr, rp->ai_addrlen) < 0) {
+        if (::connect(h->fd(), rp->ai_addr, rp->ai_addrlen) < 0) {
             continue;
         }
         /**
          * set options
          */
         struct timeval t = {.tv_sec = 0, .tv_usec = INIT_IO_TIMEOUT};
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
+        if (::setsockopt(h->fd(), SOL_SOCKET, SO_SNDTIMEO, (void*) &t, sizeof (t)) < 0) {
             continue;
         }
-        if (::setsockopt(h->FD(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
+        if (::setsockopt(h->fd(), SOL_SOCKET, SO_RCVTIMEO, (void*) &t, sizeof (t)) < 0) {
             continue;
         }
 #ifdef __DEBUG__
@@ -630,7 +628,7 @@ Stream::SRemoteResource& Stream::SRemoteResource::Link(const string& host, uint1
         /**
          * save handler
          */
-        SetHandler(h);
+        handler(h);
         return *this;
     }
     /**
@@ -638,36 +636,6 @@ Stream::SRemoteResource& Stream::SRemoteResource::Link(const string& host, uint1
      **/
     ::freeaddrinfo(result);
     throw ResourceException(make_error_code(errc::no_such_device_or_address));
-}
-/**
- * ------------------------------------------------------------------------------------------------
- * linux functions
- * ------------------------------------------------------------------------------------------------
- */
-size_t __Send(int fd, Frame::const_pointer p, Frame::size_type s) {
-    auto n = ::send(fd, p, s, MSG_NOSIGNAL);
-    if (n <= 0) {
-        if (n < 0) {
-            throw OResourceExceptionABORT(strerror(errno));
-        }
-        throw OResourceExceptionABORT();
-    }
-    return n;
-}
-/**
- */
-size_t __Recv(int fd, Frame::pointer p, Frame::size_type s) {
-    auto n = ::recv(fd, p, s, 0);
-    if (n <= 0) {
-        if (n < 0) {
-            if (errno == EAGAIN) {
-                throw ResourceExceptionTIMEOUT();
-            }
-            throw IResourceExceptionABORT(strerror(errno));
-        }
-        throw IResourceExceptionABORT();
-    }
-    return n;
 }
 /**
  * ------------------------------------------------------------------------------------------------

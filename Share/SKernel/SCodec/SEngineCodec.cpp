@@ -13,11 +13,16 @@
 /**
  * local
  */
-#include "SCodec.h"
+#include "SEngineCodec.h"
 /**
+ * namespace
  */
-namespace v1 {
+using namespace Codec;
 /**
+ * --------------------------------------------------------------------------------------------------------------------
+ *                                     --- Helpers ----
+ * --------------------------------------------------------------------------------------------------------------------
+ **
  * constant
  */
 static constexpr int INT_MASK = ~int(sizeof(int)-1);
@@ -29,21 +34,20 @@ typedef std::minstd_rand0 Generator;
  * --------------------------------------------------------------------------------------------------------------------
  *                                      ---- Utils ----                                        
  * --------------------------------------------------------------------------------------------------------------------
- **
  *  encode functions
+ * ----------------------------------------------------------------------------
  */
-static inline uint32_t Combine(
-        const Container& data, uint32_t seed, uint8_t field, uint8_t sparsity, Frame& out
-);
+static inline uint32_t __combine(
+        const Container& data, uint32_t seed, uint8_t field, uint8_t sparsity, Frame& out);
 /**
+ * ----------------------------------------------------------------------------
  * decode functions
+ * ----------------------------------------------------------------------------
  */
-static inline void Organize(
-        Frame& field, Container& coef, Container& data
-);
-static inline uint32_t Solve(
-        uint32_t size, Container& coef, Container& data
-);
+static inline void __organize(
+        Frame& field,  Container& coef, Container& data);
+static inline uint32_t __solve(
+        uint32_t size, Container& coef, Container& data);
 /**
  * --------------------------------------------------------------------------------------------------------------------
  *                                      ---- Codec ----                                       
@@ -51,7 +55,7 @@ static inline uint32_t Solve(
  * Encode
  * ----------------------------------------------------------------------------
  */
-uint32_t SCodec::Encode(
+uint32_t SEngine::Encode(
     Container&   code, 
     uint32_t     size, 
     Container&   data, 
@@ -59,21 +63,19 @@ uint32_t SCodec::Encode(
     uint32_t     high_density, 
     const Stamp& stamp
 ) {
-    // ------------------------------------------------------------------------
 #define ENCODE(MIN, FIELD, SPARSITY, FRAMESIZE) do{             \
     /* seed, field and sparsity */                              \
-    uint32_t seed(0);                                           \
-    uint8_t  field(0);                                          \
-    uint8_t  sparsity(0);                                       \
+    auto seed     = uint32_t(0);                                \
+    auto field    = uint8_t(0);                                 \
+    auto sparsity = uint8_t(0);                                 \
     /* create combination */                                    \
-    Frame comb;                                                 \
-    comb.reserve(FRAMESIZE + HeaderSize() + sizeof(int));       \
+    auto comb = Frame(FRAMESIZE + HeaderSize() + sizeof(int));  \
     comb.assign(FRAMESIZE, 0);                                  \
     do{                                                         \
         seed=rand();                                            \
         field=FIELD;                                            \
         sparsity=SPARSITY;                                      \
-    }while(Combine(data, seed, field, sparsity, comb)<MIN);     \
+    }while(__combine(data, seed, field, sparsity, comb)<MIN);   \
     /* add seed */                                              \
     comb.emplace_back(uint8_t(seed));                           \
     seed >>= 8;                                                 \
@@ -85,31 +87,36 @@ uint32_t SCodec::Encode(
     /* save combination */                                      \
     code.emplace_back(move(comb));                              \
 }while (0)
-
-    // encode container -------------------------------------------------------
+    /**
+     * encode container
+     */
     code.reserve(size);
-
-    // check if empty ---------------------------------------------------------
+    /**
+     * check if empty
+     */
     if (data.empty()) { return 0; }
-
-    // get frame size ---------------------------------------------------------
+    /**
+     * get frame size
+     */
     const uint32_t FRAME_SIZE(data.front().size());
-
-    // normal density ---------------------------------------------------------
+    /**
+     * normal density
+     */
     for (unsigned int i = high_density; i < size; i++) {
         ENCODE(1, 
             stamp[uint8_t(seed)].first, 
             stamp[uint8_t(seed)].second, 
-            FRAME_SIZE
-        );
+            FRAME_SIZE);
     }
-
-    // high density -----------------------------------------------------------
+    /**
+     * high density
+     */
     for (unsigned int i = 0; i < high_density; i++) {
         ENCODE(1, UINT8_MAX, UINT8_MAX, FRAME_SIZE);
     }
-    
-    // return container size --------------------------------------------------
+    /** 
+     * return container size
+     */
     return size;
 }
 /**
@@ -117,7 +124,7 @@ uint32_t SCodec::Encode(
  *  Decode
  * ------------------------------------------------------------------------------------------------
  */
-uint32_t SCodec::Decode(
+uint32_t SEngine::Decode(
     Container&&  code, 
     uint32_t     capacity, 
     Container&   data, 
@@ -126,8 +133,9 @@ uint32_t SCodec::Decode(
     const Stamp& stamp
 ) {
     for (auto it = code.begin(); it != code.end(); ++it) {
-     
-        // remove seed --------------------------------------------------------
+        /**
+         * remove seed 
+         */
         uint32_t seed = uint32_t(it->back());
         it->pop_back();
         seed <<= 8;
@@ -139,40 +147,47 @@ uint32_t SCodec::Decode(
         seed <<= 8;
         seed |= uint32_t(it->back());
         it->pop_back();
-     
-        // find field and sparsity --------------------------------------------
+        /**
+         * find field and sparsity
+         */
         uint8_t field    = stamp[uint8_t(seed)].first;
         uint8_t sparsity = stamp[uint8_t(seed)].second;
-     
-        // coefficient generator ----------------------------------------------
+        /**
+         * coefficient generator
+         */
         Generator c(seed);
-        // --------------------------------------------------------------------
-        Frame coef(capacity + sizeof (int), capacity, 0);
-        // --------------------------------------------------------------------
-        register uint8_t factor = 0;
-        // --------------------------------------------------------------------
+        /**
+         * gerenate coefficients
+         */
+        auto coef = Frame(capacity + sizeof (int), capacity, 0);
         for (auto it = coef.begin(), end = coef.end(); it != end; ++it) {
-            factor = c();
+            register uint8_t factor = c();
             if (factor > sparsity) {
                 continue;
             }
             *it = (factor & field);
         }
-     
-        // update state -------------------------------------------------------
+        /**
+         * update state
+         */
         data.emplace_back(move(*it));
-     
-        // update coefficients ------------------------------------------------
+        /**
+         * update coefficients
+         */
         coefs.emplace_back(move(coef));
-     
-        // update fields ------------------------------------------------------
+        /**
+         * update fields
+         */
         fields.emplace_back(field);
     }
-    // nframes organize -------------------------------------------------------
-    Organize(fields, coefs, data);
-
-    // try to solve -----------------------------------------------------------
-    return Solve(capacity, coefs, data);
+    /**
+     * nframes organize
+     */
+    __organize(fields, coefs, data);
+    /**
+     * try to solve
+     */
+    return __solve(capacity, coefs, data);
 }
 /**
  * --------------------------------------------------------------------------------------------------------------------
@@ -275,10 +290,10 @@ static const int P2V[] = {
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * division
+ * Division
  * ------------------------------------------------------------------------------------------------
  */ 
-static inline int Div(int a, int b) {
+static inline int __div(int a, int b) {
     // 0 / b = 0
     if (a == 0) {
         return 0;
@@ -293,10 +308,10 @@ static inline int Div(int a, int b) {
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * multiplication
+ * Multiplication
  * ------------------------------------------------------------------------------------------------
  */ 
-static inline int Mul(int a, int b) {
+static inline int __mul(int a, int b) {
     // b * 0 = 0
     if (a == 0 || b == 0) {
         return 0;
@@ -305,7 +320,7 @@ static inline int Mul(int a, int b) {
     return P2V[V2P[a] + V2P[b]];
 }
 
-static inline Frame& Mul(Frame& b, register int m) {
+static inline Frame& __mul(Frame& b, register int m) {
     // [X] * 0 = [0]
     if (m == 0) {
         fill(b.begin(), b.end(), 0);
@@ -323,7 +338,7 @@ static inline Frame& Mul(Frame& b, register int m) {
     return b;
 }
 
-static inline Frame& Mul(Frame& b, register int m, register int i) {
+static inline Frame& __mul(Frame& b, register int m, register int i) {
     // [X] * 0 = [0]
     if (m == 0) {
         fill(b.begin() + i, b.end(), 0);
@@ -342,30 +357,28 @@ static inline Frame& Mul(Frame& b, register int m, register int i) {
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * sum or subtraction
+ * Sum / Subtraction
  * ------------------------------------------------------------------------------------------------
  */ 
-static inline Frame& Merge(Frame& a, Frame& b) {
+static inline Frame& __merge(Frame& a, Frame& b) {
     register int* p0 = (int*) (a.data());
     register int* p1 = (int*) (b.data());
-
-    // merge b with a -------------------------------------    
+    // merge b with a    
     for (register int*pe = (int*) (a.data() + a.size()); p0 < pe; ++p0, ++p1) {
         *p0 ^= *p1;
     }
-    // return a with b ------------------------------------
+    // return a with b
     return a;
 }
 
-static inline Frame& Merge(Frame& a, Frame& b, register int i) {
+static inline Frame& __merge(Frame& a, Frame& b, register int i) {
     register int* p0 = (int*) (a.data()+(i & INT_MASK));
     register int* p1 = (int*) (b.data()+(i & INT_MASK));
-    
-    // merge b with a -------------------------------------
+    // merge b with a
     for (register int*pe = (int*) (a.data() + a.size()); p0 < pe; ++p0, ++p1) {
         *p0 ^= *p1;
     }
-    // return a with b ------------------------------------
+    // return a with b
     return a;
 }
 /**
@@ -375,22 +388,24 @@ static inline Frame& Merge(Frame& a, Frame& b, register int i) {
  * Combine                                     
  * ------------------------------------------------------------------------------------------------
  **/
-static uint32_t Combine(
-        const Container& data, uint32_t seed, uint8_t field, uint8_t sparsity, Frame& out
+static uint32_t __combine(
+    const Container& data, uint32_t seed, uint8_t field, uint8_t sparsity, Frame& out
 ) {
-    // coefficient generator ------------------------------
+    /**
+     * coefficient generator
+     */
     Generator c(seed);
-    
-    // container for process ------------------------------
+    /**
+     * container for process
+     */
     Frame aux(out.capacity());
-    
-    // ----------------------------------------------------
-    register uint8_t factor = 0;
-    register uint32_t n = 0;
-    
-    // combine loop ---------------------------------------
+    /**
+     * combine loop
+     */ 
+    register uint8_t  factor = 0;
+    register uint32_t n      = 0;
     for (auto it = data.begin(), end = data.end(); it != end; ++it) {
-        // Y += Xn*Cn -------
+        // Y += Xn*Cn
         factor = c();
         if (factor > sparsity) {
             continue;
@@ -399,14 +414,16 @@ static uint32_t Combine(
         if (factor == 0) {
             continue;
         }
-        // save a copy ------
+        // save a copy
         aux.assign(it->begin(), it->end());
-        // process ----------
-        Merge(out, Mul(aux, factor));
-        // next -------------
+        // process
+        __merge(out, __mul(aux, factor));
+        // next
         ++n;
     }
-    // return number of merges ----------------------------
+    /**
+     * return number of merges
+     */
     return n;
 }
 /**
@@ -414,12 +431,16 @@ static uint32_t Combine(
  *  Organize
  * ------------------------------------------------------------------------------------------------
  **/
-static void Organize(Frame& field, Container& coef, Container& data) {
-    // check if empty -------------------------------------
+static void __organize(Frame& field, Container& coef, Container& data) {
+    /**
+     * check if empty
+     */
     if (field.empty()) {
         return;
     }
-    // process loop ---------------------------------------
+    /**
+     * process loop
+     */
     for (register auto i = size_t(0), ii = field.size() - 1; i < ii;) {
         if (field[i] == 1) {
             i++;
@@ -441,25 +462,31 @@ static void Organize(Frame& field, Container& coef, Container& data) {
  * --------------------------------------------------------------------------------------------------------------------
  *                                      ----- Gaussian Elimination ----                               
  * --------------------------------------------------------------------------------------------------------------------
- * Elemination
+ * Elimination
  * ------------------------------------------------------------------------------------------------
  **/
-static inline void Elimination(Container& coef, Container& data, register int index) {
+static inline void __elimination(Container& coef, Container& data, register int index) {
     for (register uint32_t i = index + 1; i < data.size(); ++i) {
         if (coef[i][index] == 0) {
             continue;
         }
-        // ----------------------------
-        register auto factor = Div(coef[index][index], coef[i][index]);
-        // ----------------------------
+        /**
+         * compute factor
+         */
+        register auto factor = __div(coef[index][index], coef[i][index]);
+        /**
+         * verify factor
+         */
         if (factor == 1) {
-            Merge(coef[i], coef[index], index);
-            Merge(data[i], data[index]);
+            __merge(coef[i], coef[index], index);
+            __merge(data[i], data[index]);
             continue;
         }
-        // ----------------------------
-        Merge(Mul(coef[i], factor, index), coef[index], index);
-        Merge(Mul(data[i], factor), data[index]);
+        /**
+         * multiply and sum (= merge)
+         */
+        __merge(__mul(coef[i], factor, index), coef[index], index);
+        __merge(__mul(data[i], factor), data[index]);
     }
 }
 /**
@@ -467,7 +494,7 @@ static inline void Elimination(Container& coef, Container& data, register int in
  * Prepare
  * ------------------------------------------------------------------------------------------------
  */
-static inline bool Prepare(Container& coef, Container& data, register int index) {
+static inline bool __prepare(Container& coef, Container& data, register int index) {
     if (coef[index][index]) {
         return true;
     }
@@ -485,22 +512,28 @@ static inline bool Prepare(Container& coef, Container& data, register int index)
  * Reserve Elimination
  * ------------------------------------------------------------------------------------------------
  */
-static inline void ReverseElimination(Container& coef, Container& data, register int index) {
+static inline void __reverse_elimination(Container& coef, Container& data, register int index) {
     for (register int i = 0; i < index; ++i) {
         if (coef[i][index] == 0) {
             continue;
         }
-        // ----------------------------
-        register auto factor = Div(coef[i][index], coef[index][index]);
-        // ----------------------------
+        /**
+         * compute factor
+         */
+        register auto factor = __div(coef[i][index], coef[index][index]);
+        /**
+         * verify factor
+         */
         if (factor == 1) {
-            Merge(coef[i], coef[index], index);
-            Merge(data[i], data[index]);
+            __merge(coef[i], coef[index], index);
+            __merge(data[i], data[index]);
             continue;
         }
-        // ----------------------------
-        Merge(coef[i], Mul(coef[index], factor, index), index);
-        Merge(data[i], Mul(data[index], factor));
+        /**
+         * multiply and sum (= merge)
+         */
+        __merge(coef[i], __mul(coef[index], factor, index), index);
+        __merge(data[i], __mul(data[index], factor));
     }
 }
 /**
@@ -508,40 +541,50 @@ static inline void ReverseElimination(Container& coef, Container& data, register
  * Unification
  * ------------------------------------------------------------------------------------------------
  */
-static inline void Unification(Container& coef, Container& data, register int index) {
-    register auto factor = Div(1, coef[index][index]);
-    // check --------------------------
+static inline void __unification(Container& coef, Container& data, register int index) {
+    register auto factor = __div(1, coef[index][index]);
+    /**
+     * check
+     */
     if (factor == 0) {
         return;
     }
     if (factor == 1) {
         return;
     }
-    // process ------------------------
-    Mul(coef[index], factor, index);
-    Mul(data[index], factor);
+    /**
+     * process
+     */
+    __mul(coef[index], factor, index);
+    __mul(data[index], factor);
 }
 /**
  * ------------------------------------------------------------------------------------------------
  * Solve
  * ------------------------------------------------------------------------------------------------
  */
-static uint32_t Solve(uint32_t size, Container& coef, Container& data) {
-    // gaussian elimination -----------
+static uint32_t __solve(uint32_t size, Container& coef, Container& data) {
+    /**
+     * gaussian elimination
+     */
     register unsigned int n = 0;
     for (; n < size && n < data.size(); ++n) {
-        if (!Prepare(coef, data, n)) {
+        if (!__prepare(coef, data, n)) {
             break;
         }
-        Elimination(coef, data, n);
+        __elimination(coef, data, n);
     }
-    // solve diagonal -----------------
+    /**
+     * solve diagonal
+     */
     for (register unsigned int i = 0; i < n; ++i) {
-        ReverseElimination(coef, data, i);
+        __reverse_elimination(coef, data, i);
     }
-    // diagonal unification -----------
+    /**
+     * diagonal unification
+     */
     for (register unsigned int i = 0; i < n; ++i) {
-        Unification(coef, data, i);
+        __unification(coef, data, i);
     }
     return n;
 }
@@ -550,4 +593,3 @@ static uint32_t Solve(uint32_t size, Container& coef, Container& data) {
  * End
  * --------------------------------------------------------------------------------------------------------------------
  */
-};

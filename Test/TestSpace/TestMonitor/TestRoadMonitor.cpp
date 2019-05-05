@@ -33,13 +33,13 @@ public:
     }
     // interfaces
     using SEventResource::SEventResource;
-    bool Good() {
+    bool good() {
         return true;
     }
-    bool Inactive() {
+    bool inactive() {
         return false;
     }
-    void Repair() {
+    void build() {
     }
 };
 TEST(SRoadMonitor, Create)
@@ -56,26 +56,26 @@ TEST(SRoadMonitor, Create)
     auto monitor = RoadMonitor(
         RoadMonitor::Time(10), 
         RoadMonitor::Road(2, 0)
-            .Insert("1", SEventConnector::Make(0))
-            .Insert("2", SEventConnector::Make(0))
+            .insert("1", SEventConnector::Make(0))
+            .insert("2", SEventConnector::Make(0))
         .detach()
     );
 
     // set event 1 ---------------------------------------
-    monitor.Update().Find("1")->Send();
+    monitor.update().find("1")->send();
 
     // monitor test --------------------------------------
-    auto res1 = monitor.Update().Wait();
+    auto res1 = monitor.update().wait();
     EXPECT_EQ(res1.size(),                   1);
-    EXPECT_EQ(res1.front()->second->Clear(), 1);
+    EXPECT_EQ(res1.front()->second->clear(), 1);
 
     // set event 1 ---------------------------------------
-    monitor.Update().Find("2")->Send();
+    monitor.update().find("2")->send();
 
     // monitor test --------------------------------------
-    auto res2 = monitor.Wait();
+    auto res2 = monitor.wait();
     EXPECT_EQ(res2.size(),           1);
-    EXPECT_EQ(res2.front()->second->Clear(), 1);
+    EXPECT_EQ(res2.front()->second->clear(), 1);
 }
 /**
  * ------------------------------------------------------------------------------------------------

@@ -1,26 +1,35 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SDirConnector.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2016, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SDIRSTREAMCODED_H
 #define SDIRSTREAMCODED_H
 /**
+ * space
  */
-#include "SKernel/SContainer.h"
-#include "SKernel/SConnector.h"
+#include "SContainer.h"
+#include "SConnector.h"
 /**
- * Base coded streams
+ * connector
  */
 #include "SKernel//SIDirConnector.h"
 #include "SKernel//SODirConnector.h"
 /**
- * Begin namespace Code
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
-namespace Code {
+namespace Encoded {
+namespace Message {
 /**
- * Input UDP Connector  template
+ * ----------------------------------------------------------------------------
+ * Input DIR Connector
+ * ----------------------------------------------------------------------------
+ * template
  */
 template<class T>
 class SIDirConnectorT : public T {
@@ -35,11 +44,13 @@ public:
 	/**
 	 * constructor
 	 */
-	SIDirConnectorT(const string address) : T(address) {
-	}
+	SIDirConnectorT(const string address) : T(address) {}
 };
 /**
- * Output UDP Connector  template
+ * ----------------------------------------------------------------------------
+ * Output DIR Connector
+ * ----------------------------------------------------------------------------  
+ * template
  */
 template<class T>
 class SODirConnectorT : public T {
@@ -57,17 +68,20 @@ public:
 	SODirConnectorT(
 		const string address, 
 		const size_t files
-	) : T(address, files) {
-	}
+	) : T(address, files) {}
 };
 /**
- * definitions
+ * ----------------------------------------------------------------------------
+ * Definitions
+ * ----------------------------------------------------------------------------
  */
 typedef SIDirConnectorT<SIDirConnector> IDirConnector;
 typedef SODirConnectorT<SODirConnector> ODirConnector;
+}}
 /**
- * End namespace Code
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
-}
 #endif /* SDIRSTREAMCODED_H */
 

@@ -9,13 +9,13 @@
 #ifndef SFILEMESSAGECONNECTOR_H
 #define SFILEMESSAGECONNECTOR_H
 /**
- * Space
+ * space
  */
 #include "SContainer.h"
 #include "SConnector.h"
 #include "SFileResource.h"
 /**
- * Kernel
+ * share - connector
  */
 #include "SKernel/SIFileConnector.h"
 #include "SKernel/SOFileConnector.h"
@@ -27,9 +27,9 @@
 namespace Decoded {
 namespace Message {
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Resource adapter
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 class ResourceAdapterFile : private SFileResource {
 public:
@@ -39,30 +39,30 @@ public:
      */
     using Super::Super;
     using Super::operator=;
-    using Super::Read;
-    using Super::Drain;
-    using Super::Good;
+    using Super::read;
+    using Super::drain;
+    using Super::good;
     using Super::size;
     /**
      * interfaces
      */
-    inline Super& Base() {
+    inline Super& base() {
         return *this;
     }
-    inline void Bind(const SAddress& uri) {
+    inline void bind(const SAddress& uri) {
         *this = SIFileResource(uri);
     }
-    inline void Link(const SAddress& uri) {
+    inline void link(const SAddress& uri) {
         *this = SOFileResource(uri);
     }
-    inline void Reset() {
+    inline void reset() {
         *this = Super();
     }
 }; 
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Input LOC Connector
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * template
  */
 template <typename R> 
@@ -95,9 +95,9 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Output LOC Connector
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * template
  */
 template <typename R> 
@@ -129,16 +129,9 @@ public:
     }
 };
 /**
- * ------------------------------------------------------------------------------------------------
- * IO LOC Connector
- * ------------------------------------------------------------------------------------------------
- * template
- */
-
-/**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Definition
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 typedef SIFileConnectorT<ResourceAdapterFile>  IFileConnector;
 typedef SOFileConnectorT<ResourceAdapterFile>  OFileConnector;
@@ -146,10 +139,6 @@ typedef SOFileConnectorT<ResourceAdapterFile>  OFileConnector;
 /**
  * ------------------------------------------------------------------------------------------------
  * End namespace Decoded & Message
- * ------------------------------------------------------------------------------------------------
- * 
- * 
- * 
+ * ------------------------------------------------------------------------------------------------ 
  */
 #endif /* SFILEMESSAGECONNECTOR_H */
-

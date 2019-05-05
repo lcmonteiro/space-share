@@ -1,29 +1,40 @@
-/** 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SChannel.h
  * Author: root
  *
  * Created on November 23, 2016, 11:43 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SCHANNEL_H
 #define SCHANNEL_H
 /**
+ * std
  */
-#include<iostream>
+#include <iostream>
 /**
- */
-using namespace std;
-/**
+ * ------------------------------------------------------------------------------------------------
+ * Channel
+ * ------------------------------------------------------------------------------------------------
  */
 typedef class SChannel {
 public:
-	SChannel()
-	: __is(nullptr), __os(nullptr) {
-	}
-	SChannel(istream::__streambuf_type* ib, ostream::__streambuf_type* ob)
-	: __is(ib), __os(ob) {
-	}
 	/**
-	 * move operator
+	 * ------------------------------------------------------------------------
+	 * Constructors
+	 * ------------------------------------------------------------------------
+	 */
+	SChannel()
+	: __is(nullptr), __os(nullptr) {}
+
+	SChannel(
+		std::istream::__streambuf_type* ib, 
+		std::ostream::__streambuf_type* ob)
+	: __is(ib), __os(ob) {}
+	/**
+	 * ------------------------------------------------------------------------
+	 * Move Operator
+	 * ------------------------------------------------------------------------
 	 */
 	inline SChannel& operator=(SChannel && c) {
 		/**
@@ -32,41 +43,56 @@ public:
 		c.__is.rdbuf(__is.rdbuf(c.__is.rdbuf()));
 		c.__os.rdbuf(__os.rdbuf(c.__os.rdbuf()));
 		/**
+		 * return itself
 		 */
 		return *this;
 	}
 	/**
-	 * streams operators
+	 * ------------------------------------------------------------------------
+	 * Streams Operators
+	 * ------------------------------------------------------------------------
 	 */
-	inline operator ostream& () {
+	inline operator std::ostream& () {
 		return __os;
 	}
-	inline operator istream& () {
+	inline operator std::istream& () {
 		return __is;
 	}
 	/**
+	 * ------------------------------------------------------------------------
 	 * IO functions
+	 * ------------------------------------------------------------------------
 	 */
 	template <class V>
-	inline ostream& operator<<(V v) {
+	inline std::ostream& operator<<(V v) {
 		return __os << v;
 	}
 	template <class V>
-	inline istream& operator>>(V& v) {
+	inline std::istream& operator>>(V& v) {
 		return __is >> v;
 	}
 	/**
-	 * utilities
+	 * ------------------------------------------------------------------------
+	 * Utilities
+	 * ------------------------------------------------------------------------
 	 */
-	inline void Exceptions(ios::iostate ex){
+	inline void exceptions(std::ios::iostate ex){
 		__is.exceptions(ex);
 		__os.exceptions(ex);
 	}
-	
 private:
-	istream __is;
-	ostream __os;
+	/**
+	 * ------------------------------------------------------------------------
+	 * Variables
+	 * ------------------------------------------------------------------------
+	 */
+	std::istream __is;
+	std::ostream __os;
 } Channel;
-
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */
 #endif /* SCHANNEL_H */
 

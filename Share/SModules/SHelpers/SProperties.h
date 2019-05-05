@@ -21,7 +21,7 @@ namespace Module {
     using Properties = const SText;
     /**
      * ------------------------------------------------------------------------
-     * Funtion properties
+     * Function properties
      * ------------------------------------------------------------------------
      */
     namespace Function {

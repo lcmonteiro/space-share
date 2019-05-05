@@ -1,5 +1,5 @@
 /**
- * ------------------------------------------------------------------------------------------------ 
+ * ------------------------------------------------------------------------------------------------
  * Container:  SIOIrcConnector.h
  * Author: Luis Monteiro
  *
@@ -13,7 +13,7 @@
  */
 #include <random>
 /**
- * Space
+ * space
  */
 #include "SIRCResource.h"
 #include "SContainer.h"
@@ -21,7 +21,7 @@
 #include "SChannel.h"
 #include "STask.h"
 /**
- * Share
+ * share
  */
 #include "SConnector.h"
 /**
@@ -39,49 +39,63 @@ namespace Message {
 class SIOIrcConnector : public SInOutputConnector {
 public:
 	/**
-	 * constructor
+	 * ------------------------------------------------------------------------
+	 * Constructor
+	 * ------------------------------------------------------------------------
 	 */
-	SIOIrcConnector(const std::string& address);
+	SIOIrcConnector(const SText& address);
 	/**
-	 * destructor
+	 * ------------------------------------------------------------------------
+	 * Get Resource
+	 * ------------------------------------------------------------------------
 	 */
-	virtual ~SIOIrcConnector() = default;
-	/**
-	 * inline overrides
-	 */
-	inline Resource& GetResource() override {
+	inline Resource& resource() override {
 		return __res;
 	}
 protected:
 	/**
-	 * -----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * IO functions
-	 * -----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * read
+	 * ----------------------------------------------------
 	 */
-	Document _Read() override;
+	Document _read() override;
 	/**
+	 * ----------------------------------------------------
 	 * write
-	 */
-	void _Write(const Document& container) override;
-	/**
 	 * ----------------------------------------------------
+	 */
+	void _write(const Document& container) override;
+	/**
+	 * ------------------------------------------------------------------------
 	 * control functions
+	 * ------------------------------------------------------------------------
+	 * open
 	 * ----------------------------------------------------
-	 * open, good and close
 	 */
-	void _Open() override;
+	void _open() override;
 	/**
-	 * inline
+	 * ----------------------------------------------------
+	 * good
+	 * ----------------------------------------------------
 	 */
-	inline bool _Good() override{
-		return __res.Good();
+	inline bool _good() override{
+		return __res.good();
 	}
-	inline void _Close() override {
+	/**
+	 * ----------------------------------------------------
+	 * close
+	 * ----------------------------------------------------
+	 */
+	inline void _close() override {
 		__res = SIRCResource();
 	}
 private:
 	/**
+	 * ------------------------------------------------------------------------
+	 * Variables
+	 * ------------------------------------------------------------------------
 	 * resource 
 	 */
 	SIRCResource __res;

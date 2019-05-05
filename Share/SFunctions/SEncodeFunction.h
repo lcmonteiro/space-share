@@ -1,131 +1,152 @@
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * File:   SEncodeFunction.h
  * Author: Luis Monteiro
  *
  * Created on November 11, 2015, 9:49 AM
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SENCODE_FUNCTION_H
 #define SENCODE_FUNCTION_H
 /**
- * C++ 
+ * std 
  */
 #include <exception>
 #include <algorithm>
 /**
- * Share Kernel
+ * share 
  */
 #include "SConnector.h"
 #include "SFunction.h"
-#include "SCodec.h"
+#include "SEncoderCodec.h"
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * Encoder Template
  * @MIM = minimun redundancy
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
-template <class WALKER, size_t MIN = 10>
+template <typename Walker, size_t MIN = 10>
 class SEncodeFunctionT : public SFunctionSpread<
     SConnector::Key, Decoded::IConnector, Decoded::Document, Encoded::OConnector> {
     /**
-     * super class
+     * Super class
      */ 
     using Super = SFunctionSpread<
-        SConnector::Key, Decoded::IConnector, Decoded::Document, Encoded::OConnector
-    >;
+        SConnector::Key, Decoded::IConnector, Decoded::Document, Encoded::OConnector>;
     /**
      * helpers
      */
     using ORoad     = typename Super::ORoad;
     using Data      = typename Super::Data;
     using Location  = typename ORoad::Location;
-    using Encoder   = CodecEncoder;
-    using Walker    = WALKER;
+    using Encoder   = Codec::SEncoder;
+    using pStamp    = Codec::pStamp;
     using Generator = std::minstd_rand0;
     using Random    = std::random_device;
 public:
     /**
-     * --------------------------------------------------------------------------------------------
-     * Encode
+     * ------------------------------------------------------------------------
+     * Encode Constructors
      * @param stamp
      * @param redundancy
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
      */
     SEncodeFunctionT(
-        SharedStamp stamp, uint32_t redundancy, uint32_t energy = 1, uint8_t verbose = 0
-    ): Super("Encode", energy, verbose), __stamp(stamp), __redundancy(redundancy) {
-        Recover();
-    }
-    SEncodeFunctionT(const string& id, 
-        SharedStamp stamp, uint32_t redundancy, uint32_t energy = 1, uint8_t verbose = 0
-    ): Super(string("Encode(") + id + ")", energy, verbose), __stamp(stamp), __redundancy(redundancy) {
-        Recover();
-    }
-    /**
-     * --------------------------------------------------------------------------------------------
-     * Recover 
-     * --------------------------------------------------------------------------------------------
-     */
-    void Recover() override {
-        // refresh stream position ------------------------
-        __position.reset();
+        pStamp stamp, 
+        uint32_t redundancy, 
+        uint32_t energy = 1, 
+        uint8_t verbose = 0)
+    : Super("Encode", energy, verbose), 
+    __stamp(stamp), 
+    __redundancy(redundancy) { recover(); }
 
-        // call base recover ------------------------------ 
-        SFunction::Recover();
+    SEncodeFunctionT(const std::string& id, 
+        pStamp stamp, 
+        uint32_t redundancy, 
+        uint32_t energy = 1, 
+        uint8_t verbose = 0)
+    : Super(std::string("Encode(") + id + ")", energy, verbose), 
+    __stamp(stamp), 
+    __redundancy(redundancy) { recover(); }
+    /**
+     * ------------------------------------------------------------------------
+     * Recover 
+     * ------------------------------------------------------------------------
+     */
+    void recover() override {
+        /**
+         * refresh stream position
+         */
+        __position.reset();
+        /**
+         * call base recover
+         */ 
+        Super::recover();
     }
 protected:
     /**
      * --------------------------------------------------------------------------------------------
-     * process Data
+     * Process Data
      *---------------------------------------------------------------------------------------------
      */
-    void processData(ORoad& out) override {    
+    void _process_data(ORoad& out) override {    
     }
-    void processData(Data&& data, ORoad& out) override {
+    void _process_data(Data&& data, ORoad& out) override {
         Random rd;
         Generator gen(rd());
-	     
-        // create encoder ----------------------------------------------------
-	    Encoder en(std::move(data), __stamp);
-
-	    // create context ----------------------------------------------------
-	    Encoded::Context ctxt (__position.next(), en.size(), en.Framesize());
-
-	    // log ----------------------------------------------------------------
-	    DEBUG("encode::" << "pos=" << ctxt.Position());
-
-	    // init remain with num of frames -------------------------------------
-	    size_t remain = std::max(
-            size_t(ctxt.NumFrames()) + __redundancy, MIN);
-
-	    // process road until no remain load (remain > 0) ---------------------
+        /**
+         * create encoder
+         */
+	    auto en = Encoder(std::move(data), __stamp);
+	    /**
+         * create context
+         */
+        auto ctxt = Encoded::Context(__position.next(), en.size(), en.frame_size());
+	    /**
+         * log debug
+         */
+	    DEBUG("encode::" << "pos=" << ctxt.position());
+	    /**
+         * init remain with num of frames
+         */
+	    auto remain = std::max(
+            size_t(ctxt.frame_count()) + __redundancy, MIN);
+	    /**
+         * process road until no remain load (remain > 0)
+         */
         while (remain > 0) {
-
-            // weights --------------------------------------------------------
+            /**
+             * weights
+             */
 	        std::vector<size_t> wgt;
             wgt.reserve(out.size());
-	        for (auto& o : out) { wgt.emplace_back(o.second->GetEnergy()); }
-
-            // quantities -----------------------------------------------------
+	        for (auto& o : out) { wgt.emplace_back(o.second->energy()); }
+            /**
+             * quantities
+             */
             std::discrete_distribution<> d(wgt.begin(), wgt.end());
             std::vector<size_t> qty;
             qty.resize(wgt.size());
             for (auto i = 0; i < remain; ++i) { ++qty[d(gen)]; }
-
-	        // weighted write -------------------------------------------------
+	        /**
+             * weighted write
+             */
             auto o = out.begin();
 	        for (auto q = qty.begin(); qty.end() != q; ++q) {
 	            try {
-                    // write and update iterator and data ---------------------
-                    o->second->Write(
-                        Encoded::Document(en.NumFrames(*q).pop(), ctxt)); 
-                    // update references --------------------------------------
+                    /**
+                     * write and update iterator and data
+                     */
+                    o->second->write(
+                        Encoded::Document(en.frame_count(*q).pop(), ctxt)); 
+                    /**
+                     * update references
+                     */
                     ++o; remain -= *q;
 		        } catch (ConnectorExceptionTIMEOUT& ex) {
                     ++o;
 	            } catch (ConnectorExceptionDEAD& ex) {
-		            out.Exception(o);
+		            out.exception(o);
 		        }    
             }
 	    }
@@ -133,12 +154,12 @@ protected:
 private:
     /**
      * ------------------------------------------------------------------------
-     * variables
+     * Variables
      * ------------------------------------------------------------------------
      **
      * stamp
      */
-    SharedStamp __stamp;
+    pStamp __stamp;
     /**
      * redundancy
      */
@@ -149,15 +170,15 @@ private:
     Walker __position; 
 };
 /**
- *---------------------------------------------------------------------------------------------------------------------
+ *-------------------------------------------------------------------------------------------------
  * Message context
- *---------------------------------------------------------------------------------------------------------------------
+ *-------------------------------------------------------------------------------------------------
  */
 namespace Message {
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Walker
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 class SWalker {
     using Generator = std::minstd_rand0;
@@ -194,9 +215,9 @@ private:
     Random __rand;
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Encoder
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 class SEncodeFunction : public SEncodeFunctionT<SWalker> {
 public:
@@ -204,15 +225,15 @@ public:
 };
 }
 /**
- *---------------------------------------------------------------------------------------------------------------------
+ *-------------------------------------------------------------------------------------------------
  * Stream context
- *---------------------------------------------------------------------------------------------------------------------
+ *-------------------------------------------------------------------------------------------------
  */
 namespace Stream {
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Walker
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 class SWalker {
     using Random = std::random_device;
@@ -247,9 +268,9 @@ private:
     Random __rand;
 };
 /**
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Encoder
- * ------------------------------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 class SEncodeFunction : public SEncodeFunctionT<SWalker> {
 public:
@@ -257,9 +278,9 @@ public:
 };
 }
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * End
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
-#endif    /* SENCODE_FUNCTION_H */
+#endif /* SENCODE_FUNCTION_H */
 

@@ -41,21 +41,21 @@ TEST(DecodedMessageFile, Base)
     );
 
     // connect ------------------------
-    oc->Repair();
+    oc->build();
     
     // sleep --------------------------
     STask::Sleep(milliseconds(10));
 
     // create data --------------------
     Container idata {
-        SRandom::Frame(size), SFrame().Number(size)
+        SRandom::Frame(size), SFrame().number(size)
     }; 
     
     // test connection ---------------
-    EXPECT_EQ(oc->Wait(milliseconds(100)).Good(), true);
+    EXPECT_EQ(oc->wait(milliseconds(100)).good(), true);
     
     // send ---------------------------
-    oc->Write(idata);
+    oc->write(idata);
 
     // IN ---------------------------------------------------------------------
     
@@ -65,21 +65,21 @@ TEST(DecodedMessageFile, Base)
     );
 
     // connect ------------------------
-    ic->Repair();
+    ic->build();
     
     // sleep --------------------------
     STask::Sleep(milliseconds(10));
 
     // test connection ----------------
-    EXPECT_EQ(ic->Wait(milliseconds(100)).Good(), true);
+    EXPECT_EQ(ic->wait(milliseconds(100)).good(), true);
     
     // receive ------------------------
-    auto odata = ic->Read();
+    auto odata = ic->read();
 
     // COMPARE data -----------------------------------------------------------
     EXPECT_EQ(
-        SBuffer().Write(idata).Read(size), 
-        SBuffer().Write(odata).Read(size));
+        SBuffer().drain(idata).drain(size), 
+        SBuffer().drain(odata).drain(size));
 }
 /**
  * ------------------------------------------------------------------------------------------------

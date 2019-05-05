@@ -1,92 +1,110 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SODirConnector.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SODIRSTREAMSOCKET_H
 #define SODIRSTREAMSOCKET_H
 /**
- * Space Resource
+ * space
  */
 #include "SDirectoryResource.h"
 #include "SFileResource.h"
 /**
- * Share Kernel
+ * share 
  */
 #include "SBuffer.h"
 #include "SDocument.h"
 #include "SConnector.h"
 /**
- * Begin namespace Decoded
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Decoded and Message
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Decoded {
-/**
- * Begin namespace Message
- */
 namespace Message {
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Directory Connector
+ * ------------------------------------------------------------------------------------------------
  */
 class SODirConnector : public SOutputConnector {
 public:
     /**
-     * constructor
+     * ------------------------------------------------------------------------
+     * Constructor
+     * ------------------------------------------------------------------------
      */
     SODirConnector(const SText address);
-    /**
-     * destructor
-     */
-    virtual ~SODirConnector() = default;
-    /**
-     */
 protected:
     /**
-	 * -----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * IO functions
-	 * -----------------------------------------------------
-	 * read
+	 * ------------------------------------------------------------------------
+	 * write
+     * ----------------------------------------------------
 	 */
-    void _Write(const Document& container) override;
+    void _write(const Document& container) override;
     /**
-	 * ----------------------------------------------------
+	 * ------------------------------------------------------------------------
 	 * control functions
-	 * ----------------------------------------------------
-	 * open, good and close
+	 * ------------------------------------------------------------------------
+	 * Open
+     * ----------------------------------------------------
 	 */
-    inline void _Open() override {
+    inline void _open() override {
         __dir = SODirectoryResource(__uri, 1);
     }
-    inline bool _Good() override {
-        return __dir.Valid();
+    /**
+     * ----------------------------------------------------
+     * Good
+     * ----------------------------------------------------
+     */
+    inline bool _good() override {
+        return __dir.good();
     }
-    inline void _Close() override {
+    /**
+     * ----------------------------------------------------
+     * Close
+     * ----------------------------------------------------
+     */
+    inline void _close() override {
         __dir = SODirectoryResource();
     }
 private:
     /**
+     * ------------------------------------------------------------------------
+     * Variables
+     * ------------------------------------------------------------------------
+     **
      * resource 
      */
     SODirectoryResource __dir;
     /**
+     * buffer
      */
     Buffer __buffer;
     /**
+     * path
      */
     Frame __path;
     /**
+     * file size
      */
     filesize_t __size;
     /**
+     * file resource
      */
     SOFileResource __res;
 };
 /**
- * End namespace Message
- */
-}
-/**
+ * ------------------------------------------------------------------------------------------------
  * End namespace Decoded
+ * ------------------------------------------------------------------------------------------------
  */
-}
+}}
 #endif /* SODIRSTREAMSOCKET_H */
 

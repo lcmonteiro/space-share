@@ -1,8 +1,10 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SResource.h
  * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SRESOURCE_H
 #define SRESOURCE_H
@@ -15,34 +17,37 @@
  * ------------------------------------------------------------------------------------------------
  * Exceptions
  * ------------------------------------------------------------------------------------------------
+ * Base
+ * ----------------------------------------------------------------------------
  */
 typedef class SResourceException : public std::system_error {
 public:
 	using std::system_error::system_error;
 	/**
-	 * constructor
+	 * Constructor
 	 */
 	SResourceException()
-	: SResourceException(std::make_error_code(std::errc::resource_unavailable_try_again)){
-	}
-
+	: SResourceException(std::make_error_code(
+		std::errc::resource_unavailable_try_again)) {}
 } ResourceException;
 /**
+ * ----------------------------------------------------------------------------
  * ExceptionABORT
+ * ----------------------------------------------------------------------------
  */
 typedef class SResourceExceptionABORT : public SResourceException {
 public:
 	using SResourceException::SResourceException;
 	/**
-	 * constructor
+	 * Constructor
 	 */
 	SResourceExceptionABORT(const std::string& msg)
-	: SResourceException(std::make_error_code(std::errc::connection_aborted), msg){
-	}
-	SResourceExceptionABORT()
-	: SResourceException(std::make_error_code(std::errc::connection_aborted)){
-	}
+	: SResourceException(
+		std::make_error_code(std::errc::connection_aborted), msg){ }
 
+	SResourceExceptionABORT()
+	: SResourceException(
+		std::make_error_code(std::errc::connection_aborted)){}
 } ResourceExceptionABORT;
 
 typedef class SIResourceExceptionABORT : public SResourceExceptionABORT {
@@ -57,25 +62,26 @@ public:
 
 } OResourceExceptionABORT;
 /**
+ * ----------------------------------------------------------------------------
  * ExceptionTIMEOUT
+ * ----------------------------------------------------------------------------
  */
 typedef class SResourceExceptionTIMEOUT : public SResourceException {
 public:
 	using SResourceException::SResourceException;
 	/**
-	 * constructor
+	 * Constructor
 	 */
 	SResourceExceptionTIMEOUT(const std::string& msg)
-	: SResourceException(std::make_error_code(std::errc::timed_out), msg){
-	}
+	: SResourceException(
+		std::make_error_code(std::errc::timed_out), msg){}
 	SResourceExceptionTIMEOUT()
-	: SResourceException(std::make_error_code(std::errc::timed_out)){
-	}
-
+	: SResourceException(
+		std::make_error_code(std::errc::timed_out)){}
 } ResourceExceptionTIMEOUT;
 /**
  * ------------------------------------------------------------------------------------------------
- * resource base
+ * Resource Base
  * ------------------------------------------------------------------------------------------------
  */
 typedef class SResource {
@@ -110,7 +116,7 @@ public:
 	 * --------------------------------
 	 */
 	template<class H = SHandler>
-	inline pHandler<H> GetHandler() const {
+	inline pHandler<H> handler() const {
 		if(__h) {
 			return std::static_pointer_cast<H>(__h);
 		}
@@ -136,7 +142,7 @@ protected:
 	 * set phandler
 	 */
 	template<class H = SHandler>
-	void SetHandler(pHandler<H> h) {
+	void handler(pHandler<H> h) {
 		__h = std::static_pointer_cast<SHandler>(h);	
 	}
 private:
@@ -149,7 +155,7 @@ private:
 } Resource;
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */
 #endif /* SRESOURCE_H */

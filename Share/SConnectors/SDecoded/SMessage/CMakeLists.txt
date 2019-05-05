@@ -3,7 +3,9 @@ cmake_minimum_required (VERSION 3.8)
 add_subdirectory(SKernel)
 # folder for Kernel
 add_subdirectory(STools)
-# target
+# ---------------------------------------------------------
+# ShareConnectorDecodedMessage target
+# ---------------------------------------------------------
 add_library(ShareConnectorDecodedMessage
 INTERFACE
 )
@@ -19,3 +21,6 @@ INTERFACE
 	ShareConnectorDecodedMessageTools
 	SpaceKernel
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

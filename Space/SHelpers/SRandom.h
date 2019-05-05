@@ -35,7 +35,7 @@ public:
      **/
     template <typename T = int, typename G = Generator>
     static T Number() {
-        auto gen = G(__Device());
+        auto gen = G(__device());
         return T(gen());
     }
     /**
@@ -81,7 +81,8 @@ public:
         out.reserve(n);
         for (unsigned int i = 0; i < n; ++i) {
             auto& group = alphabet[i % alphabet.size()];
-            //
+            /**
+             */
             out.push_back(group[gen() % group.length()]);
         }
         return out;
@@ -92,10 +93,7 @@ public:
      * --------------------------------------------------------------------------------------------
      **/
 	static SFrame Frame(size_t n) {
-        SFrame out;
-        /**
-         */
-        out.reserve(n);
+        auto out = SFrame(n);
         for (unsigned int i = 0; i < n; ++i) {
             out.push_back(Frame::value_type(rand()));
         }
@@ -111,16 +109,21 @@ public:
         SOFileResource out(path);
         auto d = div(int(n), int(CHUNK));
         for(size_t i=0; i<d.quot; ++i) {
-            out.Drain(SRandom::Frame(CHUNK));
+            out.drain(SRandom::Frame(CHUNK));
         }
-        out.Drain(SRandom::Frame(d.rem)).Flush();
+        out.drain(SRandom::Frame(d.rem)).flush();
         return out;
     }
     static std::string FileName() {
-        return SFileResource::TmpPath() + "/" + SRandom::String(16);
+        return SFileResource::PathTemp() + "/" + SRandom::String(16);
     }
 private:
-    static std::random_device::result_type __Device() {
+    /**
+     * --------------------------------------------------------------------------------------------
+     * Random Device
+     * --------------------------------------------------------------------------------------------
+     **/
+    static std::random_device::result_type __device() {
         static std::random_device device;
         return device();
     }

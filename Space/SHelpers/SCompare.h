@@ -28,15 +28,21 @@ public:
     template<size_t CHUNK=0x1000>
     static bool Files(SIFileResource f1, SIFileResource f2) {
         IOFrame aux1(CHUNK), aux2(CHUNK);
-        // for each read frame ----------------------------
+        /**
+         * for each read frame
+         */
         do {
-            f1.Read(aux1), f2.Read(aux2);
-            // test frames --------------------------------
+            f1.read(aux1), f2.read(aux2);
+            /**
+             * test frames
+             */
             if(aux1 != aux2) {
                 return false;
             }
         } while(aux1.full());
-        // both files are equals --------------------------
+        /**
+         * both files are equals
+         */
         return true;
     }
 };

@@ -1,8 +1,10 @@
-/*
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   SVariable.h
  * Author: Luis Monteiro
  *
  * Created on November 2, 2018, 10:34 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SVARIABLE_H
 #define SVARIABLE_H
@@ -16,43 +18,60 @@
  */
 #include "SHelper/SCType.h"
 /**
+ * ------------------------------------------------------------------------------------------------
+ * Variable
+ * ------------------------------------------------------------------------------------------------
  */
-template <typename Key, char Enter='[', char Leave=']'>
-class SVariable : public std::map<Key, SVariable<Key>>
+template <typename T, char Enter='[', char Leave=']'>
+class SVariable : public std::map<T, SVariable<T>>
 {
     /**
-     * private types
+     * ------------------------------------------------------------------------
+     * Helpers
+     * ------------------------------------------------------------------------
      */
-    using Map = std::map<Key, SVariable<Key>>;
+    using Map  = std::map<T, SVariable<T>>;
   public:
+    using Type = T; 
     /**
-     * public types
-     */
-    using Type = Key;
-    /**
-     * constructors
+     * ------------------------------------------------------------------------
+     * Constructors
+     * ------------------------------------------------------------------------
+     * super
      */
     using Map::Map;
-
+    /**
+     * default
+     */
     SVariable() = default;
-
-    SVariable(const Key &k) : Map() {
-        this->atemplace(k, SVariable());
+    /**
+     * init
+     */
+    SVariable(const Type &val) : Map() {
+        this->emplace(val, SVariable());
     }
-    template <typename = std::enable_if_t<std::is_base_of<std::string, Key>::value>>
+    /**
+     * special case for std::string 
+     */
+    template <
+        typename = std::enable_if_t<std::is_base_of<std::string, Type>::value>>
     SVariable(const char *k) : Map() {
         this->emplace(k, SVariable());
     }
     /**
-     * get operator 
+     * ------------------------------------------------------------------------
+     * Get Operator
+     * ------------------------------------------------------------------------ 
      */
-    operator Key() const {
-        Key out{};
+    operator Type() const {
+        Type out{};
         for (auto &v : *this) out += v.first;
         return out;
     }
     /**
-     * iostream operator
+     * ------------------------------------------------------------------------
+     * IOstream Operator
+     * ------------------------------------------------------------------------
      */
     friend std::ostream &operator<<(std::ostream &out, const SVariable &var) {
         return __serialize(out, var);
@@ -64,7 +83,9 @@ class SVariable : public std::map<Key, SVariable<Key>>
 private:
     static std::locale __loc;
     /**
-     * serialize
+     * ------------------------------------------------------------------------
+     * Serialize
+     * ------------------------------------------------------------------------
      */
     static std::ostream& __serialize(std::ostream &out, const SVariable &var) {
         if(!var.empty()) {
@@ -78,11 +99,13 @@ private:
         return out;
     }
     /**
-     * unserialize
+     * ------------------------------------------------------------------------
+     * Unserialize
+     * ------------------------------------------------------------------------
      */
     static std::istream& __unserialize(std::istream& in, SVariable& var) {
         while(in.good()){    
-            Key k;
+            Type k;
             in >> k;
             switch(in.get()) {
                 case Enter :{
@@ -103,5 +126,9 @@ private:
 };
 template<typename Key, char Enter, char Leave> 
 std::locale SVariable<Key, Enter, Leave>::__loc(std::locale(), new SCType({'[',']'}));
-
+/**
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
+ */
 #endif /* SVARIABLE_H */

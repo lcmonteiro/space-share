@@ -1,8 +1,10 @@
-/*
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   SODirConnector.cpp
  * Author: Luis Monteiro
  *
  * Created on June 3, 2015, 10:12 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #include <sys/stat.h>
 #include <unistd.h>
@@ -15,17 +17,18 @@
 #include <iostream>
 #include <string.h>
 /**
+ * share
  */
 #include "SODirConnector.h"
 /**
- * Begin namespace Decoded
+ * namespaces
  */
-namespace Decoded {
+using namespace Decoded;
+using namespace Message;
 /**
- * Begin namespace Message
- */
-namespace Message {
-/**
+ * ----------------------------------------------------------------------------
+ * Constructor
+ * ----------------------------------------------------------------------------
  */
 SODirConnector::SODirConnector(const SText address)
 : SOutputConnector(address) {
@@ -38,23 +41,27 @@ SODirConnector::SODirConnector(const SText address)
 	 */
 	//__state = 0;
 }
-
-void SODirConnector::_Write(const Document& container) {
-//	/*----------------------------------------------------------------------------------------*
+/**
+ * ----------------------------------------------------------------------------
+ * Write
+ * ----------------------------------------------------------------------------
+ */
+void SODirConnector::_write(const Document& container) {
+//	/**
 //	 * log
-//	 *----------------------------------------------------------------------------------------*/
+//	 */
 //	INFO("DATA::OUT::n=" << frame.size() << frame);
 //	/**
 //	 * fill buffer
 //	 */
-//	__buffer.Write(frame);
+//	__buffer.write(frame);
 //	/**
 //	 * states 
 //	 */
 //	static vector < function < size_t() >> machine {
-//		/**----------------------------------------------------------------------------------------------------*
+//		/**
 //		 * check start sequence 
-//		 *-----------------------------------------------------------------------------------------------------*/
+//		 */
 //		[this]() {
 //			static Frame SEQ({1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233});
 //			/**
@@ -72,49 +79,49 @@ void SODirConnector::_Write(const Document& container) {
 //			/**
 //			 * wait sequency
 //			 */
-//			while (__buffer.Length() >= SEQ.size()) {
+//			while (__buffer.size() >= SEQ.size()) {
 //				if (check(__buffer)) {
 //					return 1;
 //				}
 //			}
 //			return 0;
 //		},
-//		/**----------------------------------------------------------------------------------------------------*
+//		/**
 //		 * read address size
-//		 *-----------------------------------------------------------------------------------------------------*/
+//		 */
 //		[this]() {
 //			try {
-//			       __size = __buffer.Read(sizeof (uint32_t)).Number<uint32_t>();
+//			       __size = __buffer.read(sizeof (uint32_t)).Number<uint32_t>();
 //			} catch (...) {
 //			       return 1;
 //			}
 //			return 2;
 //		},
-//		/**----------------------------------------------------------------------------------------------------*
+//		/**
 //		 * read address
-//		 *-----------------------------------------------------------------------------------------------------*/
+//		 */
 //		[this]() {
 //			try {
-//			       __path = __buffer.Read(__size);
+//			       __path = __buffer.read(__size);
 //			} catch (...) {
 //			       return 2;
 //			}
 //			return 3;
 //		},
-//		/**----------------------------------------------------------------------------------------------------*
+//		/**
 //		 * read file size
-//		 *-----------------------------------------------------------------------------------------------------*/
+//		 */
 //		[this]() {
 //			try {
-//			       __size = __buffer.Read(sizeof (filesize_t)).Number<filesize_t>();
+//			       __size = __buffer.read(sizeof (filesize_t)).Number<filesize_t>();
 //			} catch (...) {
 //			       return 3;
 //			}
 //			return 4;
 //		},
-//		/**----------------------------------------------------------------------------------------------------*
+//		/**
 //		 * open file
-//		 *-----------------------------------------------------------------------------------------------------*/
+//		 */
 //		[this]() {
 //			try {
 //			       __res = __dir.resource(string(__path.begin(),__path.end()));
@@ -123,21 +130,21 @@ void SODirConnector::_Write(const Document& container) {
 //			}
 //			return 5;
 //		},
-//		/**----------------------------------------------------------------------------------------------------*
+//		/**
 //		 * write frame
-//		 *-----------------------------------------------------------------------------------------------------*/
+//		 */
 //		[this]() {
-//			if (__res.Position() + __buffer.Length() < __size) {
-//				__res.Drain(__buffer.Read());
+//			if (__res.position() + __buffer.size() < __size) {
+//				__res.Drain(__buffer.read());
 //				return 5;
 //			}
 //			return 6;
 //		},
-//		/**----------------------------------------------------------------------------------------------------*
+//		/**
 //		 * close resource
-//		 *-----------------------------------------------------------------------------------------------------*/
+//		 */
 //		[this]() {
-//			__res.Drain(__buffer.Read(__size  -__res.Position())).Flush();
+//			__res.Drain(__buffer.read(__size  -__res.position())).Flush();
 //			return 0;
 //		}
 //	};
@@ -147,10 +154,7 @@ void SODirConnector::_Write(const Document& container) {
 //	for (auto last = __state; (__state = machine[__state]()) != last; last = __state);
 }
 /**
- * End namespace Message
+ * ------------------------------------------------------------------------------------------------
+ * End
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- * End namespace Decoded
- */
-}

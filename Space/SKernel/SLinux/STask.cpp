@@ -16,67 +16,67 @@
 #include "SMonitorHandler.h"
 /**
  * ------------------------------------------------------------------------------------------------
- * manager tasks 
+ * Manager Tasks 
  * ------------------------------------------------------------------------------------------------
- * init
+ * Init
  * --------------------------------------------------------
  */
-void STask::__Init(std::thread::id id) {
-    __Insert(id, this);
+void STask::_init(std::thread::id id) {
+    _insert(id, this);
 }
 /**
  * --------------------------------------------------------
- * end - interrupt thread if is running 
+ * End - interrupt thread if is running 
  * --------------------------------------------------------
  */
-void STask::__End(std::thread::id  id) {
+void STask::_end(std::thread::id  id) {
     if (joinable()) {
         try {
-            Interrupt();
-        #ifdef __DEBUG__
-            cout << __func__ << "::" 
-                 << __LINE__ << "::join(" << get_id() << ")" 
-            << endl;
-        #endif
-            Join();
+            interrupt();
+            #ifdef __DEBUG__
+                cout << __func__ << "::" 
+                    << __LINE__ << "::join(" << get_id() << ")" 
+                << endl;
+            #endif
+            join();
         } catch(...) {
-        #ifdef __DEBUG__
-            cout << __func__ << "::" 
-                 << __LINE__ << "::detach(" << get_id() << ")" 
-            << endl;
-        #endif
+            #ifdef __DEBUG__
+                cout << __func__ << "::" 
+                    << __LINE__ << "::detach(" << get_id() << ")" 
+                << endl;
+            #endif
             detach();
         }
-        __Remove(id);
+        _remove(id);
     }
 }
 /*
  * ------------------------------------------------------------------------------------------------
- * public - global
+ * Global
  * ------------------------------------------------------------------------------------------------ 
- * enable init task
+ * Enable init task
  * --------------------------------------------------------
  */
 STask& STask::Enable() {
-    __Insert(std::this_thread::get_id(), &__init); 
+    _insert(std::this_thread::get_id(), &__init); 
     return __init;
 }
 /**
  * --------------------------------------------------------
- * get current task
+ * Current task
  * --------------------------------------------------------
  */
 STask& STask::Instance() {
-    return *__Find(std::this_thread::get_id());
+    return *_find(std::this_thread::get_id());
 }
 /**
  * --------------------------------------------------------
- * sleep current task
+ * Sleep current task
  * --------------------------------------------------------
  */
 bool STask::Sleep(const Time& timeout) {
     try {
-        SStaticMonitorHandler().Wait(timeout);
+        SStaticMonitorHandler().wait(timeout);
     } catch(const MonitorExceptionTIMEOUT& ){
         return true;
     }
@@ -84,15 +84,15 @@ bool STask::Sleep(const Time& timeout) {
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * tasks data base - implementation 
+ * Tasks data base - implementation 
  * ------------------------------------------------------------------------------------------------
- * definitions
+ * Definitions
  * --------------------------------------------------------
  */
 typedef std::lock_guard<std::mutex> guard_t;
 /**
  * --------------------------------------------------------
- * variables
+ * Variables
  * --------------------------------------------------------
  */
 STask::DataBase STask::__tasks;
@@ -100,30 +100,40 @@ STask::Mutex    STask::__mutex;
 STask           STask::__init(0);
 /**
  * --------------------------------------------------------
- * insert task
+ * Insert task
  * --------------------------------------------------------
  */
-void STask::__Insert(std::thread::id id, STask* task) {
-    // create guard -------------------
+void STask::_insert(std::thread::id id, STask* task) {
+    /**
+     * create guard
+     */
     guard_t lock(__mutex);
-    // insert -------------------------
+    /**
+     * insert
+     */
     __tasks[id] = task;
 }
 /**
  * --------------------------------------------------------
- * find task
+ * Find task
  * --------------------------------------------------------
  */
-STask* STask::__Find(std::thread::id id) {    
-    // find by id ---------------------
+STask* STask::_find(std::thread::id id) {    
+    /**
+     * find by id
+     */
     try {
         guard_t lock(__mutex);
         return __tasks.at(id);
     } catch(std::out_of_range& e) {
-        // concurrency ---------------- 
+        /**
+         * concurrency
+         */ 
         std::this_thread::yield(); 
     }
-    // try again ----------------------
+    /**
+     * try again
+     */
     try {
         guard_t lock(__mutex);
         return __tasks.at(id);
@@ -133,13 +143,17 @@ STask* STask::__Find(std::thread::id id) {
 }
 /**
  * --------------------------------------------------------
- * remove task
+ * Remove task
  * --------------------------------------------------------
  */
-void STask::__Remove(std::thread::id id) {
-    // create guard -------------------
+void STask::_remove(std::thread::id id) {
+    /**
+     * create guard
+     */
     guard_t lock(__mutex);
-    // disable ------------------------
+    /**
+     * disable
+     */
     __tasks[id] = &__init;
 }
 /**

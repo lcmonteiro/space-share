@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
-# project name
+# ---------------------------------------------------------
+# Space project
+# ---------------------------------------------------------
 project (Space)
 # folder for core objects
 add_subdirectory(SKernel)
@@ -9,7 +11,9 @@ add_subdirectory(SMonitors)
 add_subdirectory(SResources)
 # folder for Resources
 add_subdirectory(SHelpers)
-# target
+# ---------------------------------------------------------
+# Space target
+# ---------------------------------------------------------
 add_library(Space INTERFACE)
 # dependencies
 target_link_libraries(Space 
@@ -23,3 +27,6 @@ target_include_directories(Space
 INTERFACE
 	.
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

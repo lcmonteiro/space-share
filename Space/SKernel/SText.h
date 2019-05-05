@@ -1,8 +1,10 @@
 /**
+ * ------------------------------------------------------------------------------------------------
  * File:   SText.h
  * Author: Luis Monteiro
  *
  * Created on January 15, 2019, 20:23 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef STEXT_H
 #define STEXT_H
@@ -21,19 +23,24 @@ public:
     using Super = std::string;
 	/**
 	 * --------------------------------------------------------------------
-	 * constructor
+	 * Constructor
 	 * --------------------------------------------------------------------
-	 * empty
+	 * Empty
+     * ----------------------------------------------------
      */
     using Super::Super;
     /**
-	 * native types
+     * ----------------------------------------------------
+	 * Native types
+     * ----------------------------------------------------
 	 */
-    SText(int    v): std::string(__Set(v)) {}
-    SText(float  v): std::string(__Set(v)) {}
-    SText(double v): std::string(__Set(v)) {}
+    SText(int    v): std::string(_set(v)) {}
+    SText(float  v): std::string(_set(v)) {}
+    SText(double v): std::string(_set(v)) {}
     /**
-     * mix types
+     * ----------------------------------------------------
+     * Mix Types
+     * ----------------------------------------------------
      */
     template<typename T, typename... Ts>
     SText(T arg, Ts... args) {
@@ -46,36 +53,44 @@ public:
     }
     /**
      * --------------------------------------------------------------------
-     * interfaces
+     * Interfaces
      * --------------------------------------------------------------------
-     * get native types
+     * Get Native Types
+     * ----------------------------------------------------
      */
-    inline operator int()    { return __Get<int>(*this);    }
-    inline operator float()  { return __Get<float>(*this);  }
-    inline operator double() { return __Get<double>(*this); }
+    inline operator int()    { return _get<int>(*this);    }
+    inline operator float()  { return _get<float>(*this);  }
+    inline operator double() { return _get<double>(*this); }
 protected:
     /**
      * --------------------------------------------------------------------
-     * converters
+     * Converters
      * --------------------------------------------------------------------
-     * get
+     * Get
+     * ----------------------------------------------------
      */
     template <class T>
-    static inline T __Get(std::string& s) {
+    static inline T _get(std::string& s) {
         T val;
         std::istringstream(s) >> val;
         return val;
     }
     /**
-     * set
+     * ----------------------------------------------------
+     * Set
+     * ----------------------------------------------------
      */
     template <class T>
-    static inline std::string  __Set(T val) {
+    static inline std::string  _set(T val) {
         std::ostringstream o;
         o << val;
         return o.str();
     }
 };
-
+/**
+ * ------------------------------------------------------------------------------------------------
+ *  End
+ * ------------------------------------------------------------------------------------------------
+ */
 #endif /* STEXT_H */
 

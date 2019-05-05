@@ -9,7 +9,7 @@
 #ifndef SISTREAMCONNECTOR_H
 #define SISTREAMCONNECTOR_H
 /**
- *  Space Kernel
+ *  space
  */
 #include "SContainer.h"
 #include "SAddress.h"
@@ -17,7 +17,7 @@
 #include "STask.h"
 #include "SText.h"
 /**
- * Share Kernel
+ * share
  */
 #include "SConnector.h"
 /**
@@ -29,108 +29,133 @@ namespace Decoded {
 namespace Stream  {
 /**
  */
-template<class RESOURCE>
+template<class Adapter>
 class SIStreamConnector : public SInputConnector {
 public:
     /**
-     * constructor
+     * ------------------------------------------------------------------------
+     * Constructor
+     * ------------------------------------------------------------------------
      */
     SIStreamConnector(
-        const SText  address,  // con address
-        const size_t nframes,  // num of frames
-        const size_t sframes   // size of frame
-    ) : SInputConnector(address), __container(nframes), __buffer(sframes), __res() {}
+        const SText  address,
+        const size_t nframes,
+        const size_t sframes )
+    : SInputConnector(address), 
+    __container(nframes), 
+    __buffer(sframes), 
+    __res() {}
     /**
-     * destructor
+     * ------------------------------------------------------------------------
+     * Get Resource
+     * ------------------------------------------------------------------------
      */
-    virtual ~SIStreamConnector() = default;
-    /**
-     * inline overrides
-     */
-    inline Resource& GetResource() override {
-        return __res.Base();
+    inline Resource& resource() override {
+        return __res.base();
     }
 protected:
     /**
-     * --------------------------------------------------------------------------------------------
-     * I functions
-     * --------------------------------------------------------------------------------------------
-     * read
+     * ------------------------------------------------------------------------
+     * Read
      * ------------------------------------------------------------------------
      */
-    Document _Read() override {
+    Document _read() override {
         IOFrame buffer;
-        // fill container ---------------------------------
+        /**
+         * fill container
+         */
         while (!__container.full()) {
-            
-            // fill buffer --------------------------------
-            __res.Fill(__buffer); 
-
-            // reset buffers ------------------------------
-            buffer = IOFrame(__buffer.Capacity());
+            /**
+             * fill buffer
+             */
+            while (!__buffer.full()) {
+                __res.fill(__buffer);
+            }
+            /**
+             * reset buffer
+             */
+            buffer = IOFrame(__buffer.capacity());
             std::swap(__buffer, buffer);
-
-            // save buffer --------------------------------
+            /**
+             * insert on container
+             */
             __container.emplace_back(buffer.detach());
         }
-        // reset container --------------------------------
-        Document container(__container.capacity());
+        /**
+         * reset container
+         */
+        auto container = Document(__container.capacity());
         std::swap(__container, container);    
-
-        // info -------------------------------------------
+        /**
+         * log info
+         */
         INFO("DATA::IN::n=" << container.size() << "=" << container.at(0));
-
-        // return filled container ------------------------
+        /**
+         * return filled container
+         */
         return container;
     }
     /**
      * ------------------------------------------------------------------------
-     * drain 
+     * Drain 
      * ------------------------------------------------------------------------
      */
-    std::list<Document> _Drain() override {
+    std::list<Document> _drain() override {
         Buffer tmp;
-        // check if container is full ---------------------
+        /**
+         * drain the remaining container data
+         */
         if (!__container.empty()) {
-            tmp.Write(__container);
-            __container.Reset();
+            auto container = Document(__container.capacity());
+            std::swap(__container, container);
+            tmp.drain(std::move(container));
         }
-        // check if frame is full -------------------------
+        /**
+         * drain the remaining buffer data
+         */
         if (!__buffer.empty()) {
-            tmp.Write(__buffer.Shrink());
-            __buffer.Reset();
+            auto buffer = IOFrame(__buffer.capacity());
+            std::swap(__buffer, buffer);
+            tmp.drain(std::move(buffer.deflate()));
         }
-        // fill container ---------------------------------
+        /**
+         * fill container
+         */
         std::list<Document> out;
-        for (auto& p : Shape(tmp.Length(), __container.capacity())) {
+        for (auto& p : _shape(tmp.size(), __container.capacity())) {
             auto container = Document(p.first);
             while (!container.full()) {
-                container.emplace_back(tmp.Read(p.second));
+                container.emplace_back(tmp.drain(p.second));
             }
-            out.emplace_back(container.detach());
+            out.emplace_back(std::move(container));
         }
-        // info -------------------------------------------
+        /**
+         * log info
+         */
         INFO("DATA(drain)::IN::n=" << out.size());
-        
-        // return filled container ------------------------
+        /**
+         * return filled container
+         */
         return out;
     }
     /**
-     * --------------------------------------------------------------------------------------------
-     * control functions
-     * --------------------------------------------------------------------------------------------
-     * open
+     * ------------------------------------------------------------------------
+     * Open
      * ------------------------------------------------------------------------
      */
-    inline void _Open() override {
+    inline void _open() override {
         std::default_random_engine eng{std::random_device{}()};
-        // sleep distribution -----------------------------
-        std::uniform_int_distribution<> dist{100, 1000};
-        // main loop --------------------------------------
+        /**
+         * sleep distribution
+         */
+        std::uniform_int_distribution<> dist{1000, 5000};
+        /**
+         * main loop
+         */
         int i = 0;
         do {
             try {
-                __res.Wait(__uri);
+                __res.wait(__uri);
                 break;
             } catch (std::system_error& ex) {
                 WARNING(ex.what());
@@ -139,25 +164,25 @@ protected:
     }
     /**
      * ------------------------------------------------------------------------
-     * good
+     * Good
      * ------------------------------------------------------------------------
      */
-    inline bool _Good() override {
-        return __res.Good();
+    inline bool _good() override {
+        return __res.good();
     }
     /**
      * ------------------------------------------------------------------------
-     * close
+     * Close
      * ------------------------------------------------------------------------
      */
-    inline void _Close() override {
-        __res.Reset();
+    inline void _close() override {
+        __res.reset();
     }
 private:
     /**
-     * --------------------------------------------------------------------------------------------
-     * variables
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
+     * Variables
+     * ------------------------------------------------------------------------
      **
      * container
      */
@@ -169,7 +194,7 @@ private:
     /**
      * resource 
      */
-    RESOURCE __res;
+    Adapter __res;
 };
 }}
 /**

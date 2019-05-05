@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
-# project
+# ---------------------------------------------------------
+# Share project
+# ---------------------------------------------------------
 project (Share)
 # folder for connectors
 add_subdirectory(SConnectors)
@@ -11,7 +13,9 @@ add_subdirectory(SInterfaces)
 add_subdirectory(SModules)
 # folder for kernel
 add_subdirectory(SKernel)
-# target
+# ---------------------------------------------------------
+# ShareFunction target
+# ---------------------------------------------------------
 add_library(Share INTERFACE)
 # dependencies
 target_link_libraries(Share 
@@ -26,3 +30,6 @@ target_include_directories(Share
 INTERFACE
 	.
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

@@ -38,8 +38,7 @@
  * Set
  * ----------------------------------------------------------------------------
  */
-size_t OBufferShare::Set(const Frame& data, size_t sframes, size_t redundancy) {
-
+size_t OBufferShare::set(const Frame& data, size_t sframes, size_t redundancy) {
 	/**
 	 * validation
 	 */
@@ -47,12 +46,12 @@ size_t OBufferShare::Set(const Frame& data, size_t sframes, size_t redundancy) {
 	/**
 	 * data frame size
 	 */
-	int size = sframes - Codec::HeaderSize();
+	int size = sframes - __encoder.HeaderSize();
 	/**
 	 *  split data and add to encoder
 	 */
 	auto it = data.begin();
-	for (__encoder.clear().NumFrames(1); distance(it, data.end()) >= size; it += size) {
+	for (__encoder.clear().frame_count(1); distance(it, data.end()) >= size; it += size) {
 		__encoder.push(Frame(it, it + size));
 	}
 	/**
@@ -99,7 +98,7 @@ size_t OBufferShare::Set(const Frame& data, size_t sframes, size_t redundancy) {
  * Get
  * ----------------------------------------------------------------------------
  */
-Frame OBufferShare::Get() {
+Frame OBufferShare::get() {
 	return move(__encoder.pop().front());
 }
 /**
@@ -122,7 +121,7 @@ Frame OBufferShare::Get() {
  * Set
  * ----------------------------------------------------------------------------
  */
-bool IBufferShare::Set(Frame frame) {
+bool IBufferShare::set(Frame frame) {
 	uint32_t aux = 0;
     /**
 	 * add frame to decoder 
@@ -136,7 +135,7 @@ bool IBufferShare::Set(Frame frame) {
 		/**
 		 * check if all frame is zero 
 		 */
-		if (frame.Sum(1) == 0) {
+		if (frame.sum(1) == 0) {
 			continue;
 		}
 		/**
@@ -181,16 +180,20 @@ bool IBufferShare::Set(Frame frame) {
  * Get
  * ----------------------------------------------------------------------------
  */
-Frame IBufferShare::Get() {
+Frame IBufferShare::get() {
 	uint32_t aux = 0;
 	/**
 	 * serialize data 
 	 */
-	Frame out;
-	for (auto f : __decoder) {
-		out.insert(out.end(), f.begin(), f.end());
+	auto out = Frame();
+	auto it  = __decoder.begin();
+	auto end = __decoder.end();
+	if(it != end) {
+		out = Frame(it->size() * __decoder.size());
+		do {
+			out.insert(*it);
+		} while(++it != end);
 	}
-    __decoder.clear();
 	/**
 	 * resize out to original size 
 	 */
@@ -198,8 +201,9 @@ Frame IBufferShare::Get() {
 	GET_UINT32(aux);
 	out.resize(aux);
 	/**
-	 * return decoded data 
+	 * clear and return decoded data 
 	 */
+	__decoder.clear();
 	return out;
 }
 /**

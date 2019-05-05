@@ -1,8 +1,10 @@
 /**
+ * ------------------------------------------------------------------------------------------------
  * File:   SQueue.h
  * Author: Luis Monteiro
  *
  * Created on January 14, 2019, 6:23 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SQUEUE_H
 #define SQUEUE_H
@@ -19,7 +21,7 @@
 class SQueueGuard {
 public:
     SQueueGuard() {
-	__locker.lock();
+	    __locker.lock();
     }
     ~SQueueGuard(){
         __locker.unlock();
@@ -32,11 +34,10 @@ private:
  * Queue
  * ----------------------------------------------------------------------------
  */
-template<class TYPE, class GUARD = SQueueGuard>
+template<typename Type, typename Guard = SQueueGuard>
 class SQueue {
 public:
-    using Type = TYPE;
-    using List = std::list<TYPE>;
+    using List = std::list<Type>;
     /**
      * ----------------------------------------------------
      * default
@@ -57,12 +58,12 @@ public:
      * insert
      * ----------------------------------------------------
      */
-    inline void Insert(Type&& obj) {
-        GUARD g;
+    inline void insert(Type&& obj) {
+        Guard g;
         return __container.emplace_back(obj);
     }
-    inline void Insert(Type obj) {
-        GUARD g;
+    inline void insert(Type obj) {
+        Guard g;
         return __container.emplace_back(obj);
     }
     /**
@@ -70,8 +71,8 @@ public:
      * remove
      * ----------------------------------------------------
      */
-    inline List Remove() {
-        GUARD g;
+    inline List remove() {
+        Guard g;
         return move(__container);
     }
     /**
@@ -79,8 +80,8 @@ public:
      * clear document
      * ----------------------------------------------------
      */
-    inline void Clear() {
-        GUARD g;
+    inline void clear() {
+        Guard g;
        __container.clear();
     }
 protected:
@@ -90,9 +91,9 @@ protected:
     List __container;
 };
 /**
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * End
- * ----------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 #endif /* SQUEUE_H */
 

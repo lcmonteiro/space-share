@@ -1,20 +1,22 @@
-/* 
+/**
+ * ------------------------------------------------------------------------------------------------ 
  * File:   SIOStreamConnector.h
  * Author: Luis Monteiro
  *
  * Created on June 6, 2018, 11:47 PM
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SIOSTREAMCONNECTOR_H
 #define SIOSTREAMCONNECTOR_H
 /**
- *  Space Kernel
+ *  space
  */
 #include "SContainer.h"
 #include "SAddress.h"
 #include "STask.h"
 #include "SText.h"
 /**
- * Share Kernel
+ * share
  */
 #include "SConnector.h"
 /**
@@ -26,125 +28,150 @@ namespace Decoded {
 namespace Stream  {
 /**
  */
-template<class RESOURCE>
+template<class Adapter>
 class SIOStreamConnector : public SInOutputConnector {
 public:
     /**
-     * constructor
+     * ------------------------------------------------------------------------
+     * Constructor
+     * ------------------------------------------------------------------------
      */
     SIOStreamConnector(
-        const SText  address,   // con address
-        const size_t nframes,   // num of frames
-        const size_t sframes    // size of frame
-    ) : SInOutputConnector(address), __container(nframes), __buffer(sframes), __res() {}
+        const SText  address, 
+        const size_t nframes,  
+        const size_t sframes) 
+    : SInOutputConnector(address), 
+    __container(nframes), 
+    __buffer(sframes), 
+    __res() {}
     /**
-     * destructor
+     * ------------------------------------------------------------------------
+     * Get Resource
+     * ------------------------------------------------------------------------
      */
-    virtual ~SIOStreamConnector() = default;
-    /**
-     * inline overrides
-     */
-    inline Resource& GetResource() override {
-        return __res.Base();
+    inline Resource& resource() override {
+        return __res.base();
     }
 protected:
     /**
-     * --------------------------------------------------------------------------------------------
-     * IO functions
-     * --------------------------------------------------------------------------------------------
-     * read
+     * ------------------------------------------------------------------------
+     * Read
      * ------------------------------------------------------------------------
      */
-    Document _Read() override {
+    Document _read() override {
         IOFrame buffer;
-        // fill container ---------------------------------
-        for (;!__container.full(); __container.push_back(move(buffer))) {
-            
-            // fill buffer --------------------------------
+        /**
+         * fill container
+         */
+        while (!__container.full()) {
+            /**
+             * fill buffer
+             */
             while (!__buffer.full()) {
-                __res.Fill(__buffer);
+                __res.fill(__buffer);
             }
-            // reset buffers ------------------------------
-            buffer = IOFrame(__buffer.Capacity());
-            swap(__buffer, buffer);
+            /**
+             * reset buffer
+             */
+            buffer = IOFrame(__buffer.capacity());
+            std::swap(__buffer, buffer);
+            /**
+             * insert on container
+             */
+            __container.emplace_back(buffer.detach());
         }
-        // reset container --------------------------------
-        Document container(__container.capacity());
-        swap(__container, container);    
-
-        // info -------------------------------------------
+        /**
+         * reset container
+         */
+        auto container = Document(__container.capacity());
+        std::swap(__container, container);    
+        /**
+         * log info
+         */
         INFO("DATA::IN::n=" << container.size() << "=" << container.at(0));
-
-        // return filled container ------------------------
+        /**
+         * return filled container
+         */
         return container;
     }
     /**
      * ------------------------------------------------------------------------
-     * drain 
+     * Drain 
      * ------------------------------------------------------------------------
      */
-    std::list<Document> _Drain() override {
+    std::list<Document> _drain() override {
         Buffer tmp;
-
-        // check if container is full ---------------------
+        /**
+         * drain the remaining container data
+         */
         if (!__container.empty()) {
             auto container = Document(__container.capacity());
-            swap(__container, container);
-            tmp.Write(move(container));
+            std::swap(__container, container);
+            tmp.drain(std::move(container));
         }
-        // check if frame is full -------------------------
+        /**
+         * drain the remaining buffer data
+         */
         if (!__buffer.empty()) {
-            auto buffer = IOFrame(__buffer.Capacity());
-            swap(__buffer, buffer);
-            tmp.Write(move(buffer.Shrink()));
+            auto buffer = IOFrame(__buffer.capacity());
+            std::swap(__buffer, buffer);
+            tmp.drain(std::move(buffer.deflate()));
         }
-        // fill container ---------------------------------
+        /**
+         * fill container
+         */
         std::list<Document> out;
-        for (auto& p : Shape(tmp.Length(), __container.capacity())) {
+        for (auto& p : _shape(tmp.size(), __container.capacity())) {
             auto container = Document(p.first);
             while (!container.full()) {
-                container.emplace_back(tmp.Read(p.second));
+                container.emplace_back(tmp.drain(p.second));
             }
-            out.push_back(move(container));
+            out.emplace_back(std::move(container));
         }
-
-        // info -------------------------------------------
+        /**
+         * log info
+         */
         INFO("DATA(drain)::IN::n=" << out.size());
-
-        // return filled container ------------------------
+        /**
+         * return filled container
+         */
         return out;
     }
     /**
      * ------------------------------------------------------------------------
-     * write 
+     * Write 
      * ------------------------------------------------------------------------
      */
-    void _Write(const Document& container) override {
-
-        // log info ---------------------------------------
-        INFO("DATA::OUT::n=" <<container.size() << "=" << container.front());
-
-        // write nframes ----------------------------------
+    void _write(const Document& container) override {
+        /**
+         * log info
+         */
+        INFO("DATA::OUT::n=" << container.size() << "=" << container.at(0));
+        /**
+         * write nframes
+         */
         for (auto& f : container) {
-            __res.Drain(f);
+            __res.drain(f);
         }
     }
     /**
-     * --------------------------------------------------------------------------------------------
-     * control functions
-     * --------------------------------------------------------------------------------------------
-     * open
+     * ------------------------------------------------------------------------
+     * Open
      * ------------------------------------------------------------------------
      */
-    inline void _Open() override {
+    inline void _open() override {
         std::default_random_engine eng{std::random_device{}()};
-        // sleep distribution -----------------------------
+        /**
+         * sleep distribution
+         */
         std::uniform_int_distribution<> dist{1000, 5000};
-        // main loop --------------------------------------
+        /**
+         * main loop
+         */
         int i = 0;
         do {
             try {
-                __res.Wait(__uri);
+                __res.wait(__uri);
                 break;
             } catch (std::system_error& ex) {
                 WARNING(ex.what());
@@ -153,25 +180,25 @@ protected:
     }
     /**
      * ------------------------------------------------------------------------
-     * good
+     * Good
      * ------------------------------------------------------------------------
      */
-    inline bool _Good() override {
-        return __res.Good();
+    inline bool _good() override {
+        return __res.good();
     }
     /**
      * ------------------------------------------------------------------------
-     * close
+     * Close
      * ------------------------------------------------------------------------
      */
-    inline void _Close() override {
-        __res.Reset();
+    inline void _close() override {
+        __res.reset();
     }
 private:
     /**
-     * --------------------------------------------------------------------------------------------
-     * variables
-     * --------------------------------------------------------------------------------------------
+     * ------------------------------------------------------------------------
+     * Variables
+     * ------------------------------------------------------------------------
      **
      * container
      */
@@ -183,10 +210,9 @@ private:
     /**
      * resource 
      */
-    RESOURCE __res;
+    Adapter __res;
 };
-}
-}
+}}
 /**
  * ------------------------------------------------------------------------------------------------
  * End namespace Decoded & Stream

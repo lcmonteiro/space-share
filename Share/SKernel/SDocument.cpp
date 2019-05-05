@@ -15,62 +15,74 @@
 #include "SDocument.h"
 /**
  * ------------------------------------------------------------------------------------------------
- * encoded 
+ * Encoded - NameSpace 
  * ------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
 /**
  * ----------------------------------------------------------------------------
- * push frame
+ * Push frame
  * ----------------------------------------------------------------------------
  */
-SIDocument& SIDocument::Push(Frame&& data) {
-	// process --------------------------------------------
+SIDocument& SIDocument::push(Frame&& data) {
+	/**
+	 * process
+	 */
 	switch (__init++) {
 		case 0:
 		{
 			if (data.size()>sizeof (reference_t)) {
-				// reset ----------------------------------
+				/**
+				 * reset
+				 */
 				__init = 0;
 				return *this;
 			}
-			__pos = data.Number<reference_t>();
+			__pos = data.number<reference_t>();
 			return *this;
 		}
 		case 1:
 		{
-			if (data.size()>sizeof (numframes_t)) {
-				// reset ----------------------------------
+			if (data.size()>sizeof (framecount_t)) {
+				/**
+				 * reset
+				 */
 				__init = 0;
 				return *this;
 			}
-			__n_frames = data.Number<numframes_t>();
+			__n_frames = data.number<framecount_t>();
 			return *this;
 		}
 		case 2:
 		{
-			if (data.size()>sizeof (numframes_t)) {
-				// reset ----------------------------------
+			if (data.size()>sizeof (framecount_t)) {
+				/**
+				 * reset
+				 */
 				__init = 0;
 				return *this;
 			}
-			__capacity = data.Number<numframes_t>();
+			__capacity = data.number<framecount_t>();
 			return *this;
 		}
 		case 3:
 		{	
 			if (data.size()>sizeof (framesize_t)) {
-				// reset ----------------------------------
+				/**
+				 * reset
+				 */
 				__init = 0;
 				return *this;
 			}
-			__frame_sz = data.Number<framesize_t>();
+			__frame_sz = data.number<framesize_t>();
 			return *this;
 		}
 		default:
 		{
 			if (data.size() != __frame_sz) {
-				// reset ----------------------------------
+				/**
+				 * reset
+				 */
 				clear();
 				__init = 0;
 				return *this;
@@ -83,6 +95,6 @@ SIDocument& SIDocument::Push(Frame&& data) {
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * end 
+ * End 
  * ------------------------------------------------------------------------------------------------
  */

@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
-# target
+# ---------------------------------------------------------
+# ShareInterface target
+# ---------------------------------------------------------
 add_library(ShareInterface 
 STATIC
 	SBufferShare.cpp
@@ -18,3 +20,6 @@ PUBLIC
 	SpaceMonitor
 	SpaceResource
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

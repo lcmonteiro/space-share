@@ -1,5 +1,7 @@
 cmake_minimum_required (VERSION 3.8)
-# target
+# ---------------------------------------------------------
+# ShareModule target
+# ---------------------------------------------------------
 add_library(ShareModule INTERFACE
 	#MTransform.cpp
 	#MSpliter.cpp
@@ -18,3 +20,6 @@ INTERFACE
 	SpaceMonitor
 	SpaceHelper
 )
+# ---------------------------------------------------------
+# end
+# ---------------------------------------------------------

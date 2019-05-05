@@ -1,15 +1,15 @@
 /**
- * -------------------------------------------------------------------------------------------------------------------- 
+ * ------------------------------------------------------------------------------------------------
  * File:   SOMessageConnector.h
  * Author: Luis Monteiro
  *
  * Created on December 11, 2016, 1:25 AM
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 #ifndef SOMESSAGECONNECTORCODED_H
 #define SOMESSAGECONNECTORCODED_H
 /**
- * Space Kernel
+ * space
  */
 #include "SContainer.h"
 #include "SAddress.h"
@@ -17,20 +17,20 @@
 #include "STask.h"
 #include "SText.h"
 /**
- * Share Kernel
+ * share
  */
 #include "SConnector.h"
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * Begin namespace Encoded & Message
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
 namespace Message {
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * Base - SOMessageConnector
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Base {
 /**
@@ -40,7 +40,7 @@ class SOMessageConnector : public SUPER {
 public:
     /**
      * ------------------------------------------------------------------------
-     * constructor
+     * Constructor
      * ------------------------------------------------------------------------
      */
     SOMessageConnector(
@@ -49,18 +49,22 @@ public:
 protected:
     /**
      * ------------------------------------------------------------------------
-     * open
+     * Open
      * ------------------------------------------------------------------------
      */
-    inline void _Open() override {
+    inline void _open() override {
         std::default_random_engine eng{std::random_device{}()};
-        // sleep distribution -----------------------------
+        /**
+         * sleep distribution 
+         */
         std::uniform_int_distribution<> dist{100, 1000};
-        // main loop --------------------------------------
+        /**
+         * main loop
+         */
         int i = 0;
         do {
             try {
-                __res.Link(this->__uri);
+                __res.link(this->__uri);
                 break;
             } catch (std::system_error& ex) {
                 WARNING(ex.what());
@@ -69,23 +73,23 @@ protected:
      }
     /**
      * ------------------------------------------------------------------------
-     * good
+     * Good
      * ------------------------------------------------------------------------
      */
-    inline bool _Good() override {
-        return __res.Good();
+    inline bool _good() override {
+        return __res.good();
     }
     /**
      * ------------------------------------------------------------------------
-     * close
+     * Close
      * ------------------------------------------------------------------------
      */
-    inline void _Close() override {
-        __res.Reset();
+    inline void _close() override {
+        __res.reset();
     }
     /**
      * ------------------------------------------------------------------------
-     * variables
+     * Variables
      * ------------------------------------------------------------------------
      * resource 
      */
@@ -93,71 +97,78 @@ protected:
 };
 }
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * Layer - SOMessageConnector
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Layer {
 /**
  */
-template<typename SUPER>
-class SOMessageConnector : public SUPER {
+template<typename Super>
+class SOMessageConnector : public Super {
 public:
     /**
      * ------------------------------------------------------------------------
-     * constructor
+     * Constructor
      * ------------------------------------------------------------------------
      */
     SOMessageConnector(
-        const SText  address, const size_t maxsmsg 
-    ) : SUPER(address, maxsmsg), __buffer(maxsmsg) {}
+        const SText address, const size_t maxsmsg 
+    ) : Super(address, maxsmsg), __buffer(maxsmsg) {}
 protected:
     /**
      * ------------------------------------------------------------------------
-     * write
+     * Write
      * ------------------------------------------------------------------------
      */
-    void _Write(const Document& doc) override {
+    void _write(const Document& doc) override {
         const size_t HEADER_SIZE = 
             sizeof (reference_t)      + 
-            sizeof (numframes_t) * 2  + 
+            sizeof (framecount_t) * 2  + 
             sizeof (framesize_t)
         ;
-        // log info ---------------------------------------
+        /**
+         * log info
+         */
         INFO("CODE::OUT::"
-            << "pos=" << doc.Position()  << " " 
-            << "n="   << doc.NumFrames() << " "
-            << "sz="  << doc.Framesize() << " " 
-            << "len=" << doc.size()
-        );
-        // process document -------------------------------
-        auto split = doc.Split();
+            << "pos=" << doc.position()  << " " 
+            << "n="   << doc.frame_count() << " "
+            << "sz="  << doc.frame_size() << " " 
+            << "len=" << doc.size());
+        /**
+         * process document
+         */
+        auto split = doc.split();
         for (auto& c : STools::Split(split.second.detach(), 
-            __buffer.Reset().Expand().isize() - HEADER_SIZE)) {
-
-            // write context ------------------------------
-            __buffer.Write(Frame().Number<reference_t>(
-                split.first.Position()));
-            __buffer.Write(Frame().Number<numframes_t>(
-                split.first.NumFrames()));
-            __buffer.Write(Frame().Number<numframes_t>(
+            __buffer.clear().inflate().isize() - HEADER_SIZE)) {
+            /**
+             * write context
+             */
+            __buffer.write(Frame().number<reference_t>(
+                split.first.position()));
+            __buffer.write(Frame().number<framecount_t>(
+                split.first.frame_count()));
+            __buffer.write(Frame().number<framecount_t>(
                 c.size()));
-            __buffer.Write(Frame().Number<framesize_t>(
-                split.first.Framesize()));
-            
-            // write document -----------------------------
-            for (auto& f : c) { __buffer.Write(f); }
-            
-            // write message ------------------------------
-            this->__res.Drain(__buffer);
-
-            //reuse buffer --------------------------------
-            __buffer.Reset();
+            __buffer.write(Frame().number<framesize_t>(
+                split.first.frame_size()));
+            /**
+             * write document
+             */
+            for (auto& f : c) { __buffer.write(f); }
+            /**
+             * write message
+             */
+            this->__res.drain(__buffer);
+            /**
+             * reuse buffer
+             */
+            __buffer.clear();
         }
     }
     /**
      * ------------------------------------------------------------------------
-     * variables
+     * Variables
      * ------------------------------------------------------------------------
      * buffer
      */
@@ -165,9 +176,9 @@ protected:
 };
 }
 /**
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  * End namespace Encoded & Message
- * --------------------------------------------------------------------------------------------------------------------
+ * ------------------------------------------------------------------------------------------------
  */
 }}
 #endif /* SOMESSAGECONNECTORCODED_H */

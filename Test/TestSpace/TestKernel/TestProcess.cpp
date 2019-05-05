@@ -21,12 +21,15 @@
 using namespace std;
 TEST(SProcess, Create)
 {
+    /**
+     * process sample
+     */
     class SProcess1 : public SProcess<SCommand<string, string>, SVariable<string>> {
     public:
         using SProcess<SCommand<string, string>, SVariable<string>>::SProcess;
     protected:
-        int Execute() override {
-            for(auto& cmd : __Commands()) {
+        int _execute() override {
+            for(auto& cmd : _commands()) {
                 return stoi(cmd["I"][0]["A"]);
             }
             return 0;
@@ -37,8 +40,10 @@ TEST(SProcess, Create)
             {"A", "3"}
         }}}
     });
-    // use case 1
-    EXPECT_EQ(p.Run(), 3);
+    /**
+     * use case 1
+     */
+    EXPECT_EQ(p.run(), 3);
 }
 /**
  * ------------------------------------------------------------------------------------------------

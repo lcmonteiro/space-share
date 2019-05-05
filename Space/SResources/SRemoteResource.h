@@ -1,7 +1,7 @@
 /**
  * ------------------------------------------------------------------------------------------------
  * File:   SRemoteResource.h
- * Author:      Luis Monteiro
+ * Author: Luis Monteiro
  *
  * Created on November 26, 2015, 12:37 PM
  * ------------------------------------------------------------------------------------------------
@@ -30,31 +30,31 @@ public:
      **
      * status
      */
-    bool Good();
+    bool good();
     /**
      * timeout
      */
-    SRemoteResource& SetRxTimeout(int timeout);
-    SRemoteResource& SetTxTimeout(int timeout);
+    SRemoteResource& timeout_rx(int timeout);
+    SRemoteResource& timeout_tx(int timeout);
     /**
      * behavior
      */
-    SRemoteResource& SetNoDelay(bool flag);
+    SRemoteResource& delay(bool flag);
     /**
      * ------------------------------------------------------------------------
      * IO functions
      * ------------------------------------------------------------------------
      * fill and read frame
      */
-    template<typename T> SRemoteResource& Fill (T& f);
-    template<typename T> SRemoteResource& Read (T& f);
+    template<typename T> SRemoteResource& fill (T& f);
+    template<typename T> SRemoteResource& read (T& f);
     /**
      * drain and write frame
      */
-    template<typename T> SRemoteResource& Drain (T& f);
-    template<typename T> SRemoteResource& Write (T& f);
-    template<typename T> SRemoteResource& Drain (const T& f);
-    template<typename T> SRemoteResource& Write (const T& f);
+    template<typename T> SRemoteResource& drain (T& f);
+    template<typename T> SRemoteResource& write (T& f);
+    template<typename T> SRemoteResource& drain (const T& f);
+    template<typename T> SRemoteResource& write (const T& f);
 protected:
     /**
      * ------------------------------------------------------------------------
@@ -67,38 +67,49 @@ protected:
 };
 /**
  * ------------------------------------------------------------------------------------------------
- * message
+ * Message
  * ------------------------------------------------------------------------------------------------
  */
 namespace Message {
     class SRemoteResource : public ::SRemoteResource {
     public:
         /**
-         * defaults
+         * --------------------------------------------------------------------
+         * Defaults
+         * --------------------------------------------------------------------
          */
         SRemoteResource()                             = default;
         SRemoteResource(SRemoteResource&&)            = default;
         SRemoteResource& operator=(SRemoteResource&&) = default;
         /**
+         * --------------------------------------------------------------------
+         * Connections
+         * --------------------------------------------------------------------
          * bind
          */
-        SRemoteResource& Bind(
-            const std::string& host, uint16_t port
+        SRemoteResource& bind(
+            const std::string& host,
+            uint16_t port
         );
         /**
          * wait
          */
-        SRemoteResource& Wait(
-            const std::string& host, uint16_t port, std::chrono::seconds timeout=std::chrono::hours{24}
+        SRemoteResource& wait(
+            const std::string& host, 
+            uint16_t port, 
+            std::chrono::seconds timeout=std::chrono::hours{24}
         );
         /**
          * link
          */
-        SRemoteResource& Link(
-            const std::string& host, uint16_t port
+        SRemoteResource& link(
+            const std::string& host, 
+            uint16_t port
         );
         /**
-         * detach
+         * --------------------------------------------------------------------
+         * Detach
+         * --------------------------------------------------------------------
          */
         inline SRemoteResource detach() {
             return std::move(*this);
@@ -107,32 +118,42 @@ namespace Message {
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * stream
+ * Stream
  * ------------------------------------------------------------------------------------------------
  */
 namespace Stream {
     class SRemoteResource : public ::SRemoteResource {
     public:
         /**
-         * defaults
+         * --------------------------------------------------------------------
+         * Defaults
+         * --------------------------------------------------------------------
          */
         SRemoteResource()                             = default;
         SRemoteResource(SRemoteResource&&)            = default;
         SRemoteResource& operator=(SRemoteResource&&) = default;
         /**
+         * --------------------------------------------------------------------
+         * Connections
+         * --------------------------------------------------------------------
          * wait
          */
-        SRemoteResource& Wait(
-            const std::string& host, uint16_t port, std::chrono::seconds timeout=std::chrono::hours{24}
+        SRemoteResource& wait(
+            const std::string& host, 
+            uint16_t port, 
+            std::chrono::seconds timeout=std::chrono::hours{24}
         );
         /**
          * link
          */
-        SRemoteResource& Link(
-            const std::string& host, uint16_t port
+        SRemoteResource& link(
+            const std::string& host, 
+            uint16_t port
         );
         /**
-         * detach
+         * --------------------------------------------------------------------
+         * Detach
+         * --------------------------------------------------------------------
          */
         inline SRemoteResource detach() {
             return std::move(*this);
@@ -141,7 +162,7 @@ namespace Stream {
 }
 /**
  * ------------------------------------------------------------------------------------------------
- * end
+ * End
  * ------------------------------------------------------------------------------------------------
  */
 #endif /* SREMOTERESOURCE_H */

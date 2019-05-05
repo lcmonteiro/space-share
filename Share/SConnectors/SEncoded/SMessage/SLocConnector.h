@@ -9,13 +9,13 @@
 #ifndef SLOCMESSAGECONNECTORCODED_H
 #define SLOCMESSAGECONNECTORCODED_H
 /**
- * Space 
+ * space 
  */
 #include "SContainer.h"
 #include "SConnector.h"
 #include "SLocalResource.h"
 /**
- * Kernel
+ * connector
  */
 #include "SKernel/SIMessageConnector.h"
 #include "SKernel/SOMessageConnector.h"
@@ -39,25 +39,25 @@ public:
      */
     using Super::SLocalResource;
     using Super::operator=;
-    using Super::Read;
-    using Super::Drain;
-    using Super::Good;
+    using Super::read;
+    using Super::drain;
+    using Super::good;
     /**
      * interfaces
      */
-    inline Super& Base() {
+    inline Super& base() {
         return *this;
     }
-    inline void Bind(const SAddress& uri) {
-        Super::Bind(uri.File());
+    inline void bind(const SAddress& uri) {
+        Super::bind(uri.file());
     }
-    inline void Wait(const SAddress& uri) {
-        Super::Bind(uri.File());
+    inline void wait(const SAddress& uri) {
+        Super::bind(uri.file());
     }
-    inline void Link(const SAddress& uri) {
-        Super::Link(uri.File());
+    inline void link(const SAddress& uri) {
+        Super::link(uri.file());
     }
-    inline void Reset() {
+    inline void reset() {
         *this = Super();
     }
 };    
@@ -147,8 +147,8 @@ public:
  * ------------------------------------------------------------------------------------------------
  */
 typedef SIOLocConnectorT<ResourceAdapterLoc> IOLocConnector;
-typedef SILocConnectorT<ResourceAdapterLoc>  ILocConnector;
-typedef SOLocConnectorT<ResourceAdapterLoc>  OLocConnector;
+typedef SILocConnectorT< ResourceAdapterLoc>  ILocConnector;
+typedef SOLocConnectorT< ResourceAdapterLoc>  OLocConnector;
 }}
 /**
  * ------------------------------------------------------------------------------------------------

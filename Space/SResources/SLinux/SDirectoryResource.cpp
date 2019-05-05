@@ -19,7 +19,7 @@
  */
 #include "SResourceHandler.h"
 /**
- * Space
+ * space
  */
 #include "SDirectoryResource.h"
 #include "SText.h"
@@ -53,11 +53,11 @@ static bool __mark(const SText& name) {
  * ------------------------------------------------------------------------------------------------
  * Base
  * ------------------------------------------------------------------------------------------------
- **
  * status
+ * ----------------------------------------------------------------------------
  */
-bool SDirectoryResource::Valid() {
-    return ::fcntl(GetHandler<SResourceHandler>()->FD(), F_GETFL) != -1 || errno != EBADF;
+bool SDirectoryResource::good() {
+    return ::fcntl(handler<SResourceHandler>()->fd(), F_GETFL) != -1 || errno != EBADF;
 }
 /**
  * ------------------------------------------------------------------------------------------------
@@ -81,24 +81,25 @@ SIDirectoryResource::SIDirectoryResource(const std::string& path) : SDirectoryRe
 	/**
 	 * create resource
 	 */
-	SetHandler(std::make_shared<SResourceHandler>(fd));
+	handler(std::make_shared<SResourceHandler>(fd));
 	/**
 	 * mark files
 	 */
 	for (auto i = 0; __mark(SText(__path, "/", i)); ++i);
 }
 /**
+ * -----------------------------------------------------------------------------
+ * get resource
+ * -----------------------------------------------------------------------------
  */
-SIFileResource SIDirectoryResource::GetResource() {
+SIFileResource SIDirectoryResource::resource() {
 	char buf[sizeof (struct inotify_event) + 0x400] __attribute__((aligned(__alignof__(struct inotify_event))));
 	/**
 	 * read raw data
 	 */
 	int len = 0;
 	for (int s = sizeof(struct inotify_event); (len <= 0) && (s < 0x400); s += sizeof(struct inotify_event)) {
-		len = ::read(
-			GetHandler<SResourceHandler>()->FD(), buf, sizeof (struct inotify_event) + s
-		);
+		len = ::read(handler<SResourceHandler>()->fd(), buf, sizeof (struct inotify_event) + s);
 	}
 	if (len <= 0) {
 		throw IResourceExceptionABORT(strerror(errno));
@@ -130,19 +131,17 @@ SODirectoryResource::SODirectoryResource(
 	/**
 	 * create resource
 	 */
-	SetHandler(std::make_shared<SResourceHandler>(
-        ::open(path.data(), O_RDONLY)
-    ));
+	handler(std::make_shared<SResourceHandler>(::open(path.data(), O_RDONLY)));
 }
 /**
  * ----------------------------------------------------------------------------
- * get resources
+ * Get Resources
  * ----------------------------------------------------------------------------
  */
-SOFileResource SODirectoryResource::GetResource() {
+SOFileResource SODirectoryResource::resource() {
 	return SOFileResource(SText(__path, "/", __position++ % __capacity));
 }
-SOFileResource SODirectoryResource::GetResource(const std::string& name) {
+SOFileResource SODirectoryResource::resource(const std::string& name) {
 	return SOFileResource(SText(__path, "/", name));
 }
 /**

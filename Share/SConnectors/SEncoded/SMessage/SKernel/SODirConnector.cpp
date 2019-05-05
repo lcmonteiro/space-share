@@ -1,8 +1,10 @@
-/*
+/**
+ * ------------------------------------------------------------------------------------------------
  * File:   SODirConnector.cpp
  * Author: Luis Monteiro
  *
  * Created on June 3, 2015, 10:12 AM
+ * ------------------------------------------------------------------------------------------------
  */
 #include <sys/stat.h>
 #include <unistd.h>
@@ -15,58 +17,60 @@
 #include <iostream>
 #include <string.h>
 /**
- * Space
+ * space
  */
 #include "SFileResource.h"
-/**
- */
 #include "SODirConnector.h"
 /**
- * Begin namespace Encoded
+ * ------------------------------------------------------------------------------------------------
+ * Begin namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
 namespace Encoded {
-/**
- * Begin namespace Message
- */
 namespace Message {
 /**
+ * ----------------------------------------------------------------------------
+ * Constructor
+ * ----------------------------------------------------------------------------
  */
 SODirConnector::SODirConnector(const SText address, const uint32_t nfiles)
 : SOutputConnector(address), __n(nfiles) {
 }
 /**
+ * ----------------------------------------------------------------------------
+ * Write
+ * ----------------------------------------------------------------------------
  */
-void SODirConnector::_Write(const Document& container) {
-    /**------------------------------------------------------------------------------------------------------------*
+void SODirConnector::_write(const Document& container) {
+    /**
      * open file
-     *----------------------------------------------------------------------------------------*/
-    auto res = __res.GetResource();
-    /**------------------------------------------------------------------------------------------------------------*
+     */
+    auto res = __res.resource();
+    /**
      * write context
-     *----------------------------------------------------------------------------------------*/
-    res.Drain(Frame().Number<reference_t>(container.Position()));
-    res.Drain(Frame().Number<numframes_t>(container.NumFrames()));
-    res.Drain(Frame().Number<numframes_t>(container.size()));
-    res.Drain(Frame().Number<framesize_t>(container.Framesize()));
-    // log ------------------------------------------------
+     */
+    res.drain(Frame().number<reference_t>(container.position()));
+    res.drain(Frame().number<framecount_t>(container.frame_count()));
+    res.drain(Frame().number<framecount_t>(container.size()));
+    res.drain(Frame().number<framesize_t>(container.frame_size()));
+    /**
+     *  log info
+     */
     INFO("CODE::OUT::"
-        << "pos=" << container.Position()  << " " 
-        << "n="   << container.NumFrames() << " "
-        << "sz="  << container.Framesize() << " " 
-        << "len=" << container.size()
-    );
-    /**------------------------------------------------------------------------------------------------------------*
+        << "pos=" << container.position()    << " " 
+        << "n="   << container.frame_count() << " "
+        << "sz="  << container.frame_size()  << " " 
+        << "len=" << container.size() );
+    /**
      * write nframes
-     *----------------------------------------------------------------------------------------*/
+     */
     for (auto& f : container) {
-        res.Drain(f);
+        res.drain(f);
     }
 }
+}}
 /**
- * End namespace Message
+ * ------------------------------------------------------------------------------------------------
+ * End namespace Encoded & Message
+ * ------------------------------------------------------------------------------------------------
  */
-}
-/**
- * End namespace Encoded
- */
-}
