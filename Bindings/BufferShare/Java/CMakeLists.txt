@@ -1,37 +1,21 @@
 cmake_minimum_required (VERSION 3.10)
-enable_testing()
 # ---------------------------------------------------------
-# SpaceShare project
+# BufferShareJava project
 # ---------------------------------------------------------
-project (SpaceShare)
-# properties
-set(CMAKE_CXX_STANDARD 14)
-# definitions
-add_definitions(-D__LOG__)
+project (BindingBufferShareJava)
 # ---------------------------------------------------------
 # subdirectories
 # ---------------------------------------------------------
-# folder for applications
-add_subdirectory(Applications)
-# folder for binding
-add_subdirectory(Bindings)
-# folder for Share algorithms
-add_subdirectory(Share)
-# folder for common use
-add_subdirectory(Space)
-# folder for common use
-add_subdirectory(Test)
+# folder for Java Binding
+add_subdirectory(Native)
 # ---------------------------------------------------------
-# SpaceShare target
+# Bindings target
 # ---------------------------------------------------------
-add_library(SpaceShare 
-INTERFACE
-)
+add_library(BindingBufferShareJava INTERFACE)
 # dependencies
-target_link_libraries(SpaceShare 
+target_link_libraries(BindingBufferShareJava 
 INTERFACE
-	Share 
-	Space
+	BindingBufferShareJavaNative
 )
 # ---------------------------------------------------------
 # end

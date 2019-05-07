@@ -10,7 +10,7 @@ INTERFACE
 	.
 )
 #dependencies
-target_link_libraries(SpaceKernelLinux
+target_link_libraries(SpaceResourceLinux
 )
 # ---------------------------------------------------------
 # end 

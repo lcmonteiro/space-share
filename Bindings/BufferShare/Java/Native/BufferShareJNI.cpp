@@ -51,28 +51,28 @@ extern "C" {
         JNIEXPORT jint JNICALL Java_com_share_cwrapper_buffershare_BufferShare_Encode(
                 JNIEnv * env, jobject obj, jbyteArray data, jint size, jint id
         ) {
-                return __encoder[id].Set(toFrame(env, data), static_cast<size_t>(size));
+                return __encoder[id].set(toFrame(env, data), static_cast<size_t>(size));
         }
         /**
          */
         JNIEXPORT jbyteArray JNICALL Java_com_share_cwrapper_buffershare_BufferShare_GetFrame(
                 JNIEnv * env, jobject obj, jint id
         ) {
-                return toByteArray(env, __encoder[id].Get());
+                return toByteArray(env, __encoder[id].get());
         }
         /**
          */
         JNIEXPORT jboolean JNICALL Java_com_share_cwrapper_buffershare_BufferShare_SetFrame(
                 JNIEnv * env, jobject obj, jbyteArray data, jint id
         ) {
-                return __decoder[id].Set(toFrame(env, data));
+                return __decoder[id].set(toFrame(env, data));
         }
         /**
          */
         JNIEXPORT jbyteArray JNICALL Java_com_share_cwrapper_buffershare_BufferShare_Decode(
                 JNIEnv * env, jobject obj, jint id
         ) {
-                return toByteArray(env, __decoder[id].Get());
+                return toByteArray(env, __decoder[id].get());
         }
         /**
          */

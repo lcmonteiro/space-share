@@ -10,7 +10,7 @@
  *
  * Created on October 30, 2016, 4:22 PM
  */
-#include "Sinterface/SBufferShare.h"
+#include "SBufferShare.h"
 /**
  * 
  */
