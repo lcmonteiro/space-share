@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
 # Share project
 # ---------------------------------------------------------
-project (Share)
+#project (Share)
 # folder for connectors
 add_subdirectory(SConnectors)
 # folder for functions

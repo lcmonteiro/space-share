@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
 # Space project
 # ---------------------------------------------------------
-project (Space)
+#project (Space)
 # folder for core objects
 add_subdirectory(SKernel)
 # folder for Monitor objects

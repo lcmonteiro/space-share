@@ -3,7 +3,6 @@ cmake_minimum_required (VERSION 3.8)
 # ShareInterface target
 # ---------------------------------------------------------
 add_library(ShareInterface 
-STATIC
 	SBufferShare.cpp
 	SMachine.cpp
 )

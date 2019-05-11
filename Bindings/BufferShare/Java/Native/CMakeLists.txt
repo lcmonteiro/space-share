@@ -16,7 +16,7 @@ target_include_directories(BindingBufferShareJavaNative
 # dependencies
 target_link_libraries(BindingBufferShareJavaNative 
 PRIVATE
-    $<TARGET_OBJECTS:ShareInterface>
+    ShareInterface
 )
 # ---------------------------------------------------------
 # end
