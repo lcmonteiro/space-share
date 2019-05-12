@@ -6,17 +6,12 @@ add_subdirectory(SEncoded)
 # ---------------------------------------------------------
 # ShareConnector target
 # ---------------------------------------------------------
-add_library(ShareConnector 
-INTERFACE
-)
-# includes
-target_include_directories(ShareConnector 
-INTERFACE
-	.
-)
-# dependencies
-target_link_libraries(ShareConnector
-INTERFACE 
+create_container(
+TARGET	
+	ShareConnector 
+PUBLIC_INCLUDES
+	${CMAKE_CURRENT_LIST_DIR}
+PUBLIC_LINKS
 	ShareConnectorDecoded
 	ShareConnectorEncoded
 )

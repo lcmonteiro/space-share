@@ -4,12 +4,10 @@ add_subdirectory(SKernel)
 # ---------------------------------------------------------
 # ShareConnectorEncodedMessage target
 # ---------------------------------------------------------
-add_library(ShareConnectorEncodedMessage
-INTERFACE
-)
-# dependencies
-target_link_libraries(ShareConnectorEncodedMessage
-INTERFACE 
+create_container(
+TARGET	
+	ShareConnectorEncodedMessage	 
+PUBLIC_LINKS
 	ShareConnectorEncodedMessageKernel
 )
 # ---------------------------------------------------------

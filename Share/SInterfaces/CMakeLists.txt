@@ -2,22 +2,18 @@ cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
 # ShareInterface target
 # ---------------------------------------------------------
-add_library(ShareInterface 
+create_container(
+TARGET	
+	ShareInterface 
+SOURCES
 	SBufferShare.cpp
 	SMachine.cpp
-)
-# includes
-target_include_directories(ShareInterface 
-PUBLIC
-	.
-)
-#dependencies
-target_link_libraries(ShareInterface
-PUBLIC
+PUBLIC_INCLUDES
+	${CMAKE_CURRENT_LIST_DIR}
+PUBLIC_LINKS
 	ShareModule
 	ShareKernel
 	SpaceMonitor
-	SpaceResource
 )
 # ---------------------------------------------------------
 # end

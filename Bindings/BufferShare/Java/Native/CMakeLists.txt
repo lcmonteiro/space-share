@@ -7,6 +7,7 @@ find_package(JNI REQUIRED)
 add_library(BindingBufferShareJavaNative 
 SHARED
     BufferShareJNI.cpp
+    $<TARGET_OBJECTS:ShareInterface>
 )
 # includes
 target_include_directories(BindingBufferShareJavaNative
@@ -16,7 +17,6 @@ target_include_directories(BindingBufferShareJavaNative
 # dependencies
 target_link_libraries(BindingBufferShareJavaNative 
 PRIVATE
-    ShareInterface
 )
 # ---------------------------------------------------------
 # end

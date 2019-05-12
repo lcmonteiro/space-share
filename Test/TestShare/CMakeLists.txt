@@ -8,9 +8,9 @@ TARGET
 SOURCES
     TestConnector/TestDecodedMessageUDP.cpp
     TestConnector/TestDecodedMessageFile.cpp
-DEPENDS
-    ShareConnector
+CONTAINERS
     SpaceHelper
+    ShareConnector
 )
 # ---------------------------------------------------------
 # add test for share kernel 
@@ -20,7 +20,7 @@ TARGET
     TestShareKernel
 SOURCES
     TestKernel/TestCodec.cpp
-DEPENDS
+CONTAINERS
     ShareModule
 )
 # ---------------------------------------------------------
@@ -32,7 +32,7 @@ TARGET
 SOURCES
     TestModule/TestSpliter.cpp
     TestModule/TestSpread.cpp
-DEPENDS
+CONTAINERS
     ShareModule
 )
 # ---------------------------------------------------------
@@ -44,7 +44,7 @@ TARGET
 SOURCES
     TestInterface/TestMachine.cpp
     TestInterface/TestBufferShare.cpp
-DEPENDS
+CONTAINERS
     ShareModule
     ShareInterface
 )

@@ -6,17 +6,12 @@ add_subdirectory(STools)
 # ---------------------------------------------------------
 # ShareConnectorDecodedMessage target
 # ---------------------------------------------------------
-add_library(ShareConnectorDecodedMessage
-INTERFACE
-)
-# includes
-target_include_directories(ShareConnectorDecodedMessage 
-INTERFACE
+create_interface(
+TARGET	
+	ShareConnectorDecodedMessage
+PUBLIC_INCLUDES
 	.
-)
-# dependencies
-target_link_libraries(ShareConnectorDecodedMessage
-INTERFACE 
+PUBLIC_LINKS
 	ShareConnectorDecodedMessageKernel
 	ShareConnectorDecodedMessageTools
 	SpaceKernel

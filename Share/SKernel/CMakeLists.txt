@@ -4,10 +4,11 @@ add_subdirectory(SCodec)
 # ---------------------------------------------------------
 # ShareKernel target
 # ---------------------------------------------------------
-add_library(ShareKernel STATIC
+add_library(ShareKernel 
 	SConnector.cpp
 	SDocument.cpp
 	SModule.cpp
+	$<TARGET_OBJECTS:SpaceKernel>
 )
 # includes
 target_include_directories(ShareKernel 
@@ -17,7 +18,6 @@ PUBLIC
 # target dependencies
 target_link_libraries(ShareKernel 
 PUBLIC
-	SpaceKernel
 	ShareKernelCodec
 )
 # ---------------------------------------------------------

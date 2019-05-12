@@ -7,27 +7,23 @@ if(true)
 	add_subdirectory(SLinux)
 endif()
 # ---------------------------------------------------------
-# SpaceResource target
+# SpaceResource container
 # ---------------------------------------------------------
-add_library(SpaceResource 
-STATIC 
+create_container(
+TARGET	
+	SpaceResource 
+SOURCES
 	${sources}
 	SIRCResource.cpp
-)
-# includes
-target_include_directories(SpaceResource 
-PUBLIC
+PUBLIC_INCLUDES
 	${CMAKE_CURRENT_LIST_DIR}
-PRIVATE
-	${includes}
-)
-# dependencies
-target_link_libraries(SpaceResource 
-#PUBLIC
-	#${links}
-PUBLIC
+PUBLIC_LINKS
 	SpaceKernel
-PRIVATE
+PRIVATE_INCLUDES
+	${includes}
+PRIVATE_LINKS
 	SpaceMonitor
-	SpaceHelper
 )
+# ---------------------------------------------------------
+# End
+# ---------------------------------------------------------

@@ -8,7 +8,7 @@ TARGET
 SOURCES
     TestShare/main.cpp
     TestShare/SInterface/STestBasic.cpp
-DEPENDS
+CONTAINERS
     ShareInterface
 )
 # ---------------------------------------------------------

@@ -1,13 +1,15 @@
 cmake_minimum_required (VERSION 3.10)
-enable_testing()
+include(CMakeTools.cmake)
 # ---------------------------------------------------------
 # SpaceShare project
 # ---------------------------------------------------------
 #project (SpaceShare)
 # properties
-#set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 14)
 # definitions
-#add_definitions(-D__LOG__)
+add_definitions(-D__LOG__)
+set(BUILD_SHARED_LIBS OFF)
+enable_testing()
 # ---------------------------------------------------------
 # subdirectories
 # ---------------------------------------------------------

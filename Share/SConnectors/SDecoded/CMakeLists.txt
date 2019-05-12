@@ -6,12 +6,10 @@ add_subdirectory(SStream)
 # ---------------------------------------------------------
 # ShareConnectorDecoded target
 # ---------------------------------------------------------
-add_library(ShareConnectorDecoded
-INTERFACE
-)
-# dependencies
-target_link_libraries(ShareConnectorDecoded
-INTERFACE 
+create_container(
+TARGET	
+	ShareConnectorDecoded
+PUBLIC_LINKS
 	ShareConnectorDecodedMessage
 	ShareConnectorDecodedStream
 )
