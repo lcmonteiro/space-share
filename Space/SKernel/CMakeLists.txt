@@ -7,9 +7,9 @@ if(true)
 	add_subdirectory(SLinux)
 endif()
 # ---------------------------------------------------------
-# SpaceKernel container
+# SpaceKernel package
 # ---------------------------------------------------------
-create_container(
+create_package(
 TARGET	
 	SpaceKernel 
 SOURCES

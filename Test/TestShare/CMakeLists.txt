@@ -8,8 +8,9 @@ TARGET
 SOURCES
     TestConnector/TestDecodedMessageUDP.cpp
     TestConnector/TestDecodedMessageFile.cpp
-CONTAINERS
+LINKS
     SpaceHelper
+DEPENDS
     ShareConnector
 )
 # ---------------------------------------------------------
@@ -20,7 +21,7 @@ TARGET
     TestShareKernel
 SOURCES
     TestKernel/TestCodec.cpp
-CONTAINERS
+LINKS
     ShareModule
 )
 # ---------------------------------------------------------
@@ -32,7 +33,7 @@ TARGET
 SOURCES
     TestModule/TestSpliter.cpp
     TestModule/TestSpread.cpp
-CONTAINERS
+LINKS
     ShareModule
 )
 # ---------------------------------------------------------
@@ -44,7 +45,7 @@ TARGET
 SOURCES
     TestInterface/TestMachine.cpp
     TestInterface/TestBufferShare.cpp
-CONTAINERS
+LINKS
     ShareModule
     ShareInterface
 )

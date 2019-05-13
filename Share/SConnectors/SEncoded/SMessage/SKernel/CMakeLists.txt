@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
-# ShareConnectorEncodedMessageKernel target
+# ShareConnectorEncodedMessageKernel package
 # ---------------------------------------------------------
-create_container(
+create_package(
 TARGET	
 	ShareConnectorEncodedMessageKernel	 
 SOURCES
@@ -12,7 +12,7 @@ SOURCES
 	SODirConnector.cpp
 	SOIrcConnector.cpp
 PUBLIC_INCLUDES
-	.
+	${CMAKE_CURRENT_LIST_DIR}
 PUBLIC_LINKS
 	SpaceResource
 	ShareKernel

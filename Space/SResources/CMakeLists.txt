@@ -9,7 +9,7 @@ endif()
 # ---------------------------------------------------------
 # SpaceResource container
 # ---------------------------------------------------------
-create_container(
+create_package(
 TARGET	
 	SpaceResource 
 SOURCES

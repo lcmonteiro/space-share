@@ -2,9 +2,9 @@ cmake_minimum_required (VERSION 3.8)
 # folder for Kernel
 add_subdirectory(SKernel)
 # ---------------------------------------------------------
-# ShareConnectorEncodedMessage target
+# ShareConnectorEncodedMessage interface
 # ---------------------------------------------------------
-create_container(
+create_interface(
 TARGET	
 	ShareConnectorEncodedMessage	 
 PUBLIC_LINKS

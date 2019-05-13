@@ -1,13 +1,13 @@
 cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
-# SpaceMonitor target
+# SpaceMonitor interface
 # ---------------------------------------------------------
-create_container(
+create_interface(
 TARGET	
 	SpaceMonitor 
-PUBLIC_INCLUDES
+INCLUDES
 	${CMAKE_CURRENT_LIST_DIR}
-PUBLIC_LINKS
+LINKS
 	SpaceKernel
 )
 # ---------------------------------------------------------

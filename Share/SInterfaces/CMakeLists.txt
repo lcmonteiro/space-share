@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
 # ShareInterface target
 # ---------------------------------------------------------
-create_container(
+create_collector(
 TARGET	
 	ShareInterface 
 SOURCES

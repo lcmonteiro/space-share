@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
-# SpaceHelper container
+# SpaceHelper package
 # ---------------------------------------------------------
-create_container(
+create_package(
 TARGET	
 	SpaceHelper 
 SOURCES

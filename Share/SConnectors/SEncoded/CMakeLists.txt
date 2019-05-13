@@ -4,9 +4,9 @@ add_subdirectory(SMessage)
 # folder for Encoded
 add_subdirectory(SStream)
 # ---------------------------------------------------------
-# ShareConnectorEncoded target
+# ShareConnectorEncoded interface
 # ---------------------------------------------------------
-create_container(
+create_interface(
 TARGET	
 	ShareConnectorEncoded 
 PUBLIC_LINKS

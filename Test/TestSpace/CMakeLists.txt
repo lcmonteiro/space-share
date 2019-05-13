@@ -13,7 +13,7 @@ SOURCES
     TestKernel/TestContainer.cpp
     TestKernel/TestFrame.cpp
     TestKernel/TestBuffer.cpp
-CONTAINERS
+LINKS
     SpaceKernel
     SpaceHelper
 )
@@ -27,7 +27,7 @@ SOURCES
     TestResource/TestFileResource.cpp
     TestResource/TestLocalResource.cpp
     TestResource/TestRemoteResource.cpp
-CONTAINERS
+LINKS
     SpaceResource
     SpaceKernel
     SpaceHelper
@@ -41,11 +41,12 @@ TARGET
 SOURCES 
     TestMonitor/TestResourceMonitor.cpp
     TestMonitor/TestRoadMonitor.cpp
-CONTAINERS
+LINKS
     SpaceResource
-    SpaceMonitor
     SpaceKernel
     SpaceHelper
+DEPENDS
+    SpaceMonitor
 )
 # ---------------------------------------------------------
 # end

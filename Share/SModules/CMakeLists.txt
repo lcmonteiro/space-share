@@ -2,12 +2,12 @@ cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
 # ShareModule target
 # ---------------------------------------------------------
-create_container(
+create_interface(
 TARGET	
 	ShareModule 
-PUBLIC_INCLUDES
+INCLUDES
 	${CMAKE_CURRENT_LIST_DIR}
-PUBLIC_LINKS
+LINKS
 	ShareConnector
 	ShareFunction
 	ShareKernel

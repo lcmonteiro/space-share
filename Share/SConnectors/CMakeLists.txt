@@ -4,14 +4,14 @@ add_subdirectory(SDecoded)
 # folder for Encoded
 add_subdirectory(SEncoded)
 # ---------------------------------------------------------
-# ShareConnector target
+# ShareConnector collector
 # ---------------------------------------------------------
-create_container(
+create_interface(
 TARGET	
 	ShareConnector 
-PUBLIC_INCLUDES
+INCLUDES
 	${CMAKE_CURRENT_LIST_DIR}
-PUBLIC_LINKS
+LINKS
 	ShareConnectorDecoded
 	ShareConnectorEncoded
 )

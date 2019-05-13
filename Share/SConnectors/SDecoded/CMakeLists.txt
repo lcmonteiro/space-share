@@ -4,9 +4,9 @@ add_subdirectory(SMessage)
 # folder for stream
 add_subdirectory(SStream)
 # ---------------------------------------------------------
-# ShareConnectorDecoded target
+# ShareConnectorDecoded interface
 # ---------------------------------------------------------
-create_container(
+create_interface(
 TARGET	
 	ShareConnectorDecoded
 PUBLIC_LINKS

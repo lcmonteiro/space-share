@@ -1,8 +1,8 @@
 cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
-# ShareConnectorDecodedMessageKernel container
+# ShareConnectorDecodedMessageKernel package
 # ---------------------------------------------------------
-create_container(
+create_package(
 TARGET	
 	ShareConnectorDecodedMessageKernel 
 SOURCES
