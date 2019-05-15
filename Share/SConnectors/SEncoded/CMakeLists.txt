@@ -6,12 +6,14 @@ add_subdirectory(SStream)
 # ---------------------------------------------------------
 # ShareConnectorEncoded interface
 # ---------------------------------------------------------
-create_interface(
-TARGET	
-	ShareConnectorEncoded 
-PUBLIC_LINKS
-	ShareConnectorEncodedMessage
-	ShareConnectorEncodedStream
+# interface library
+add_library(ShareConnectorEncoded INTERFACE)
+# dependencies
+target_include_directories(ShareConnectorEncoded
+INTERFACE
+	${CMAKE_CURRENT_LIST_DIR}
+	$<TARGET_PROPERTY:ShareConnectorEncodedMessage,INTERFACE_INCLUDE_DIRECTORIES>
+	$<TARGET_PROPERTY:ShareConnectorEncodedStream,INTERFACE_INCLUDE_DIRECTORIES>
 )
 # ---------------------------------------------------------
 # end

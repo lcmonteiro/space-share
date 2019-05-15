@@ -1,16 +1,22 @@
 cmake_minimum_required (VERSION 3.8)
 # project
 project (SystemShare)
-# target
-create_executable(
-TARGET 
-	SystemShare
-SOURCES
+# -----------------------------------------------------------------------------
+# SystemShare target
+# -----------------------------------------------------------------------------
+# executable
+add_executable(SystemShare
 	Source/main.cpp
-LINKS
-	ShareInterface
 )
-# dependencies 
+# dependencies
+target_sources(SystemShare
+PRIVATE 
+	$<TARGET_OBJECTS:ShareInterface>
+)
 target_link_libraries(SystemShare
-	PRIVATE pthread
+PRIVATE 
+	pthread
 )
+# -----------------------------------------------------------------------------
+# end
+# -----------------------------------------------------------------------------

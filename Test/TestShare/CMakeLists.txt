@@ -10,7 +10,6 @@ SOURCES
     TestConnector/TestDecodedMessageFile.cpp
 LINKS
     SpaceHelper
-DEPENDS
     ShareConnector
 )
 # ---------------------------------------------------------

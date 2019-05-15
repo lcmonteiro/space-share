@@ -2,16 +2,16 @@ cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
 # ShareKernelCodec target
 # ---------------------------------------------------------
-add_library(ShareKernelCodec 
+# object library
+add_library(ShareKernelCodec OBJECT 
 	SEngineCodec.cpp
 	SStampCodec.cpp
-	$<TARGET_OBJECTS:SpaceKernel>
 )
-# includes
-target_include_directories(ShareKernelCodec 
-PUBLIC
-	.
-	$<TARGET_PROPERTY:SpaceKernel,INTERFACE_INCLUDE_DIRECTORIES>
+# dependencies
+target_include_directories(ShareKernelCodec
+PUBLIC  
+	${CMAKE_CURRENT_LIST_DIR}
+	#$<TARGET_PROPERTY:SpaceKernel,INTERFACE_INCLUDE_DIRECTORIES>
 )
 # ---------------------------------------------------------
 # end

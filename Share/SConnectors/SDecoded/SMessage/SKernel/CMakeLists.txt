@@ -1,19 +1,20 @@
 cmake_minimum_required (VERSION 3.8)
-# ---------------------------------------------------------
+# -----------------------------------------------------------------------------
 # ShareConnectorDecodedMessageKernel package
-# ---------------------------------------------------------
-create_package(
-TARGET	
-	ShareConnectorDecodedMessageKernel 
-SOURCES
+# -----------------------------------------------------------------------------
+# object library
+add_library(ShareConnectorDecodedMessageKernel OBJECT
 	SIDirConnector.cpp
 	SODirConnector.cpp
-PUBLIC_INCLUDES
-	${CMAKE_CURRENT_LIST_DIR}
-PUBLIC_LINKS
-	SpaceKernel
-	ShareKernel
 )
-# ---------------------------------------------------------
+# dependencies
+target_include_directories(ShareConnectorDecodedMessageKernel
+PUBLIC 
+	${CMAKE_CURRENT_LIST_DIR}
+PRIVATE
+	#$<TARGET_PROPERTY:SpaceKernel, INTERFACE_INCLUDE_DIRECTORIES>
+	#$<TARGET_PROPERTY:ShareKernel, INTERFACE_INCLUDE_DIRECTORIES>
+)
+# -----------------------------------------------------------------------------
 # end
-# ---------------------------------------------------------
+# -----------------------------------------------------------------------------

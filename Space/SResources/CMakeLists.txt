@@ -1,29 +1,28 @@
 cmake_minimum_required (VERSION 3.8)
-# ---------------------------------------------------------
+# -----------------------------------------------------------------------------
 # platform dependencies ${includes} and ${sources}
-# ---------------------------------------------------------
+# -----------------------------------------------------------------------------
 if(true)
 	# linux folder for core objects
 	add_subdirectory(SLinux)
 endif()
-# ---------------------------------------------------------
+# -----------------------------------------------------------------------------
 # SpaceResource container
-# ---------------------------------------------------------
-create_package(
-TARGET	
-	SpaceResource 
-SOURCES
-	${sources}
+# -----------------------------------------------------------------------------
+# object library
+add_library(SpaceResource OBJECT
+	${SOURCES}
 	SIRCResource.cpp
-PUBLIC_INCLUDES
-	${CMAKE_CURRENT_LIST_DIR}
-PUBLIC_LINKS
-	SpaceKernel
-PRIVATE_INCLUDES
-	${includes}
-PRIVATE_LINKS
-	SpaceMonitor
 )
-# ---------------------------------------------------------
+# dependencies
+target_include_directories(SpaceResource
+PUBLIC 
+	${CMAKE_CURRENT_LIST_DIR}
+	#$<TARGET_PROPERTY:ShareKernel, INTERFACE_INCLUDE_DIRECTORIES>
+PRIVATE
+	${INCLUDES}
+	#$<TARGET_PROPERTY:SpaceMonitor,INTERFACE_INCLUDE_DIRECTORIES>
+)
+# -----------------------------------------------------------------------------
 # End
-# ---------------------------------------------------------
+# -----------------------------------------------------------------------------
