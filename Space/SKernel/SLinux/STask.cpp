@@ -6,6 +6,10 @@
  * Created on November 26, 2016, 12:37 PM
  * ------------------------------------------------------------------------------------------------
  **
+ * linux 
+ */ 
+ #include <sys/eventfd.h>
+/**
  * std
  */
 #include <iostream>
@@ -14,6 +18,26 @@
  */
 #include "STask.h"
 #include "SMonitorHandler.h"
+/**
+ * ------------------------------------------------------------------------------------------------
+ * Interrupt Task 
+ * ------------------------------------------------------------------------------------------------
+ * Constructor
+ * ----------------------------------------------------------------------------
+ */
+STask::SInterrupt::SInterrupt(bool init) : SResource() {
+    if(init) {
+        handler(std::make_shared<SResourceHandler>(::eventfd(0, 0)));
+    }
+}
+/**
+ * ----------------------------------------------------------------------------
+ * send interrupt
+ * ----------------------------------------------------------------------------
+ */
+void STask::SInterrupt::send() {
+    ::eventfd_write(handler<SResourceHandler>()->fd(), 1);
+}
 /**
  * ------------------------------------------------------------------------------------------------
  * Manager Tasks 
@@ -97,7 +121,7 @@ typedef std::lock_guard<std::mutex> guard_t;
  */
 STask::DataBase STask::__tasks;
 STask::Mutex    STask::__mutex;
-STask           STask::__init(0);
+STask           STask::__init(true);
 /**
  * --------------------------------------------------------
  * Insert task

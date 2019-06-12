@@ -17,13 +17,37 @@
 /**
  * space
  */
-#include "SEventResource.h"
+#include "SResource.h"
 /**
  * ------------------------------------------------------------------------------------------------
  * Task
  * ------------------------------------------------------------------------------------------------
  **/
 class STask : public std::thread {
+    /**
+     * ------------------------------------------------------------------------
+     * Interrupt Task 
+     * ------------------------------------------------------------------------
+     */
+    class SInterrupt : public SResource {
+    public:
+        /**
+         * main constructor
+         */
+        SInterrupt(bool init = false);
+        /**
+         * move constructor
+         */
+        SInterrupt(SInterrupt&&) = default;
+        /**
+         * move operator
+         */
+        SInterrupt& operator=(SInterrupt&&) = default;
+        /**
+         * send interruption
+         */
+        void send();
+    };
 public:
     using Time = std::chrono::milliseconds;
     /**
@@ -40,10 +64,10 @@ public:
     template<typename Func, typename... Args> explicit
     STask(Func&& f, Args&&... args)
     : std::thread(std::forward<Func>(f), std::forward<Args>(args)...),
-    __event(0) {
+    __interrupt(true) {
         _init(std::thread::get_id());
     }
-    STask(STask&& t): std::thread(), __event() {
+    STask(STask&& t): std::thread(), __interrupt(false) {
         *this = std::move(t);
     }
     /**
@@ -67,7 +91,7 @@ public:
         /**
          * swap event
          */
-        std::swap(__event, t.__event);
+        std::swap(__interrupt, t.__interrupt);
         /**
          * update tasks data base
          */
@@ -83,7 +107,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline void interrupt() {
-        __event.send();
+        __interrupt.send();
     }
     /**
      * ------------------------------------------------------------------------
@@ -91,7 +115,7 @@ public:
      * ------------------------------------------------------------------------
      */
     inline Resource& resource() {
-        return __event;
+        return __interrupt;
     }
     /**
      * ------------------------------------------------------------------------
@@ -119,7 +143,7 @@ protected:
      * Protected Constructor
      * ------------------------------------------------------------------------
      */
-    STask(int init): __event(init) {} 
+    STask(bool init): std::thread(), __interrupt(init) {} 
     /**
      * ------------------------------------------------------------------------
      * manager tasks 
@@ -136,7 +160,7 @@ private:
      * ------------------------------------------------------------------------
      * event
      */
-    SEventResource __event;
+    SInterrupt __interrupt;
     /**
      * ------------------------------------------------------------------------
      * Tasks Data Base - Declaration

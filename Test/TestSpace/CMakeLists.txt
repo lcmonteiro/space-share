@@ -29,6 +29,7 @@ SOURCES
     TestResource/TestRemoteResource.cpp
 DEPENDS
     SpaceResource
+    SpaceMonitor
     SpaceKernel
     SpaceHelper
 )

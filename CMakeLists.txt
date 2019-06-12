@@ -3,11 +3,11 @@ enable_testing()
 # ---------------------------------------------------------
 # SpaceShare project
 # ---------------------------------------------------------
-#project (SpaceShare)
+project (SpaceShare)
 # properties
-#set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 14)
 # definitions
-#add_definitions(-D__LOG__)
+add_definitions(-D__LOG__)
 # ---------------------------------------------------------
 # subdirectories
 # ---------------------------------------------------------

@@ -27,9 +27,6 @@ PRIVATE
 target_link_libraries(SpaceKernel 
 PUBLIC 
 	${links}
-	SpaceResource
-	SpaceMonitor
-	SpaceHelper
 )
 # ---------------------------------------------------------
 # end
