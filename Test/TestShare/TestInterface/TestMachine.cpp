@@ -24,7 +24,7 @@ TEST(SMachine, File)
     auto out = SFileResource::FileTemp();
 
     // create test data -------------------------------------------------------
-    SRandom::Fill(SIFileResource(in), 1000);
+    SRandom::Fill(SOFileResource(in), 1000);
 
     // encoder machine --------------------------------------------------------
     auto conf = SMachine::Config();

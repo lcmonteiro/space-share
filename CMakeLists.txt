@@ -5,7 +5,7 @@ enable_testing()
 # ---------------------------------------------------------
 project (SpaceShare)
 # properties
-set(BUILD_SHARED_LIBS ON)
+set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_CXX_STANDARD 14)
 # definitions
 add_definitions(-D__LOG__)
