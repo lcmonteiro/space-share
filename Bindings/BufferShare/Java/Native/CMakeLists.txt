@@ -5,7 +5,6 @@ find_package(JNI REQUIRED)
 # Bindings target
 # ---------------------------------------------------------
 add_library(BindingBufferShareJavaNative 
-SHARED
     BufferShareJNI.cpp
 )
 # includes

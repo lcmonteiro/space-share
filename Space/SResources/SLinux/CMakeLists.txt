@@ -9,6 +9,7 @@ add_subdirectory(SKernel)
 # include directories
 set(includes 
 	${CMAKE_CURRENT_LIST_DIR}
+	${includes}
 	PARENT_SCOPE
 )
 # source files

@@ -6,9 +6,7 @@ add_subdirectory(SEncoded)
 # ---------------------------------------------------------
 # ShareConnector target
 # ---------------------------------------------------------
-add_library(ShareConnector 
-INTERFACE
-)
+add_library(ShareConnector INTERFACE)
 # includes
 target_include_directories(ShareConnector 
 INTERFACE

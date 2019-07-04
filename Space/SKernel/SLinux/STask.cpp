@@ -46,7 +46,7 @@ void STask::SInterrupt::send() {
  * --------------------------------------------------------
  */
 void STask::_init(std::thread::id id) {
-    _insert(id, this);
+    __Insert(id, this);
 }
 /**
  * --------------------------------------------------------
@@ -71,7 +71,7 @@ void STask::_end(std::thread::id  id) {
             #endif
             detach();
         }
-        _remove(id);
+        __Remove(id);
     }
 }
 /*
@@ -82,7 +82,7 @@ void STask::_end(std::thread::id  id) {
  * --------------------------------------------------------
  */
 STask& STask::Enable() {
-    _insert(std::this_thread::get_id(), &__init); 
+    __Insert(std::this_thread::get_id(), &__init); 
     return __init;
 }
 /**
@@ -91,7 +91,7 @@ STask& STask::Enable() {
  * --------------------------------------------------------
  */
 STask& STask::Instance() {
-    return *_find(std::this_thread::get_id());
+    return *__Find(std::this_thread::get_id());
 }
 /**
  * --------------------------------------------------------
@@ -127,7 +127,7 @@ STask           STask::__init(true);
  * Insert task
  * --------------------------------------------------------
  */
-void STask::_insert(std::thread::id id, STask* task) {
+void STask::__Insert(std::thread::id id, STask* task) {
     /**
      * create guard
      */
@@ -142,35 +142,32 @@ void STask::_insert(std::thread::id id, STask* task) {
  * Find task
  * --------------------------------------------------------
  */
-STask* STask::_find(std::thread::id id) {    
+STask* STask::__Find(std::thread::id id) {    
     /**
      * find by id
      */
-    try {
-        guard_t lock(__mutex);
-        return __tasks.at(id);
-    } catch(std::out_of_range& e) {
-        /**
-         * concurrency
-         */ 
-        std::this_thread::yield(); 
+    for(auto i = 2; i; --i) {
+        try {
+            guard_t lock(__mutex);
+            return __tasks.at(id);
+        } catch(std::out_of_range& e) {
+            /**
+             * concurrency
+             */ 
+            std::this_thread::yield(); 
+        }
     }
     /**
-     * try again
+     * task not found
      */
-    try {
-        guard_t lock(__mutex);
-        return __tasks.at(id);
-    } catch(std::out_of_range& e) {
-        throw std::runtime_error("Task Not Found!!!");
-    }
+    throw std::runtime_error("Task Not Found!!!");
 }
 /**
  * --------------------------------------------------------
  * Remove task
  * --------------------------------------------------------
  */
-void STask::_remove(std::thread::id id) {
+void STask::__Remove(std::thread::id id) {
     /**
      * create guard
      */

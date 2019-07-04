@@ -19,7 +19,6 @@
  * space
  */
 #include "SContainer.h"
-#include "SFileResource.h"
 /**
  * --------------------------------------------------------------------------------------------------------------------
  * Random
@@ -104,18 +103,14 @@ public:
      * Random File
      * --------------------------------------------------------------------------------------------
      **/
-    template<size_t CHUNK=0x1000>
-    static SOFileResource File(const std::string& path, size_t n) {
-        SOFileResource out(path);
+    template<typename Resource, size_t CHUNK=0x1000>
+    static Resource Fill(Resource r, size_t n) {
         auto d = div(int(n), int(CHUNK));
         for(size_t i=0; i<d.quot; ++i) {
-            out.drain(SRandom::Frame(CHUNK));
+            r.drain(SRandom::Frame(CHUNK));
         }
-        out.drain(SRandom::Frame(d.rem)).flush();
-        return out;
-    }
-    static std::string FileName() {
-        return SFileResource::PathTemp() + "/" + SRandom::String(16);
+        r.drain(SRandom::Frame(d.rem)).flush();
+        return r;
     }
 private:
     /**

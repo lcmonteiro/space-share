@@ -4,9 +4,7 @@ add_subdirectory(SKernel)
 # ---------------------------------------------------------
 # ShareConnectorDecodedStream target
 # ---------------------------------------------------------
-add_library(ShareConnectorDecodedStream
-INTERFACE
-)
+add_library(ShareConnectorDecodedStream INTERFACE)
 # dependencies
 target_link_libraries(ShareConnectorDecodedStream
 INTERFACE 

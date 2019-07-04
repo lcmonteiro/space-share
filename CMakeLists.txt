@@ -5,6 +5,7 @@ enable_testing()
 # ---------------------------------------------------------
 project (SpaceShare)
 # properties
+set(BUILD_SHARED_LIBS ON)
 set(CMAKE_CXX_STANDARD 14)
 # definitions
 add_definitions(-D__LOG__)
@@ -24,9 +25,7 @@ add_subdirectory(Test)
 # ---------------------------------------------------------
 # SpaceShare target
 # ---------------------------------------------------------
-add_library(SpaceShare 
-INTERFACE
-)
+add_library(SpaceShare INTERFACE)
 # dependencies
 target_link_libraries(SpaceShare 
 INTERFACE

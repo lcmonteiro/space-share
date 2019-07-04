@@ -6,9 +6,7 @@ add_subdirectory(STools)
 # ---------------------------------------------------------
 # ShareConnectorDecodedMessage target
 # ---------------------------------------------------------
-add_library(ShareConnectorDecodedMessage
-INTERFACE
-)
+add_library(ShareConnectorDecodedMessage INTERFACE)
 # includes
 target_include_directories(ShareConnectorDecodedMessage 
 INTERFACE

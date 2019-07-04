@@ -1,21 +1,17 @@
 cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
-# SpaceKernelLinux target
+# linux - kernel
 # ---------------------------------------------------------
-add_library(SpaceKernelLinux STATIC
-	SMonitorHandler.cpp
+# include directories
+set(includes 
+	${CMAKE_CURRENT_LIST_DIR}
+	PARENT_SCOPE
 )
-# includes
-target_include_directories(SpaceKernelLinux 
-PUBLIC
-	.
-)
-#dependencies
-target_link_libraries(SpaceKernelLinux
-PUBLIC 
-	pthread
-	SpaceKernel
+# source files
+set(sources  
+	${CMAKE_CURRENT_LIST_DIR}/SMonitorHandler.cpp
+	PARENT_SCOPE
 )
 # ---------------------------------------------------------
-# end 
+# end
 # ---------------------------------------------------------

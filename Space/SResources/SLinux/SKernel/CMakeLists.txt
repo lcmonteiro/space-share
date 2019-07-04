@@ -1,17 +1,12 @@
 cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
-# SpaceResourceLinux target
+# linux - kernel
 # ---------------------------------------------------------
-add_library(SpaceResourceLinux INTERFACE
-)
-# includes
-target_include_directories(SpaceKernelLinux 
-INTERFACE
-	.
-)
-#dependencies
-target_link_libraries(SpaceResourceLinux
+# include directories
+set(includes 
+	${CMAKE_CURRENT_LIST_DIR}
+	PARENT_SCOPE
 )
 # ---------------------------------------------------------
-# end 
+# end
 # ---------------------------------------------------------

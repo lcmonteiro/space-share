@@ -85,6 +85,10 @@ public:
       * temporary dir
       */
     static std::string PathTemp();
+    /**
+      * temporary File
+      */
+    static std::string FileTemp();
 protected:
     /**
      * ------------------------------------------------------------------------

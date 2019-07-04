@@ -3,7 +3,6 @@ cmake_minimum_required (VERSION 3.8)
 # ShareConnectorEncodedMessageKernel target
 # ---------------------------------------------------------
 add_library(ShareConnectorEncodedMessageKernel 
-STATIC
 	SIDirConnector.cpp
 	SIIrcConnector.cpp
 	SIOIrcConnector.cpp

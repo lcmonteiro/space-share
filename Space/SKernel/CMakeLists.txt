@@ -10,7 +10,6 @@ endif()
 # SpaceKernel target
 # ---------------------------------------------------------
 add_library(SpaceKernel 
-STATIC
     ${sources}
 	SContainer.cpp
 	SAddress.cpp
@@ -19,8 +18,7 @@ STATIC
 # includes
 target_include_directories(SpaceKernel 
 PUBLIC
-	${CMAKE_CURRENT_LIST_DIR}	
-PRIVATE
+	${CMAKE_CURRENT_LIST_DIR}
 	${includes}
 )
 # target dependencies

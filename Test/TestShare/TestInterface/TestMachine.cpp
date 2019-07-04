@@ -20,11 +20,11 @@ TEST(SMachine, File)
     STask::Enable();
 
     // files ------------------------------------------------------------------
-    auto in  = SRandom::FileName();
-    auto out = SRandom::FileName();
+    auto in  = SFileResource::FileTemp();
+    auto out = SFileResource::FileTemp();
 
     // create test data -------------------------------------------------------
-    SRandom::File(in, 1000);
+    SRandom::Fill(SIFileResource(in), 1000);
 
     // encoder machine --------------------------------------------------------
     auto conf = SMachine::Config();
@@ -49,15 +49,15 @@ TEST(SMachine, File)
             {Module::IO::NOMINAL, "3"}
         }, {
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_FILE},
-            {Module::IO::URI, SRandom::FileName()},
+            {Module::IO::URI, SFileResource::FileTemp()},
             {Module::IO::VERBOSE, "4"}
         }, {
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_FILE},
-            {Module::IO::URI, SRandom::FileName()},
+            {Module::IO::URI, SFileResource::FileTemp()},
             {Module::IO::VERBOSE, "4"} 
         }, {
             {Module::IO::TYPE, Module::IO::Type::MESSAGE_FILE},
-            {Module::IO::URI, SRandom::FileName()},
+            {Module::IO::URI, SFileResource::FileTemp()},
             {Module::IO::VERBOSE, "4"}
         }}}
     });

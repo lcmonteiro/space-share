@@ -27,7 +27,7 @@ TEST(SFileResource, Move)
 {
     SOFileResource f1("/tmp/test1");
     SOFileResource f2("/tmp/test2");
-    SOFileResource f(SRandom::FileName(), f1);
+    SOFileResource f(SFileResource::FileTemp(), f1);
     
 
     //f1 = move(f2);

@@ -26,7 +26,9 @@
  * space
  */
 #include "SFileResource.h"
+#include "SRandom.h"
 #include "SFrame.h"
+#include "SText.h"
 /**
  * namespaces 
  */
@@ -205,6 +207,10 @@ string SFileResource::PathTemp() {
     (ptr = getenv("TEMPDIR")) ||
     (ptr = default_tmp);
     return string(ptr);
+}
+
+string SFileResource::FileTemp() {
+    return SText(PathTemp(), "/", SRandom::String(16));
 }
 /**
  * ------------------------------------------------------------------------------------------------

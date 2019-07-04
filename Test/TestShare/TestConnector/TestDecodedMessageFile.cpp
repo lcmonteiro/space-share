@@ -31,7 +31,7 @@ TEST(DecodedMessageFile, Base)
     STask::Enable();
     // settings ----------------------- 
     auto size = size_t(100);
-    auto path = SRandom::FileName();
+    auto path = SFileResource::FileTemp();
 
     // OUT --------------------------------------------------------------------
     

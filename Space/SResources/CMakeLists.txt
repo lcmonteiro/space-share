@@ -9,8 +9,7 @@ endif()
 # ---------------------------------------------------------
 # SpaceResource target
 # ---------------------------------------------------------
-add_library(SpaceResource 
-STATIC 
+add_library(SpaceResource
 	${sources}
 	SIRCResource.cpp
 )
@@ -23,8 +22,6 @@ PRIVATE
 )
 # dependencies
 target_link_libraries(SpaceResource 
-#PUBLIC
-	#${links}
 PUBLIC
 	SpaceKernel
 PRIVATE

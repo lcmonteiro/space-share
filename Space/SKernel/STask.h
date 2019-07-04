@@ -178,9 +178,9 @@ private:
      * Interfaces
      * ---------------------------------------------------
      */
-    static void   _insert(std::thread::id, STask*);
-    static STask* _find  (std::thread::id);
-    static void   _remove(std::thread::id);
+    static void   __Insert(std::thread::id, STask*);
+    static STask* __Find  (std::thread::id);
+    static void   __Remove(std::thread::id);
 };
 /**
  * --------------------------------------------------------------------------------------------------------------------

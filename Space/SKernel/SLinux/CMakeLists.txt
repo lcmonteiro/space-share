@@ -1,26 +1,26 @@
 cmake_minimum_required (VERSION 3.8)
 # ---------------------------------------------------------
-# linux - kernel 
-# ---------------------------------------------------------
-add_subdirectory(SKernel)
-# ---------------------------------------------------------
 # linux - interface 
 # ---------------------------------------------------------
+# add dependencies 
+add_subdirectory(SKernel)
 # include directories
 set(includes 
-	${CMAKE_CURRENT_LIST_DIR}
+	${includes}
 	PARENT_SCOPE
 )
 # source files
-set(sources  
+set(sources
+	${sources}
 	${CMAKE_CURRENT_LIST_DIR}/SMonitor.cpp
 	${CMAKE_CURRENT_LIST_DIR}/STask.cpp
 	${CMAKE_CURRENT_LIST_DIR}/SLog.cpp
 	PARENT_SCOPE
 )
-# link libraries
+# source files
 set(links
-	SpaceKernelLinux
+	${links}
+	pthread
 	PARENT_SCOPE
 )
 # ---------------------------------------------------------
