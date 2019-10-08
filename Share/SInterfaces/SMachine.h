@@ -81,7 +81,7 @@ public:
          * ------------------------------------------------
          */
         inline Config& update(Key k1, Key k2, Val val) {
-            for (auto& m : *this){
+            for (auto& m : *this) {
                 m.update(k1, k2, val);
             }
             return *this;

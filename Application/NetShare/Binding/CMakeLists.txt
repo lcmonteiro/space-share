@@ -2,18 +2,16 @@ cmake_minimum_required (VERSION 3.10)
 # ---------------------------------------------------------
 # subdirectories
 # ---------------------------------------------------------
-# folder for BufferShare
-add_subdirectory(BufferShare)
-# folder for NetShare
-#add_subdirectory(NetShare)
+# folder for Java Binding
+add_subdirectory(Java)
 # ---------------------------------------------------------
 # Bindings target
 # ---------------------------------------------------------
-add_library(Bindings INTERFACE)
+add_library(BindingNetShare INTERFACE)
 # dependencies
-target_link_libraries(Bindings 
+target_link_libraries(BindingNetShare 
 INTERFACE
-    BindingBufferShare
+	BindingNetShareJava
 )
 # ---------------------------------------------------------
 # end
